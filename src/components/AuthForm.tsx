@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { authFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CustomInput from "./CustomInput";
+import { signIn } from "@/lib/actions/user.actions";
 // import { signIn, signUp } from "@/lib/actions/user.actions";
 
 const AuthForm = ({ type }: { type: string }) => {
@@ -16,6 +17,7 @@ const AuthForm = ({ type }: { type: string }) => {
   //   const [user, setUser] = useState(null);
 
   //   const router = useNavigate();
+  const navigate = useNavigate();
 
   const formSchema = authFormSchema(type);
 
@@ -33,7 +35,6 @@ const AuthForm = ({ type }: { type: string }) => {
     setIsLoading(true);
 
     try {
-      // Sign up with Appwrite & create plaid token
       if (type === "sign-up") {
         // const userData = {
         //   email: data.email,
@@ -41,18 +42,23 @@ const AuthForm = ({ type }: { type: string }) => {
         //   firstName: data.firstName,
         // };
         // const newUser = await signUp(userData);
-        // setUser(newUser);
+        // if (newUser) {
+        //   navigate("/");
+        // }
       }
 
       if (type === "sign-in") {
-        // const response = await signIn({
-        //   email: data.email,
-        //   password: data.password,
-        // });
-        // if (response) router("/");
+        const response: DummyUser | null = await signIn({
+          email: data.email,
+          password: data.password,
+        });
+        if (response) {
+          console.log("User signed in successfully:", response);
+          navigate("/assigned-candidates");
+        } else {
+          console.log("Sign-in failed: Invalid credentials");
+        }
       }
-
-      console.log(data);
     } catch (error) {
       console.log(error);
     } finally {

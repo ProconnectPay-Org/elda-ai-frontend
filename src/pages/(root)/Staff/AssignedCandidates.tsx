@@ -2,8 +2,8 @@ import { DataTable } from "@/components/DataTable";
 import SmallBox from "@/components/SmallBox";
 import { Payment, columns } from "@/components/ui/Columns";
 import { smallBox } from "@/constants";
+import useAuth from "@/hooks/useAuth";
 import RootLayout from "@/layouts/RootLayout";
-import { getLoggedInUser } from "@/lib/actions/user.actions";
 import { useEffect, useState } from "react";
 
 const AssignedCandidates = () => {
@@ -88,16 +88,7 @@ const AssignedCandidates = () => {
     fetchTableData();
   }, []);
 
-  const [loggedInUser, setLoggedInUser] = useState<DummyUser | null>(null);
-
-  useEffect(() => {
-    const fetchLoggedInUser = async () => {
-      const user = await getLoggedInUser();
-      setLoggedInUser(user);
-    };
-
-    fetchLoggedInUser();
-  }, []);
+  const { loggedInUser } = useAuth();
 
   return (
     <RootLayout title="Dashboard">

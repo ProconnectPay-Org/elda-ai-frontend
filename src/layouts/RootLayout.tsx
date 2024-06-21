@@ -1,23 +1,24 @@
+// components/RootLayout.tsx
 import MobileNav from "@/components/MobileNav";
 import SideBar from "@/components/SideBar";
 import TopNavBar from "@/components/TopNavBar";
-import { getLoggedInUser } from "@/lib/actions/user.actions";
-import { useEffect, useState } from "react";
-import { redirect } from "react-router-dom";
+import useAuth from "@/hooks/useAuth";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const RootLayout = ({ children, title }: AuthLayoutProps) => {
-  const [loggedInUser, setLoggedInUser] = useState<DummyUser | null>(null);
+  const { loggedInUser, loading } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchLoggedInUser = async () => {
-      const user = await getLoggedInUser();
-      setLoggedInUser(user);
-    };
+    if (!loading && !loggedInUser) {
+      navigate("/sign-in");
+    }
+  }, [loading, loggedInUser, navigate]);
 
-    fetchLoggedInUser();
-  }, []);
-
-  if (!loggedInUser) redirect("/sign-in");
+  if (loading) {
+    return <p>Loading...</p>; // Or some kind of loading spinner
+  }
 
   return (
     <main className="flex h-screen w-full">

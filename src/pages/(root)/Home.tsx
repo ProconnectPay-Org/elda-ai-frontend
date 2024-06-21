@@ -1,17 +1,7 @@
-import { getLoggedInUser } from "@/lib/actions/user.actions";
-import { useEffect, useState } from "react";
+import useAuth from "@/hooks/useAuth";
 
 const Home = () => {
-  const [loggedInUser, setLoggedInUser] = useState<DummyUser | null>(null);
-
-  useEffect(() => {
-    const fetchLoggedInUser = async () => {
-      const user = await getLoggedInUser();
-      setLoggedInUser(user);
-    };
-
-    fetchLoggedInUser();
-  }, []);
+  const { loggedInUser } = useAuth();
 
   return <div>{loggedInUser && <p>Welcome, {loggedInUser.name}!</p>}</div>;
 };
