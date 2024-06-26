@@ -4,6 +4,8 @@
 //   email: "johndoe@example.com",
 // };
 
+import { signInProps } from "@/types";
+
 // export const getUserInfo = async () => {};
 
 // export const signIn = async ({ email, password }: signInProps) => {

@@ -1,3 +1,4 @@
+import { DottedBox } from "@/types";
 import { Link } from "react-router-dom";
 
 const DottedBox = ({ docType, icon, href }: DottedBox) => {

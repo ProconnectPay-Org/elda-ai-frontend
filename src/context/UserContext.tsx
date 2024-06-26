@@ -1,3 +1,4 @@
+import { UserContextValue } from '@/types';
 import React from 'react';
 
 const UserContext = React.createContext<UserContextValue>({
