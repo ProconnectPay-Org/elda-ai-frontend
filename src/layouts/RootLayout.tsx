@@ -3,6 +3,7 @@ import MobileNav from "@/components/MobileNav";
 import SideBar from "@/components/SideBar";
 import TopNavBar from "@/components/TopNavBar";
 import useAuth from "@/hooks/useAuth";
+import { AuthLayoutProps } from "@/types";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -31,7 +32,7 @@ const RootLayout = ({ children, title }: AuthLayoutProps) => {
             <MobileNav />
           </div>
         </div>
-        <div className="px-12 py-8">{children}</div>
+        <div className="px-12 py-8 overflow-y-auto">{children}</div>
       </div>
     </main>
   );

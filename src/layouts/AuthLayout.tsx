@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import Logo from "../assets/elda-logo.png";
+import { AuthLayoutProps } from "@/types";
 
 const AuthLayout = ({ children }: AuthLayoutProps) => {
   return (
@@ -12,9 +13,8 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
           </h1>
         </Link>
         <div className="flex items-center gap-8">
-          <Link to="/sign-in">Log In</Link>
-          <Link to="/sign-up">
-            <Button className="bg-[#DB251A]">Sign Up</Button>
+          <Link to="/sign-in">
+            <Button className="bg-red">Sign In</Button>
           </Link>
         </div>
       </nav>

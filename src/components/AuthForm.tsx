@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { authFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CustomInput from "./CustomInput";
 import { signIn } from "@/lib/actions/user.actions";
+import { DummyUser } from "@/types";
 // import { signIn, signUp } from "@/lib/actions/user.actions";
 
 const AuthForm = ({ type }: { type: string }) => {
@@ -70,7 +71,7 @@ const AuthForm = ({ type }: { type: string }) => {
     <section className="auth-form bg-white p-16 md:w-[32rem] rounded-md">
       <header>
         <h1 className="text-[28px] font-bold text-black-1 text-center mb-8">
-          {type === "sign-in" ? "Login" : "Sign Up"}
+          {type === "sign-in" ? "Sign In" : "Sign Up"}
         </h1>
       </header>
 
@@ -107,7 +108,7 @@ const AuthForm = ({ type }: { type: string }) => {
             <Button
               type="submit"
               disabled={isLoading}
-              className="form-btn bg-[#DB251A]"
+              className="form-btn bg-red"
             >
               {isLoading ? (
                 <>
@@ -124,7 +125,7 @@ const AuthForm = ({ type }: { type: string }) => {
         </form>
       </Form>
 
-      <footer className="flex justify-center gap-1">
+      {/* <footer className="flex justify-center gap-1">
         <p className="text-14 font-normal text-gray-600">
           {type === "sign-in"
             ? "Don't have an account?"
@@ -136,7 +137,7 @@ const AuthForm = ({ type }: { type: string }) => {
         >
           {type === "sign-in" ? "Sign up" : "Sign in"}
         </Link>
-      </footer>
+      </footer> */}
     </section>
   );
 };

@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 
+import { step1Schema, step2Schema, step3Schema, step4Schema, step5Schema } from "@/lib/utils";
+
 declare type SearchParamProps = {
   params: { [key: string]: string };
   searchParams: { [key: string]: string | string[] | undefined };
@@ -10,6 +12,10 @@ declare type SearchParamProps = {
 declare type AuthLayoutProps = {
   children: React.ReactNode;
   title?: string;
+};
+
+declare type CandidateLayoutProps = {
+  children: React.ReactNode;
 };
 
 declare type SignUpParams = {
@@ -115,3 +121,11 @@ declare interface RightSidebarProps {
 declare interface SiderbarProps {
   user: User;
 }
+
+// validationSchemas.ts
+export type Step1FormData = z.infer<typeof step1Schema>;
+export type Step2FormData = z.infer<typeof step2Schema>;
+// Define types for other steps similarly
+export type Step3FormData = z.infer<typeof step3Schema>;
+export type Step4FormData = z.infer<typeof step4Schema>;
+export type Step5FormData = z.infer<typeof step5Schema>;
