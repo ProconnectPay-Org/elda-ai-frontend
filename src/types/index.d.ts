@@ -59,7 +59,7 @@ declare type DummyUser = {
   token?: string; // Optional token property for future use
 };
 
-declare type DottedBox = {
+declare type DottedBoxProps = {
   docType: string;
   icon: string;
   href: string; // Optional onClick function

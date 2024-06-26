@@ -1,7 +1,7 @@
-import { DottedBox } from "@/types";
+import { DottedBoxProps } from "@/types";
 import { Link } from "react-router-dom";
 
-const DottedBox = ({ docType, icon, href }: DottedBox) => {
+const DottedBox = ({ docType, icon, href }: DottedBoxProps) => {
   return (
     <Link
       className="border cursor-pointer border-dashed flex flex-col items-center justify-center w-1/2 h-60 p-12 border-red-500 rounded-2xl"
