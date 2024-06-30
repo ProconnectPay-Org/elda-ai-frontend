@@ -1,83 +1,29 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { DataTable } from "@/components/DataTable";
 import SmallBox from "@/components/SmallBox";
-import { Payment, columns } from "@/components/ui/Columns";
+import { columns } from "@/components/ui/Columns";
 import { smallBox } from "@/constants";
 import useAuth from "@/hooks/useAuth";
 import RootLayout from "@/layouts/RootLayout";
-import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { copyToClipboard } from "@/lib/utils";
+import DottedBox from "@/components/DottedBox";
+import { CopyIcon, MailIcon, PhoneCallIcon } from "lucide-react";
+import { getData } from "@/lib/actions/user.actions";
+import { Payment } from "@/types";
 
 const AssignedCandidates = () => {
-  const [tableData, setTableData] = useState<Payment[]>([]); // Initialize as an array of Payment
-
-  async function getData(): Promise<Payment[]> {
-    return [
-      {
-        id: "m5gr84i9",
-        amount: 316,
-        email: "ken99@yahoo.com",
-        serialNumber: 1,
-        name: "Ken Smith",
-        recommendedSchool: "Harvard University",
-        recommendedCourse: "Computer Science",
-        resume: "resume_1",
-        sop: "sop_1",
-        schoolApplicationStarted: "true01",
-        schoolApplicationCompleted: "true14",
-      },
-      {
-        id: "3u1reuv4",
-        amount: 242,
-        email: "Abe45@gmail.com",
-        serialNumber: 2,
-        name: "Abe Johnson",
-        recommendedSchool: "Stanford University",
-        recommendedCourse: "Electrical Engineering",
-        resume: "resume_2",
-        sop: "sop_2",
-        schoolApplicationStarted: "true03",
-        schoolApplicationCompleted: "true15",
-      },
-      {
-        id: "derv1ws0",
-        amount: 837,
-        email: "Monserrat44@gmail.com",
-        serialNumber: 3,
-        name: "Monserrat Gomez",
-        recommendedSchool: "MIT",
-        recommendedCourse: "Mechanical Engineering",
-        resume: "resume_3",
-        sop: "sop_3",
-        schoolApplicationStarted: "true05",
-        schoolApplicationCompleted: "true16",
-      },
-      {
-        id: "5kma53ae",
-        amount: 874,
-        email: "Silas22@gmail.com",
-        serialNumber: 4,
-        name: "Silas Thompson",
-        recommendedSchool: "UC Berkeley",
-        recommendedCourse: "Data Science",
-        resume: "resume_4",
-        sop: "sop_4",
-        schoolApplicationStarted: "true07",
-        schoolApplicationCompleted: "true17",
-      },
-      {
-        id: "bhqecj4p",
-        amount: 721,
-        email: "carmella@hotmail.com",
-        serialNumber: 5,
-        name: "Carmella Lee",
-        recommendedSchool: "Princeton University",
-        recommendedCourse: "Physics",
-        resume: "resume_5",
-        sop: "sop_5",
-        schoolApplicationStarted: "true09",
-        schoolApplicationCompleted: "true18",
-      },
-    ];
-  }
+  const [tableData, setTableData] = useState<Payment[]>([]);
+  const [selectedRowData, setSelectedRowData] = useState<Payment | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchTableData = async () => {
@@ -87,6 +33,16 @@ const AssignedCandidates = () => {
 
     fetchTableData();
   }, []);
+
+  const handleRowClick = (row: Payment) => {
+    setSelectedRowData(row);
+    setIsDialogOpen(true);
+  };
+
+  // const closeModal = () => {
+  //   setSelectedRowData(null);
+  //   setIsDialogOpen(false);
+  // };
 
   const { loggedInUser } = useAuth();
 
@@ -114,8 +70,101 @@ const AssignedCandidates = () => {
             10 new candidates
           </span>
         </div>
-        <DataTable columns={columns} data={tableData} />
+        <DataTable
+          columns={columns}
+          data={tableData}
+          onRowClick={handleRowClick}
+        />
       </div>
+      {selectedRowData && (
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent>
+            <DialogHeader className="flex">
+              <DialogTitle className="text-red">Candidate Details</DialogTitle>
+              <Link
+                to={`/candidate/${selectedRowData.id}`}
+                className="underline text-sm text-red font-medium"
+              >
+                View All
+              </Link>
+            </DialogHeader>
+            <DialogDescription className="flex flex-col gap-8">
+              <div className="flex items-center justify-between">
+                <div className="w-1/2">
+                  <p>Full Name</p>
+                  <p className="text-primary font-medium">
+                    {selectedRowData.name}
+                  </p>
+                </div>
+                <div className="w-1/2 flex flex-col items-start">
+                  <p>Status</p>
+                  <p
+                    className={`${
+                      selectedRowData.status === "completed"
+                        ? "bg-green-200 text-green-800"
+                        : "text-red bg-pale-bg"
+                    } text-[10px] p-1 rounded-xl`}
+                  >
+                    {selectedRowData.status}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p>Phone Number</p>
+                  <p
+                    onClick={() => copyToClipboard(selectedRowData.phone || "")}
+                    className="text-primary font-medium flex items-center gap-1"
+                  >
+                    <PhoneCallIcon size={16} />
+                    {selectedRowData.phone}
+                    <CopyIcon size={16} cursor="pointer" />
+                  </p>
+                </div>
+                <div className="w-1/2">
+                  <p>Recommended School</p>
+                  <p className="text-primary font-medium">
+                    {selectedRowData.recommendedSchool}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p>Email Address</p>
+                  <p
+                    onClick={() => copyToClipboard(selectedRowData.email || "")}
+                    className="text-primary font-medium flex items-center gap-1"
+                  >
+                    <MailIcon size={16} />
+                    {selectedRowData.email}
+                    <CopyIcon size={16} cursor="pointer" />
+                  </p>
+                </div>
+                <div className="w-1/2">
+                  <p>Recommended Course</p>
+                  <p className="text-primary font-medium">
+                    {selectedRowData.recommendedCourse}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <DottedBox
+                  className="border-red rounded-md text-sm font-bold p-2 hover:bg-pale-bg"
+                  href="/craft-sop"
+                  docType="Draft Statement Of Purpose"
+                  icon=""
+                />
+                <Button className="bg-red w-1/2 hover:bg-pale-bg hover:text-red border hover:border-red">
+                  <Link to="/refine-resume">Refine Resume</Link>
+                </Button>
+              </div>
+            </DialogDescription>
+            {/* <DialogClose asChild>
+              <Button onClick={closeModal}>Close</Button>
+            </DialogClose> */}
+          </DialogContent>
+        </Dialog>
+      )}
     </RootLayout>
   );
 };

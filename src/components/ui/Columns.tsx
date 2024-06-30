@@ -10,22 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
+import { Payment } from "@/types";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Payment = {
-  id: string;
-  amount: number;
-  email: string;
-  serialNumber: number;
-  name: string;
-  recommendedSchool: string;
-  recommendedCourse: string;
-  resume: string;
-  sop: string;
-  schoolApplicationStarted: string;
-  schoolApplicationCompleted: string;
-};
 
 export const columns: ColumnDef<Payment>[] = [
   {

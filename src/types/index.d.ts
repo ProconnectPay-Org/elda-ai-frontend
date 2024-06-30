@@ -63,6 +63,7 @@ declare type DottedBoxProps = {
   docType: string;
   icon: string;
   href: string; // Optional onClick function
+  className: string;
 };
 
 declare type SmallBoxProps = {
@@ -129,3 +130,21 @@ export type Step2FormData = z.infer<typeof step2Schema>;
 export type Step3FormData = z.infer<typeof step3Schema>;
 export type Step4FormData = z.infer<typeof step4Schema>;
 export type Step5FormData = z.infer<typeof step5Schema>;
+
+// This type is used to define the shape of our data.
+// You can use a Zod schema here if you want.
+export type Payment = {
+  id: string;
+  amount: number;
+  email: string;
+  serialNumber: number;
+  name: string;
+  recommendedSchool: string;
+  recommendedCourse: string;
+  resume: string;
+  sop: string;
+  schoolApplicationStarted: string;
+  schoolApplicationCompleted: string;
+  status: string;
+  phone: string;
+};

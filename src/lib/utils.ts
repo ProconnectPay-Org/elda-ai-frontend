@@ -105,3 +105,19 @@ export const getErrorMessage = (
   if (typeof error === "string") return error;
   return error.message;
 };
+
+// src/utils/clipboardUtils.ts
+export const copyToClipboard = async (text: string): Promise<void> => {
+  try {
+    await navigator.clipboard.writeText(text);
+    console.log("Text copied to clipboard", text);
+  } catch (err) {
+    console.error("Failed to copy text: ", err);
+  }
+};
+
+export const getInitials = (name: string) => {
+  const nameParts = name.split(" ");
+  const initials = nameParts.map((part) => part[0]).join("");
+  return initials.toUpperCase();
+};

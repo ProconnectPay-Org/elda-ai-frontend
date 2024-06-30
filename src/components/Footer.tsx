@@ -1,3 +1,4 @@
+import { getInitials } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import useAuth from "@/hooks/useAuth";
 
@@ -6,10 +7,12 @@ const Footer = () => {
 
   return (
     <div className="flex items-center justify-evenly">
-      <Avatar>
-        <AvatarImage src="https://github.com/shadcn.png" />
-        <AvatarFallback>JD</AvatarFallback>
-      </Avatar>
+      {loggedInUser && (
+        <Avatar>
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>{getInitials(loggedInUser?.name)}</AvatarFallback>
+        </Avatar>
+      )}
       <p className="text-black cursor-pointer text-xs">{loggedInUser?.email}</p>
       <p className="text-black cursor-pointer" onClick={handleLogout}>
         Log Out

@@ -6,6 +6,7 @@ import useAuth from "@/hooks/useAuth";
 import { AuthLayoutProps } from "@/types";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Logo from "../assets/elda-logo.png";
 
 const RootLayout = ({ children, title }: AuthLayoutProps) => {
   const { loggedInUser, loading } = useAuth();
@@ -26,10 +27,10 @@ const RootLayout = ({ children, title }: AuthLayoutProps) => {
       <SideBar />
       <div className="flex size-full flex-col">
         <TopNavBar title={title} />
-        <div className="root-layout">
-          <img src="/icons/logo.svg" width={30} height={30} alt="logo" />
+        <div className="root-layout border-b border-gray shadow-md">
+          <img src={Logo} width={100} height={100} alt="logo" />
           <div>
-            <MobileNav />
+            <MobileNav title={title} />
           </div>
         </div>
         <div className="px-12 py-8 overflow-y-auto">{children}</div>
