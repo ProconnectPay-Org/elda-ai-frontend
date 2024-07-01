@@ -4,8 +4,8 @@
 //   email: "johndoe@example.com",
 // };
 
-import { Payment } from "@/components/ui/Columns";
-import { signInProps } from "@/types";
+// import { Payment } from "@/components/ui/Columns";
+import { signInProps, Payment } from "@/types";
 
 // export const getUserInfo = async () => {};
 
