@@ -1,6 +1,12 @@
 /* eslint-disable no-unused-vars */
 
-import { step1Schema, step2Schema, step3Schema, step4Schema, step5Schema } from "@/lib/utils";
+import {
+  step1Schema,
+  step2Schema,
+  step3Schema,
+  step4Schema,
+  step5Schema,
+} from "@/lib/utils";
 
 declare type SearchParamProps = {
   params: { [key: string]: string };
@@ -70,6 +76,13 @@ declare type SmallBoxProps = {
   name: string;
   icon: string;
   number: number; // Optional onClick function
+};
+
+declare type NotificationProps = {
+  title: string;
+  icon: string;
+  text: string;
+  date: string;
 };
 
 declare type Category = "Food and Drink" | "Travel" | "Transfer";
