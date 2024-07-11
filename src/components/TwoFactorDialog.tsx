@@ -3,7 +3,7 @@ import { Button } from "./ui/button"
 
 const TwoFactorDialog = () => {
   return (
-    <Dialog >
+    <Dialog>
           <DialogContent>
             <DialogHeader className="flex">
               <DialogTitle className="text-red">Candidate Details</DialogTitle>

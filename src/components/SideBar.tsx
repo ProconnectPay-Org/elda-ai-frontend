@@ -2,18 +2,18 @@ import { sidebarLinks } from "@/constants";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
 import Footer from "./Footer";
-import Logo from "../assets/sharp-logo.png";
+import Logo from "../assets/elda-logo.svg";
 
 const SideBar = () => {
   const navLocation = useLocation();
   return (
-    <section className="sidebar">
+    <section className="sidebar w-[250px]">
       <nav className="flex flex-col gap-4">
         <Link
           to="/"
-          className=" flex cursor-pointer items-center justify-center gap-2 w-[250px] h-20 overflow-hidden"
+          className="flex cursor-pointer items-center justify-center gap-2 w-[250px] h-20"
         >
-          <img src={Logo} alt="logo" className="w-full" />
+          <img src={Logo} alt="logo" className="" />
         </Link>
         {sidebarLinks.map((item) => {
           const isActive =
