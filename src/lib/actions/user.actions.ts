@@ -4,7 +4,7 @@
 //   email: "johndoe@example.com",
 // };
 
-import { Payment, signInProps } from "@/types";
+import { AllColumn, Payment, TeamMemberColumn, signInProps } from "@/types";
 
 // export const getUserInfo = async () => {};
 
@@ -158,6 +158,168 @@ export async function getData(): Promise<Payment[]> {
       schoolApplicationCompleted: "true18",
       status: "completed",
       phone: "+234 709 823 4343",
+    },
+  ];
+}
+
+export async function getAllData(): Promise<AllColumn[]> {
+  return [
+    {
+      id: "m5gr84i9",
+      serialNumber: 1,
+      candidateName: "Ken Smith",
+      country: "Nigeria",
+      assignedUniversity: "Harvard University",
+      assignedCourse: "Computer Science",
+      schoolApplicationStatus: "true01",
+      resumeStatus: "true14",
+      sopStatus: "not completed",
+      duplicate: "Duplicate",
+    },
+    {
+      id: "b2fg93h1",
+      serialNumber: 2,
+      candidateName: "Jane Doe",
+      country: "Ghana",
+      assignedUniversity: "Stanford University",
+      assignedCourse: "Mechanical Engineering",
+      schoolApplicationStatus: "true05",
+      resumeStatus: "true11",
+      sopStatus: "completed",
+      duplicate: "Not Duplicate",
+    },
+    {
+      id: "c8hx67m4",
+      serialNumber: 3,
+      candidateName: "John Carter",
+      country: "South Africa",
+      assignedUniversity: "Massachusetts Institute of Technology",
+      assignedCourse: "Electrical Engineering",
+      schoolApplicationStatus: "true07",
+      resumeStatus: "true10",
+      sopStatus: "not completed",
+      duplicate: "Duplicate",
+    },
+    {
+      id: "d1kl09n8",
+      serialNumber: 4,
+      candidateName: "Emily Clark",
+      country: "Kenya",
+      assignedUniversity: "University of Cambridge",
+      assignedCourse: "Chemical Engineering",
+      schoolApplicationStatus: "true03",
+      resumeStatus: "true13",
+      sopStatus: "completed",
+      duplicate: "Not Duplicate",
+    },
+    {
+      id: "e4mn23v6",
+      serialNumber: 5,
+      candidateName: "Michael Brown",
+      country: "Uganda",
+      assignedUniversity: "University of Oxford",
+      assignedCourse: "Civil Engineering",
+      schoolApplicationStatus: "true02",
+      resumeStatus: "true12",
+      sopStatus: "not completed",
+      duplicate: "Duplicate",
+    },
+    {
+      id: "f9op45w2",
+      serialNumber: 6,
+      candidateName: "Sarah Johnson",
+      country: "Tanzania",
+      assignedUniversity: "California Institute of Technology",
+      assignedCourse: "Aerospace Engineering",
+      schoolApplicationStatus: "true08",
+      resumeStatus: "true09",
+      sopStatus: "completed",
+      duplicate: "Not Duplicate",
+    },
+  ];
+}
+
+export async function getTeamMembersData(): Promise<TeamMemberColumn[]> {
+  return [
+    {
+      id: "a1b2c3d4",
+      fullName: "Alice Johnson",
+      staffStatus: "Active",
+      assignedCandidates: "15",
+      permission: "Admin",
+      deleteAccount: "Yes",
+    },
+    {
+      id: "e5f6g7h8",
+      fullName: "Bob Smith",
+      staffStatus: "Inactive",
+      assignedCandidates: "8",
+      permission: "Editor",
+      deleteAccount: "No",
+    },
+    {
+      id: "i9j0k1l2",
+      fullName: "Charlie Brown",
+      staffStatus: "Active",
+      assignedCandidates: "20",
+      permission: "Viewer",
+      deleteAccount: "Yes",
+    },
+    {
+      id: "m3n4o5p6",
+      fullName: "Diana Prince",
+      staffStatus: "Active",
+      assignedCandidates: "25",
+      permission: "Admin",
+      deleteAccount: "No",
+    },
+    {
+      id: "q7r8s9t0",
+      fullName: "Ethan Hunt",
+      staffStatus: "Inactive",
+      assignedCandidates: "5",
+      permission: "Editor",
+      deleteAccount: "Yes",
+    },
+    {
+      id: "u1v2w3x4",
+      fullName: "Fiona Gallagher",
+      staffStatus: "Active",
+      assignedCandidates: "30",
+      permission: "Viewer",
+      deleteAccount: "No",
+    },
+    {
+      id: "y5z6a7b8",
+      fullName: "George Clooney",
+      staffStatus: "Inactive",
+      assignedCandidates: "12",
+      permission: "Admin",
+      deleteAccount: "Yes",
+    },
+    {
+      id: "c9d0e1f2",
+      fullName: "Hannah Montana",
+      staffStatus: "Active",
+      assignedCandidates: "22",
+      permission: "Editor",
+      deleteAccount: "No",
+    },
+    {
+      id: "g3h4i5j6",
+      fullName: "Ian Fleming",
+      staffStatus: "Inactive",
+      assignedCandidates: "7",
+      permission: "Viewer",
+      deleteAccount: "Yes",
+    },
+    {
+      id: "k7l8m9n0",
+      fullName: "Jill Valentine",
+      staffStatus: "Active",
+      assignedCandidates: "18",
+      permission: "Admin",
+      deleteAccount: "No",
     },
   ];
 }

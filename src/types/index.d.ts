@@ -161,3 +161,25 @@ export type Payment = {
   status: string;
   phone: string;
 };
+
+export type AllColumn = {
+  id: string;
+  serialNumber: number;
+  candidateName: string;
+  country: string;
+  assignedCourse: string;
+  assignedUniversity: string;
+  schoolApplicationStatus: string;
+  resumeStatus: string;
+  sopStatus: string;
+  duplicate: string;
+};
+
+export type TeamMemberColumn = {
+  id: string;
+  fullName: string;
+  staffStatus: string;
+  assignedCandidates: string;
+  permission: string;
+  deleteAccount: string;
+};
