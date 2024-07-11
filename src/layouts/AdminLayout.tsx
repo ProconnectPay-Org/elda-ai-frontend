@@ -1,5 +1,5 @@
 import { AuthLayoutProps } from "@/types";
-import Logo from "../assets/elda.png";
+import Logo from "../assets/elda-logo.svg";
 import { NavLink } from "react-router-dom";
 
 const AdminLayout = ({ children }: AuthLayoutProps) => {

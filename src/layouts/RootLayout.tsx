@@ -6,7 +6,7 @@ import useAuth from "@/hooks/useAuth";
 import { AuthLayoutProps } from "@/types";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Logo from "../assets/elda-logo.png";
+import Logo from "../assets/elda-logo.svg";
 
 const RootLayout = ({ children, title }: AuthLayoutProps) => {
   const { loggedInUser, loading } = useAuth();
