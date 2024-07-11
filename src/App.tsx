@@ -24,6 +24,7 @@ import {
   Candidates,
   Staff,
 } from "./pages/(root)/SuperAdmin";
+import AdminSecurity from "./pages/(root)/SuperAdmin/AdminSecurity";
 
 function App() {
   return (
@@ -36,7 +37,8 @@ function App() {
         <Route element={<AdminDashboard />} path="/admin-dashboard" />
         <Route element={<Staff />} path="/staff" />
         <Route element={<Candidates />} path="/candidates" />
-        <Route element={<AdminSettings />} path="/admin-settings" />
+        <Route element={<AdminSettings />} path="settings/account" />
+        <Route element={<AdminSecurity />} path="settings/security" />
 
         {/* STAFF */}
         <Route
