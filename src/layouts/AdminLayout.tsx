@@ -35,7 +35,7 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
             Staff
           </NavLink>
           <NavLink
-            to="/settings"
+            to="/settings/account"
             className={({ isActive }) =>
               `px-4 py-2 rounded ${isActive ? "bg-red text-white" : ""}`
             }
