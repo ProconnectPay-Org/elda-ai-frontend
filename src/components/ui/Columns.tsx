@@ -12,7 +12,6 @@ import {
 } from "./dropdown-menu";
 import { Payment } from "@/types";
 
-
 export const columns: ColumnDef<Payment>[] = [
   {
     id: "select",

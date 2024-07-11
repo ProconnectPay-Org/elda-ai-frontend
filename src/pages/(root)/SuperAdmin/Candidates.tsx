@@ -1,8 +1,11 @@
+import TabsComponent from "@/components/TabsComponent"
 import AdminLayout from "@/layouts/AdminLayout"
 
 const Candidates = () => {
   return (
-    <AdminLayout>Candidates</AdminLayout>
+    <AdminLayout>
+      <TabsComponent />
+    </AdminLayout>
   )
 }
 
