@@ -1,8 +1,13 @@
+// AdminLayout.tsx
+
 import { AuthLayoutProps } from "@/types";
 import Logo from "../assets/elda-logo.svg";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const AdminLayout = ({ children }: AuthLayoutProps) => {
+  const location = useLocation();
+  const isSettingsActive = location.pathname.startsWith("/settings");
+
   return (
     <div>
       <nav className="flex items-center bg-[#F5F7F9] h-32 p-2 md:p-4 lg:p-12 gap-10">
@@ -36,8 +41,8 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
           </NavLink>
           <NavLink
             to="/settings/account"
-            className={({ isActive }) =>
-              `px-4 py-2 rounded ${isActive ? "bg-red text-white" : ""}`
+            className={() =>
+              `px-4 py-2 rounded ${isSettingsActive ? "bg-red text-white" : ""}`
             }
           >
             Settings
