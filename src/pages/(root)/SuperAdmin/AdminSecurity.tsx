@@ -3,6 +3,8 @@ import TwoFactorDialog from "@/components/TwoFactorDialog";
 import { Button } from "@/components/ui/button";
 import AdminLayout from "@/layouts/AdminLayout";
 import { useState } from "react";
+import Lock from "../../../assets/lock-light.svg";
+import Pen from "../../../assets/pen.svg";
 
 const AdminSecurity = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -18,24 +20,36 @@ const AdminSecurity = () => {
           <div className="flex flex-col gap-3">
             <div className="flex flex-col w-full gap-1.5">
               <label htmlFor="password">Current Password</label>
-              <input
-                className="border border-gray-border rounded-md py-2 px-4"
-                id="password"
-              />
+              <div className="flex border border-gray-border justify-between gap-2 items-center py-2 px-4 rounded-lg">
+                <img src={Lock} alt="lock" />
+                <input
+                  className="border-none w-full focus:outline-none"
+                  id="password"
+                />
+                <img src={Pen} alt="pen" />
+              </div>
             </div>
             <div className="flex flex-col w-full gap-1.5">
               <label htmlFor="newpassword">New Password</label>
-              <input
-                className="border border-gray-border rounded-md py-2 px-4"
-                id="newpassword"
-              />
+              <div className="flex border border-gray-border justify-between gap-2 items-center py-2 px-4 rounded-lg">
+                <img src={Lock} alt="lock" />
+                <input
+                  className="border-none w-full focus:outline-none"
+                  id="newpassword"
+                />
+                <img src={Pen} alt="pen" />
+              </div>
             </div>
             <div className="flex flex-col w-full gap-1.5">
               <label htmlFor="repeatpassword">Repeat Password</label>
-              <input
-                className="border border-gray-border rounded-md py-2 px-4"
-                id="repeatpassword"
-              />
+              <div className="flex border border-gray-border justify-between gap-2 items-center py-2 px-4 rounded-lg">
+                <img src={Lock} alt="lock" />
+                <input
+                  className="border-none w-full focus:outline-none"
+                  id="repeatpassword"
+                />
+                <img src={Pen} alt="pen" />
+              </div>
             </div>
           </div>
 
@@ -46,7 +60,12 @@ const AdminSecurity = () => {
             Two Factor Authentication
           </Button>
 
-          {isDialogOpen && <TwoFactorDialog />}
+          {isDialogOpen && (
+            <TwoFactorDialog
+              open={isDialogOpen}
+              onOpenChange={setIsDialogOpen}
+            />
+          )}
         </div>
       </div>
     </AdminLayout>

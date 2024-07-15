@@ -1,4 +1,10 @@
+// SetingsSideBar.tsx
+
 import { NavLink } from "react-router-dom";
+import Profile from '../assets/account-icon.svg';
+import ProfileActive from '../assets/profile-active.svg'; // Active state icon
+import Lock from '../assets/lock-light.svg';
+import LockActive from '../assets/lock-dark.svg'; // Active state icon
 
 const SetingsSideBar = () => {
   return (
@@ -11,13 +17,17 @@ const SetingsSideBar = () => {
           }`
         }
       >
-        <div>
-          <img src="" alt="" />
-        </div>
-        <div>
-          <p className="font-bold text-lg">Account</p>
-          <p className="text-sm">Personal Information, Profile photo</p>
-        </div>
+        {({ isActive }) => (
+          <>
+            <div>
+              <img src={isActive ? ProfileActive : Profile} alt="account-icon" />
+            </div>
+            <div>
+              <p className="font-bold text-lg">Account</p>
+              <p className="text-sm">Personal Information, Profile photo</p>
+            </div>
+          </>
+        )}
       </NavLink>
       <NavLink
         to="/settings/security"
@@ -27,13 +37,17 @@ const SetingsSideBar = () => {
           }`
         }
       >
-        <div>
-          <img src="" alt="" />
-        </div>
-        <div>
-          <p className="font-bold text-lg">Security</p>
-          <p className="text-sm">Password</p>
-        </div>
+        {({ isActive }) => (
+          <>
+            <div>
+              <img src={isActive ? LockActive : Lock} alt="lock" />
+            </div>
+            <div>
+              <p className="font-bold text-lg">Security</p>
+              <p className="text-sm">Password</p>
+            </div>
+          </>
+        )}
       </NavLink>
     </div>
   );
