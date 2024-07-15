@@ -12,19 +12,22 @@ import {
 } from "./pages";
 import {
   AssignedCandidates,
+  CandidateProfile,
   CraftSOP,
   Profile,
   RefineResume,
 } from "./pages/(root)/Staff";
 import RegistrationForm from "./pages/(root)/Candidates/RegistrationForm";
-import CandidateProfile from "./pages/(root)/Staff/CandidateProfile";
 import {
   AdminDashboard,
+  AdminSecurity,
   AdminSettings,
+  AssignCandidate,
   Candidates,
+  CreateCandidateProfile,
+  InviteEmployee,
   Staff,
 } from "./pages/(root)/SuperAdmin";
-import AdminSecurity from "./pages/(root)/SuperAdmin/AdminSecurity";
 
 function App() {
   return (
@@ -35,6 +38,9 @@ function App() {
         <Route element={<SignUp />} path="/sign-up" />
         {/* SUPER ADMIN */}
         <Route element={<AdminDashboard />} path="/admin-dashboard" />
+        <Route element={<CreateCandidateProfile />} path="/admin/create-candidate-profile" />
+        <Route element={<InviteEmployee />} path="/admin/invite-employee" />
+        <Route element={<AssignCandidate />} path="/admin/assign-candidate" />
         <Route element={<Staff />} path="/staff" />
         <Route element={<Candidates />} path="/candidates" />
         <Route element={<AdminSettings />} path="settings/account" />

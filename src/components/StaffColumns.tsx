@@ -25,10 +25,10 @@ export const StaffColumns: ColumnDef<any>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-//   {
-//     accessorKey: "serialNumber",
-//     header: "S/N",
-//   },
+  //   {
+  //     accessorKey: "serialNumber",
+  //     header: "S/N",
+  //   },
   {
     accessorKey: "fullName",
     header: "Full Name",
@@ -48,13 +48,13 @@ export const StaffColumns: ColumnDef<any>[] = [
   {
     accessorKey: "deleteAccount",
     header: () => <div className="text-center">Delete Account</div>,
-    cell: ({ row }) => (
+    cell: () => (
       <div className="flex justify-center">
         <Button
           className="bg-[#D74632]"
-          onClick={() => alert(`Status: ${row.original.deleteAccount}`)}
+          onClick={() => alert(`Status: Deleted`)}
         >
-          {row.original.deleteAccount}
+          Delete Account
         </Button>
       </div>
     ),

@@ -7,6 +7,7 @@ import { NavLink, useLocation } from "react-router-dom";
 const AdminLayout = ({ children }: AuthLayoutProps) => {
   const location = useLocation();
   const isSettingsActive = location.pathname.startsWith("/settings");
+  const isDashboardActive = location.pathname.startsWith("/admin");
 
   return (
     <div>
@@ -17,8 +18,10 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
         <div className="flex gap-4 items-center">
           <NavLink
             to="/admin-dashboard"
-            className={({ isActive }) =>
-              `px-4 py-2 rounded ${isActive ? "bg-red text-white" : ""}`
+            className={() =>
+              `px-4 py-2 rounded ${
+                isDashboardActive ? "bg-red text-white" : ""
+              }`
             }
           >
             Dashboard

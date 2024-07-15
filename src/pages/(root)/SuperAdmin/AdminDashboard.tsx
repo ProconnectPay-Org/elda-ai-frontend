@@ -10,6 +10,9 @@ import { Button } from "@/components/ui/button";
 import Notification from "@/components/Notification";
 import Time from "../../../assets/time.png";
 import { NotificationDetails } from "@/constants";
+import EmployeeMail from "@/assets/invite-employee.svg";
+import CandidateIcon from "@/assets/candidate-profile.svg";
+import { Link } from "react-router-dom";
 
 const AdminDashboard = () => {
   return (
@@ -33,18 +36,24 @@ const AdminDashboard = () => {
           </Select>
         </div>
         <div className="flex gap-4">
-          <Button
-            variant="outline"
-            className="border-red text-red hover:text-white hover:bg-red"
-          >
-            Invite Employee
-          </Button>
-          <Button
-            variant="outline"
-            className="border-red text-red hover:text-white hover:bg-red"
-          >
-            Create Candidate Profile
-          </Button>
+          <Link to="/admin/invite-employee">
+            <Button
+              variant="outline"
+              className="border-red text-red flex items-center gap-2 hover:text-red hover:bg-pale-bg"
+            >
+              <img src={EmployeeMail} alt="icon" />
+              Invite Employee
+            </Button>
+          </Link>
+          <Link to="/admin/create-candidate-profile">
+            <Button
+              variant="outline"
+              className="border-red text-red flex items-center gap-2 hover:text-red hover:bg-pale-bg"
+            >
+              <img src={CandidateIcon} alt="icon" />
+              Create Candidate Profile
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -52,28 +61,28 @@ const AdminDashboard = () => {
         <div className="p-8 flex flex-col gap-4 items-center justify-center w-1/4 border-r border-red">
           <p className="font-medium text-sm">NUMBER OF CANDIDATE</p>
           <p className="font-bold text-4xl">20</p>
-          <p className="text-xs text-gray-text flex items-center gap-2 capitalize">
+          <p className="text-xs flex items-center gap-2 capitalize">
             <img src={Time} alt="time-icon" /> just now
           </p>
         </div>
         <div className="p-8 flex flex-col gap-4 items-center justify-center w-1/4 border-r border-red">
           <p className="font-medium text-sm">NUMBER OF STAFF</p>
           <p className="font-bold text-4xl">5</p>
-          <p className="text-xs text-gray-text flex items-center gap-2 capitalize">
+          <p className="text-xs flex items-center gap-2 capitalize">
             <img src={Time} alt="time-icon" /> just now
           </p>
         </div>
         <div className="p-8 flex flex-col gap-4 items-center justify-center w-1/4 border-r border-red">
           <p className="font-medium text-sm">PENDING JOBS</p>
           <p className="font-bold text-4xl">100</p>
-          <p className="text-xs text-gray-text flex items-center gap-2 capitalize">
+          <p className="text-xs flex items-center gap-2 capitalize">
             <img src={Time} alt="time-icon" /> just now
           </p>
         </div>
         <div className="p-8 flex flex-col gap-4 items-center justify-center w-1/4">
           <p className="font-medium text-sm">COMPLETED JOBS</p>
           <p className="font-bold text-4xl">8</p>
-          <p className="text-xs text-gray-text flex items-center gap-2 capitalize">
+          <p className="text-xs flex items-center gap-2 capitalize">
             <img src={Time} alt="time-icon" /> just now
           </p>
         </div>
