@@ -1,12 +1,14 @@
-// components/Step1.tsx
-
+import { countryOptions, genderOptions, stateOptions } from "@/constants";
 import { getErrorMessage } from "@/lib/utils";
 import { Step1FormData } from "@/types";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
+import ReactPhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 const PersonalDetails = () => {
   const {
     register,
+    control,
     formState: { errors },
   } = useFormContext<Step1FormData>();
 
@@ -15,13 +17,18 @@ const PersonalDetails = () => {
       <div className="flex flex-col gap-8">
         <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
           <div className="flex flex-col sm:w-1/2">
-            <label htmlFor="firstName">First Name</label>
+            <label htmlFor="firstName">
+              First Name <span className="text-red">*</span>
+            </label>
             <input
               className="border border-gray-border rounded-md py-2 px-4"
               id="firstName"
               {...register("firstName")}
               placeholder="Enter your first name"
             />
+            <p className="text-xs text-gray-text">
+              as on international passport
+            </p>
             {errors.firstName && (
               <span className="text-red text-sm">
                 {getErrorMessage(errors.firstName)}
@@ -36,6 +43,9 @@ const PersonalDetails = () => {
               {...register("middleName")}
               placeholder="Enter your middle name"
             />
+            <p className="text-xs text-gray-text">
+              as on international passport
+            </p>
             {errors.middleName && (
               <span className="text-red text-sm">
                 {getErrorMessage(errors.middleName)}
@@ -46,13 +56,18 @@ const PersonalDetails = () => {
 
         <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
           <div className="flex flex-col sm:w-1/2">
-            <label htmlFor="surname">Surname</label>
+            <label htmlFor="surname">
+              Surname <span className="text-red">*</span>
+            </label>
             <input
               className="border border-gray-border rounded-md py-2 px-4"
               id="surname"
               {...register("surname")}
               placeholder="Enter your surname"
             />
+            <p className="text-xs text-gray-text">
+              as on international passport
+            </p>
             {errors.surname && (
               <span className="text-red text-sm">
                 {getErrorMessage(errors.surname)}
@@ -60,7 +75,9 @@ const PersonalDetails = () => {
             )}
           </div>
           <div className="flex flex-col sm:w-1/2">
-            <label htmlFor="preferredName">Preferred Call Name</label>
+            <label htmlFor="preferredName">
+              Preferred Call Name <span className="text-red">*</span>
+            </label>
             <input
               className="border border-gray-border rounded-md py-2 px-4"
               id="preferredName"
@@ -77,9 +94,12 @@ const PersonalDetails = () => {
 
         <div className="flex flex-col-reverse sm:flex-row-reverse sm:justify-between gap-4 md:gap-8">
           <div className="flex flex-col sm:w-1/2">
-            <label htmlFor="dateOfBirth">Date of Birth</label>
+            <label htmlFor="dateOfBirth">
+              Date of Birth <span className="text-red">*</span>
+            </label>
             <input
-              className="border border-gray-border rounded-md py-2 px-4"
+              type="date"
+              className="border border-gray-border h-[42px] rounded-md py-2 px-4"
               id="dateOfBirth"
               {...register("dateOfBirth")}
               placeholder="Enter your date of birth"
@@ -91,13 +111,21 @@ const PersonalDetails = () => {
             )}
           </div>
           <div className="flex flex-col sm:w-1/2">
-            <label htmlFor="gender">Gender</label>
-            <input
-              className="border border-gray-border rounded-md py-2 px-4"
+            <label htmlFor="gender">
+              Gender <span className="text-red">*</span>
+            </label>
+            <select
               id="gender"
               {...register("gender")}
-              placeholder="Enter your gender"
-            />
+              className="border border-gray-border h-[42px] rounded-md py-2 px-4"
+            >
+              <option value="">Select your gender</option>
+              {genderOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
             {errors.gender && (
               <span className="text-red text-sm">
                 {getErrorMessage(errors.gender)}
@@ -108,7 +136,9 @@ const PersonalDetails = () => {
 
         <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
           <div className="flex flex-col sm:w-1/2">
-            <label htmlFor="cityOfBirth">City of Birth</label>
+            <label htmlFor="cityOfBirth">
+              City of Birth <span className="text-red">*</span>
+            </label>
             <input
               className="border border-gray-border rounded-md py-2 px-4"
               id="cityOfBirth"
@@ -122,7 +152,9 @@ const PersonalDetails = () => {
             )}
           </div>
           <div className="flex flex-col sm:w-1/2">
-            <label htmlFor="stateOfBirth">State of Birth</label>
+            <label htmlFor="stateOfBirth">
+              State of Birth <span className="text-red">*</span>
+            </label>
             <input
               className="border border-gray-border rounded-md py-2 px-4"
               id="stateOfBirth"
@@ -139,13 +171,21 @@ const PersonalDetails = () => {
 
         <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
           <div className="flex flex-col sm:w-1/2">
-            <label htmlFor="countryOfBirth">Country of Birth</label>
-            <input
-              className="border border-gray-border rounded-md py-2 px-4"
+            <label htmlFor="countryOfBirth">
+              Country of Birth <span className="text-red">*</span>
+            </label>
+            <select
               id="countryOfBirth"
               {...register("countryOfBirth")}
-              placeholder="Enter your country of birth"
-            />
+              className="border border-gray-border h-[42px] rounded-md py-2 px-4"
+            >
+              <option value="">Select your country</option>
+              {countryOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
             {errors.countryOfBirth && (
               <span className="text-red text-sm">
                 {getErrorMessage(errors.countryOfBirth)}
@@ -153,13 +193,18 @@ const PersonalDetails = () => {
             )}
           </div>
           <div className="flex flex-col sm:w-1/2">
-            <label htmlFor="emailAddress">Email Address</label>
+            <label htmlFor="emailAddress">
+              Email Address <span className="text-red">*</span>
+            </label>
             <input
               className="border border-gray-border rounded-md py-2 px-4"
               id="emailAddress"
               {...register("emailAddress")}
               placeholder="Enter your email address"
             />
+            <p className="text-xs text-gray-text">
+              this will be used for admission and loan processing
+            </p>
             {errors.emailAddress && (
               <span className="text-red text-sm">
                 {getErrorMessage(errors.emailAddress)}
@@ -170,12 +215,29 @@ const PersonalDetails = () => {
 
         <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
           <div className="flex flex-col sm:w-1/2">
-            <label htmlFor="phoneNumber">Phone Number</label>
-            <input
-              className="border border-gray-border rounded-md py-2 px-4"
-              id="phoneNumber"
-              {...register("phoneNumber")}
-              placeholder="Enter your phone number"
+            <label htmlFor="phoneNumber">
+              Phone Number <span className="text-red">*</span>
+            </label>
+            <Controller
+              name="phoneNumber"
+              control={control}
+              render={({ field: { onChange, value, ref } }) => (
+                <ReactPhoneInput
+                  country={"ng"}
+                  inputProps={{
+                    name: "phoneNumber",
+                    required: true,
+                    ref,
+                  }}
+                  containerClass="react-tel-input"
+                  inputClass="border border-gray-border rounded-md py-2 px-4"
+                  inputStyle={{ width: "100%", height:"42px" }}
+                  buttonStyle={{backgroundColor:"white", borderRadius:"8px 0 0 8px", borderColor: "#66666"}}
+                  value={value}
+                  onChange={(phone) => onChange(phone)}
+                  placeholder="Enter your phone number"
+                />
+              )}
             />
             {errors.phoneNumber && (
               <span className="text-red text-sm">
@@ -185,14 +247,21 @@ const PersonalDetails = () => {
           </div>
           <div className="flex flex-col sm:w-1/2">
             <label htmlFor="countryOfResidence">
-              Country where you currently reside
+              Country where you currently reside{" "}
+              <span className="text-red">*</span>
             </label>
-            <input
-              className="border border-gray-border rounded-md py-2 px-4"
+            <select
               id="countryOfResidence"
               {...register("countryOfResidence")}
-              placeholder="Enter your country of residence"
-            />
+              className="border border-gray-border rounded-md h-[42px] py-2 px-4"
+            >
+              <option value="">Select your country</option>
+              {countryOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
             {errors.countryOfResidence && (
               <span className="text-red text-sm">
                 {getErrorMessage(errors.countryOfResidence)}
@@ -204,14 +273,21 @@ const PersonalDetails = () => {
         <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
           <div className="flex flex-col sm:w-1/2">
             <label htmlFor="stateOfResidence">
-              State/Province where you currently reside
+              State/Province where you currently reside{" "}
+              <span className="text-red">*</span>
             </label>
-            <input
-              className="border border-gray-border rounded-md py-2 px-4"
+            <select
               id="stateOfResidence"
               {...register("stateOfResidence")}
-              placeholder="Enter your state of residence"
-            />
+              className="border border-gray-border h-[42px] rounded-md py-2 px-4"
+            >
+              <option value="">Select your state</option>
+              {stateOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
             {errors.stateOfResidence && (
               <span className="text-red text-sm">
                 {getErrorMessage(errors.stateOfResidence)}
@@ -219,7 +295,9 @@ const PersonalDetails = () => {
             )}
           </div>
           <div className="flex flex-col sm:w-1/2">
-            <label htmlFor="cityOfResidence">City you currently reside</label>
+            <label htmlFor="cityOfResidence">
+              City you currently reside <span className="text-red">*</span>
+            </label>
             <input
               className="border border-gray-border rounded-md py-2 px-4"
               id="cityOfResidence"
@@ -236,13 +314,18 @@ const PersonalDetails = () => {
 
         <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
           <div className="flex flex-col sm:w-1/2">
-            <label htmlFor="houseAddress">Current House Address</label>
+            <label htmlFor="houseAddress">
+              Current House Address <span className="text-red">*</span>
+            </label>
             <input
               className="border border-gray-border rounded-md py-2 px-4"
               id="houseAddress"
               {...register("houseAddress")}
-              placeholder="Enter your house adderess"
+              placeholder="Enter your house address"
             />
+            <p className="text-xs text-gray-text">
+              consistent with utility slip
+            </p>
             {errors.houseAddress && (
               <span className="text-red text-sm">
                 {getErrorMessage(errors.houseAddress)}
@@ -250,7 +333,9 @@ const PersonalDetails = () => {
             )}
           </div>
           <div className="flex flex-col sm:w-1/2">
-            <label htmlFor="postalAddress">Postal Address</label>
+            <label htmlFor="postalAddress">
+              Postal Code <span className="text-red">*</span>
+            </label>
             <input
               className="border border-gray-border rounded-md py-2 px-4"
               id="postalAddress"

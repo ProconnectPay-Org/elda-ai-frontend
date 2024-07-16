@@ -176,3 +176,37 @@ export const NotificationDetails = [
     text: " Performance metrics for all staff were updated",
   },
 ];
+
+export const genderOptions = [
+  { value: "Male", label: "Male" },
+  { value: "Female", label: "Female" },
+  { value: "Other", label: "Other" },
+];
+
+export const countryOptions = [
+  { value: 'United States', label: 'United States' },
+  { value: 'Canada', label: 'Canada' },
+  { value: 'United Kingdom', label: 'United Kingdom' },
+  { value: 'Australia', label: 'Australia' },
+  { value: 'Germany', label: 'Germany' },
+  { value: 'France', label: 'France' },
+  { value: 'India', label: 'India' },
+  { value: 'China', label: 'China' },
+  { value: 'Japan', label: 'Japan' },
+  { value: 'Brazil', label: 'Brazil' },
+  // Add more countries as needed
+];
+
+export const stateOptions = [
+  { value: 'Alabama', label: 'Alabama' },
+  { value: 'Alaska', label: 'Alaska' },
+  { value: 'Arizona', label: 'Arizona' },
+  { value: 'Arkansas', label: 'Arkansas' },
+  { value: 'California', label: 'California' },
+  { value: 'Colorado', label: 'Colorado' },
+  { value: 'Connecticut', label: 'Connecticut' },
+  { value: 'Delaware', label: 'Delaware' },
+  { value: 'Florida', label: 'Florida' },
+  { value: 'Georgia', label: 'Georgia' },
+  // Add more states as needed
+];
