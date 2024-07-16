@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import Logo from "../assets/elda-logo.png";
+import Logo from "../assets/elda-logo.svg";
 import { AuthLayoutProps } from "@/types";
 
 const AuthLayout = ({ children }: AuthLayoutProps) => {
