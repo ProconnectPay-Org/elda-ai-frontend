@@ -10,6 +10,8 @@ import {
   step5Schema,
 } from "@/lib/utils";
 import { Step1, Step2, Step3, Step4, Step5 } from "@/pages/(root)/Candidates";
+import { useToast } from "./ui/use-toast";
+import { ToastAction } from "./ui/toast";
 
 const steps = [
   { component: Step1, schema: step1Schema, title: "PERSONAL DETAILS" },
@@ -24,6 +26,8 @@ const totalSteps = steps.length;
 const MultiStepForm = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<any>({});
+
+  const { toast } = useToast();
 
   const methods = useForm({
     resolver: zodResolver(steps[currentStep].schema),
@@ -65,7 +69,8 @@ const MultiStepForm = () => {
       <form onSubmit={methods.handleSubmit(onSubmit)}>
         <h2 className="font-semibold text-xl">{steps[currentStep].title}</h2>
         <div className="step-indicator">
-          Step {currentStep + 1} of {totalSteps}
+          <span className="text-red">Step {currentStep + 1}</span>
+          of {totalSteps}
         </div>
         <div className="progress-container mb-4">
           <div
@@ -74,7 +79,7 @@ const MultiStepForm = () => {
           ></div>
         </div>
         <StepComponent />
-        <div className="flex mt-4 items-center justify-center gap-8">
+        <div className="flex mt-10 items-center justify-center gap-8">
           {currentStep > 0 && (
             <button
               type="button"
@@ -86,6 +91,16 @@ const MultiStepForm = () => {
           )}
           <button
             type="submit"
+            // onClick={() => {
+            //   toast({
+            //     variant: "destructive",
+            //     title: "Uh oh! Something went wrong.",
+            //     description: "There was a problem with your request.",
+            //     action: (
+            //       <ToastAction altText="Try again">Try again</ToastAction>
+            //     ),
+            //   });
+            // }}
             className="form-btn bg-red text-white w-28 px-10 py-2 rounded-md flex items-center justify-center"
           >
             {currentStep === steps.length - 1 ? "Submit" : "Continue"}

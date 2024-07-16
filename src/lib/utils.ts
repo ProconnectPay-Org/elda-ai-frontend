@@ -20,7 +20,7 @@ export const step1Schema = z.object({
   surname: z.string().nonempty("Surname is required"),
   preferredName: z.string().optional(),
   dateOfBirth: z.string().nonempty("Date of birth is required"),
-  gender: z.string().nonempty("Gender is required"),
+  gender: z.enum(["Male", "Female", "Other"]),
   cityOfBirth: z.string().nonempty("City of birth is required"),
   stateOfBirth: z.string().nonempty("State of birth is required"),
   countryOfBirth: z.string().nonempty("Country of birth is required"),
@@ -33,18 +33,46 @@ export const step1Schema = z.object({
   houseAddress: z.string().nonempty("House address is required"),
 });
 
-export const step2Schema = z.object({
-  currentStatus: z.string().min(1, "Current status is required"),
-  degreeType: z.string().min(1, "Degree type is required"),
-  country: z.string().min(1, "Country is required"),
-  courseOfStudy: z.string().min(1, "Course of study is required"),
-  institutionName: z.string().min(1, "Name of institution is required"),
-  degreeClass: z.string().min(1, "Class of degree is required"),
-  currentCGPA: z.string().min(1, "Current CGPA is required"),
-  yearAdmitted: z.string().min(4, "Year admitted must be a positive integer"),
-  yearGraduated: z.string().min(4, "Year graduated must be a positive integer"),
+// Define a base schema for common fields
+const baseSchema = z.object({
+  currentStatus: z.string().min(1, { message: "Current status is required" }),
+  degreeType: z.string().min(1, { message: "Degree type is required" }),
+  country: z.string().min(1, { message: "Country is required" }),
+  courseOfStudy: z.string().min(1, { message: "Course of study is required" }),
+  institutionName: z
+    .string()
+    .min(1, { message: "Name of institution is required" }),
+  degreeClass: z.string().min(1, { message: "Class of degree is required" }),
+  currentCGPA: z.string().min(1, { message: "Current CGPA is required" }),
+  yearAdmitted: z
+    .string()
+    .min(4, { message: "Year admitted must be a positive integer" }),
+  yearGraduated: z
+    .string()
+    .min(4, { message: "Year graduated must be a positive integer" }),
   advancedDegree: z.enum(["yes", "no"]),
 });
+
+// Define a schema for users with an advanced degree
+const advancedDegreeSchema = z.object({
+  advancedDegreeType: z
+    .string()
+    .min(1, { message: "Advanced Degree Type is required" }),
+  graduateType: z.string().min(1, { message: "Graduate Type is required" }),
+});
+
+// Merge schemas conditionally
+export const step2Schema = baseSchema.and(
+  z.union([
+    z.object({
+      advancedDegree: z.literal("no"),
+    }),
+    z.object({
+      advancedDegree: z.literal("yes"),
+      ...advancedDegreeSchema.shape,
+    }),
+  ])
+);
 
 export const step3Schema = z.object({
   profession: z.string().nonempty("Profession is required"),

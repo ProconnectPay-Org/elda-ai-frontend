@@ -15,7 +15,7 @@ const ReferreeDetails = () => {
           <h2 className="text-2xl">Loan Referee Details 1</h2>
           <div className="flex justify-between gap-4 md:gap-8">
             <div className="flex flex-col w-1/2">
-              <label htmlFor="referee1fullname">Full Name</label>
+              <label htmlFor="referee1fullname">Full Name <span className="text-red">*</span></label>
               <input
                 className="border border-gray-border rounded-md py-2 px-4"
                 id="referee1fullname"
@@ -29,7 +29,7 @@ const ReferreeDetails = () => {
               )}
             </div>
             <div className="flex flex-col w-1/2">
-              <label htmlFor="referee1email">Email Address</label>
+              <label htmlFor="referee1email">Email Address <span className="text-red">*</span></label>
               <input
                 className="border border-gray-border rounded-md py-2 px-4"
                 id="referee1email"
@@ -46,7 +46,7 @@ const ReferreeDetails = () => {
 
           <div className="flex justify-between gap-4 md:gap-8">
             <div className="flex flex-col w-1/2">
-              <label htmlFor="referee1phoneNumber">Phone Number</label>
+              <label htmlFor="referee1phoneNumber">Phone Number <span className="text-red">*</span></label>
               <input
                 className="border border-gray-border rounded-md py-2 px-4"
                 id="referee1phoneNumber"
@@ -60,7 +60,7 @@ const ReferreeDetails = () => {
               )}
             </div>
             <div className="flex flex-col w-1/2">
-              <label htmlFor="referee1relationship">Relationship</label>
+              <label htmlFor="referee1relationship">Relationship <span className="text-red">*</span></label>
               <input
                 className="border border-gray-border rounded-md py-2 px-4"
                 id="referee1relationship"
@@ -79,7 +79,7 @@ const ReferreeDetails = () => {
 
           <div className="flex justify-between gap-4 md:gap-8">
             <div className="flex flex-col w-1/2">
-              <label htmlFor="referee2fullname">Full Name</label>
+              <label htmlFor="referee2fullname">Full Name <span className="text-red">*</span></label>
               <input
                 className="border border-gray-border rounded-md py-2 px-4"
                 id="referee2fullname"
@@ -93,7 +93,7 @@ const ReferreeDetails = () => {
               )}
             </div>
             <div className="flex flex-col w-1/2">
-              <label htmlFor="referee2email">Email Address</label>
+              <label htmlFor="referee2email">Email Address <span className="text-red">*</span></label>
               <input
                 className="border border-gray-border rounded-md py-2 px-4"
                 id="referee2email"
@@ -110,7 +110,7 @@ const ReferreeDetails = () => {
 
           <div className="flex justify-between gap-4 md:gap-8">
             <div className="flex flex-col w-1/2">
-              <label htmlFor="referee2phoneNumber">Phone Number</label>
+              <label htmlFor="referee2phoneNumber">Phone Number <span className="text-red">*</span></label>
               <input
                 className="border border-gray-border rounded-md py-2 px-4"
                 id="referee2phoneNumber"
@@ -124,7 +124,7 @@ const ReferreeDetails = () => {
               )}
             </div>
             <div className="flex flex-col w-1/2">
-              <label htmlFor="referee2relationship">Relationship</label>
+              <label htmlFor="referee2relationship">Relationship <span className="text-red">*</span></label>
               <input
                 className="border border-gray-border rounded-md py-2 px-4"
                 id="referee2relationship"
