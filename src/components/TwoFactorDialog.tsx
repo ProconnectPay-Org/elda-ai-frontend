@@ -39,7 +39,7 @@ const TwoFactorDialog = ({ open, onOpenChange }: TwoFactorDialogProps) => {
             <QRCode
               size={256}
               style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-              value={"hello"}
+              value={"https://proconnectpay.com"}
               viewBox={`0 0 256 256`}
             />
             <p className="text-xs mt-2">Hold your camera to scan QR code</p>
