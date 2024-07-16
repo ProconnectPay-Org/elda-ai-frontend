@@ -10,8 +10,8 @@ import {
   step5Schema,
 } from "@/lib/utils";
 import { Step1, Step2, Step3, Step4, Step5 } from "@/pages/(root)/Candidates";
-import { useToast } from "./ui/use-toast";
-import { ToastAction } from "./ui/toast";
+// import { useToast } from "./ui/use-toast";
+// import { ToastAction } from "./ui/toast";
 
 const steps = [
   { component: Step1, schema: step1Schema, title: "PERSONAL DETAILS" },
@@ -27,7 +27,7 @@ const MultiStepForm = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<any>({});
 
-  const { toast } = useToast();
+  // const { toast } = useToast();
 
   const methods = useForm({
     resolver: zodResolver(steps[currentStep].schema),
