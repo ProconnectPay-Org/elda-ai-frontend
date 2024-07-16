@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import Logo from "../assets/elda.png";
+import Logo from "../assets/elda-logo.svg";
 import { Button } from "./ui/button";
 
 const HomeNavBar = () => {
