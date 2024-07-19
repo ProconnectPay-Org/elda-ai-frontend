@@ -1,9 +1,3 @@
 export { default as SignIn } from "./Auth/SignIn";
 export { default as SignUp } from "./Auth/SignUp";
 export { default as Home } from "./(root)/Home";
-export { default as Dashboard } from "./(root)/Dashboard";
-export { default as SOP } from "./(root)/SOP";
-export { default as Resumes } from "./(root)/Resumes";
-export { default as Settings } from "./(root)/Setting";
-export { default as DraftSOP } from "./(root)/DraftSOP";
-export { default as NewResume } from "./(root)/NewResume";

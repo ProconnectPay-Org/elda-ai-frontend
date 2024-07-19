@@ -150,7 +150,7 @@ const AssignedCandidates = () => {
               <div className="flex items-center justify-between">
                 <DottedBox
                   className="border-red rounded-md text-sm font-bold p-2 hover:bg-pale-bg"
-                  href="/craft-sop"
+                  href="/craft-sop/1"
                   docType="Draft Statement Of Purpose"
                   icon=""
                 />
