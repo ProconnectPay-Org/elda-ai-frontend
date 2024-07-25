@@ -82,7 +82,7 @@ const AssignedCandidates = () => {
             <DialogHeader className="flex">
               <DialogTitle className="text-red">Candidate Details</DialogTitle>
               <Link
-                to={`/candidate/${selectedRowData.id}`}
+                to={`/assigned-candidates/${selectedRowData.id}`}
                 className="underline text-sm text-red font-medium"
               >
                 View All
