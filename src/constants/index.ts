@@ -31,7 +31,7 @@ export const sidebarLinks = [
   },
   {
     imgURL: Documents,
-    route: "/craft-sop/1",
+    route: "/craft-sop",
     label: "Craft SOPs",
   },
   {
