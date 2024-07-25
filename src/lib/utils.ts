@@ -12,6 +12,11 @@ export const authFormSchema = (type: string) =>
     firstName: type === "sign-in" ? z.string().optional() : z.string().min(3),
     email: z.string().email(),
     password: z.string().min(8),
+    fullName: z.string(),
+    gender: z.string(),
+    dob: z.string(),
+    phoneNumber: z.string(),
+    jobs: z.string(),
   });
 
 export const step1Schema = z.object({
