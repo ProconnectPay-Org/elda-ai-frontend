@@ -14,7 +14,7 @@ const Step2 = () => {
   return (
     <RootLayout title="Draft Statement Of Purpose">
       <div className="bg-gray w-full min-h-[50vh] rounded-3xl p-12">
-        <Link to="/">
+        <Link to="/craft-sop">
           <div className="w-16 cursor-pointer relative mb-5">
             <ChevronLeftIcon color="red" />
             <div className="bg-red w-5 h-0.5 absolute top-[11px] left-[11px]"></div>
