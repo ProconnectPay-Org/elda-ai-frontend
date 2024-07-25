@@ -9,7 +9,6 @@ import { useState } from "react";
 import TwoFactorDialog from "./TwoFactorDialog";
 
 const ProfileTabs = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const formSchema = (): ZodSchema => {
@@ -31,7 +30,6 @@ const ProfileTabs = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
-    setIsLoading(true);
 
     try {
       console.log(data);
@@ -39,7 +37,6 @@ const ProfileTabs = () => {
     } catch (error) {
       console.log(error);
     } finally {
-      setIsLoading(false);
     }
   };
 
