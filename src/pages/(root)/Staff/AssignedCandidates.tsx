@@ -150,7 +150,7 @@ const AssignedCandidates = () => {
               <div className="flex items-center justify-between">
                 <DottedBox
                   className="border-red rounded-md text-sm font-bold p-2 hover:bg-pale-bg"
-                  href="/craft-sop/1"
+                  href="/craft-sop"
                   docType="Draft Statement Of Purpose"
                   icon=""
                 />
@@ -159,9 +159,6 @@ const AssignedCandidates = () => {
                 </Button>
               </div>
             </DialogDescription>
-            {/* <DialogClose asChild>
-              <Button onClick={closeModal}>Close</Button>
-            </DialogClose> */}
           </DialogContent>
         </Dialog>
       )}
