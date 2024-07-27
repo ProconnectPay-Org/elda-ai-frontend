@@ -48,13 +48,13 @@ const ProfileTabs = () => {
             value="all"
             className="data-[state=active]:border-b-4 rounded-none shadow-none font-semibold text-2xl border-0 border-transparent"
           >
-            All
+            My Details
           </TabsTrigger>
           <TabsTrigger
             value="assigned"
             className="data-[state=active]:border-b-4 rounded-none shadow-none font-semibold text-2xl border-0 border-transparent"
           >
-            Assigned
+            Password
           </TabsTrigger>
         </div>
         <div className="space-x-4">

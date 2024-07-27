@@ -93,7 +93,7 @@ const RefineResume = () => {
     <RootLayout title="Refine Resume">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <h2 className="font-semibold text-xl">{steps[currentStep].title}</h2>
+          {/* <h2 className="font-semibold text-xl">{steps[currentStep].title}</h2> */}
           <div className="step-indicator">
             <span className="text-red">Step {currentStep + 1}</span>
             of {totalSteps}
@@ -117,16 +117,6 @@ const RefineResume = () => {
             )}
             <button
               type="submit"
-              // onClick={() => {
-              //   toast({
-              //     variant: "destructive",
-              //     title: "Uh oh! Something went wrong.",
-              //     description: "There was a problem with your request.",
-              //     action: (
-              //       <ToastAction altText="Try again">Try again</ToastAction>
-              //     ),
-              //   });
-              // }}
               className="form-btn bg-red text-white w-28 px-10 py-2 rounded-md flex items-center justify-center"
             >
               {currentStep === steps.length - 1 ? "Submit" : "Continue"}
