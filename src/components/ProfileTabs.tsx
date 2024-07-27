@@ -71,14 +71,14 @@ const ProfileTabs = () => {
               <div className="flex gap-4 w-full justify-between">
                 <CustomInput
                   control={form.control}
-                  name="fullName"
+                  name="firstName"
                   label="Full Name"
                   placeholder="Peter"
                   className="w-full"
                 />
                 <CustomInput
                   control={form.control}
-                  name="gender"
+                  name="firstName"
                   label="Gender"
                   placeholder="Female"
                   className="w-full"
@@ -88,7 +88,7 @@ const ProfileTabs = () => {
               <div className="flex gap-4 w-full justify-between">
                 <CustomInput
                   control={form.control}
-                  name="dob"
+                  name="firstName"
                   label="Date of Birth"
                   placeholder="Enter your email"
                   className="w-full"
@@ -96,7 +96,7 @@ const ProfileTabs = () => {
 
                 <CustomInput
                   control={form.control}
-                  name="phoneNumber"
+                  name="firstName"
                   label="Phone Number"
                   placeholder="08122983232"
                   className="w-full"
@@ -113,7 +113,7 @@ const ProfileTabs = () => {
 
                 <CustomInput
                   control={form.control}
-                  name="jobs"
+                  name="firstName"
                   label="Number of Assigned job so far"
                   placeholder="20"
                   className="w-full"
@@ -132,7 +132,7 @@ const ProfileTabs = () => {
                 <div className="flex gap-4 w-full justify-between">
                   <CustomInput
                     control={form.control}
-                    name="fullName"
+                    name="firstName"
                     label="Current Password"
                     placeholder=""
                     className="w-1/2"
@@ -142,7 +142,7 @@ const ProfileTabs = () => {
                 <div className="flex gap-4 w-full justify-between">
                   <CustomInput
                     control={form.control}
-                    name="dob"
+                    name="firstName"
                     label="New Password"
                     placeholder=""
                     className="w-full"
@@ -150,7 +150,7 @@ const ProfileTabs = () => {
 
                   <CustomInput
                     control={form.control}
-                    name="phoneNumber"
+                    name="firstName"
                     label="Confirm Password"
                     placeholder=""
                     className="w-full"
