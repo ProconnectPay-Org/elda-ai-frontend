@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 
+import { ResumeStep1Schema, ResumeStep2Schema, ResumeStep3Schema, ResumeStep4Schema, ResumeStep5Schema } from "@/lib/resumeSchema";
 import {
   step1Schema,
   step2Schema,
@@ -183,3 +184,11 @@ export type TeamMemberColumn = {
   permission: string;
   deleteAccount: string;
 };
+
+
+// ResumevalidationSchemas.ts
+export type ResumeStep1FormData = z.infer<typeof ResumeStep1Schema>;
+export type ResumeStep2FormData = z.infer<typeof ResumeStep2Schema>;
+export type ResumeStep3FormData = z.infer<typeof ResumeStep3Schema>;
+export type ResumeStep4FormData = z.infer<typeof ResumeStep4Schema>;
+export type ResumeStep5FormData = z.infer<typeof ResumeStep5Schema>;

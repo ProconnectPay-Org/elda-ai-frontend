@@ -7,16 +7,44 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const getErrorMessage = (
+  error:
+    | string
+    | FieldError
+    | Merge<FieldError, FieldErrorsImpl<any>>
+    | undefined
+): any | undefined => {
+  if (!error) return undefined;
+  if (typeof error === "string") return error;
+  return error.message;
+};
+
+// src/utils/clipboardUtils.ts
+export const copyToClipboard = async (text: string): Promise<void> => {
+  try {
+    await navigator.clipboard.writeText(text);
+    console.log("Text copied to clipboard", text);
+  } catch (err) {
+    console.error("Failed to copy text: ", err);
+  }
+};
+
+export const getInitials = (name: string) => {
+  const nameParts = name.split(" ");
+  const initials = nameParts.map((part) => part[0]).join("");
+  return initials.toUpperCase();
+};
+
 export const authFormSchema = (type: string) =>
   z.object({
     firstName: type === "sign-in" ? z.string().optional() : z.string().min(3),
     email: z.string().email(),
     password: z.string().min(8),
-    fullName: z.string(),
-    gender: z.string(),
-    dob: z.string(),
-    phoneNumber: z.string(),
-    jobs: z.string(),
+    // fullName: z.string(),
+    // gender: z.string(),
+    // dob: z.string(),
+    // phoneNumber: z.string(),
+    // jobs: z.string(),
   });
 
 export const step1Schema = z.object({
@@ -127,30 +155,3 @@ export const step5Schema = z.object({
   document10: z.instanceof(File).optional(),
 });
 
-export const getErrorMessage = (
-  error:
-    | string
-    | FieldError
-    | Merge<FieldError, FieldErrorsImpl<any>>
-    | undefined
-): any | undefined => {
-  if (!error) return undefined;
-  if (typeof error === "string") return error;
-  return error.message;
-};
-
-// src/utils/clipboardUtils.ts
-export const copyToClipboard = async (text: string): Promise<void> => {
-  try {
-    await navigator.clipboard.writeText(text);
-    console.log("Text copied to clipboard", text);
-  } catch (err) {
-    console.error("Failed to copy text: ", err);
-  }
-};
-
-export const getInitials = (name: string) => {
-  const nameParts = name.split(" ");
-  const initials = nameParts.map((part) => part[0]).join("");
-  return initials.toUpperCase();
-};
