@@ -52,8 +52,6 @@ const RefineResume = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<any>({});
 
-  // const { toast } = useToast();
-
   const methods = useForm({
     resolver: zodResolver(steps[currentStep].schema),
     defaultValues: formData,
@@ -74,26 +72,22 @@ const RefineResume = () => {
   };
 
   const onSubmit = (data: any) => {
-    // Merge current step data into formData
     const currentFormData = { ...formData, ...data };
 
     if (currentStep === steps.length - 1) {
-      // Final submit logic
       console.log("Form Submitted:", currentFormData);
       alert("Form Submitted!");
     } else {
-      setFormData(currentFormData); // Update formData with current step data
+      setFormData(currentFormData);
       nextStep();
     }
   };
-
   const progressBarWidth = ((currentStep + 1) / totalSteps) * 100;
 
   return (
     <RootLayout title="Refine Resume">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          {/* <h2 className="font-semibold text-xl">{steps[currentStep].title}</h2> */}
           <div className="step-indicator">
             <span className="text-red">Step {currentStep + 1}</span>
             of {totalSteps}
