@@ -1,20 +1,23 @@
 import { CandidateLayoutProps } from "@/types";
 import PcpLogo from "../assets/pcplogo.svg";
-import EldaLogo from "../assets/elda-logo.svg";
+// import EldaLogo from "../assets/elda-logo.svg";
+import EldaLogo from "../assets/eldanic-scaled-logo.png";
 
-const CandidateLayout = ({ children } : CandidateLayoutProps) => {
+const CandidateLayout = ({ children }: CandidateLayoutProps) => {
   return (
     <div className="relative min-h-screen w-full form-bg">
       <div className="flex items-center justify-center flex-col pt-8">
-        <div className="flex gap-4">
-        <img src={PcpLogo} alt="pcp-logo" />
-        <img src={EldaLogo} alt="elda-logo" />
+        <div className="flex items-center justify-center gap-4 w-[200px] h-[200px]">
+          <img src={PcpLogo} alt="pcp-logo" />
+          <img src={EldaLogo} alt="elda-logo" className="w-full h-full" />
         </div>
-        <h1 className="font-semibold mt-8 sm:font-bold text-4xl leading-tight">Registration Form</h1>
+        <h1 className="font-semibold mt-8 sm:font-bold text-4xl leading-tight">
+          Registration Form
+        </h1>
       </div>
       <div className="p-8 md:px-16 md:py-12 xl:px-20">
         {/* <div className="border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white"> */}
-          {children}
+        {children}
         {/* </div> */}
       </div>
     </div>
