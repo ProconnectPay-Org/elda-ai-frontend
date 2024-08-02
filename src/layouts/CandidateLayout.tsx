@@ -1,13 +1,12 @@
 import { CandidateLayoutProps } from "@/types";
 import PcpLogo from "../assets/pcplogo.svg";
-// import EldaLogo from "../assets/elda-logo.svg";
-import EldaLogo from "../assets/eldanic-scaled-logo.png";
+import EldaLogo from "../assets/elda-ai-logo-no-bg.png";
 
 const CandidateLayout = ({ children }: CandidateLayoutProps) => {
   return (
     <div className="relative min-h-screen w-full form-bg">
       <div className="flex items-center justify-center flex-col pt-8">
-        <div className="flex items-center justify-center gap-4 w-[200px] h-[200px]">
+        <div className="flex items-center justify-center gap-4 max-w-full h-[200px]">
           <img src={PcpLogo} alt="pcp-logo" />
           <img src={EldaLogo} alt="elda-logo" className="w-full h-full" />
         </div>
