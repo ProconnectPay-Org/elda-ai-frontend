@@ -1,7 +1,7 @@
 // AdminLayout.tsx
 
 import { AuthLayoutProps } from "@/types";
-import Logo from "../assets/elda-logo.svg";
+import Logo from "../assets/elda-ai-logo-no-bg.png";
 import { NavLink, useLocation } from "react-router-dom";
 
 const AdminLayout = ({ children }: AuthLayoutProps) => {
@@ -11,9 +11,9 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
 
   return (
     <div>
-      <nav className="flex items-center bg-[#F5F7F9] h-32 p-2 md:p-4 lg:p-12 gap-10">
-        <div>
-          <img src={Logo} alt="logo" />
+      <nav className="flex items-center bg-[#F5F7F9] h-32 p-2 md:p-4 lg:p-12 gap-16">
+        <div className="w-[15%]">
+          <img src={Logo} alt="logo" className="w-full h-full" />
         </div>
         <div className="flex gap-4 items-center">
           <NavLink

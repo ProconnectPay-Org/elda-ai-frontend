@@ -2,7 +2,7 @@ import { sidebarLinks } from "@/constants";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
 import Footer from "./Footer";
-import Logo from "../assets/elda-logo.svg";
+import Logo from "../assets/elda-ai-logo-no-bg.png";
 
 const SideBar = () => {
   const navLocation = useLocation();
@@ -11,9 +11,9 @@ const SideBar = () => {
       <nav className="flex flex-col gap-4">
         <Link
           to="/"
-          className="flex cursor-pointer items-center justify-center gap-2 w-[250px] h-20"
+          className="flex cursor-pointer items-center justify-center w-[240px] h-20 mb-8"
         >
-          <img src={Logo} alt="logo" className="" />
+          <img src={Logo} alt="logo" className="w-[200px]" />
         </Link>
         {sidebarLinks.map((item) => {
           const isActive =

@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Home, SignIn, SignUp } from "./pages";
+import { Home, SignIn } from "./pages";
 import {
   AssignedCandidates,
   CandidateProfile,
@@ -29,7 +29,7 @@ function App() {
       <Routes>
         <Route element={<Home />} path="/" />
         <Route element={<SignIn />} path="/sign-in" />
-        <Route element={<SignUp />} path="/sign-up" />
+        {/* <Route element={<SignUp />} path="/sign-up" /> */}
         {/* SUPER ADMIN */}
         <Route element={<AdminDashboard />} path="/admin-dashboard" />
         <Route
