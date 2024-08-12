@@ -26,7 +26,10 @@ const AdminSettings = () => {
               <div className="relative rounded-full w-[150px] h-[150px] flex items-center justify-center bg-pale-bg">
                 {loggedInUser && (
                   <Avatar className="rounded-none w-full overflow-visible h-full">
-                    <AvatarImage className="rounded-full" src="https://github.com/shadcn.png" />
+                    <AvatarImage
+                      className="rounded-full"
+                      src="https://github.com/shadcn.png"
+                    />
                     <AvatarFallback className="font-bold text-[72px] bg-transparent text-red">
                       {getInitials(loggedInUser?.name)}
                     </AvatarFallback>
@@ -71,10 +74,10 @@ const AdminSettings = () => {
             </div>
           </div>
 
-          <div>
-            <Button className="bg-red flex items-center gap-2">
-              <img src={DeleteIcon} alt="delete icon" /> Delete your super admin
-              account
+          <div className="mt-6">
+            <Button className="bg-red w-full md:w-fit flex items-center gap-2">
+              <img src={DeleteIcon} alt="delete icon" />
+              Delete your super admin account
             </Button>
           </div>
         </div>

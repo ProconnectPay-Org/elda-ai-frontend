@@ -54,7 +54,7 @@ const AdminSecurity = () => {
           </div>
 
           <Button
-            className="bg-red w-[280px] h-[44px]"
+            className="bg-red  w-full md:w-[280px] h-[44px]"
             onClick={() => setIsDialogOpen(true)}
           >
             Two Factor Authentication

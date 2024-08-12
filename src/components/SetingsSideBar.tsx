@@ -8,7 +8,7 @@ import LockActive from '../assets/lock-dark.svg'; // Active state icon
 
 const SetingsSideBar = () => {
   return (
-    <div className="min-w-[280px] border border-[#969696] h-[70vh] rounded-lg overflow-hidden">
+    <div className="hidden md:block min-w-[280px] border border-[#969696] h-[70vh] rounded-lg overflow-hidden">
       <NavLink
         to="/settings/account"
         className={({ isActive }) =>

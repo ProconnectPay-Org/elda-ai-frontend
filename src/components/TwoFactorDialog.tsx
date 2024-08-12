@@ -19,7 +19,7 @@ interface TwoFactorDialogProps {
 const TwoFactorDialog = ({ open, onOpenChange }: TwoFactorDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="py-12 flex flex-col items-center justify-center">
+      <DialogContent className="py-12 flex flex-col items-center w-[96%] justify-center">
         <DialogHeader className="flex">
           <DialogTitle className="text-red flex items-center justify-center gap-3">
             <img src={RedLock} alt="lock" />

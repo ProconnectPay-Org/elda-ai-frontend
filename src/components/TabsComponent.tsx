@@ -22,7 +22,7 @@ const TabsComponent = () => {
       defaultValue="all"
       className="w-full flex justify-center items-center flex-col"
     >
-      <TabsList className="w-[400px] bg-transparent justify-between">
+      <TabsList className="w-full md:w-[400px] bg-transparent justify-between">
         <TabsTrigger
           value="all"
           className="data-[state=active]:border-b-4 rounded-none shadow-none font-bold text-base border-red"
@@ -44,15 +44,12 @@ const TabsComponent = () => {
       </TabsList>
       <div className="w-full">
         <TabsContent value="all">
-          All
           <DataTable columns={allTabsColumns} data={tableData} />
         </TabsContent>
         <TabsContent value="assigned">
-          Assigned
           <DataTable columns={allTabsColumns} data={tableData} />
         </TabsContent>
         <TabsContent value="unassigned">
-          Unassigned
           <DataTable columns={allTabsColumns} data={tableData} />
         </TabsContent>
       </div>

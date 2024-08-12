@@ -7,7 +7,7 @@ import Mail from "@/assets/mail.png";
 const InviteEmployee = () => {
   return (
     <AdminLayout>
-      <div className="flex items-start gap-24 px-32">
+      <div className="flex items-start lg:gap-24 lg:px-32">
         <Link to="/admin-dashboard">
           <div className="w-16 cursor-pointer relative">
             <ChevronLeftIcon color="red" />

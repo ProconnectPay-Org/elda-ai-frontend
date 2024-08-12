@@ -21,9 +21,9 @@ const AdminDashboard = () => {
         Welcome to the Super Admin Dashboard
       </h1>
 
-      <div className="flex items-center justify-between my-10">
-        <div className="flex items-center gap-4">
-          <p className="text-xl">Stats overview for</p>
+      <div className="flex flex-col-reverse gap-5 md:gap-0 md:flex-row items-start md:items-center justify-between my-8 md:my-10">
+        <div className="flex flex-col lg:flex-row items-center gap-2 lg:gap-4">
+          <p className="text-base lg:text-xl">Stats overview for</p>
           <Select>
             <SelectTrigger className="w-[150px] h-[30px]">
               <SelectValue placeholder="Last month" />
@@ -35,11 +35,11 @@ const AdminDashboard = () => {
             </SelectContent>
           </Select>
         </div>
-        <div className="flex gap-4">
+        <div className="flex gap-2 md:gap-4">
           <Link to="/admin/invite-employee">
             <Button
               variant="outline"
-              className="border-red text-red flex items-center gap-2 hover:text-red hover:bg-pale-bg"
+              className="border-red text-red text-xs md:text-base flex items-center gap-2 hover:text-red hover:bg-pale-bg"
             >
               <img src={EmployeeMail} alt="icon" />
               Invite Employee
@@ -48,7 +48,7 @@ const AdminDashboard = () => {
           <Link to="/admin/create-candidate-profile">
             <Button
               variant="outline"
-              className="border-red text-red flex items-center gap-2 hover:text-red hover:bg-pale-bg"
+              className="border-red text-red text-xs md:text-base flex items-center gap-2 hover:text-red hover:bg-pale-bg"
             >
               <img src={CandidateIcon} alt="icon" />
               Create Candidate Profile

@@ -28,12 +28,12 @@ const RootLayout = ({ children, title }: AuthLayoutProps) => {
       <div className="flex size-full flex-col">
         <TopNavBar title={title} />
         <div className="root-layout border-b border-gray shadow-md">
-          <img src={Logo} width={100} height={100} alt="logo" />
+          <img src={Logo} className="w-[30%]" alt="logo" />
           <div>
             <MobileNav title={title} />
           </div>
         </div>
-        <div className="px-12 py-8 overflow-y-auto">{children}</div>
+        <div className="px-6 md:px-12 py-8 overflow-y-auto">{children}</div>
       </div>
     </main>
   );

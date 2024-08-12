@@ -42,33 +42,33 @@ const ProfileTabs = () => {
 
   return (
     <Tabs defaultValue="all" className="w-full flex flex-col gap-7">
-      <TabsList className="w-full bg-transparent justify-between items-center p-0">
-        <div className="space-x-8">
+      <TabsList className="w-full bg-transparent flex-col md:flex-row h-full space-y-4 md:space-y-0 md:justify-between items-center p-0">
+        <div className="space-x-8 flex">
           <TabsTrigger
             value="all"
-            className="data-[state=active]:border-b-4 rounded-none shadow-none font-semibold text-2xl border-0 border-transparent"
+            className="data-[state=active]:border-b-4 rounded-none shadow-none font-semibold text-xl md:text-2xl border-0 border-transparent"
           >
             My Details
           </TabsTrigger>
           <TabsTrigger
             value="assigned"
-            className="data-[state=active]:border-b-4 rounded-none shadow-none font-semibold text-2xl border-0 border-transparent"
+            className="data-[state=active]:border-b-4 rounded-none shadow-none font-semibold text-xl md:text-2xl border-0 border-transparent"
           >
             Password
           </TabsTrigger>
         </div>
-        <div className="space-x-4">
-          <Button className="h-12 border-red text-red" variant="outline">
+        <div className="space-x-4 flex w-full md:w-fit">
+          <Button className="h-12 w-full md:max-w-fit border-red text-red" variant="outline">
             Cancel
           </Button>
-          <Button className="h-12 text-white bg-red">Save</Button>
+          <Button className="h-12 w-full md:max-w-fit text-white bg-red">Save</Button>
         </div>
       </TabsList>
       <div>
-        <TabsContent value="all" className="w-full bg-gray p-8 rounded-2xl">
+        <TabsContent value="all" className="w-full bg-gray p-4 md:p-8 rounded-2xl">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <div className="flex gap-4 w-full justify-between">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 md:space-y-8">
+              <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
                 <CustomInput
                   control={form.control}
                   name="firstName"
@@ -85,7 +85,7 @@ const ProfileTabs = () => {
                 />
               </div>
 
-              <div className="flex gap-4 w-full justify-between">
+              <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
                 <CustomInput
                   control={form.control}
                   name="firstName"
@@ -102,7 +102,7 @@ const ProfileTabs = () => {
                   className="w-full"
                 />
               </div>
-              <div className="flex gap-4 w-full justify-between">
+              <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
                 <CustomInput
                   control={form.control}
                   name="email"
@@ -123,23 +123,23 @@ const ProfileTabs = () => {
           </Form>
         </TabsContent>
         <TabsContent value="assigned" className="space-y-10">
-          <div className="w-full bg-gray p-8 rounded-2xl">
+          <div className="w-full bg-gray p-4 md:p-8 rounded-2xl">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-8"
               >
-                <div className="flex gap-4 w-full justify-between">
+                <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
                   <CustomInput
                     control={form.control}
                     name="firstName"
                     label="Current Password"
                     placeholder=""
-                    className="w-1/2"
+                    className="w-full md:w-1/2"
                   />
                 </div>
 
-                <div className="flex gap-4 w-full justify-between">
+                <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
                   <CustomInput
                     control={form.control}
                     name="firstName"

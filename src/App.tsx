@@ -45,7 +45,6 @@ function App() {
 
         {/* STAFF */}
 
-        <Route element={<Profile />} path="/profile" />
         <Route element={<AssignedCandidates />} path="/assigned-candidates" />
         <Route element={<CandidateProfile />} path="/assigned-candidates/:id" />
         <Route element={<CraftSOP />} path="/craft-sop" />
@@ -53,6 +52,7 @@ function App() {
         <Route element={<Step3 />} path="/craft-sop/3" />
         <Route element={<Step4 />} path="/craft-sop/4" />
         <Route element={<RefineResume />} path="/refine-resume" />
+        <Route element={<Profile />} path="/profile" />
 
         {/* CANDIDATES */}
         <Route element={<RegistrationForm />} path="/register" />

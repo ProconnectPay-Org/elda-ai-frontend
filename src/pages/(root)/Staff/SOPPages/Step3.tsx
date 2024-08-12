@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 const Step3 = () => {
   return (
     <RootLayout title="Draft Statement Of Purpose">
-      <div className="bg-gray w-full min-h-[50vh] rounded-3xl p-12">
+      <div className="bg-gray w-full min-h-[50vh] rounded-3xl px-4 py-10 lg:p-12">
         <Link to="/craft-sop/2">
           <div className="w-16 cursor-pointer relative mb-5">
             <ChevronLeftIcon color="red" />

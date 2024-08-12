@@ -68,7 +68,7 @@ const AuthForm = ({ type }: { type: string }) => {
   };
 
   return (
-    <section className="auth-form bg-white p-16 md:w-[32rem] rounded-md">
+    <section className="auth-form bg-white w-[80%] p-4 md:p-16 md:w-[32rem] rounded-md">
       <header>
         <h1 className="text-[28px] font-bold text-black-1 text-center mb-8">
           {type === "sign-in" ? "Sign In" : "Sign Up"}
