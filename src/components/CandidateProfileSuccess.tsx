@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 const CandidateProfileSuccess = () => {
   return (
-    <div className="absolute w-[100vw] min-h-[100vh] flex items-start pt-12 px-32 bg-white z-10 top-28 left-0">
+    <div className="absolute w-[100vw] min-h-[100vh] flex items-start pt-12 px-5 lg:px-32 bg-white z-10 top-28 left-0">
       <Link to="/admin-dashboard">
         <div className="w-16 cursor-pointer relative">
           <ChevronLeftIcon color="red" />

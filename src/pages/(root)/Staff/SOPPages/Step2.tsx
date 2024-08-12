@@ -13,7 +13,7 @@ import {
 const Step2 = () => {
   return (
     <RootLayout title="Draft Statement Of Purpose">
-      <div className="bg-gray w-full min-h-[50vh] rounded-3xl p-12">
+      <div className="bg-gray w-full min-h-[50vh] rounded-3xl px-4 py-10 lg:p-12">
         <Link to="/craft-sop">
           <div className="w-16 cursor-pointer relative mb-5">
             <ChevronLeftIcon color="red" />
@@ -25,8 +25,8 @@ const Step2 = () => {
             Enter Candidate&apos;s Name or Email Address
           </h2>
 
-          <div className="flex justify-between w-full gap-12 items-center">
-            <div className="flex flex-col gap-2 border border-gray-border w-full md:w-1/2 rounded-lg py-1 px-4">
+          <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
+            <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
               <label htmlFor="email" className="text-sm">
                 Email
               </label>
@@ -36,7 +36,7 @@ const Step2 = () => {
                 placeholder="Havard University"
               />
             </div>
-            <div className="flex flex-col gap-2 border border-gray-border w-full md:w-1/2 rounded-lg py-1 px-4">
+            <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
               <label htmlFor="email" className="text-sm">
                 Program Type
               </label>
@@ -53,8 +53,8 @@ const Step2 = () => {
             </div>
           </div>
 
-          <div className="flex justify-between w-full gap-12 items-center">
-            <div className="flex flex-col gap-2 border border-gray-border w-full md:w-1/2 rounded-lg py-1 px-4">
+          <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
+            <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
               <label htmlFor="email" className="text-sm">
                 Assigned University
               </label>
@@ -69,7 +69,7 @@ const Step2 = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex flex-col gap-2 border border-gray-border w-full md:w-1/2 rounded-lg py-1 px-4">
+            <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
               <label htmlFor="email" className="text-sm">
                 Assigned Course
               </label>
@@ -86,8 +86,8 @@ const Step2 = () => {
             </div>
           </div>
 
-          <div className="flex justify-between w-full gap-12 items-center">
-            <div className="flex flex-col gap-2 border border-gray-border w-full md:w-1/2 rounded-lg py-1 px-4">
+          <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
+            <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
               <label htmlFor="email" className="text-sm">
                 Number of Years of Professional Work Experience
               </label>
@@ -97,7 +97,7 @@ const Step2 = () => {
                 placeholder="2"
               />
             </div>
-            <div className="flex flex-col gap-2 border border-gray-border w-full md:w-1/2 rounded-lg py-1 px-4">
+            <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
               <label htmlFor="email" className="text-sm">
                 Manually Add School Description
               </label>
@@ -109,8 +109,8 @@ const Step2 = () => {
             </div>
           </div>
 
-          <div className="flex justify-between w-full gap-12 items-center">
-            <div className="flex flex-col gap-2 border border-gray-border w-full md:w-1/2 rounded-lg py-1 px-4">
+          <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
+            <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
               <label htmlFor="text" className="text-sm">
                 Generate Course Description
               </label>
@@ -120,7 +120,7 @@ const Step2 = () => {
                 placeholder="Havard University"
               />
             </div>
-            <div className="flex flex-col gap-2 border border-gray-border w-full md:w-1/2 rounded-lg py-1 px-4">
+            <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
               <label htmlFor="text" className="text-sm">
                 Generate School Description
               </label>

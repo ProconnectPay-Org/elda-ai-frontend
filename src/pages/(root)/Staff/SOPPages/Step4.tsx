@@ -21,7 +21,7 @@ const Step4 = () => {
 
   return (
     <RootLayout title="Draft Statement Of Purpose">
-      <div className="bg-gray w-full min-h-[50vh] rounded-3xl p-12">
+      <div className="bg-gray w-full min-h-[50vh] rounded-3xl px-4 py-10 lg:p-12">
         <Link to="/craft-sop/3">
           <div className="w-16 cursor-pointer relative mb-5">
             <ChevronLeftIcon color="red" />
@@ -29,7 +29,7 @@ const Step4 = () => {
           </div>
         </Link>
         <div className="flex items-start flex-col gap-8 justify-center mx-auto">
-          <h2 className="text-red font-bold text-center w-full text-3xl">
+          <h2 className="text-red font-bold text-center w-full text-xl md:text-3xl">
             Review New Statement of Purpose
           </h2>
 
@@ -58,7 +58,7 @@ const Step4 = () => {
 
       {showModal && (
         <Dialog open={showModal} onOpenChange={setshowModal}>
-          <DialogContent className="sm:max-w-md flex flex-col items-center justify-center md:py-8">
+          <DialogContent className="w-[90%] rounded-md sm:max-w-md flex flex-col items-center justify-center md:py-8">
             <DialogHeader>
               <DialogTitle className="text-red text-2xl">Sop Successfully Created</DialogTitle>
             </DialogHeader>

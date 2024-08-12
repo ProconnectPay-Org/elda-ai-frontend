@@ -23,14 +23,14 @@ const Staff = () => {
       <div className="flex flex-col gap-12">
         <div className="flex justify-between items-center border rounded-sm py-2 px-3 border-[#EAECF0]">
           <div>
-            <h2 className="text-2xl font-bold text-red leading-8 mb-2">
+            <h2 className="text-xl md:text-2xl font-bold text-red leading-8 mb-2">
               Team Members
             </h2>
-            <p>Invite and Manage your Staff</p>
+            <p className="text-sm md:text-base">Invite and Manage your Staff</p>
           </div>
           <Button
             variant="outline"
-            className="border-red text-red h-[52px] flex items-center gap-2.5 hover:text-white hover:bg-red"
+            className="border-red text-red md:h-[52px] flex items-center gap-2.5 hover:text-white hover:bg-red"
           >
             Invite Employee
           </Button>
