@@ -1,4 +1,19 @@
 import CandidateLayout from "@/layouts/CandidateLayout";
+import { ChevronRight } from "lucide-react";
+
+const StatusBox = ({ text, status }: { text: string; status: string }) => {
+  return (
+    <div className="w-full h-[60px] rounded-2xl bg-[#F5F7F9] flex justify-between items-center p-5">
+      <div className="flex items-center gap-4">
+        <p className="font-semibold text-2xl text-red">{text}</p>
+        <div className="border border-red w-[80px] h-6 flex items-center justify-center rounded-md">
+          <p className=" text-xs text-center">{status}</p>
+        </div>
+      </div>
+      <ChevronRight color="red" />
+    </div>
+  );
+};
 
 const CandidateStatus = () => {
   return (
@@ -11,9 +26,8 @@ const CandidateStatus = () => {
         </div>
 
         <div>
-
+          <StatusBox text="Resume" status="Completed" />
         </div>
-
       </section>
     </CandidateLayout>
   );
