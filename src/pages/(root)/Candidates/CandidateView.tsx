@@ -1,8 +1,7 @@
+import CandidateLayout from "@/layouts/CandidateLayout";
 
 const CandidateView = () => {
-  return (
-    <div>CandidateView</div>
-  )
-}
+  return <CandidateLayout>CandidateView</CandidateLayout>;
+};
 
-export default CandidateView
+export default CandidateView;

@@ -22,7 +22,7 @@ import {
   Staff,
 } from "./pages/(root)/SuperAdmin";
 import { Toaster } from "./components/ui/toaster";
-import { CandidateStatus, CandidateView, LinkedInMasterclass } from "./pages/(root)/Candidates";
+import { CandidateStatus, CandidateView, Complaints, Feedback, LinkedInMasterclass } from "./pages/(root)/Candidates";
 
 function App() {
   return (
@@ -60,7 +60,9 @@ function App() {
         <Route element={<CandidateLogin />} path="/candidate-login" />
         <Route element={<CandidateStatus />} path="/candidate-status" />
         <Route element={<CandidateView />} path="/candidate-view" />
+        <Route element={<Feedback />} path="/feedback" />
         <Route element={<LinkedInMasterclass />} path="/masterclass" />
+        <Route element={<Complaints />} path="/complaints" />
 
 
       </Routes>
