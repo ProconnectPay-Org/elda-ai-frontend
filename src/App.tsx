@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Home, SignIn } from "./pages";
+import { CandidateLogin, Home, SignIn } from "./pages";
 import {
   AssignedCandidates,
   CandidateProfile,
@@ -10,7 +10,7 @@ import {
   Step3,
   Step4,
 } from "./pages/(root)/Staff";
-import RegistrationForm from "./pages/(root)/Candidates/RegistrationForm";
+import RegistrationForm from "./pages/(root)/Candidates/CandidateForm/RegistrationForm";
 import {
   AdminDashboard,
   AdminSecurity,
@@ -22,6 +22,7 @@ import {
   Staff,
 } from "./pages/(root)/SuperAdmin";
 import { Toaster } from "./components/ui/toaster";
+import { CandidateStatus, CandidateView, LinkedInMasterclass } from "./pages/(root)/Candidates";
 
 function App() {
   return (
@@ -56,6 +57,12 @@ function App() {
 
         {/* CANDIDATES */}
         <Route element={<RegistrationForm />} path="/register" />
+        <Route element={<CandidateLogin />} path="/candidate-login" />
+        <Route element={<CandidateStatus />} path="/candidate-status" />
+        <Route element={<CandidateView />} path="/candidate-view" />
+        <Route element={<LinkedInMasterclass />} path="/masterclass" />
+
+
       </Routes>
       <Toaster />
     </BrowserRouter>

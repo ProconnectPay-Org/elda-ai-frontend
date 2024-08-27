@@ -55,7 +55,7 @@ const AuthForm = ({ type }: { type: string }) => {
         });
         if (response) {
           console.log("User signed in successfully:", response);
-          navigate("/assigned-candidates");
+          navigate("/admin-dashboard");
         } else {
           console.log("Sign-in failed: Invalid credentials");
         }

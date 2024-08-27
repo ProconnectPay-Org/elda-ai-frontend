@@ -2,8 +2,8 @@ import { Step5FormData } from "@/types";
 import React, { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { getErrorMessage } from "@/lib/utils";
-import UploadCloud from "../../../assets/upload-cloud.png";
-import FileIcon from "../../../assets/icon-file.png";
+import UploadCloud from "@/assets/upload-cloud.png";
+import FileIcon from "@/assets/icon-file.png";
 
 type UploadState = {
   progress: number;

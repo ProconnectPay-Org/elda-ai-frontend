@@ -1,11 +1,11 @@
 import MultiStepForm from "@/components/MultiStepForm";
-import CandidateLayout from "@/layouts/CandidateLayout";
+import CandidateFormLayout from "@/layouts/CandidateFormLayout";
 
 const RegistrationForm = () => {
   return (
-    <CandidateLayout>
+    <CandidateFormLayout>
       <MultiStepForm />
-    </CandidateLayout>
+    </CandidateFormLayout>
   );
 };
 
