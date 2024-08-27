@@ -1,5 +1,7 @@
+import CandidateLayout from "@/layouts/CandidateLayout";
+
 const LinkedInMasterclass = () => {
-  return <div>CandidateMasterclass</div>;
+  return <CandidateLayout>MasterClass</CandidateLayout>;
 };
 
 export default LinkedInMasterclass;
