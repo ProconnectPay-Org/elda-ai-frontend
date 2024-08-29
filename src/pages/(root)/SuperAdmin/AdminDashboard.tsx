@@ -91,7 +91,7 @@ const AdminDashboard = () => {
       {/* RECENT ACTIVITY */}
       <div className="w-full lg:min-w-[40%] lg:w-[50%]">
         <span className="flex justify-between">
-          <h2 className="text-xl">Recent Activity</h2>
+          <h2 className="text-xl font-medium">Recent Activity</h2>
           <p className="text-red underline cursor-pointer">View all</p>
         </span>
         {NotificationDetails.map((item) => (

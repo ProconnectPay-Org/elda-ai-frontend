@@ -12,6 +12,7 @@ import CustomInput from "./CustomInput";
 import { signIn } from "@/lib/actions/user.actions";
 import { DummyUser } from "@/types";
 // import { signIn, signUp } from "@/lib/actions/user.actions";
+import GoogleIcon from '@/assets/google-logo.svg'
 
 const AuthForm = ({ type }: { type: string }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -124,6 +125,20 @@ const AuthForm = ({ type }: { type: string }) => {
           </div>
         </form>
       </Form>
+
+      <div className="flex items-center my-4">
+        <div className="flex-grow border-t border-gray-300"></div>
+        <span className="mx-4 text-gray-500">OR</span>
+        <div className="flex-grow border-t border-gray-300"></div>
+      </div>
+
+      <Button
+        variant={"outline"}
+        className="w-full bg-white text-[#333333] border-[#333333] gap-2"
+      >
+        <img src={GoogleIcon} alt="google icon" />
+        Continue with Google
+      </Button>
 
       {/* <footer className="flex justify-center gap-1">
         <p className="text-14 font-normal text-gray-600">
