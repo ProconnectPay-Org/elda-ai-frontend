@@ -9,6 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import sendIcon from "@/assets/send.svg";
+import sendIcon2 from "@/assets/send-2.svg";
 
 const Step2 = () => {
   return (
@@ -22,7 +24,7 @@ const Step2 = () => {
         </Link>
         <div className="flex items-start flex-col gap-8 justify-center mx-auto">
           <h2 className="text-red font-bold text-center w-full text-3xl">
-            Enter Candidate&apos;s Name or Email Address
+            Candidate&apos;s Details
           </h2>
 
           <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
@@ -110,25 +112,35 @@ const Step2 = () => {
           </div>
 
           <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
-            <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
-              <label htmlFor="text" className="text-sm">
-                Generate Course Description
-              </label>
-              <input
-                className="border-none w-full focus:outline-none bg-transparent"
-                id="text"
-                placeholder="Havard University"
-              />
+            <div className="flex flex-row justify-between items-end gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-2 px-4">
+              <div>
+                <label htmlFor="text" className="text-sm">
+                  Generate Course Description
+                </label>
+                <input
+                  className="border-none w-full focus:outline-none bg-transparent"
+                  id="text"
+                  placeholder="Havard University"
+                />
+              </div>
+              <div>
+                <img src={sendIcon} alt="send icon" />
+              </div>
             </div>
-            <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
-              <label htmlFor="text" className="text-sm">
-                Generate School Description
-              </label>
-              <input
-                className="border-none w-full focus:outline-none bg-transparent"
-                id="text"
-                placeholder="Havard University"
-              />
+            <div className="flex flex-row justify-between items-end gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-2 px-4">
+              <div>
+                <label htmlFor="text" className="text-sm">
+                  Generate School Description
+                </label>
+                <input
+                  className="border-none w-full focus:outline-none bg-transparent"
+                  id="text"
+                  placeholder="Havard University"
+                />
+              </div>
+              <div>
+                <img src={sendIcon2} alt="send icon" />
+              </div>
             </div>
           </div>
         </div>

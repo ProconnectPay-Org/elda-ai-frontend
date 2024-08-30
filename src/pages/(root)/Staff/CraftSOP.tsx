@@ -1,8 +1,9 @@
 import RootLayout from "@/layouts/RootLayout";
-import Mail from "@/assets/mail.png";
 import { Button } from "@/components/ui/button";
 import { ChevronLeftIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import helpIcon from "@/assets/help-icon.svg";
+import mailIcon from "@/assets/mail.svg";
 
 const CraftSOP = () => {
   return (
@@ -22,15 +23,13 @@ const CraftSOP = () => {
             <label htmlFor="email">
               Email <span className="text-red">*</span>
             </label>
-            <div className="flex border border-gray-border justify-between gap-2 items-center py-2 px-4 rounded-[24px]">
-              <img src={Mail} alt="mail icon" />
+            <div className="w-full flex items-center gap-4 border border-[#667085] p-3 rounded-full overflow-hidden">
+              <img src={mailIcon} alt="mail icon" />
               <input
-                className="border-none w-full focus:outline-none bg-transparent"
-                id="email"
-                placeholder="Enter your email address"
+                type="email"
+                className="bg-transparent w-full focus:ring-0 focus-visible:ring-0 focus:outline-none border-0 focus-within:ring-0 max-h-fit"
               />
-
-              {/* <img src={Pen} alt="pen" /> */}
+              <img src={helpIcon} alt="help icon" />
             </div>
           </div>
           <div className="flex items-center justify-end w-full">
