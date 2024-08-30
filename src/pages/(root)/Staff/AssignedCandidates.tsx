@@ -47,7 +47,7 @@ const AssignedCandidates = () => {
   const { loggedInUser } = useAuth();
 
   return (
-    <RootLayout title="Dashboard">
+    <RootLayout title="Assigned Candidates">
       {loggedInUser && (
         <p className="text-red text-[32px] font-semibold">
           Welcome, {loggedInUser.name}!
