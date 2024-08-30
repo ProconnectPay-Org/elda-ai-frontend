@@ -27,17 +27,21 @@ const SideBar = () => {
               key={item.label}
             >
               <div className="relative top-0.5 size-6">
-                <img
-                  src={item.imgURL}
-                  alt={item.label}
-                  className={cn({
-                    "brightness-[3] invert-0 fill-red-600": isActive,
-                  })}
-                />
+                {!isActive ? (
+                  <img
+                    src={item.imgURL}
+                    alt={item.label}
+                    
+                  />
+                ) : (
+                  <img
+                    src={item.isActive}
+                    alt={item.label}
+                   
+                  />
+                )}
               </div>
-              <p
-                className={cn("sidebar-label", { "!text-red": isActive })}
-              >
+              <p className={cn("sidebar-label", { "!text-red": isActive })}>
                 {item.label}
               </p>
             </Link>

@@ -5,6 +5,7 @@
 // };
 
 import { AllColumn, Payment, TeamMemberColumn, signInProps } from "@/types";
+import RedCircle from '../../assets/red-circle.svg'
 
 // export const getUserInfo = async () => {};
 
@@ -94,9 +95,9 @@ export async function getData(): Promise<Payment[]> {
       recommendedCourse: "Computer Science",
       resume: "resume_1",
       sop: "sop_1",
-      schoolApplicationStarted: "true01",
-      schoolApplicationCompleted: "true14",
-      status: "not completed",
+      schoolApplicationStarted: RedCircle,
+      schoolApplicationCompleted: RedCircle,
+      status: "completed",
       phone: "+234 709 823 4343",
     },
     {
@@ -109,10 +110,10 @@ export async function getData(): Promise<Payment[]> {
       recommendedCourse: "Electrical Engineering",
       resume: "resume_2",
       sop: "sop_2",
-      schoolApplicationStarted: "true03",
-      schoolApplicationCompleted: "true15",
-      status: "completed",
-      phone: "+234 709 823 4343",
+      schoolApplicationStarted: RedCircle,
+      schoolApplicationCompleted: RedCircle, 
+      status: "not completed", 
+      phone: "+234 709 823 4343", 
     },
     {
       id: "derv1ws0",

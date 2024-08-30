@@ -3,6 +3,7 @@ export { default as ResumeStep2 } from "./ResumePages/BioData";
 export { default as ResumeStep3 } from "./ResumePages/EducationHistory";
 export { default as ResumeStep4 } from "./ResumePages/WorkExperience";
 export { default as ResumeStep5 } from "./ResumePages/GenericStrategicPurpose";
+export { default as FinalResume } from "./ResumePages/FinalResume";
 export { default as CraftSOP } from "./CraftSOP";
 export { default as AssignedCandidates } from "./AssignedCandidates";
 export { default as Profile } from "./Profile";

@@ -6,15 +6,15 @@ const Footer = () => {
   const { loggedInUser, handleLogout } = useAuth();
 
   return (
-    <div className="flex items-center justify-evenly">
+    <div className="flex items-center justify-start gap-4">
       {loggedInUser && (
         <Avatar>
           <AvatarImage src="https://github.com/shadcn.png" />
           <AvatarFallback>{getInitials(loggedInUser?.name)}</AvatarFallback>
         </Avatar>
       )}
-      <p className="text-black cursor-pointer text-xs">{loggedInUser?.email}</p>
-      <p className="text-black cursor-pointer" onClick={handleLogout}>
+      {/* <p className="text-black cursor-pointer text-xs">{loggedInUser?.email}</p> */}
+      <p className="text-black cursor-pointer font-semibold hover:font-normal" onClick={handleLogout}>
         Log Out
       </p>
     </div>

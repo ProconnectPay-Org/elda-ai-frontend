@@ -47,7 +47,7 @@ const AssignedCandidates = () => {
   const { loggedInUser } = useAuth();
 
   return (
-    <RootLayout title="Assigned Candidates">
+    <RootLayout title="Dashboard">
       {loggedInUser && (
         <p className="text-red text-[32px] font-semibold">
           Welcome, {loggedInUser.name}!
@@ -79,14 +79,18 @@ const AssignedCandidates = () => {
       {selectedRowData && (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent>
-            <DialogHeader className="flex">
-              <DialogTitle className="text-red">Candidate Details</DialogTitle>
-              <Link
-                to={`/assigned-candidates/${selectedRowData.id}`}
-                className="underline text-sm text-red font-medium"
-              >
-                View All
-              </Link>
+            <DialogHeader>
+              <div className="flex w-full justify-between mt-4">
+                <DialogTitle className="text-red">
+                  Candidate Details
+                </DialogTitle>
+                <Link
+                  to={`/assigned-candidates/${selectedRowData.id}`}
+                  className="underline text-sm text-red font-medium"
+                >
+                  View All
+                </Link>
+              </div>
             </DialogHeader>
             <DialogDescription className="flex flex-col gap-8">
               <div className="flex items-center justify-between">

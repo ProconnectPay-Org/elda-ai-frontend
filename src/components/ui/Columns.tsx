@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 import { Payment } from "@/types";
+import RedCircle from "@/assets/red-circle.svg";
 
 export const columns: ColumnDef<Payment>[] = [
   {
@@ -54,18 +55,62 @@ export const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: "resume",
     header: "Resume",
+    cell: ({ row }) =>
+      typeof row.original === "string" ? (
+        row.original
+      ) : (
+        <div className="flex justify-center">
+          <img src={RedCircle} alt="Red Circle" width={20} height={20} />
+        </div>
+      ),
   },
   {
     accessorKey: "sop",
-    header: "SOP",
+    header: () => (
+      <div>
+        <p className="text-center">SOP</p>
+      </div>
+    ),
+    cell: ({ row }) =>
+      typeof row.original === "string" ? (
+        row.original
+      ) : (
+        <div className="flex justify-center">
+          <img src={RedCircle} alt="Red Circle" width={20} height={20} />
+        </div>
+      ),
   },
   {
     accessorKey: "schoolApplicationStarted",
-    header: "School Application Started",
+    header: () => (
+      <div>
+        <p className="text-center">School Application Started</p>
+      </div>
+    ),
+    cell: ({ row }) =>
+      typeof row.original === "string" ? (
+        row.original
+      ) : (
+        <div className="flex justify-center">
+          <img src={RedCircle} alt="Red Circle" width={20} height={20} />
+        </div>
+      ),
   },
   {
     accessorKey: "schoolApplicationCompleted",
-    header: "School Application Completed",
+    header: () => (
+      <div>
+        <p className="text-center">School Application Completed</p>
+      </div>
+    ),
+    cell: ({ row }) =>
+      typeof row.original === "string" ? (
+        row.original
+      ) : (
+        <div className="flex justify-center">
+          <img src={RedCircle} alt="Red Circle" width={20} height={20} />
+        </div>
+      ),
   },
   {
     id: "actions",

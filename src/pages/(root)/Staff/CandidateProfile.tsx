@@ -62,7 +62,7 @@ const CandidateProfile = () => {
       <hr className="w-full h-2 my-8" />
       <div>
         <h3 className="font-semibold text-lg mb-4">CAREER STRATEGIC PURPOSE</h3>
-        <p className="">
+        <p className="text-[#5E6366]">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa quidem
           tenetur eveniet aliquam alias. Sapiente architecto aliquam nesciunt
           obcaecati minus distinctio non a assumenda maxime perspiciatis. Ut
@@ -81,30 +81,30 @@ const CandidateProfile = () => {
       <div className="flex flex-col gap-4">
         <span className="flex gap-5 items-center">
           <h3 className="font-semibold text-lg">EDUCATION HISTORY</h3>
-          <p>2 degrees(BSc and Masters)</p>
+          <p className="text-[#5E6366] font-semibold">2 degrees(BSc and Masters)</p>
         </span>
         <span className="flex gap-5 items-center">
-          <p>2014-2019</p>
-          <p>Bachelor of Science at University of Lagos</p>
+          <p className="text-[#5E6366] font-semibold">2014-2019</p>
+          <p className="font-semibold">Bachelor of Science at University of Lagos</p>
         </span>
         <span className="flex gap-5 items-center">
-          <p>2020-2021</p>
-          <p>Masters of Science at University of Benin</p>
+          <p className="text-[#5E6366] font-semibold">2020-2021</p>
+          <p className="font-semibold">Masters of Science at University of Benin</p>
         </span>
       </div>
       <hr className="w-full h-2 my-8" />
       <div className="flex flex-col gap-4">
         <span className="flex gap-5 items-center">
           <h3 className="font-semibold text-lg">WORK HISTORY</h3>
-          <p>2 degrees(BSc and Masters)</p>
+          <p className="text-[#5E6366] font-semibold">2 degrees(BSc and Masters)</p>
         </span>
         <span className="flex gap-5 items-center">
-          <p>2014-2019</p>
-          <p>Bachelor of Science at University of Lagos</p>
+          <p className="text-[#5E6366] font-semibold">2014-2019</p>
+          <p className="font-semibold">Accountant at ProconnectPAY</p>
         </span>
         <span className="flex gap-5 items-center">
-          <p>2020-2021</p>
-          <p>Masters of Science at University of Benin</p>
+          <p className="text-[#5E6366] font-semibold">2020-2021</p>
+          <p className="font-semibold">Accountant at Zenith Bank</p>
         </span>
       </div>
       {/* Display other candidate details as needed */}

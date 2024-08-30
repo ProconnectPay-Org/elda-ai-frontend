@@ -137,6 +137,34 @@ declare interface SiderbarProps {
   user: User;
 }
 
+declare interface ResumeFormData {
+  city: string;
+  companyDescription: string;
+  coreSkills: string;
+  country: string;
+  course: string;
+  dateOfBirth: string;
+  email: string;
+  endDate: string;
+  fullName: string;
+  gender: string;
+  interest: string;
+  jobTitle: string;
+  kindOfDegree: string;
+  location: string;
+  mode: string;
+  nameOfCompany: string;
+  nationality: string;
+  phoneNumber: string;
+  profession: string;
+  prompt: string;
+  startDate: string;
+  state: string;
+  tertiaryInstitutionAttended: string;
+  typeOfCompany: string;
+}
+
+
 // validationSchemas.ts
 export type Step1FormData = z.infer<typeof step1Schema>;
 export type Step2FormData = z.infer<typeof step2Schema>;

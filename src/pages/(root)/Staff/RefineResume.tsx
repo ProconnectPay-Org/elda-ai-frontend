@@ -17,6 +17,7 @@ import {
   ResumeStep5,
 } from ".";
 import RootLayout from "@/layouts/RootLayout";
+import { useNavigate } from "react-router-dom";
 
 const steps = [
   {
@@ -51,6 +52,7 @@ const totalSteps = steps.length;
 const RefineResume = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<any>({});
+  const navigate = useNavigate();
 
   const methods = useForm({
     resolver: zodResolver(steps[currentStep].schema),
@@ -76,7 +78,8 @@ const RefineResume = () => {
 
     if (currentStep === steps.length - 1) {
       console.log("Form Submitted:", currentFormData);
-      alert("Form Submitted!");
+      localStorage.setItem("ResumeData", JSON.stringify(currentFormData)); // Store as JSON string
+      navigate("final-resume"); // Route to the new path
     } else {
       setFormData(currentFormData);
       nextStep();
@@ -85,7 +88,7 @@ const RefineResume = () => {
   const progressBarWidth = ((currentStep + 1) / totalSteps) * 100;
 
   return (
-    <RootLayout title="Refine Resume">
+    <RootLayout title="Create New Resume">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <div className="step-indicator">
@@ -99,8 +102,8 @@ const RefineResume = () => {
             ></div>
           </div>
           <StepComponent />
-          <div className="flex mt-10 items-center justify-center gap-8">
-            {currentStep > 0 && (
+          <div className="flex mt-10 items-center justify-between gap-8">
+            {currentStep >= 0 && (
               <button
                 type="button"
                 onClick={prevStep}
@@ -113,7 +116,7 @@ const RefineResume = () => {
               type="submit"
               className="form-btn bg-red text-white w-28 px-10 py-2 rounded-md flex items-center justify-center"
             >
-              {currentStep === steps.length - 1 ? "Submit" : "Continue"}
+              Next
             </button>
           </div>
         </form>

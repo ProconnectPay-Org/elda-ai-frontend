@@ -4,6 +4,7 @@ import {
   AssignedCandidates,
   CandidateProfile,
   CraftSOP,
+  FinalResume,
   Profile,
   RefineResume,
   Step2,
@@ -52,6 +53,7 @@ function App() {
         <Route element={<Step2 />} path="/craft-sop/2" />
         <Route element={<Step3 />} path="/craft-sop/3" />
         <Route element={<Step4 />} path="/craft-sop/4" />
+        <Route element={<FinalResume />} path="/refine-resume/final-resume" />
         <Route element={<RefineResume />} path="/refine-resume" />
         <Route element={<Profile />} path="/profile" />
 
