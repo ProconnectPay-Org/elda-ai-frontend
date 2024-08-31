@@ -46,11 +46,14 @@ const Complaints = () => {
 
   // Simulate API call - replace with actual API call in production
   const fakeApiCall = (data: ComplaintFormData) => {
+    console.log("Submitting data:", data); // Use the data for logging/debugging
     return new Promise<void>((resolve) => setTimeout(resolve, 1000));
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -106,7 +109,11 @@ const Complaints = () => {
             />
           </div>
           {submissionMessage && (
-            <p className={`text-sm ${isSubmitting ? "text-blue-500" : "text-red"}`}>
+            <p
+              className={`text-sm ${
+                isSubmitting ? "text-blue-500" : "text-red"
+              }`}
+            >
               {submissionMessage}
             </p>
           )}
