@@ -43,7 +43,7 @@ const Step4 = () => {
         </div>
       </div>
       <div className="flex items-center mt-10 justify-between w-full">
-        <Link to="/craft-sop/4">
+        <Link to="/craft-sop/3">
           <Button className="border-red text-red w-32 h-12" variant="outline">
             Edit
           </Button>

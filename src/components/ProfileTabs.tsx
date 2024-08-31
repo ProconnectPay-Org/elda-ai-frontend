@@ -37,6 +37,7 @@ const ProfileTabs = () => {
     } catch (error) {
       console.log(error);
     } finally {
+      console.log(data);
     }
   };
 

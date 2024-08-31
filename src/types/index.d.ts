@@ -1,6 +1,12 @@
 /* eslint-disable no-unused-vars */
 
-import { ResumeStep1Schema, ResumeStep2Schema, ResumeStep3Schema, ResumeStep4Schema, ResumeStep5Schema } from "@/lib/resumeSchema";
+import {
+  ResumeStep1Schema,
+  ResumeStep2Schema,
+  ResumeStep3Schema,
+  ResumeStep4Schema,
+  ResumeStep5Schema,
+} from "@/lib/resumeSchema";
 import {
   step1Schema,
   step2Schema,
@@ -164,7 +170,6 @@ declare interface ResumeFormData {
   typeOfCompany: string;
 }
 
-
 // validationSchemas.ts
 export type Step1FormData = z.infer<typeof step1Schema>;
 export type Step2FormData = z.infer<typeof step2Schema>;
@@ -172,6 +177,12 @@ export type Step2FormData = z.infer<typeof step2Schema>;
 export type Step3FormData = z.infer<typeof step3Schema>;
 export type Step4FormData = z.infer<typeof step4Schema>;
 export type Step5FormData = z.infer<typeof step5Schema>;
+
+export type FormData = Step1FormData &
+  Step2FormData &
+  Step3FormData &
+  Step4FormData &
+  Step5FormData;
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -212,7 +223,6 @@ export type TeamMemberColumn = {
   permission: string;
   deleteAccount: string;
 };
-
 
 // ResumevalidationSchemas.ts
 export type ResumeStep1FormData = z.infer<typeof ResumeStep1Schema>;

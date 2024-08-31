@@ -1,7 +1,19 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "./ui/button";
 
-export const allTabsColumns: ColumnDef<any>[] = [
+interface Candidate {
+  serialNumber: string;
+  candidateName: string;
+  country: string;
+  assignedUniversity: string;
+  assignedCourse: string;
+  schoolApplicationStatus: string;
+  resumeStatus: string;
+  sopStatus: string;
+  duplicate: string;
+}
+
+export const allTabsColumns: ColumnDef<Candidate>[] = [
   {
     accessorKey: "serialNumber",
     header: "S/N",

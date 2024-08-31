@@ -1,6 +1,17 @@
+import PhoneInputField from "@/components/PhoneInputField";
 import { getErrorMessage } from "@/lib/utils";
 import { Step4FormData } from "@/types";
 import { useFormContext } from "react-hook-form";
+
+const relationshipOptions = [
+  "father",
+  "mother",
+  "uncle",
+  "aunt",
+  "sister",
+  "brother",
+  "cousin",
+];
 
 const ReferreeDetails = () => {
   const {
@@ -15,7 +26,9 @@ const ReferreeDetails = () => {
           <h2 className="text-2xl">Loan Referee Details 1</h2>
           <div className="flex justify-between gap-4 md:gap-8">
             <div className="flex flex-col w-1/2">
-              <label htmlFor="referee1fullname">Full Name <span className="text-red">*</span></label>
+              <label htmlFor="referee1fullname">
+                Full Name <span className="text-red">*</span>
+              </label>
               <input
                 className="border border-gray-border rounded-md py-2 px-4"
                 id="referee1fullname"
@@ -29,7 +42,9 @@ const ReferreeDetails = () => {
               )}
             </div>
             <div className="flex flex-col w-1/2">
-              <label htmlFor="referee1email">Email Address <span className="text-red">*</span></label>
+              <label htmlFor="referee1email">
+                Email Address <span className="text-red">*</span>
+              </label>
               <input
                 className="border border-gray-border rounded-md py-2 px-4"
                 id="referee1email"
@@ -45,28 +60,23 @@ const ReferreeDetails = () => {
           </div>
 
           <div className="flex justify-between gap-4 md:gap-8">
+            <PhoneInputField name="referee1phoneNumber" />
             <div className="flex flex-col w-1/2">
-              <label htmlFor="referee1phoneNumber">Phone Number <span className="text-red">*</span></label>
-              <input
-                className="border border-gray-border rounded-md py-2 px-4"
-                id="referee1phoneNumber"
-                {...register("referee1phoneNumber")}
-                placeholder="Enter your Phone Number"
-              />
-              {errors.referee1phoneNumber && (
-                <span className="text-red text-sm">
-                  {getErrorMessage(errors.referee1phoneNumber)}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col w-1/2">
-              <label htmlFor="referee1relationship">Relationship <span className="text-red">*</span></label>
-              <input
+              <label htmlFor="referee1relationship">
+                Relationship <span className="text-red">*</span>
+              </label>
+              <select
                 className="border border-gray-border rounded-md py-2 px-4"
                 id="referee1relationship"
                 {...register("referee1relationship")}
-                placeholder="Enter your course of study"
-              />
+              >
+                <option value="">Select relationship</option>
+                {relationshipOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option.charAt(0).toUpperCase() + option.slice(1)}
+                  </option>
+                ))}
+              </select>
               {errors.referee1relationship && (
                 <span className="text-red text-sm">
                   {getErrorMessage(errors.referee1relationship)}
@@ -79,7 +89,9 @@ const ReferreeDetails = () => {
 
           <div className="flex justify-between gap-4 md:gap-8">
             <div className="flex flex-col w-1/2">
-              <label htmlFor="referee2fullname">Full Name <span className="text-red">*</span></label>
+              <label htmlFor="referee2fullname">
+                Full Name <span className="text-red">*</span>
+              </label>
               <input
                 className="border border-gray-border rounded-md py-2 px-4"
                 id="referee2fullname"
@@ -93,7 +105,9 @@ const ReferreeDetails = () => {
               )}
             </div>
             <div className="flex flex-col w-1/2">
-              <label htmlFor="referee2email">Email Address <span className="text-red">*</span></label>
+              <label htmlFor="referee2email">
+                Email Address <span className="text-red">*</span>
+              </label>
               <input
                 className="border border-gray-border rounded-md py-2 px-4"
                 id="referee2email"
@@ -109,28 +123,23 @@ const ReferreeDetails = () => {
           </div>
 
           <div className="flex justify-between gap-4 md:gap-8">
+            <PhoneInputField name="referee2phoneNumber" />
             <div className="flex flex-col w-1/2">
-              <label htmlFor="referee2phoneNumber">Phone Number <span className="text-red">*</span></label>
-              <input
-                className="border border-gray-border rounded-md py-2 px-4"
-                id="referee2phoneNumber"
-                {...register("referee2phoneNumber")}
-                placeholder="Enter your Phone Number"
-              />
-              {errors.referee2phoneNumber && (
-                <span className="text-red text-sm">
-                  {getErrorMessage(errors.referee2phoneNumber)}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col w-1/2">
-              <label htmlFor="referee2relationship">Relationship <span className="text-red">*</span></label>
-              <input
+              <label htmlFor="referee2relationship">
+                Relationship <span className="text-red">*</span>
+              </label>
+              <select
                 className="border border-gray-border rounded-md py-2 px-4"
                 id="referee2relationship"
                 {...register("referee2relationship")}
-                placeholder="Enter your course of study"
-              />
+              >
+                <option value="">Select relationship</option>
+                {relationshipOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option.charAt(0).toUpperCase() + option.slice(1)}
+                  </option>
+                ))}
+              </select>
               {errors.referee2relationship && (
                 <span className="text-red text-sm">
                   {getErrorMessage(errors.referee2relationship)}

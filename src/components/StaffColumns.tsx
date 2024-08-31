@@ -2,7 +2,16 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 
-export const StaffColumns: ColumnDef<any>[] = [
+interface Staff {
+  id?: string;
+  fullName: string;
+  staffStatus: string;
+  assignedCandidates: string; // You can use a more specific type if you have more context, like `number` if it represents a count
+  permission: string; // You can specify more details about what kind of permissions if applicable
+  deleteAccount?: boolean; // Add this if you track deletion status; otherwise, you can omit it
+}
+
+export const StaffColumns: ColumnDef<Staff>[] = [
   {
     id: "select",
     header: ({ table }) => (

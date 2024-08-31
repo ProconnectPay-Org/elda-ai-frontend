@@ -10,6 +10,7 @@ import {
   step5Schema,
 } from "@/lib/utils";
 import { Step1, Step2, Step3, Step4, Step5 } from "@/pages/(root)/Candidates";
+import { FormData } from "@/types";
 // import { useToast } from "./ui/use-toast";
 // import { ToastAction } from "./ui/toast";
 
@@ -25,13 +26,14 @@ const totalSteps = steps.length;
 
 const MultiStepForm = () => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState<any>({});
+  const [formData, setFormData] = useState<FormData>({} as FormData);
 
   // const { toast } = useToast();
 
   const methods = useForm({
     resolver: zodResolver(steps[currentStep].schema),
     defaultValues: formData,
+    mode: "onBlur",
   });
 
   const StepComponent = steps[currentStep].component;
@@ -48,7 +50,7 @@ const MultiStepForm = () => {
     }
   };
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: FormData) => {
     // Merge current step data into formData
     const currentFormData = { ...formData, ...data };
 

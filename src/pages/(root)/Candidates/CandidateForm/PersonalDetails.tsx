@@ -1,14 +1,15 @@
-import { countryOptions, genderOptions, stateOptions } from "@/constants";
+import { countryOptions, genderOptions } from "@/constants";
 import { getErrorMessage } from "@/lib/utils";
 import { Step1FormData } from "@/types";
-import { Controller, useFormContext } from "react-hook-form";
-import ReactPhoneInput from "react-phone-input-2";
+import { useFormContext } from "react-hook-form";
 import "react-phone-input-2/lib/style.css";
+import StateSelect from "@/components/StateSelect";
+import CountrySelect from "@/components/CountrySelect";
+import PhoneInputField from "@/components/PhoneInputField";
 
 const PersonalDetails = () => {
   const {
     register,
-    control,
     formState: { errors },
   } = useFormContext<Step1FormData>();
 
@@ -214,86 +215,15 @@ const PersonalDetails = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
-          <div className="flex flex-col sm:w-1/2">
-            <label htmlFor="phoneNumber">
-              Phone Number <span className="text-red">*</span>
-            </label>
-            <Controller
-              name="phoneNumber"
-              control={control}
-              render={({ field: { onChange, value, ref } }) => (
-                <ReactPhoneInput
-                  country={"ng"}
-                  inputProps={{
-                    name: "phoneNumber",
-                    required: true,
-                    ref,
-                  }}
-                  containerClass="react-tel-input"
-                  inputClass="border border-gray-border rounded-md py-2 px-4"
-                  inputStyle={{ width: "100%", height:"42px" }}
-                  buttonStyle={{backgroundColor:"white", borderRadius:"8px 0 0 8px", borderColor: "#66666"}}
-                  value={value}
-                  onChange={(phone) => onChange(phone)}
-                  placeholder="Enter your phone number"
-                />
-              )}
-            />
-            {errors.phoneNumber && (
-              <span className="text-red text-sm">
-                {getErrorMessage(errors.phoneNumber)}
-              </span>
-            )}
-          </div>
-          <div className="flex flex-col sm:w-1/2">
-            <label htmlFor="countryOfResidence">
-              Country where you currently reside{" "}
-              <span className="text-red">*</span>
-            </label>
-            <select
-              id="countryOfResidence"
-              {...register("countryOfResidence")}
-              className="border border-gray-border rounded-md h-[42px] py-2 px-4"
-            >
-              <option value="">Select your country</option>
-              {countryOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-            {errors.countryOfResidence && (
-              <span className="text-red text-sm">
-                {getErrorMessage(errors.countryOfResidence)}
-              </span>
-            )}
-          </div>
+          <PhoneInputField name="phoneNumber"/>
+          <CountrySelect
+            label="Country where you currently reside"
+            name="countryOfResidence"
+          />
         </div>
 
         <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
-          <div className="flex flex-col sm:w-1/2">
-            <label htmlFor="stateOfResidence">
-              State/Province where you currently reside{" "}
-              <span className="text-red">*</span>
-            </label>
-            <select
-              id="stateOfResidence"
-              {...register("stateOfResidence")}
-              className="border border-gray-border h-[42px] rounded-md py-2 px-4"
-            >
-              <option value="">Select your state</option>
-              {stateOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-            {errors.stateOfResidence && (
-              <span className="text-red text-sm">
-                {getErrorMessage(errors.stateOfResidence)}
-              </span>
-            )}
-          </div>
+          <StateSelect />
           <div className="flex flex-col sm:w-1/2">
             <label htmlFor="cityOfResidence">
               City you currently reside <span className="text-red">*</span>

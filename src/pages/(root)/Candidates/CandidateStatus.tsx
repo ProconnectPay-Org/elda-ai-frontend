@@ -51,11 +51,11 @@ const statusProps = [
     status: "Not Started",
   },
   {
-    title: "Extra School of Purpose",
+    title: "Extra Statement of Purpose",
     status: "Not Started",
   },
   {
-    title: "Extra School Application Submission ",
+    title: "Extra School Application Submission",
     status: "Not Started",
   },
 ];

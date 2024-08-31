@@ -1,22 +1,18 @@
-import { useState } from "react";
 import { getErrorMessage } from "@/lib/utils";
 import { Step2FormData } from "@/types";
 import { useFormContext } from "react-hook-form";
+import CountrySelect from "@/components/CountrySelect";
 
 const EducationDetails = () => {
-  const [hasAdvancedDegree, setHasAdvancedDegree] = useState(false);
   const {
     register,
+    watch,
     formState: { errors },
   } = useFormContext<Step2FormData>();
 
-  const handleAdvancedDegreeChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setHasAdvancedDegree(event.target.value === "yes");
-  };
+  const hasAdvancedDegree = watch("advancedDegree") === "yes";
 
-  const inputClass = "border border-gray-border rounded-md py-2 px-4 h-10"; // h-10 is 40px, change it to h-10.5 if it does not work
+  const inputClass = "border border-gray-border rounded-md py-2 px-4 h-10";
 
   return (
     <div className="flex flex-col gap-10">
@@ -67,28 +63,11 @@ const EducationDetails = () => {
           </div>
 
           <div className="flex justify-between gap-4 md:gap-8">
-            <div className="flex flex-col w-1/2">
-              <label htmlFor="country">
-                Country <span className="text-red">*</span>
-              </label>
-              <select
-                className={inputClass}
-                id="country"
-                {...register("country")}
-              >
-                <option value="">Select country</option>
-                <option value="United States">United States</option>
-                <option value="Canada">Canada</option>
-                <option value="United Kingdom">United Kingdom</option>
-                <option value="Australia">Australia</option>
-                <option value="India">India</option>
-              </select>
-              {errors.country && (
-                <span className="text-red text-sm">
-                  {getErrorMessage(errors.country)}
-                </span>
-              )}
-            </div>
+            <CountrySelect
+              label="Country"
+              name="countryOfEducation"
+              smallText="location of the school you attended"
+            />
             <div className="flex flex-col w-1/2">
               <label htmlFor="courseOfStudy">
                 Specific Course of study (Computer science, Electrical
@@ -143,6 +122,9 @@ const EducationDetails = () => {
                 <option value="secondLower">Second Class Lower</option>
                 <option value="third">Third Class</option>
               </select>
+              <p className="text-xs text-gray-text">
+                select your class of degree you graduated with
+              </p>
               {errors.degreeClass && (
                 <span className="text-red text-sm">
                   {getErrorMessage(errors.degreeClass)}
@@ -214,7 +196,7 @@ const EducationDetails = () => {
                 className={inputClass}
                 id="advancedDegree"
                 {...register("advancedDegree")}
-                onChange={handleAdvancedDegreeChange}
+                // onChange={handleAdvancedDegreeChange}
               >
                 <option value="">Select one</option>
                 <option value="yes">Yes</option>
@@ -255,46 +237,29 @@ const EducationDetails = () => {
                 )}
               </div>
               <div className="flex flex-col w-1/2">
-                <label htmlFor="advancedCourseOfStudy">
+                <label htmlFor="graduateType">
                   Graduate Type <span className="text-red">*</span>
                 </label>
                 <input
                   className={inputClass}
-                  id="advancedCourseOfStudy"
-                  {...register("advancedCourseOfStudy")}
+                  id="graduateType"
+                  {...register("graduateType")}
                   placeholder="Enter your course of study"
                 />
-                {errors.advancedCourseOfStudy && (
+                {errors.graduateType && (
                   <span className="text-red text-sm">
-                    {getErrorMessage(errors.advancedCourseOfStudy)}
+                    {getErrorMessage(errors.graduateType)}
                   </span>
                 )}
               </div>
             </div>
 
             <div className="flex justify-between gap-4 md:gap-8">
-              <div className="flex flex-col w-1/2">
-                <label htmlFor="advancedCountry">
-                  Country <span className="text-red">*</span>
-                </label>
-                <select
-                  className={inputClass}
-                  id="advancedCountry"
-                  {...register("advancedCountry")}
-                >
-                  <option value="">Select country</option>
-                  <option value="United States">United States</option>
-                  <option value="Canada">Canada</option>
-                  <option value="United Kingdom">United Kingdom</option>
-                  <option value="Australia">Australia</option>
-                  <option value="India">India</option>
-                </select>
-                {errors.advancedCountry && (
-                  <span className="text-red text-sm">
-                    {getErrorMessage(errors.advancedCountry)}
-                  </span>
-                )}
-              </div>
+              <CountrySelect
+                label="Country"
+                name="advancedCountry"
+                smallText="location of the school you attended"
+              />
               <div className="flex flex-col w-1/2">
                 <label htmlFor="advancedDegreeClass">
                   Class of Degree <span className="text-red">*</span>
