@@ -40,7 +40,7 @@ const CountrySelect: React.FC<CountrySelectProps> = ({
             id={name}
             value={value}
             onChange={onChange}
-            className={`border border-gray-border h-[42px] rounded-md py-2 px-4 ${
+            className={`border border-gray-border h-[42px] bg-white rounded-md py-2 px-4 ${
               errors[name] ? "border-red-500" : ""
             }`}
           >

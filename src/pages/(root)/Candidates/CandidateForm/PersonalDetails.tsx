@@ -100,7 +100,7 @@ const PersonalDetails = () => {
             </label>
             <input
               type="date"
-              className="border border-gray-border h-[42px] rounded-md py-2 px-4"
+              className="border border-gray-border bg-white w-full h-[42px] rounded-md py-2 px-4"
               id="dateOfBirth"
               {...register("dateOfBirth")}
               placeholder="Enter your date of birth"
@@ -118,7 +118,7 @@ const PersonalDetails = () => {
             <select
               id="gender"
               {...register("gender")}
-              className="border border-gray-border h-[42px] rounded-md py-2 px-4"
+              className="border border-gray-border bg-white h-[42px] rounded-md py-2 px-4"
             >
               <option value="">Select your gender</option>
               {genderOptions.map((option) => (
@@ -178,7 +178,7 @@ const PersonalDetails = () => {
             <select
               id="countryOfBirth"
               {...register("countryOfBirth")}
-              className="border border-gray-border h-[42px] rounded-md py-2 px-4"
+              className="border border-gray-border bg-white h-[42px] rounded-md py-2 px-4"
             >
               <option value="">Select your country</option>
               {countryOptions.map((option) => (

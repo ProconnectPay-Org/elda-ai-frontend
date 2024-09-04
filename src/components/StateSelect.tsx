@@ -31,7 +31,7 @@ const StateSelect = () => {
         render={({ field }) => (
           <select
             {...field}
-            className="border border-gray-border rounded-md h-[42px] py-2 px-4"
+            className="border border-gray-border bg-white rounded-md h-[42px] py-2 px-4"
           >
             <option value="">Select your state</option>
             {states.map((state) => (
