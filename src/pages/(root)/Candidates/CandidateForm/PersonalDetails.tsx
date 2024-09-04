@@ -100,7 +100,7 @@ const PersonalDetails = () => {
             </label>
             <input
               type="date"
-              className="border border-gray-border bg-white min-w-[300px] md:w-full h-[42px] rounded-md py-2 px-4"
+              className="border border-gray-border bg-white min-w-[240px] md:w-full h-[42px] rounded-md py-2 px-4"
               id="dateOfBirth"
               {...register("dateOfBirth")}
               placeholder="Enter your date of birth"
