@@ -6,6 +6,9 @@ import { getErrorMessage } from "@/lib/utils";
 import { Step3FormData } from "@/types";
 import { Controller, useFormContext } from "react-hook-form";
 import ReactSelect from "react-select";
+import promptImage from "@/assets/prompt.svg";
+import promptWhiteImage from "@/assets/prompt-white.svg";
+import { Button } from "@/components/ui/button";
 
 const WorkExperience = () => {
   const {
@@ -360,21 +363,31 @@ const WorkExperience = () => {
                 Provide Job Summary and Key Achievements on this Current JOB{" "}
                 <span className="text-red">*</span>
               </label>
-              <textarea
-                id="jobSummary"
-                {...register("jobSummary")}
-                className="border border-gray-border rounded-md py-2 px-4 h-full"
-              />
-              <p className="text-xs text-gray-text">
+              <div className="flex items-start gap-4 border border-gray-border rounded-md py-2 px-4 h-full">
+                <img src={promptImage} alt="prompt image" />
+                <textarea
+                  id="jobSummary"
+                  {...register("jobSummary")}
+                  className="w-full outline-none h-full"
+                />
+              </div>
+              <i className="text-xs">
                 Give us more than 3 sentences stating your Job Role and your Key
                 Achievements
-              </p>
+              </i>
               {errors.jobSummary && (
                 <p className="text-red text-sm">
                   {getErrorMessage(errors.jobSummary)}
                 </p>
               )}
             </div>
+          </div>
+          <div className="flex items-end w-full flex-col md:flex-row justify-between gap-4 md:gap-8">
+            <div className="w-full md:w-1/2 hidden md:flex"></div>
+            <Button className="w-full md:w-1/2 bg-red flex gap-2 text-sm md:text-base">
+              <img src={promptWhiteImage} alt="prompt" />
+              Refine Job Summary and Key Achievements with eLDa AI
+            </Button>
           </div>
         </div>
       </div>
@@ -560,11 +573,14 @@ const WorkExperience = () => {
                 Provide Job Summary and Key Achievements on this Current JOB{" "}
                 <span className="text-red">*</span>
               </label>
-              <textarea
-                id="jobSummary"
-                {...register("jobSummary")}
-                className="border border-gray-border rounded-md py-2 px-4 h-full"
-              />
+              <div className="flex items-start gap-4 border border-gray-border rounded-md py-2 px-4 h-full">
+                <img src={promptImage} alt="prompt image" />
+                <textarea
+                  id="jobSummary"
+                  {...register("jobSummary")}
+                  className="w-full outline-none h-full"
+                />
+              </div>
               <p className="text-xs text-gray-text">
                 Give us more than 3 sentences stating your Job Role and your Key
                 Achievements
@@ -575,6 +591,13 @@ const WorkExperience = () => {
                 </p>
               )}
             </div>
+          </div>
+          <div className="flex items-end w-full flex-col md:flex-row justify-between gap-4 md:gap-8">
+            <div className="w-full md:w-1/2 hidden md:flex"></div>
+            <Button className="w-full md:w-1/2 bg-red flex gap-2 text-sm md:text-base">
+              <img src={promptWhiteImage} alt="prompt" />
+              Refine Job Summary and Key Achievements with eLDa AI
+            </Button>
           </div>
         </div>
       </div>
