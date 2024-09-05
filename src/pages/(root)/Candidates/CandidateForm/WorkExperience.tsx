@@ -1,5 +1,6 @@
 // components/Step2.tsx
 
+import CountrySelect from "@/components/CountrySelect";
 import { careerOptions } from "@/constants";
 import { getErrorMessage } from "@/lib/utils";
 import { Step3FormData } from "@/types";
@@ -308,50 +309,53 @@ const WorkExperience = () => {
                 </p>
               )}
             </div>
-            <div className="flex flex-col w-1/2">
-              <label htmlFor="countryLocation" className="form-label">
-                Country Location of Current Job{" "}
-                <span className="text-red">*</span>
-              </label>
-              <select
-                id="countryLocation"
-                {...register("countryLocation")}
-                className="border border-gray-border rounded-md py-2 px-4"
-              >
-                <option value="">Select a country</option>
-                {/* Add options as needed */}
-                <option value="United States">United States</option>
-                <option value="Canada">Canada</option>
-                <option value="United Kingdom">United Kingdom</option>
-                {/* Add other options here */}
-              </select>
-              {errors.countryLocation && (
-                <p className="text-red text-sm">
-                  {getErrorMessage(errors.countryLocation)}
-                </p>
-              )}
-            </div>
+            <CountrySelect
+              label="Country Location of Current Job"
+              name="countryLocation"
+            />
           </div>
 
-          <div className="flex justify-between gap-4 md:gap-8">
-            <div className="flex flex-col w-1/2">
-              <label htmlFor="startedDate" className="form-label">
-                Year and Month Started <span className="text-red">*</span>
-              </label>
-              <input
-                id="startedDate"
-                type="month"
-                {...register("startedDate")}
-                className="border border-gray-border rounded-md py-2 px-4"
-              />
-              {errors.startedDate && (
-                <p className="text-red text-sm">
-                  {getErrorMessage(errors.startedDate)}
+          <div className="flex flex-col md:flex-row justify-between gap-4 md:gap-8">
+            <div className="w-full md:w-1/2 gap-8 flex flex-col">
+              <div className="flex flex-col w-full">
+                <label htmlFor="startedDate" className="form-label">
+                  Year and Month Started <span className="text-red">*</span>
+                </label>
+                <input
+                  id="startedDate"
+                  type="month"
+                  {...register("startedDate")}
+                  className="border border-gray-border rounded-md py-2 px-4"
+                />
+                {errors.startedDate && (
+                  <p className="text-red text-sm">
+                    {getErrorMessage(errors.startedDate)}
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col w-full">
+                <label htmlFor="jobSummary" className="form-label">
+                  Provide Company Description with Vision and Mission Statement{" "}
+                  <span className="text-red">*</span>
+                </label>
+                <textarea
+                  id="jobSummary"
+                  {...register("jobSummary")}
+                  className="border border-gray-border rounded-md py-2 px-4"
+                />
+                <p className="text-xs text-gray-text">
+                  Please describe in third person with the name of the company
+                  prominently stated.
                 </p>
-              )}
+                {errors.jobSummary && (
+                  <p className="text-red text-sm">
+                    {getErrorMessage(errors.jobSummary)}
+                  </p>
+                )}
+              </div>
             </div>
 
-            <div className="flex flex-col w-1/2">
+            <div className="flex flex-col w-full md:w-1/2">
               <label htmlFor="jobSummary" className="form-label">
                 Provide Job Summary and Key Achievements on this Current JOB{" "}
                 <span className="text-red">*</span>
@@ -364,29 +368,6 @@ const WorkExperience = () => {
               <p className="text-xs text-gray-text">
                 Give us more than 3 sentences stating your Job Role and your Key
                 Achievements
-              </p>
-              {errors.jobSummary && (
-                <p className="text-red text-sm">
-                  {getErrorMessage(errors.jobSummary)}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div className="flex justify-between gap-4 md:gap-8">
-            <div className="flex flex-col w-1/2">
-              <label htmlFor="jobSummary" className="form-label">
-                Provide Company Description with Vision and Mission Statement{" "}
-                <span className="text-red">*</span>
-              </label>
-              <textarea
-                id="jobSummary"
-                {...register("jobSummary")}
-                className="border border-gray-border rounded-md py-2 px-4"
-              />
-              <p className="text-xs text-gray-text">
-                Please describe in third person with the name of the company
-                prominently stated.
               </p>
               {errors.jobSummary && (
                 <p className="text-red text-sm">

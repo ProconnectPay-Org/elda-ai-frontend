@@ -1,4 +1,4 @@
-import { countryOptions, genderOptions } from "@/constants";
+import { genderOptions } from "@/constants";
 import { getErrorMessage } from "@/lib/utils";
 import { Step1FormData } from "@/types";
 import { useFormContext } from "react-hook-form";
@@ -171,28 +171,7 @@ const PersonalDetails = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
-          <div className="flex flex-col sm:w-1/2">
-            <label htmlFor="countryOfBirth">
-              Country of Birth <span className="text-red">*</span>
-            </label>
-            <select
-              id="countryOfBirth"
-              {...register("countryOfBirth")}
-              className="border border-gray-border bg-white h-[42px] rounded-md py-2 px-4"
-            >
-              <option value="">Select your country</option>
-              {countryOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-            {errors.countryOfBirth && (
-              <span className="text-red text-sm">
-                {getErrorMessage(errors.countryOfBirth)}
-              </span>
-            )}
-          </div>
+          <CountrySelect label="Country of Birth" name="countryOfBirth" />
           <div className="flex flex-col sm:w-1/2">
             <label htmlFor="emailAddress">
               Email Address <span className="text-red">*</span>
@@ -215,7 +194,7 @@ const PersonalDetails = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
-          <PhoneInputField name="phoneNumber"/>
+          <PhoneInputField name="phoneNumber" />
           <CountrySelect
             label="Country where you currently reside"
             name="countryOfResidence"
