@@ -128,7 +128,9 @@ export const step3Schema = z.object({
   profession: z.string().min(2, "Profession is required"),
   sectorOfProfession: z.string().min(2, "Sector of profession is required"),
   technicalSkill: z.string().min(2, "Technical skill is required"),
-  careerInterest: z.string().min(2, "Career interest is required"),
+  careerInterest: z
+    .array(z.string().min(2, "Each career interest must be at least 2 characters long"))
+    .min(1, "At least one career interest is required"),
   yearsOfProfessionalExperiencePostFirstDegree: z
     .string()
     .min(1, "Must be a positive number"),

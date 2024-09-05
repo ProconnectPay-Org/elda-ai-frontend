@@ -21,6 +21,7 @@ import settingsIcon from "../assets/settings-icon.png";
 import fileIcon from "../assets/files-icon.png";
 import shieldIcon from "../assets/shield-icon.png";
 import metricsIcon from "../assets/metrics-icon.png";
+import { OptionType } from "@/types";
 
 export const sidebarLinks = [
   {
@@ -408,4 +409,19 @@ export const stateOptions = [
   { value: "Florida", label: "Florida" },
   { value: "Georgia", label: "Georgia" },
   // Add more states as needed
+];
+
+export const careerOptions: OptionType[] = [
+  { value: "Software Engineering", label: "Software Engineering" },
+  { value: "Data Science", label: "Data Science" },
+  { value: "Graphic Design", label: "Graphic Design" },
+  { value: "Marketing", label: "Marketing" },
+  { value: "Finance", label: "Finance" },
+  { value: "Healthcare Administration", label: "Healthcare Administration" },
+  { value: "Mechanical Engineering", label: "Mechanical Engineering" },
+  { value: "Law", label: "Law" },
+  { value: "Entrepreneurship", label: "Entrepreneurship" },
+  { value: "Cybersecurity", label: "Cybersecurity" },
+  { value: "Journalism", label: "Journalism" },
+  { value: "Architecture", label: "Architecture" },
 ];

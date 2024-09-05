@@ -54,6 +54,11 @@ declare type NewUserParams = {
   password: string;
 };
 
+declare type OptionType = {
+  value: string;
+  label: string;
+}
+
 interface UserContextValue {
   user?: {
     id?: string;

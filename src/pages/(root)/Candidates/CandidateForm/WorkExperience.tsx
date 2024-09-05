@@ -1,15 +1,17 @@
 // components/Step2.tsx
 
+import { careerOptions } from "@/constants";
 import { getErrorMessage } from "@/lib/utils";
 import { Step3FormData } from "@/types";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
+import ReactSelect from "react-select";
 
 const WorkExperience = () => {
   const {
     register,
+    control,
     formState: { errors },
   } = useFormContext<Step3FormData>();
-
   return (
     <div className="flex flex-col gap-10">
       <div className="border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
@@ -83,11 +85,44 @@ const WorkExperience = () => {
               <label htmlFor="careerInterest" className="form-label">
                 Name 2 Career Interest <span className="text-red">*</span>
               </label>
-              <input
-                id="careerInterest"
-                type="text"
-                {...register("careerInterest")}
-                className="border border-gray-border rounded-md py-2 px-4"
+              <Controller
+                name="careerInterest"
+                control={control}
+                rules={{
+                  required: "Please select at least one career interest.",
+                }}
+                render={({ field }) => (
+                  <ReactSelect
+                    {...field}
+                    isMulti
+                    options={careerOptions}
+                    classNamePrefix="select"
+                    placeholder="Select Career Interests"
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        border: "1px solid #ccc",
+                        borderRadius: "0.35rem",
+                        padding: "1px 0px",
+                      }),
+                    }}
+                    // Convert selected values to the format ReactSelect expects
+                    value={
+                      field.value
+                        ? careerOptions.filter((option) =>
+                            field.value.includes(option.value)
+                          )
+                        : []
+                    }
+                    onChange={(selectedOptions) => {
+                      field.onChange(
+                        selectedOptions
+                          ? selectedOptions.map((option) => option.value)
+                          : []
+                      );
+                    }}
+                  />
+                )}
               />
               <p className="text-xs text-gray-text">
                 what do you want to EXPLORE Learning ABROAD in RELATION to your
