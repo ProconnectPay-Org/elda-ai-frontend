@@ -177,14 +177,55 @@ export const step4Schema = z.object({
 });
 
 export const step5Schema = z.object({
-  document1: z.instanceof(File).optional(),
-  document2: z.instanceof(File).optional(),
-  document3: z.instanceof(File).optional(),
-  document4: z.instanceof(File).optional(),
-  document5: z.instanceof(File).optional(),
-  document6: z.instanceof(File).optional(),
-  document7: z.instanceof(File).optional(),
-  document8: z.instanceof(File).optional(),
-  document9: z.instanceof(File).optional(),
-  document10: z.instanceof(File).optional(),
+  document1: z
+    .custom((file) => file instanceof File || file === undefined, {
+      message: "Invalid file",
+    })
+    .optional(),
+  document2: z
+    .custom((file) => file instanceof File || file === undefined, {
+      message: "Invalid file",
+    })
+    .optional(),
+  document3: z
+    .custom((file) => file instanceof File || file === undefined, {
+      message: "Invalid file",
+    })
+    .optional(),
+  document4: z
+    .custom((file) => file instanceof File || file === undefined, {
+      message: "Invalid file",
+    })
+    .optional(),
+  document5: z
+    .custom((file) => file instanceof File || file === undefined, {
+      message: "Invalid file",
+    })
+    .optional(),
+  document6: z
+    .custom((file) => file instanceof File || file === undefined, {
+      message: "Invalid file",
+    })
+    .optional(),
+  document7: z
+    .custom((file) => file instanceof File || file === undefined, {
+      message: "Invalid file",
+    })
+    .optional(),
+  document8: z
+    .custom((file) => file instanceof File || file === undefined, {
+      message: "Invalid file",
+    })
+    .optional(),
+  document9: z
+    .custom((file) => file instanceof File || file === undefined, {
+      message: "Invalid file",
+    })
+    .optional(),
+  document10: z
+    .custom((file) => file instanceof File || file === undefined, {
+      message: "Invalid file",
+    })
+    .optional(),
 });
+

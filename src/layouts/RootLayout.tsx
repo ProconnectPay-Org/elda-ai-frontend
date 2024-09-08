@@ -2,25 +2,25 @@
 import MobileNav from "@/components/MobileNav";
 import SideBar from "@/components/SideBar";
 import TopNavBar from "@/components/TopNavBar";
-import useAuth from "@/hooks/useAuth";
+// import useAuth from "@/hooks/useAuth";
 import { AuthLayoutProps } from "@/types";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
 import Logo from "../assets/elda-ai-logo-no-bg.png";
 
 const RootLayout = ({ children, title }: AuthLayoutProps) => {
-  const { loggedInUser, loading } = useAuth();
-  const navigate = useNavigate();
+  // const { loggedInUser, loading } = useAuth();
+  // const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!loading && !loggedInUser) {
-      navigate("/sign-in");
-    }
-  }, [loading, loggedInUser, navigate]);
+  // useEffect(() => {
+  //   if (!loading && !loggedInUser) {
+  //     navigate("/sign-in");
+  //   }
+  // }, [loading, loggedInUser, navigate]);
 
-  if (loading) {
-    return <p>Loading...</p>; // Or some kind of loading spinner
-  }
+  // if (loading) {
+  //   return <p>Loading...</p>; // Or some kind of loading spinner
+  // }
 
   return (
     <main className="flex h-screen w-full">

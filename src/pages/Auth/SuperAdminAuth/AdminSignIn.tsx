@@ -1,7 +1,7 @@
 import AuthForm from "@/components/AuthForm";
 import AuthLayout from "@/layouts/AuthLayout";
 
-const SignIn = () => {
+const AdminSignIn = () => {
   return (
     <AuthLayout>
       <AuthForm type="sign-in" />
@@ -9,4 +9,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default AdminSignIn;
