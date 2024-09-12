@@ -1,45 +1,45 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "./ui/button";
-import CustomInput from "./CustomInput";
-import { Form } from "./ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z, ZodSchema } from "zod";
+// import CustomInput from "./CustomInput";
+// import { Form } from "./ui/form";
+// import { useForm } from "react-hook-form";
+// import { zodResolver } from "@hookform/resolvers/zod";
+// import { z, ZodSchema } from "zod";
 import { useState } from "react";
 import TwoFactorDialog from "./TwoFactorDialog";
 
 const ProfileTabs = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const formSchema = (): ZodSchema => {
-    return z.object({
-      email: z.string().email(),
-      gender: z.string().min(2),
-    });
-  };
+  // const formSchema = (): ZodSchema => {
+  //   return z.object({
+  //     email: z.string().email(),
+  //     gender: z.string().min(2),
+  //   });
+  // };
 
-  const schema = formSchema();
+  // const schema = formSchema();
 
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      email: "",
-      password: "",
-      gender: "",
-    },
-  });
+  // const form = useForm<z.infer<typeof schema>>({
+  //   resolver: zodResolver(schema),
+  //   defaultValues: {
+  //     email: "",
+  //     password: "",
+  //     gender: "",
+  //   },
+  // });
 
-  const onSubmit = async (data: z.infer<typeof schema>) => {
+  // const onSubmit = async (data: z.infer<typeof schema>) => {
 
-    try {
-      console.log(data);
-      return data;
-    } catch (error) {
-      console.log(error);
-    } finally {
-      console.log(data);
-    }
-  };
+  //   try {
+  //     console.log(data);
+  //     return data;
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     console.log(data);
+  //   }
+  // };
 
   return (
     <Tabs defaultValue="all" className="w-full flex flex-col gap-7">
@@ -67,8 +67,8 @@ const ProfileTabs = () => {
       </TabsList>
       <div>
         <TabsContent value="all" className="w-full bg-gray p-4 md:p-8 rounded-2xl">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 md:space-y-8">
+          {/* <Form {...form}> */}
+            {/* <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 md:space-y-8">
               <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
                 <CustomInput
                   control={form.control}
@@ -120,12 +120,12 @@ const ProfileTabs = () => {
                   className="w-full"
                 />
               </div>
-            </form>
-          </Form>
+            </form> */}
+          {/* </Form> */}
         </TabsContent>
         <TabsContent value="assigned" className="space-y-10">
           <div className="w-full bg-gray p-4 md:p-8 rounded-2xl">
-            <Form {...form}>
+            {/* <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-8"
@@ -158,7 +158,7 @@ const ProfileTabs = () => {
                   />
                 </div>
               </form>
-            </Form>
+            </Form> */}
           </div>
           <Button className="bg-red h-11" onClick={() => setIsDialogOpen(true)}>
             Step Two-factor Authentication

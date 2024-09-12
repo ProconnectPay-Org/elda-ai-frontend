@@ -4,7 +4,7 @@ import { z } from "zod";
 import { Control, FieldPath } from "react-hook-form";
 import { authFormSchema } from "@/lib/utils";
 
-const formSchema = authFormSchema('sign-up');
+const formSchema = authFormSchema();
 
 interface CustomInput {
   control: Control<z.infer<typeof formSchema>>;
