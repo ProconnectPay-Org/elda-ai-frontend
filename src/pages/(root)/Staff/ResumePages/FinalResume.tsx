@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import RootLayout from "@/layouts/RootLayout";
 import { ResumeFormData } from "@/types";
+import { Button } from "@/components/ui/button";
 
 const FinalResume = () => {
   const [formData, setFormData] = useState<ResumeFormData | null>(null);
@@ -18,21 +19,23 @@ const FinalResume = () => {
 
   return (
     <RootLayout title="Final Resume Refined">
-      <div className="border min-w-[484px] space-y-5 pb-5 max-w-[600px] mx-auto min-h-svh rounded-lg overflow-hidden">
+      <div className="border md:min-w-[484px] space-y-5 pb-5 max-w-[600px] mx-auto min-h-svh rounded-lg overflow-hidden">
         <div className="bg-[#F1F8F9] p-5 w-full flex flex-col items-center gap-3">
-          <h1 className="font-bold underline text-lg uppercase">{formData.fullName}</h1>
-          <div className="flex items-center gap-3">
+          <h1 className="font-bold underline text-lg uppercase">
+            {formData.fullName}
+          </h1>
+          <div className="flex items-center flex-wrap justify-center gap-3">
             <div>
               <img src="" alt="" />
-              <p className="text-sm">{formData.email}</p>
+              <p className="text-xs md:text-sm">{formData.email}</p>
             </div>
             <div>
               <img src="" alt="" />
-              <p className="text-sm">{formData.phoneNumber}</p>
+              <p className="text-xs md:text-sm">{formData.phoneNumber}</p>
             </div>
             <div>
               <img src="" alt="" />
-              <p className="text-sm">
+              <p className="text-xs md:text-sm">
                 {formData.city}, {formData.state} {formData.country}
               </p>
             </div>
@@ -162,6 +165,9 @@ const FinalResume = () => {
           <h2 className="text-[#102694] font-bold text-lg">REFERENCES</h2>
           <p className="text-sm">Available on request</p>
         </div>
+      </div>
+      <div className="mt-5 md:mt-8 w-full flex items-center justify-end">
+        <Button className="bg-red">Complete</Button>
       </div>
     </RootLayout>
   );

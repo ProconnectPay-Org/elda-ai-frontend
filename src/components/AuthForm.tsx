@@ -9,19 +9,15 @@ import { authFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import CustomInput from "./CustomInput";
-import { signIn } from "@/lib/actions/user.actions";
-import { DummyUser } from "@/types";
-// import { signIn, signUp } from "@/lib/actions/user.actions";
-import GoogleIcon from '@/assets/google-logo.svg'
+import { adminSignIn } from "@/lib/actions/user.actions";
+import GoogleIcon from "@/assets/google-logo.svg";
 
-const AuthForm = ({ type }: { type: string }) => {
+const AuthForm = () => {
   const [isLoading, setIsLoading] = useState(false);
-  //   const [user, setUser] = useState(null);
 
-  //   const router = useNavigate();
   const navigate = useNavigate();
 
-  const formSchema = authFormSchema(type);
+  const formSchema = authFormSchema();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -37,29 +33,15 @@ const AuthForm = ({ type }: { type: string }) => {
     setIsLoading(true);
 
     try {
-      if (type === "sign-up") {
-        // const userData = {
-        //   email: data.email,
-        //   password: data.password,
-        //   firstName: data.firstName,
-        // };
-        // const newUser = await signUp(userData);
-        // if (newUser) {
-        //   navigate("/");
-        // }
-      }
-
-      if (type === "sign-in") {
-        const response: DummyUser | null = await signIn({
-          email: data.email,
-          password: data.password,
-        });
-        if (response) {
-          console.log("User signed in successfully:", response);
-          navigate("/admin-dashboard");
-        } else {
-          console.log("Sign-in failed: Invalid credentials");
-        }
+      const response = await adminSignIn({
+        email: data.email,
+        password: data.password,
+      });
+      if (response) {
+        localStorage.setItem("access_token", response.access);
+        navigate("/admin-dashboard");
+      } else {
+        console.log("Sign-in failed: Invalid credentials");
       }
     } catch (error) {
       console.log(error);
@@ -72,25 +54,12 @@ const AuthForm = ({ type }: { type: string }) => {
     <section className="auth-form bg-white w-[80%] p-4 md:p-16 md:w-[32rem] rounded-md">
       <header>
         <h1 className="text-[28px] font-bold text-black-1 text-center mb-8">
-          {type === "sign-in" ? "Sign In" : "Sign Up"}
+          Sign In
         </h1>
       </header>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          {type === "sign-up" && (
-            <>
-              <div className="flex gap-4">
-                <CustomInput
-                  control={form.control}
-                  name="firstName"
-                  label="First Name"
-                  placeholder="Enter your first name"
-                />
-              </div>
-            </>
-          )}
-
           <CustomInput
             control={form.control}
             name="email"
@@ -116,10 +85,8 @@ const AuthForm = ({ type }: { type: string }) => {
                   <Loader2 size={20} className="animate-spin" /> &nbsp;
                   Loading...
                 </>
-              ) : type === "sign-in" ? (
-                "Sign In"
               ) : (
-                "Sign Up"
+                "Sign In"
               )}
             </Button>
           </div>
@@ -139,20 +106,6 @@ const AuthForm = ({ type }: { type: string }) => {
         <img src={GoogleIcon} alt="google icon" />
         Continue with Google
       </Button>
-
-      {/* <footer className="flex justify-center gap-1">
-        <p className="text-14 font-normal text-gray-600">
-          {type === "sign-in"
-            ? "Don't have an account?"
-            : "Already have an account?"}
-        </p>
-        <Link
-          to={type === "sign-in" ? "/sign-up" : "/sign-in"}
-          className="form-link"
-        >
-          {type === "sign-in" ? "Sign up" : "Sign in"}
-        </Link>
-      </footer> */}
     </section>
   );
 };

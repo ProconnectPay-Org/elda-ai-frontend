@@ -1,10 +1,10 @@
 // hooks/useAuth.ts
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getLoggedInUser, logoutAccount, DummyUser } from "@/lib/actions/user.actions";
+import { getLoggedInUser, logoutAccount } from "@/lib/actions/user.actions";
 
 const useAuth = () => {
-  const [loggedInUser, setLoggedInUser] = useState<DummyUser | null>(null);
+  const [loggedInUser, setLoggedInUser] = useState<null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -14,9 +14,9 @@ const useAuth = () => {
       if (user) {
         setLoggedInUser(user);
       } else {
-        navigate("/sign-in");
+        navigate("/admin/sign-in");
       }
-      setLoading(false); // Set loading to false after fetching user
+      setLoading(false);
     };
 
     fetchLoggedInUser();
@@ -24,7 +24,7 @@ const useAuth = () => {
 
   const handleLogout = async () => {
     await logoutAccount();
-    navigate("/sign-in");
+    navigate("/admin/sign-in");
   };
 
   return {

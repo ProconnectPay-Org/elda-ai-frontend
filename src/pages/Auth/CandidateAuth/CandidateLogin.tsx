@@ -9,18 +9,12 @@ import { Form } from "@/components/ui/form";
 import CustomInput from "@/components/CustomInput";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { signIn } from "@/lib/actions/user.actions";
 import { Checkbox } from "@/components/ui/checkbox";
+import { adminSignIn } from "@/lib/actions/user.actions";
 
 const CandidateLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
-  type DummyUser = {
-    id: string;
-    name: string;
-    email: string;
-  };
 
   const formSchema = z.object({
     password: z.string().min(8),
@@ -40,12 +34,13 @@ const CandidateLogin = () => {
     setIsLoading(true);
 
     try {
-      const response: DummyUser | null = await signIn({
+      const response = await adminSignIn({
         email: data.email,
         password: data.password,
       });
       if (response) {
-        console.log("User signed in successfully:", response);
+        localStorage.setItem("candidate_access_token", response.access);
+        console.log(response);
         navigate("/candidate-status");
       } else {
         console.log("Sign-in failed: Invalid credentials");

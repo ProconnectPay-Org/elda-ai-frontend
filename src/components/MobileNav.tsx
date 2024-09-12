@@ -10,7 +10,7 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import Footer from "./Footer";
-import { MenuIcon } from "lucide-react";
+import Hamburger from "@/assets/mobile_hamburger.svg";
 
 const MobileNav = ({ title }: { title?: string }) => {
   const navLocation = useLocation();
@@ -18,7 +18,7 @@ const MobileNav = ({ title }: { title?: string }) => {
     <div>
       <Sheet>
         <SheetTrigger>
-          <MenuIcon />
+          <img src={Hamburger} alt="menu icon" />
         </SheetTrigger>
         <SheetContent side={"left"} className="flex flex-col justify-between">
           <div>
@@ -45,13 +45,11 @@ const MobileNav = ({ title }: { title?: string }) => {
                     key={item.label}
                   >
                     <div className="relative top-0.5 size-6">
-                      <img
-                        src={item.imgURL}
-                        alt={item.label}
-                        className={cn({
-                          "brightness-[3] invert-0 fill-red-600": isActive,
-                        })}
-                      />
+                      {!isActive ? (
+                        <img src={item.imgURL} alt={item.label} />
+                      ) : (
+                        <img src={item.isActive} alt={item.label} />
+                      )}
                     </div>
                     <li className={cn("flex", { "!text-red": isActive })}>
                       {item.label}

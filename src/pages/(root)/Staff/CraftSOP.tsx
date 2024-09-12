@@ -16,7 +16,7 @@ const CraftSOP = () => {
           </div>
         </Link>
         <div className="flex items-center flex-col gap-8 justify-center md:w-3/4 mx-auto">
-          <h2 className="text-red font-bold text-3xl">
+          <h2 className="text-red font-bold text-lg text-center md:text-3xl">
             Enter Candidate&apos;s Name or Email Address
           </h2>
           <div className="flex flex-col w-full gap-1.5">

@@ -5,6 +5,7 @@ import AdminLayout from "@/layouts/AdminLayout";
 import { useState } from "react";
 import Lock from "../../../assets/lock-light.svg";
 import Pen from "../../../assets/pen.svg";
+import SettingsTabs from "@/components/SettingsTabs";
 
 const AdminSecurity = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -14,7 +15,8 @@ const AdminSecurity = () => {
         <SetingsSideBar />
 
         <div className="flex flex-col gap-6 w-full">
-          <p className="text-[#273240] font-bold">Personal Information</p>
+          <SettingsTabs />
+          <p className="text-[#273240] font-bold">Security Information</p>
 
           {/* Inout fields */}
           <div className="flex flex-col gap-3">
@@ -50,6 +52,10 @@ const AdminSecurity = () => {
                 />
                 <img src={Pen} alt="pen" />
               </div>
+            </div>
+
+            <div className="w-full flex justify-end">
+              <Button className="bg-red">Save Changes</Button>
             </div>
           </div>
 

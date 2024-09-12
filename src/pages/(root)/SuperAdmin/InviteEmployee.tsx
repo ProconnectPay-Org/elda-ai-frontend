@@ -1,24 +1,23 @@
 import { Button } from "@/components/ui/button";
 import AdminLayout from "@/layouts/AdminLayout";
-import { ChevronLeftIcon } from "lucide-react";
+import { ArrowLeftIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import Mail from "@/assets/mail.png";
 
 const InviteEmployee = () => {
   return (
     <AdminLayout>
-      <div className="flex items-start lg:gap-24 lg:px-32">
-        <Link to="/admin-dashboard">
-          <div className="w-16 cursor-pointer relative">
-            <ChevronLeftIcon color="red" />
-            <div className="bg-red w-5 h-0.5 absolute top-[11px] left-[11px]"></div>
-          </div>
-        </Link>
-        <div className="flex flex-col items-start justify-center w-[76%]">
-          <h2 className="text-red text-3xl font-bold text-center w-full mb-10">
+      <div className="flex flex-col mx-auto gap-12 lg:max-w-[800px]">
+        <div className="flex items-center">
+          <Link to="/admin-dashboard">
+            <ArrowLeftIcon color="red" className="cursor-pointer" />
+          </Link>
+          <h2 className="text-red text-2xl md:text-3xl font-bold text-center w-full">
             Invite Employee
           </h2>
+        </div>
 
+        <div className="flex flex-col items-center justify-center w-full">
           {/* INPUT FIELDS */}
           <div className="flex flex-col gap-3 w-full">
             <div className="flex flex-col w-full gap-1.5">
@@ -48,9 +47,7 @@ const InviteEmployee = () => {
           </div>
 
           <Link to="/admin/assign-candidate" className="w-full mt-10">
-            <Button className="bg-red w-full h-12 text-lg">
-              Send Invite
-            </Button>
+            <Button className="bg-red w-full h-12 text-lg">Send Invite</Button>
           </Link>
         </div>
       </div>

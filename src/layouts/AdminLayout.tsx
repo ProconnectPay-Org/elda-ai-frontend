@@ -2,6 +2,7 @@
 
 import { AuthLayoutProps } from "@/types";
 import Logo from "../assets/elda-ai-logo-no-bg.png";
+import Hamburger from "@/assets/mobile_hamburger.svg";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import {
   Sheet,
@@ -11,7 +12,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { MenuIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const sidebarLinks = [
@@ -40,7 +40,7 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
 
   return (
     <div>
-      <nav className="flex items-center justify-between md:justify-normal bg-[#F5F7F9] h-28 p-4 lg:p-12 gap-16">
+      <nav className="flex items-center justify-between md:justify-normal bg-pale-bg h-28 p-4 lg:p-12 gap-16">
         <div className="w-[40%] sm:w-[30%] md:w-[15%]">
           <img src={Logo} alt="logo" className="w-full h-full" />
         </div>
@@ -84,7 +84,7 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
         <div className="md:hidden">
           <Sheet>
             <SheetTrigger>
-              <MenuIcon />
+              <img src={Hamburger} alt="menu icon" />
             </SheetTrigger>
             <SheetContent
               side={"left"}

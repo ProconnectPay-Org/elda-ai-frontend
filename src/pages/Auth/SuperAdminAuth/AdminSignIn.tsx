@@ -4,7 +4,7 @@ import AuthLayout from "@/layouts/AuthLayout";
 const AdminSignIn = () => {
   return (
     <AuthLayout>
-      <AuthForm type="sign-in" />
+      <AuthForm />
     </AuthLayout>
   );
 };

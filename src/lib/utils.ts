@@ -35,9 +35,8 @@ export const getInitials = (name: string) => {
   return initials.toUpperCase();
 };
 
-export const authFormSchema = (type: string) =>
+export const authFormSchema = () =>
   z.object({
-    firstName: type === "sign-in" ? z.string().optional() : z.string().min(3),
     email: z.string().email(),
     password: z.string().min(8),
   });

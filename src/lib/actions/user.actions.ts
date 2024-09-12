@@ -1,85 +1,103 @@
-// const dummyUser: DummyUser = {
-//   id: "1",
-//   name: "John Doe",
-//   email: "johndoe@example.com",
-// };
-
-import { AllColumn, Payment, TeamMemberColumn, signInProps } from "@/types";
-import RedCircle from '../../assets/red-circle.svg'
+import {
+  AllColumn,
+  CreateCandidateProfileProps,
+  Payment,
+  TeamMemberColumn,
+  signInProps,
+} from "@/types";
+import RedCircle from "../../assets/red-circle.svg";
+import axios from "axios";
 
 // export const getUserInfo = async () => {};
 
-// export const signIn = async ({ email, password }: signInProps) => {
-//   email;
-//   password;
-// };
+const API_URL = import.meta.env.VITE_API_URL;
 
-// export const signUp = async ({ email, password }: SignUpParams) => {
-//   email;
-//   password;
-// };
-
-// export const getLoggedInUser = async (): Promise<DummyUser | null> => {
-//   // Simulate the user being logged out by returning null
-//   return null;
-// };
-
-// export const logoutAccount = async () => {
-//   console.log("logged out");
-// };
-
-// user.actions.ts
-export type DummyUser = {
-  id: string;
-  name: string;
-  email: string;
-};
-
-const dummyUser: DummyUser = {
-  id: "1",
-  name: "John Doe",
-  email: "johndoe@example.com",
+export const adminSignIn = async ({ email, password }: signInProps) => {
+  try {
+    const response = await axios.post(`${API_URL}auth/login/`, {
+      email,
+      password,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Sign-in error:", error);
+    throw error;
+  }
 };
 
 export const getUserInfo = async () => {};
 
-export const signIn = async ({
+export const getAdminInfo = async () => {};
+
+export const emailPost = async () => {};
+
+export const createCandidateProfile = async ({
   email,
+  full_name,
+  university,
+  course,
   password,
-}: signInProps): Promise<DummyUser | null> => {
-  // Mock authentication logic
-  if (email === dummyUser.email && password === "password") {
-    localStorage.setItem("isLoggedIn", "true");
-    return dummyUser;
+  role,
+}: CreateCandidateProfileProps) => {
+  try {
+    const token = localStorage.getItem("access_token");
+
+    if (!token) {
+      throw new Error("No access token found.");
+    }
+
+    const response = await axios.post(
+      `${API_URL}auth/create-candidate-profile/`,
+      {
+        email,
+        full_name,
+        university,
+        course,
+        password,
+        role,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Profile creation error:", error);
+    throw error;
   }
-  return null;
 };
 
-export const signUp = async ({
-  email,
-  firstName,
-}: {
-  email: string;
-  firstName: string;
-}): Promise<DummyUser> => {
-  // Simulate user creation and return the created user
-  return {
-    id: "2",
-    name: firstName,
-    email,
-  };
-};
+export const getCandidateDetails = async () => {};
 
-export async function getLoggedInUser(): Promise<DummyUser | null> {
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
+export const getStaffDetails = async () => {};
+
+export async function getLoggedInUser(): Promise<null> {
+  const isLoggedIn = localStorage.getItem("access_token");
   if (isLoggedIn === "true") {
-    return dummyUser;
+    return null;
   }
   return null;
 }
 
+export const candidateSignIn = async ({ email, password }: signInProps) => {
+  try {
+    const response = await axios.post(`${API_URL}auth/users/activation/`, {
+      email,
+      password,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Sign-in error:", error);
+    throw error;
+  }
+};
+
 export const logoutAccount = async () => {
-  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("access_token");
   console.log("logged out");
 };
 
@@ -111,9 +129,9 @@ export async function getData(): Promise<Payment[]> {
       resume: "resume_2",
       sop: "sop_2",
       schoolApplicationStarted: RedCircle,
-      schoolApplicationCompleted: RedCircle, 
-      status: "not completed", 
-      phone: "+234 709 823 4343", 
+      schoolApplicationCompleted: RedCircle,
+      status: "not completed",
+      phone: "+234 709 823 4343",
     },
     {
       id: "derv1ws0",

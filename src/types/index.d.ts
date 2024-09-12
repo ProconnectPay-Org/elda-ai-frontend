@@ -42,6 +42,15 @@ declare type signInProps = {
   password: string;
 };
 
+declare type CreateCandidateProfileProps = {
+  email: string;
+  password?: string;
+  full_name: string;
+  university: string;
+  course: string;
+  role: 'candidate' | 'admin' | 'staff';
+}
+
 declare type LoginUser = {
   email: string;
   password: string;
@@ -59,7 +68,7 @@ declare type OptionType = {
   label: string;
 }
 
-interface UserContextValue {
+interface User {
   user?: {
     id?: string;
     name?: string;

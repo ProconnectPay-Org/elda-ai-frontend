@@ -4,7 +4,7 @@ import { DataTable } from "@/components/DataTable";
 import SmallBox from "@/components/SmallBox";
 import { columns } from "@/components/ui/Columns";
 import { smallBox } from "@/constants";
-import useAuth from "@/hooks/useAuth";
+// import useAuth from "@/hooks/useAuth";
 import RootLayout from "@/layouts/RootLayout";
 import { Button } from "@/components/ui/button";
 import {
@@ -44,16 +44,17 @@ const AssignedCandidates = () => {
   //   setIsDialogOpen(false);
   // };
 
-  const { loggedInUser } = useAuth();
+  // const { loggedInUser } = useAuth();
 
   return (
     <RootLayout title="Assigned Candidates">
-      {loggedInUser && (
-        <p className="text-red text-[32px] font-semibold">
-          Welcome, {loggedInUser.name}!
-        </p>
-      )}
-      <div className="flex justify-between gap-8 flex-wrap mt-4">
+      {/* {loggedInUser && ( */}
+      <p className="text-red text-[32px] font-semibold">
+        {/* Welcome, {loggedInUser.name}! */}
+        Welcome, Elda David!
+      </p>
+      {/* )} */}
+      <div className="flex justify-between w-full gap-8 flex-wrap mt-4">
         {smallBox.map((box) => (
           <SmallBox
             key={box.name}
@@ -64,9 +65,11 @@ const AssignedCandidates = () => {
         ))}
       </div>
       <div className="border-2 border-gray w-full rounded-lg mt-8">
-        <div className="px-5 py-5 flex items-center gap-4">
-          <p className="font-medium text-xl">Assigned Candidates</p>
-          <span className="text-sm bg-pale-bg py-2 px-4 rounded-3xl text-red">
+        <div className="px-2 md:px-5 py-5 flex items-center md:gap-4 justify-between md:justify-normal">
+          <p className="font-medium text-base md:text-xl">
+            Assigned Candidates
+          </p>
+          <span className="text-xs md:text-sm bg-pale-bg py-2 px-4 rounded-3xl text-red">
             10 new candidates
           </span>
         </div>
@@ -76,9 +79,10 @@ const AssignedCandidates = () => {
           onRowClick={handleRowClick}
         />
       </div>
+
       {selectedRowData && (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent>
+          <DialogContent className="w-[364px] md:w-full">
             <DialogHeader>
               <div className="flex w-full justify-between mt-4">
                 <DialogTitle className="text-red">
@@ -93,7 +97,7 @@ const AssignedCandidates = () => {
               </div>
             </DialogHeader>
             <DialogDescription className="flex flex-col gap-8">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
                 <div className="w-1/2">
                   <p>Full Name</p>
                   <p className="text-primary font-medium">
@@ -113,7 +117,7 @@ const AssignedCandidates = () => {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
                 <div>
                   <p>Phone Number</p>
                   <p
@@ -132,7 +136,7 @@ const AssignedCandidates = () => {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
                 <div>
                   <p>Email Address</p>
                   <p
@@ -151,7 +155,7 @@ const AssignedCandidates = () => {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col md:flex-row items-center gap-5 md:gap-0 justify-between">
                 <DottedBox
                   className="border-red rounded-md text-sm font-bold p-2 hover:bg-pale-bg"
                   href="/craft-sop"

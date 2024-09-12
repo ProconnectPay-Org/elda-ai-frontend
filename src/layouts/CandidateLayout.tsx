@@ -42,18 +42,18 @@ const CandidateLayout = ({ children }: AuthLayoutProps) => {
 
   return (
     <div>
-      <nav className="flex items-center justify-between md:justify-normal bg-[#F5F7F9] h-28 p-4 lg:p-12 gap-36">
+      <nav className="flex items-center justify-between md:justify-normal bg-[#F5F7F9] h-28 p-4 lg:p-12 gap-20 lg:gap-36">
         <div className="w-[40%] sm:w-[30%] md:w-[15%] flex gap-4">
           <img src={PcpLogo} alt="pcp-logo" className="w-1/2" />
           <img src={Logo} alt="logo" className="w-2/3 h-full" />
         </div>
-        <div className="hidden md:flex gap-4 items-center">
+        <div className="hidden md:flex gap-1 lg:gap-4 items-center">
           {sidebarLinks.map((link) => (
             <NavLink
               to={link.route}
               key={link.label}
               className={({ isActive }) =>
-                `px-4 py-2 rounded ${isActive ? "bg-red text-white" : ""}`
+                `px-4 py-2 rounded md:text-sm xl:text-base whitespace-nowrap ${isActive ? "bg-red text-white" : ""}`
               }
             >
               {link.label}

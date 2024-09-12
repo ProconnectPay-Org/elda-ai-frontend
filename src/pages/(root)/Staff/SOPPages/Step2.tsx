@@ -23,7 +23,7 @@ const Step2 = () => {
           </div>
         </Link>
         <div className="flex items-start flex-col gap-8 justify-center mx-auto">
-          <h2 className="text-red font-bold text-center w-full text-3xl">
+          <h2 className="text-red font-bold text-center w-full text-lg md:text-3xl">
             Candidate&apos;s Details
           </h2>
 

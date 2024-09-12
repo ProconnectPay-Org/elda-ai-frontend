@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import Notification from "@/components/Notification";
-import Time from "../../../assets/time.png";
+import Time from "@/assets/time.png";
 import { NotificationDetails } from "@/constants";
 import EmployeeMail from "@/assets/invite-employee.svg";
 import CandidateIcon from "@/assets/candidate-profile.svg";
@@ -22,7 +22,7 @@ const AdminDashboard = () => {
       </h1>
 
       <div className="flex flex-col-reverse gap-5 md:gap-0 md:flex-row items-start md:items-center justify-between my-8 md:my-10">
-        <div className="flex flex-col lg:flex-row items-center gap-2 lg:gap-4">
+        <div className="flex items-center gap-2 lg:gap-4">
           <p className="text-base lg:text-xl">Stats overview for</p>
           <Select>
             <SelectTrigger className="w-[150px] h-[30px]">
@@ -57,34 +57,74 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      <div className="border-red border w-full mb-10 rounded-lg flex">
-        <div className="p-8 flex flex-col gap-4 items-center justify-center w-1/4 border-r border-red">
+      <div className="border-red md:border w-full mb-10 rounded-lg flex flex-col md:flex-row gap-2 md:gap-0">
+        <div className="p-8 hidden md:flex flex-col gap-4 items-center justify-center w-1/4 border-r border-red">
           <p className="font-medium text-sm">NUMBER OF CANDIDATE</p>
           <p className="font-bold text-4xl">20</p>
           <p className="text-xs flex items-center gap-2 capitalize">
             <img src={Time} alt="time-icon" /> just now
           </p>
         </div>
-        <div className="p-8 flex flex-col gap-4 items-center justify-center w-1/4 border-r border-red">
+        <div className="py-8 px-4 flex md:hidden gap-4 items-center justify-between rounded-lg border border-red">
+          <div>
+            <p className="font-medium text-sm">NUMBER OF CANDIDATE</p>
+            <p className="text-xs flex items-center gap-2 capitalize">
+              <img src={Time} alt="time-icon" /> just now
+            </p>
+          </div>
+          <p className="font-bold text-4xl">20</p>
+        </div>
+
+        <div className="p-8 hidden md:flex flex-col gap-4 items-center justify-center w-1/4 border-r border-red">
           <p className="font-medium text-sm">NUMBER OF STAFF</p>
           <p className="font-bold text-4xl">5</p>
           <p className="text-xs flex items-center gap-2 capitalize">
             <img src={Time} alt="time-icon" /> just now
           </p>
         </div>
-        <div className="p-8 flex flex-col gap-4 items-center justify-center w-1/4 border-r border-red">
+
+        <div className="py-8 px-4 flex md:hidden gap-4 items-center justify-between rounded-lg border border-red">
+          <div>
+          <p className="font-medium text-sm">NUMBER OF STAFF</p>
+            <p className="text-xs flex items-center gap-2 capitalize">
+              <img src={Time} alt="time-icon" /> just now
+            </p>
+          </div>
+          <p className="font-bold text-4xl">5</p>
+        </div>
+
+        <div className="p-8 hidden md:flex flex-col gap-4 items-center justify-center w-1/4 border-r border-red">
           <p className="font-medium text-sm">PENDING JOBS</p>
           <p className="font-bold text-4xl">100</p>
           <p className="text-xs flex items-center gap-2 capitalize">
             <img src={Time} alt="time-icon" /> just now
           </p>
         </div>
-        <div className="p-8 flex flex-col gap-4 items-center justify-center w-1/4">
+        <div className="py-8 px-4 flex md:hidden gap-4 items-center justify-between rounded-lg border border-red">
+          <div>
+          <p className="font-medium text-sm">PENDING JOBS</p>
+            <p className="text-xs flex items-center gap-2 capitalize">
+              <img src={Time} alt="time-icon" /> just now
+            </p>
+          </div>
+          <p className="font-bold text-4xl">120</p>
+        </div>
+
+        <div className="p-8 hidden md:flex flex-col gap-4 items-center justify-center w-1/4">
           <p className="font-medium text-sm">COMPLETED JOBS</p>
           <p className="font-bold text-4xl">8</p>
           <p className="text-xs flex items-center gap-2 capitalize">
             <img src={Time} alt="time-icon" /> just now
           </p>
+        </div>
+        <div className="py-8 px-4 flex md:hidden gap-4 items-center justify-between rounded-lg border border-red">
+          <div>
+            <p className="font-medium text-sm">COMPLETED JOBS</p>
+            <p className="text-xs flex items-center gap-2 capitalize">
+              <img src={Time} alt="time-icon" /> just now
+            </p>
+          </div>
+          <p className="font-bold text-4xl">8</p>
         </div>
       </div>
 

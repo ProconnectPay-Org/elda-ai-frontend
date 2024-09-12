@@ -7,34 +7,38 @@ import NameIcon from "../../../assets/name-icon.svg";
 import Mail from "../../../assets/mail.png";
 import { getInitials } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import useAuth from "@/hooks/useAuth";
+// import useAuth from "@/hooks/useAuth";
+import SettingsTabs from "@/components/SettingsTabs";
 
 const AdminSettings = () => {
-  const { loggedInUser } = useAuth();
+  // const { loggedInUser } = useAuth();
 
   return (
     <AdminLayout>
       <div className="flex items-start gap-12">
         <SetingsSideBar />
-
         <div className="flex flex-col justify-between min-h-[70vh] w-full md:w-[60%]">
-          <div className="flex flex-col gap-6">
+        <SettingsTabs />
+          <div className="flex flex-col gap-6 mt-5 md:mt-0">
             <p className="text-[#273240] font-bold">Personal Information</p>
 
             {/* IMAGE AND PROFILE */}
             <div className="flex items-end gap-4">
               <div className="relative rounded-full w-[150px] h-[150px] flex items-center justify-center bg-pale-bg">
-                {loggedInUser && (
+                {/* {loggedInUser && ( */}
                   <Avatar className="rounded-none w-full overflow-visible h-full">
                     <AvatarImage
                       className="rounded-full"
                       src="https://github.com/shadcn.png"
                     />
                     <AvatarFallback className="font-bold text-[72px] bg-transparent text-red">
-                      {getInitials(loggedInUser?.name)}
+                      {getInitials("Elda David")}
                     </AvatarFallback>
+                    {/* <AvatarFallback className="font-bold text-[72px] bg-transparent text-red">
+                      {getInitials(loggedInUser?.name)}
+                    </AvatarFallback> */}
                   </Avatar>
-                )}
+                {/* )} */}
               </div>
               <div className="flex items-center justify-center flex-col gap-2">
                 <Button className="bg-red">Upload an Image</Button>
@@ -53,7 +57,7 @@ const AdminSettings = () => {
                   <input
                     className="border-none w-full focus:outline-none"
                     id="fullName"
-                    placeholder="Enter your full name"
+                    placeholder="Your full name"
                   />
                   <img src={Pen} alt="pen" />
                 </div>
@@ -65,7 +69,7 @@ const AdminSettings = () => {
                   <input
                     className="border-none w-full focus:outline-none"
                     id="email"
-                    placeholder="Enter your email address"
+                    placeholder="Your email address"
                   />
 
                   <img src={Pen} alt="pen" />

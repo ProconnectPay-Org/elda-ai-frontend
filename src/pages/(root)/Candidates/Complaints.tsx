@@ -62,7 +62,7 @@ const Complaints = () => {
   return (
     <CandidateLayout>
       <section className="w-full md:w-[580px] mx-auto p-4">
-        <h1 className="text-[#1F384C] font-semibold text-3xl mb-5">
+        <h1 className="text-red font-semibold text-3xl mb-5">
           General Complaints
         </h1>
         <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
@@ -118,7 +118,7 @@ const Complaints = () => {
             </p>
           )}
           <div className="flex items-center justify-end w-full">
-            <Button disabled={isSubmitting}>
+            <Button disabled={isSubmitting} className="bg-red">
               {isSubmitting ? "Submitting..." : "Submit"}
             </Button>
           </div>
