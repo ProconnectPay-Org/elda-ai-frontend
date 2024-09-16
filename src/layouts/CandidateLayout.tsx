@@ -16,11 +16,11 @@ import PcpLogo from "../assets/pcplogo.svg";
 
 const sidebarLinks = [
   {
-    route: "/candidate-status",
+    route: "/candidate/status",
     label: "Status",
   },
   {
-    route: "/candidate-view",
+    route: "/candidate/view",
     label: "View",
   },
   {

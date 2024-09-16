@@ -22,7 +22,6 @@ const CreateCandidateProfile = () => {
   const [fullname, setFullname] = useState("");
   const [university, setUniversity] = useState("");
   const [course, setCourse] = useState("");
-  // const navigate = useNavigate();
 
   const createProfile = async () => {
     setIsLoading(true);
@@ -40,6 +39,7 @@ const CreateCandidateProfile = () => {
       if (response) {
         console.log(response);
         setSuccess(true);
+        localStorage.setItem("user_password", password);
       } else {
         console.log("Profile creation failed: Invalid data");
       }

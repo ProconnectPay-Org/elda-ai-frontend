@@ -22,7 +22,6 @@ import {
   InviteEmployee,
   Staff,
 } from "./pages/(root)/SuperAdmin";
-import { Toaster } from "./components/ui/toaster";
 import { CandidateStatus, CandidateView, Complaints, Feedback, LinkedInMasterclass } from "./pages/(root)/Candidates";
 
 function App() {
@@ -59,16 +58,15 @@ function App() {
 
         {/* CANDIDATES */}
         <Route element={<RegistrationForm />} path="/register" />
-        <Route element={<CandidateLogin />} path="/candidate-login" />
-        <Route element={<CandidateStatus />} path="/candidate-status" />
-        <Route element={<CandidateView />} path="/candidate-view" />
+        <Route element={<CandidateLogin />} path="/candidate/login" />
+        <Route element={<CandidateStatus />} path="/candidate/status" />
+        <Route element={<CandidateView />} path="/candidate/view" />
         <Route element={<Feedback />} path="/feedback" />
         <Route element={<LinkedInMasterclass />} path="/masterclass" />
         <Route element={<Complaints />} path="/complaints" />
 
 
       </Routes>
-      <Toaster />
     </BrowserRouter>
   );
 }

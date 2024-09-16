@@ -3,6 +3,7 @@ import {
   CreateCandidateProfileProps,
   Payment,
   TeamMemberColumn,
+  UserType,
   signInProps,
 } from "@/types";
 import RedCircle from "../../assets/red-circle.svg";
@@ -27,7 +28,26 @@ export const adminSignIn = async ({ email, password }: signInProps) => {
 
 export const getUserInfo = async () => {};
 
-export const getAdminInfo = async () => {};
+export const getAdminInfo = async () => {
+  const access_token = localStorage.getItem("access_token"); // Fetch token from localStorage
+
+  if (!access_token) {
+    throw new Error("Access token is missing. Please sign in again.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}admin/dashboard/`, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching admin info:", error);
+    throw error;
+  }
+};
 
 export const emailPost = async () => {};
 
@@ -43,11 +63,11 @@ export const createCandidateProfile = async ({
     const token = localStorage.getItem("access_token");
 
     if (!token) {
-      throw new Error("No access token found.");
+      throw new Error("No access token found. Login again!");
     }
 
     const response = await axios.post(
-      `${API_URL}auth/create-candidate-profile/`,
+      `${API_URL}auth/create-user/`,
       {
         email,
         full_name,
@@ -75,13 +95,25 @@ export const getCandidateDetails = async () => {};
 
 export const getStaffDetails = async () => {};
 
-export async function getLoggedInUser(): Promise<null> {
-  const isLoggedIn = localStorage.getItem("access_token");
-  if (isLoggedIn === "true") {
+// lib/actions/user.actions.ts
+export const getLoggedInUser = async (): Promise<UserType> => {
+  try {
+    const token = localStorage.getItem("access_token");
+    if (!token) return null;
+
+    const response = await axios.get(`${API_URL}auth/users/me/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // Assuming your response includes user role
+    return response.data.role; // Adjust based on your actual API response
+  } catch (error) {
+    console.error("Failed to get logged-in user", error);
     return null;
   }
-  return null;
-}
+};
 
 export const candidateSignIn = async ({ email, password }: signInProps) => {
   try {

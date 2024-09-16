@@ -19,11 +19,13 @@ import DottedBox from "@/components/DottedBox";
 import { CopyIcon, MailIcon, PhoneCallIcon } from "lucide-react";
 import { getData } from "@/lib/actions/user.actions";
 import { Payment } from "@/types";
+import { useToast } from "@/components/ui/use-toast";
 
 const AssignedCandidates = () => {
   const [tableData, setTableData] = useState<Payment[]>([]);
   const [selectedRowData, setSelectedRowData] = useState<Payment | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchTableData = async () => {
@@ -121,7 +123,9 @@ const AssignedCandidates = () => {
                 <div>
                   <p>Phone Number</p>
                   <p
-                    onClick={() => copyToClipboard(selectedRowData.phone || "")}
+                    onClick={() =>
+                      copyToClipboard(selectedRowData.phone || "", toast)
+                    }
                     className="text-primary font-medium flex items-center gap-1"
                   >
                     <PhoneCallIcon size={16} />
@@ -140,7 +144,9 @@ const AssignedCandidates = () => {
                 <div>
                   <p>Email Address</p>
                   <p
-                    onClick={() => copyToClipboard(selectedRowData.email || "")}
+                    onClick={() =>
+                      copyToClipboard(selectedRowData.email || "", toast)
+                    }
                     className="text-primary font-medium flex items-center gap-1"
                   >
                     <MailIcon size={16} />

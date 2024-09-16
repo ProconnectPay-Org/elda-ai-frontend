@@ -13,12 +13,51 @@ import { NotificationDetails } from "@/constants";
 import EmployeeMail from "@/assets/invite-employee.svg";
 import CandidateIcon from "@/assets/candidate-profile.svg";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getAdminInfo } from "@/lib/actions/user.actions";
+import { Loader2 } from "lucide-react";
 
 const AdminDashboard = () => {
+  const [adminInfo, setAdminInfo] = useState<null | any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchAdminInfo = async () => {
+      try {
+        const data = await getAdminInfo();
+        setAdminInfo(data);
+      } catch (err) {
+        setError("Failed to fetch admin info. Please try again later.");
+        console.error("Error fetching admin info:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAdminInfo();
+
+    return () => {};
+  }, []);
+
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Loader2 className="animate-spin" />
+        <span className="ml-2 font-semibold">Loading...</span>
+      </div>
+    );
+  if (error)
+    return (
+      <div className="flex items-center justify-center h-full font-semibold">
+        {error}
+      </div>
+    );
+
   return (
     <AdminLayout>
       <h1 className="text-red text-3xl font-bold">
-        Welcome to the Super Admin Dashboard
+        Welcome to the Super Admin Dashboard {adminInfo}
       </h1>
 
       <div className="flex flex-col-reverse gap-5 md:gap-0 md:flex-row items-start md:items-center justify-between my-8 md:my-10">
@@ -85,7 +124,7 @@ const AdminDashboard = () => {
 
         <div className="py-8 px-4 flex md:hidden gap-4 items-center justify-between rounded-lg border border-red">
           <div>
-          <p className="font-medium text-sm">NUMBER OF STAFF</p>
+            <p className="font-medium text-sm">NUMBER OF STAFF</p>
             <p className="text-xs flex items-center gap-2 capitalize">
               <img src={Time} alt="time-icon" /> just now
             </p>
@@ -102,7 +141,7 @@ const AdminDashboard = () => {
         </div>
         <div className="py-8 px-4 flex md:hidden gap-4 items-center justify-between rounded-lg border border-red">
           <div>
-          <p className="font-medium text-sm">PENDING JOBS</p>
+            <p className="font-medium text-sm">PENDING JOBS</p>
             <p className="text-xs flex items-center gap-2 capitalize">
               <img src={Time} alt="time-icon" /> just now
             </p>

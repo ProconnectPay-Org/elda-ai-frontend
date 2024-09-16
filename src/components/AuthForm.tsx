@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import CustomInput from "./CustomInput";
 import { adminSignIn } from "@/lib/actions/user.actions";
 import GoogleIcon from "@/assets/google-logo.svg";
+import { toast } from "./ui/use-toast";
 
 const AuthForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -37,13 +38,28 @@ const AuthForm = () => {
         email: data.email,
         password: data.password,
       });
+
       if (response) {
         localStorage.setItem("access_token", response.access);
+        toast({
+          title: "Success",
+          description: "Sign-in successful. Redirecting...",
+          variant: "success",
+        });
         navigate("/admin-dashboard");
       } else {
-        console.log("Sign-in failed: Invalid credentials");
+        toast({
+          title: "Error",
+          description: "Invalid credentials. Please try again.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again later.",
+        variant: "destructive",
+      });
       console.log(error);
     } finally {
       setIsLoading(false);

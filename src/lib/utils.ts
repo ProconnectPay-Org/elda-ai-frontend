@@ -20,12 +20,20 @@ export const getErrorMessage = (
 };
 
 // src/utils/clipboardUtils.ts
-export const copyToClipboard = async (text: string): Promise<void> => {
+export const copyToClipboard = async (text: string, toast: any): Promise<void> => {
   try {
     await navigator.clipboard.writeText(text);
-    console.log("Text copied to clipboard", text);
+    toast({
+      variant: "success",
+      title: "Text copied",
+      description: `Copied: ${text}`,
+    });
   } catch (err) {
-    console.error("Failed to copy text: ", err);
+    toast({
+      variant: "destructive",
+      title: "Error",
+      description: "Failed to copy text.",
+    });
   }
 };
 
@@ -128,7 +136,11 @@ export const step3Schema = z.object({
   sectorOfProfession: z.string().min(2, "Sector of profession is required"),
   technicalSkill: z.string().min(2, "Technical skill is required"),
   careerInterest: z
-    .array(z.string().min(2, "Each career interest must be at least 2 characters long"))
+    .array(
+      z
+        .string()
+        .min(2, "Each career interest must be at least 2 characters long")
+    )
     .min(1, "At least one career interest is required"),
   yearsOfProfessionalExperiencePostFirstDegree: z
     .string()
@@ -227,4 +239,3 @@ export const step5Schema = z.object({
     })
     .optional(),
 });
-

@@ -3,7 +3,7 @@
 import { AuthLayoutProps } from "@/types";
 import Logo from "../assets/elda-ai-logo-no-bg.png";
 import Hamburger from "@/assets/mobile_hamburger.svg";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   Sheet,
   SheetContent,
@@ -37,6 +37,13 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
   const location = useLocation();
   const isSettingsActive = location.pathname.startsWith("/settings");
   const isDashboardActive = location.pathname.startsWith("/admin");
+
+  const access_token = localStorage.getItem("access_token");
+  const navigate = useNavigate();
+
+  if (!access_token) {
+    navigate("/admin/sign-in");
+  }
 
   return (
     <div>

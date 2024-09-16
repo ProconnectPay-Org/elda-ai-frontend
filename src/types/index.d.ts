@@ -31,12 +31,6 @@ declare type CandidateLayoutProps = {
   children: React.ReactNode;
 };
 
-declare type SignUpParams = {
-  firstName: string;
-  email: string;
-  password: string;
-};
-
 declare type signInProps = {
   email: string;
   password: string;
@@ -50,6 +44,8 @@ declare type CreateCandidateProfileProps = {
   course: string;
   role: 'candidate' | 'admin' | 'staff';
 }
+
+declare type UserType = "admin" | "staff" | "candidate" | null;
 
 declare type LoginUser = {
   email: string;
@@ -79,13 +75,6 @@ interface User {
   setUser?: React.Dispatch<React.SetStateAction<UserContextValue["user"]>>; // Function to update user state
 }
 
-declare type DummyUser = {
-  id: string;
-  name: string;
-  email: string;
-  token?: string; // Optional token property for future use
-};
-
 declare type DottedBoxProps = {
   docType: string;
   icon: string;
@@ -106,14 +95,6 @@ declare type NotificationProps = {
   date: string;
 };
 
-declare type Category = "Food and Drink" | "Travel" | "Transfer";
-
-declare type CategoryCount = {
-  name: string;
-  count: number;
-  totalCount: number;
-};
-
 declare interface HeaderBoxProps {
   type?: "title" | "greeting";
   title: string;
@@ -125,32 +106,14 @@ declare interface MobileNavProps {
   user: User;
 }
 
-declare interface PageHeaderProps {
-  topTitle: string;
-  bottomTitle: string;
-  topDescription: string;
-  bottomDescription: string;
-  connectBank?: boolean;
-}
-
 declare interface PaginationProps {
   page: number;
   totalPages: number;
 }
 
-declare interface AuthFormProps {
-  type: "sign-in" | "sign-up";
-}
-
 declare interface FooterProps {
   user: User;
   type?: "mobile" | "desktop";
-}
-
-declare interface RightSidebarProps {
-  user: User;
-  transactions: Transaction[];
-  banks: Bank[] & Account[];
 }
 
 declare interface SiderbarProps {

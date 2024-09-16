@@ -384,7 +384,10 @@ const WorkExperience = () => {
           </div>
           <div className="flex items-end w-full flex-col md:flex-row justify-between gap-4 md:gap-8">
             <div className="w-full md:w-1/2 hidden md:flex"></div>
-            <Button className="w-full md:w-1/2 bg-red flex gap-2 text-sm md:text-base">
+            <Button
+              onClick={(e) => e.preventDefault()}
+              className="w-full md:w-1/2 bg-red flex gap-2 text-sm md:text-base"
+            >
               <img src={promptWhiteImage} alt="prompt" />
               Refine Job Summary and Key Achievements with eLDa AI
             </Button>
@@ -594,7 +597,10 @@ const WorkExperience = () => {
           </div>
           <div className="flex items-end w-full flex-col md:flex-row justify-between gap-4 md:gap-8">
             <div className="w-full md:w-1/2 hidden md:flex"></div>
-            <Button className="w-full md:w-1/2 bg-red flex gap-2 text-sm md:text-base">
+            <Button
+              onClick={(e) => e.preventDefault()}
+              className="w-full md:w-1/2 bg-red flex gap-2 text-sm md:text-base"
+            >
               <img src={promptWhiteImage} alt="prompt" />
               Refine Job Summary and Key Achievements with eLDa AI
             </Button>

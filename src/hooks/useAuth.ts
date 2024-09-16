@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { getLoggedInUser, logoutAccount } from "@/lib/actions/user.actions";
 
 const useAuth = () => {
-  const [loggedInUser, setLoggedInUser] = useState<null>(null);
+  const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 

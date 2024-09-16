@@ -15,7 +15,6 @@ type UploadState = {
 
 const UploadDocuments: React.FC = () => {
   const {
-    register,
     formState: { errors },
     setValue,
   } = useFormContext<Step5FormData>();
@@ -56,9 +55,7 @@ const UploadDocuments: React.FC = () => {
       setValue(`document${index + 1}` as `document${number}`, file);
       startUpload(index);
     } else {
-      // Handle the case where file is not an instance of File
       console.error("Input not instance of File");
-      // Optionally reset the input field or show an error message
     }
   };
 
@@ -84,7 +81,7 @@ const UploadDocuments: React.FC = () => {
           [index]: { ...prev[index], progress },
         }));
       }
-    }, 500); // Simulated upload progress
+    }, 200);
   };
 
   const cancelUpload = (index: number) => {
@@ -133,13 +130,13 @@ const UploadDocuments: React.FC = () => {
             <>
               <div className="flex items-center relative gap-x-10 h-11 justify-end border border-gray-border bg-white rounded-md py-2 px-4 mt-1 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                 <div className="absolute w-[full] h-[full] opacity-0">
-                  <input
-                    type="file"
-                    {...register(`document${i + 1}` as `document${number}`)}
-                    onChange={(e) => handleFileChange(i, e)}
-                  />
+                  <input type="file" onChange={(e) => handleFileChange(i, e)} />
                 </div>
-                <img src={UploadCloud} alt="upload cloud" className="block float-end" />
+                <img
+                  src={UploadCloud}
+                  alt="upload cloud"
+                  className="block float-end"
+                />
               </div>
               {uploadStates[i]?.uploading && (
                 <div className="mt-2">

@@ -5,6 +5,7 @@ import AdminLayout from "@/layouts/AdminLayout";
 import { getTeamMembersData } from "@/lib/actions/user.actions";
 import { TeamMemberColumn } from "@/types";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Staff = () => {
   const [tableData, setTableData] = useState<TeamMemberColumn[]>([]);
@@ -28,12 +29,15 @@ const Staff = () => {
             </h2>
             <p className="text-sm md:text-base">Invite and Manage your Staff</p>
           </div>
-          <Button
-            variant="outline"
-            className="border-red text-red md:h-[52px] flex items-center gap-2.5 hover:text-white hover:bg-red"
-          >
-            Invite Employee
-          </Button>
+
+          <Link to="/admin/invite-employee">
+            <Button
+              variant="outline"
+              className="border-red text-red md:h-[52px] flex items-center gap-2.5 hover:text-white hover:bg-red"
+            >
+              Invite Employee
+            </Button>
+          </Link>
         </div>
 
         <DataTable columns={StaffColumns} data={tableData} />

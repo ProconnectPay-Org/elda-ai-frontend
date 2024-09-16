@@ -2,19 +2,24 @@ import { FormControl, FormField, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { Control, FieldPath } from "react-hook-form";
-import { authFormSchema } from "@/lib/utils";
 
-const formSchema = authFormSchema();
-
-interface CustomInput {
-  control: Control<z.infer<typeof formSchema>>;
-  name: FieldPath<z.infer<typeof formSchema>>;
+// Define a type for the CustomInput component with constraints
+interface CustomInputProps<T extends z.ZodType<any, any, any>> {
+  control: Control<z.infer<T>>;
+  name: FieldPath<z.infer<T>>;
   label: string;
   placeholder: string;
   className?: string;
 }
 
-const CustomInput = ({ control, name, label, placeholder, className }: CustomInput) => {
+// Update the CustomInput component to use generic type T
+const CustomInput = <T extends z.ZodType<any, any, any>>({
+  control,
+  name,
+  label,
+  placeholder,
+  className,
+}: CustomInputProps<T>) => {
   return (
     <FormField
       control={control}
