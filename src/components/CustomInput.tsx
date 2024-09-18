@@ -7,7 +7,15 @@ import { Control, FieldPath } from "react-hook-form";
 const schema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
-  // Add other fields as needed
+  // Optional fields
+  gender: z.string().optional(),
+  fullName: z.string().optional(),
+  dateOfBirth: z.string().optional(),
+  phoneNumber: z.string().optional(),
+  numberOfJobs: z.string().optional(),
+  currentPassword: z.string().optional(),
+  newPassword: z.string().optional(),
+  confirmPassword: z.string().optional(),
 });
 
 type FormSchema = z.infer<typeof schema>;

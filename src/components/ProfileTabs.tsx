@@ -1,60 +1,89 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "./ui/button";
-import CustomInput from "./CustomInput";
-import { Form } from "./ui/form";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useState } from "react";
 import TwoFactorDialog from "./TwoFactorDialog";
 
 const ProfileTabs = () => {
+  const [activeTab, setActiveTab] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const formSchema = () => {
-    return z.object({
-      email: z.string().email(),
-      gender: z.string().min(2),
-      fullName: z.string(),
-      dateOfBirth: z.string(),
-      phoneNumber: z.string(),
-      numberOfJobs: z.string(),
-      currentPassword: z.string(),
-      newPassword: z.string(),
-      confirmPassword: z.string(),
-    });
-  };
-
-  const schema = formSchema();
-
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  // Form for "My Details"
+  const {
+    register: registerDetails,
+    handleSubmit: handleSubmitDetails,
+    formState: { errors: errorsDetails },
+  } = useForm({
     defaultValues: {
-      email: "",
-      gender: "",
       fullName: "",
+      gender: "",
       dateOfBirth: "",
       phoneNumber: "",
+      email: "",
       numberOfJobs: "",
+    },
+  });
+
+  interface DetailsFormType {
+    fullName: string;
+    gender: string;
+    dateOfBirth: string;
+    phoneNumber: string;
+    email: string;
+    numberOfJobs: string;
+  }
+
+  const onSubmitDetails = async (data: DetailsFormType) => {
+    try {
+      console.log("Details Submitted: ", data);
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Form for "Password"
+  const {
+    register: registerPassword,
+    handleSubmit: handleSubmitPassword,
+    formState: { errors: errorsPassword },
+  } = useForm({
+    defaultValues: {
       currentPassword: "",
       newPassword: "",
       confirmPassword: "",
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof schema>) => {
+  interface PasswordFormType {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }
+
+  const onSubmitPassword = async (data: PasswordFormType) => {
     try {
-      console.log(data);
+      console.log("Password Submitted: ", data);
       return data;
     } catch (error) {
       console.log(error);
-    } finally {
-      console.log(data);
+    }
+  };
+
+  const handleSave = () => {
+    if (activeTab === "all") {
+      handleSubmitDetails(onSubmitDetails)();
+    } else if (activeTab === "assigned") {
+      handleSubmitPassword(onSubmitPassword)();
     }
   };
 
   return (
-    <Tabs defaultValue="all" className="w-full flex flex-col gap-7">
+    <Tabs
+      defaultValue="all"
+      className="w-full flex flex-col gap-7"
+      onValueChange={(value) => setActiveTab(value)}
+    >
       <TabsList className="w-full bg-transparent flex-col md:flex-row h-full space-y-4 md:space-y-0 md:justify-between items-center p-0">
         <div className="space-x-8 flex">
           <TabsTrigger
@@ -77,124 +106,196 @@ const ProfileTabs = () => {
           >
             Cancel
           </Button>
-          <Button className="h-12 w-full md:max-w-fit text-white bg-red">
+          <Button
+            onClick={handleSave}
+            className="h-12 w-full md:max-w-fit text-white bg-red"
+          >
             Save
           </Button>
         </div>
       </TabsList>
       <div>
+        {/* My Details Form */}
         <TabsContent
           value="all"
           className="w-full bg-gray p-4 md:p-8 rounded-2xl"
         >
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4 md:space-y-8"
-            >
-              <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
-                <CustomInput
-                  control={form.control}
-                  name="fullName"
-                  label="Full Name"
+          <form className="space-y-4 md:space-y-8">
+            <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
+              <div className="w-full">
+                <label>Full Name</label>
+                <input
+                  {...registerDetails("fullName", {
+                    required: activeTab === "all" && "Full Name is required",
+                  })}
                   placeholder="Peter"
-                  className="w-full"
+                  className="w-full p-2 rounded-md"
                 />
-                <CustomInput
-                  control={form.control}
-                  name="gender"
-                  label="Gender"
+                {errorsDetails.fullName && (
+                  <p className="text-red text-sm">
+                    {errorsDetails.fullName.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="w-full">
+                <label>Gender</label>
+                <input
+                  {...registerDetails("gender", {
+                    required: activeTab === "all" && "Gender is required",
+                  })}
                   placeholder="Female"
-                  className="w-full"
+                  className="w-full p-2 rounded-md"
                 />
+                {errorsDetails.gender && (
+                  <p className="text-red text-sm">
+                    {errorsDetails.gender.message}
+                  </p>
+                )}
               </div>
+            </div>
 
-              <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
-                <CustomInput
-                  control={form.control}
-                  name="dateOfBirth"
-                  label="Date of Birth"
+            <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
+              <div className="w-full">
+                <label>Date of Birth</label>
+                <input
+                  {...registerDetails("dateOfBirth", {
+                    required:
+                      activeTab === "all" && "Date of Birth is required",
+                  })}
                   placeholder="Enter your date of birth"
-                  className="w-full"
+                  className="w-full p-2 rounded-md"
                 />
+                {errorsDetails.dateOfBirth && (
+                  <p className="text-red text-sm">
+                    {errorsDetails.dateOfBirth.message}
+                  </p>
+                )}
+              </div>
 
-                <CustomInput
-                  control={form.control}
-                  name="phoneNumber"
-                  label="Phone Number"
+              <div className="w-full">
+                <label>Phone Number</label>
+                <input
+                  {...registerDetails("phoneNumber", {
+                    required: activeTab === "all" && "Phone Number is required",
+                  })}
                   placeholder="08122983232"
-                  className="w-full"
+                  className="w-full p-2 rounded-md"
                 />
+                {errorsDetails.phoneNumber && (
+                  <p className="text-red text-sm">
+                    {errorsDetails.phoneNumber.message}
+                  </p>
+                )}
               </div>
-              <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
-                <CustomInput
-                  control={form.control}
-                  name="email"
-                  label="Email"
-                  placeholder="joy@proconnectpay@gmail.com"
-                  className="w-full"
-                />
+            </div>
 
-                <CustomInput
-                  control={form.control}
-                  name="numberOfJobs"
-                  label="Number of Assigned jobs so far"
-                  placeholder="20"
-                  className="w-full"
+            <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
+              <div className="w-full">
+                <label>Email</label>
+                <input
+                  {...registerDetails("email", {
+                    required: activeTab === "all" && "Email is required",
+                    pattern: {
+                      value: /\S+@\S+\.\S+/,
+                      message: "Invalid email format",
+                    },
+                  })}
+                  placeholder="joy@proconnectpay@gmail.com"
+                  className="w-full p-2 rounded-md"
                 />
+                {errorsDetails.email && (
+                  <p className="text-red text-sm">
+                    {errorsDetails.email.message}
+                  </p>
+                )}
               </div>
-            </form>
-          </Form>
+
+              <div className="w-full">
+                <label>Number of Assigned Jobs so far</label>
+                <input
+                  {...registerDetails("numberOfJobs", {
+                    required:
+                      activeTab === "all" && "Number of jobs is required",
+                  })}
+                  placeholder="20"
+                  className="w-full p-2 rounded-md"
+                />
+                {errorsDetails.numberOfJobs && (
+                  <p className="text-red text-sm">
+                    {errorsDetails.numberOfJobs.message}
+                  </p>
+                )}
+              </div>
+            </div>
+          </form>
         </TabsContent>
+
+        {/* Password Form */}
         <TabsContent value="assigned" className="space-y-10">
           <div className="w-full bg-gray p-4 md:p-8 rounded-2xl">
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8"
-              >
-                <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
-                  <CustomInput
-                    control={form.control}
-                    name="currentPassword"
-                    label="Current Password"
-                    placeholder=""
-                    className="w-full md:w-1/2"
+            <form className="space-y-8">
+              <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
+                <div className="w-full md:w-1/2">
+                  <label>Current Password</label>
+                  <input
+                    {...registerPassword("currentPassword", {
+                      required:
+                        activeTab === "assigned" &&
+                        "Current Password is required",
+                    })}
+                    type="password"
+                    className="w-full p-2 rounded-md"
                   />
+                  {errorsPassword.currentPassword && (
+                    <p className="text-red text-sm">
+                      {errorsPassword.currentPassword.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
+                <div className="w-full">
+                  <label>New Password</label>
+                  <input
+                    {...registerPassword("newPassword", {
+                      required:
+                        activeTab === "assigned" && "New Password is required",
+                    })}
+                    type="password"
+                    className="w-full p-2 rounded-md"
+                  />
+                  {errorsPassword.newPassword && (
+                    <p className="text-red text-sm">
+                      {errorsPassword.newPassword.message}
+                    </p>
+                  )}
                 </div>
 
-                <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
-                  <CustomInput
-                    control={form.control}
-                    name="newPassword"
-                    label="New Password"
-                    placeholder=""
-                    className="w-full"
+                <div className="w-full">
+                  <label>Confirm Password</label>
+                  <input
+                    {...registerPassword("confirmPassword", {
+                      required:
+                        activeTab === "assigned" &&
+                        "Confirm Password is required",
+                    })}
+                    type="password"
+                    className="w-full p-2 rounded-md"
                   />
-
-                  <CustomInput
-                    control={form.control}
-                    name="confirmPassword"
-                    label="Confirm Password"
-                    placeholder=""
-                    className="w-full"
-                  />
+                  {errorsPassword.confirmPassword && (
+                    <p className="text-red text-sm">
+                      {errorsPassword.confirmPassword.message}
+                    </p>
+                  )}
                 </div>
-              </form>
-            </Form>
+              </div>
+            </form>
           </div>
-          <Button className="bg-red h-11" onClick={() => setIsDialogOpen(true)}>
-            Step Two-factor Authentication
-          </Button>
-
-          {isDialogOpen && (
-            <TwoFactorDialog
-              open={isDialogOpen}
-              onOpenChange={setIsDialogOpen}
-            />
-          )}
         </TabsContent>
       </div>
+      <TwoFactorDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
     </Tabs>
   );
 };
