@@ -14,17 +14,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "./ui/button";
+import { Skeleton } from "./ui/skeleton";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   onRowClick?: (row: TData) => void;
+  isLoading?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   onRowClick,
+  isLoading,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -32,6 +35,40 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
+
+  if (isLoading) {
+    return (
+      <div className="rounded-md border border-gray">
+        <Table>
+          {/* Skeleton Table Header */}
+          <TableHeader>
+            <TableRow className="border-gray">
+              {columns.map((_, index) => (
+                <TableHead key={index}>
+                  <Skeleton className="w-full h-6" />
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+
+          {/* Skeleton Table Body */}
+          <TableBody>
+            {Array(5)
+              .fill(0)
+              .map((_, rowIndex) => (
+                <TableRow key={rowIndex} className="border-gray">
+                  {columns.map((_, colIndex) => (
+                    <TableCell key={colIndex}>
+                      <Skeleton className="w-full h-6" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-md border border-gray">

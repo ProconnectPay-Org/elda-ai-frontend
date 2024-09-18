@@ -2,9 +2,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getLoggedInUser, logoutAccount } from "@/lib/actions/user.actions";
+import { UserType } from "@/types";
 
 const useAuth = () => {
-  const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
+  const [loggedInUser, setLoggedInUser] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -13,14 +14,12 @@ const useAuth = () => {
       const user = await getLoggedInUser();
       if (user) {
         setLoggedInUser(user);
-      } else {
-        navigate("/admin/sign-in");
       }
       setLoading(false);
     };
 
     fetchLoggedInUser();
-  }, [navigate]);
+  }, []);
 
   const handleLogout = async () => {
     await logoutAccount();

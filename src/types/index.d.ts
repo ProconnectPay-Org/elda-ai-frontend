@@ -39,13 +39,59 @@ declare type signInProps = {
 declare type CreateCandidateProfileProps = {
   email: string;
   password?: string;
-  full_name: string;
-  university: string;
-  course: string;
+  full_name?: string;
+  university?: string;
+  course?: string;
   role: 'candidate' | 'admin' | 'staff';
 }
 
-declare type UserType = "admin" | "staff" | "candidate" | null;
+interface Profile {
+  id: number;
+  first_name: string;
+  middle_name: string | null;
+  last_name: string;
+  preferred_call_name: string;
+  previous_first_name: string | null;
+  previous_last_name: string | null;
+  gender: string;
+  birth_date: string | null;
+  city_of_birth: string;
+  state_of_birth: string;
+  country_of_birth: string;
+  phone_number: string;
+  country_current_reside: string;
+  state_current_reside: string;
+  city_current_reside: string;
+  current_house_address: string;
+  postal_code: string;
+  bio: string;
+  user: number;
+}
+
+export interface OptionType {
+  value: string;
+  label: string;
+}
+
+export interface CandidateData {
+  serialNumber: number;
+  full_name: string;
+  country: string;
+  university: string;
+  course: string;
+  schoolApplicationStatus: string;
+  resumeStatus: string;
+  sopStatus: string;
+  duplicate: string;
+  assigned: boolean;
+}
+
+declare type UserType = {
+  id: number;
+  email: string;
+  role: "candidate" | "staff" | "admin";
+  profile: Profile;
+}
 
 declare type LoginUser = {
   email: string;
@@ -178,6 +224,28 @@ export type Payment = {
   status: string;
   phone: string;
 };
+
+declare interface AllCandidates {
+  full_name: string;
+  university: string;
+  course: string;
+  sopStatus?: string;
+  resumeStatus?: string;
+  schoolApplicationStatus?: string;
+  assigned: boolean;
+  duplicate?: string;
+  // Add missing fields
+  serialNumber?: number; // Add serial number dynamically
+  country?: string;
+}
+
+
+declare interface AllCandidatesResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: AllCandidates[];
+}
 
 export type AllColumn = {
   id: string;

@@ -38,7 +38,7 @@ function App() {
           path="/admin/create-candidate-profile"
         />
         <Route element={<InviteEmployee />} path="/admin/invite-employee" />
-        <Route element={<AssignCandidate />} path="/admin/assign-candidate" />
+        <Route element={<AssignCandidate />} path="/assign-candidate" />
         <Route element={<Staff />} path="/staff" />
         <Route element={<Candidates />} path="/candidates" />
         <Route element={<AdminSettings />} path="settings/account" />

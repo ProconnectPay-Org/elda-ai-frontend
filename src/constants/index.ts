@@ -14,13 +14,6 @@ import SocialIcons3 from "../assets/Social icons3.png";
 import SocialIcons4 from "../assets/Social icons4.png";
 import SocialIcons5 from "../assets/Social icons5.png";
 import SocialIcons6 from "../assets/youtube.png";
-import humanIcon from "../assets/candidate-icon.png";
-import messageIcon from "../assets/message-icon.png";
-import editIcon from "../assets/edit-icon.png";
-import settingsIcon from "../assets/settings-icon.png";
-import fileIcon from "../assets/files-icon.png";
-import shieldIcon from "../assets/shield-icon.png";
-import metricsIcon from "../assets/metrics-icon.png";
 import { OptionType } from "@/types";
 
 export const sidebarLinks = [
@@ -138,51 +131,6 @@ export const socialIcons = [
   {
     name: SocialIcons6,
     url: "https://www.youtube.com/channel/UCsX-weJpSWORcMUAQ-g0HdA",
-  },
-];
-
-export const NotificationDetails = [
-  {
-    icon: humanIcon,
-    date: "June 12, 2023",
-    title: "New Candidate Added:",
-    text: "Mary Johnson, was added by Admin",
-  },
-  {
-    icon: messageIcon,
-    date: "June 12, 2023",
-    title: "New Staff Invited:",
-    text: "An invitation was sent to Sarah Connor to join the team",
-  },
-  {
-    icon: editIcon,
-    date: "June 12, 2023",
-    title: "John Doe's Resume Updated:",
-    text: "John Doe's resume was refined by Jane Smith",
-  },
-  {
-    icon: settingsIcon,
-    date: "June 12, 2023",
-    title: "Staff Profile Updated:",
-    text: "Laura Wilson updated her profile information",
-  },
-  {
-    icon: fileIcon,
-    date: "June 12, 2023",
-    title: "Emily Davis has been Assigned:",
-    text: "Emily Davis was assigned to Robert Brown",
-  },
-  {
-    icon: shieldIcon,
-    date: "June 12, 2023",
-    title: "User Permissions Adjusted:",
-    text: "Permissions for the Editor role were adjusted",
-  },
-  {
-    icon: metricsIcon,
-    date: "June 12, 2023",
-    title: "Performance Metrics Updated:",
-    text: " Performance metrics for all staff were updated",
   },
 ];
 

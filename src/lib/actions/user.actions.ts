@@ -36,7 +36,7 @@ export const getAdminInfo = async () => {
   }
 
   try {
-    const response = await axios.get(`${API_URL}admin/dashboard/`, {
+    const response = await axios.get(`${API_URL}admin-dashboard/`, {
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
@@ -91,24 +91,43 @@ export const createCandidateProfile = async ({
   }
 };
 
-export const getCandidateDetails = async () => {};
+export const getAllCandidates = async () => {
+  const access_token = localStorage.getItem("access_token");
+
+  if (!access_token) {
+    throw new Error("Access token is missing. Please sign in again.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}all-candidates/`, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching admin info:", error);
+    throw error;
+  }
+};
+
+export const getSingleCandidate = async () => {};
 
 export const getStaffDetails = async () => {};
 
-// lib/actions/user.actions.ts
-export const getLoggedInUser = async (): Promise<UserType> => {
+export const getLoggedInUser = async (): Promise<UserType | null> => {
   try {
     const token = localStorage.getItem("access_token");
     if (!token) return null;
 
-    const response = await axios.get(`${API_URL}auth/users/me/`, {
+    const response = await axios.get<UserType>(`${API_URL}auth/profile/`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    // Assuming your response includes user role
-    return response.data.role; // Adjust based on your actual API response
+    return response.data;
   } catch (error) {
     console.error("Failed to get logged-in user", error);
     return null;

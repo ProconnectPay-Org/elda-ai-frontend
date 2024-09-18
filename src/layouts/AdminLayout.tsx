@@ -28,6 +28,10 @@ const sidebarLinks = [
     label: "Staff",
   },
   {
+    route: "/assign-candidate",
+    label: "Assign Candidate",
+  },
+  {
     route: "/settings/account",
     label: "Settings",
   },
@@ -77,6 +81,14 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
             }
           >
             Staff
+          </NavLink>
+          <NavLink
+            to="/assign-candidate"
+            className={({ isActive }) =>
+              `px-4 py-2 rounded ${isActive ? "bg-red text-white" : ""}`
+            }
+          >
+            Assign Candidate
           </NavLink>
           <NavLink
             to="/settings/account"

@@ -6,7 +6,13 @@ import { Link } from "react-router-dom";
 import { copyToClipboard } from "@/lib/utils";
 import { useToast } from "./ui/use-toast";
 
-const CandidateProfileSuccess = () => {
+const CandidateProfileSuccess = ({
+  text,
+  type,
+}: {
+  text: string;
+  type: string;
+}) => {
   const userPassword = localStorage.getItem("user_password");
   const { toast } = useToast();
 
@@ -18,21 +24,25 @@ const CandidateProfileSuccess = () => {
         </Link>
 
         <h2 className="text-red text-2xl md:text-3xl font-bold text-center w-full">
-          Registration Successful
+          {text}
         </h2>
       </div>
       <div className="flex flex-col items-center justify-center w-full">
         {/* IMAGE */}
         <img src={Success} alt="success image" />
 
-        <Button
-          variant={"outline"}
-          className="border border-red mt-10 text-red hover:text-red flex justify-center items-center gap-2 h-12 text-lg"
-          onClick={() => copyToClipboard(userPassword || "", toast)}
-        >
-          Save user Password: {userPassword}
-          <img src={CopyIcon} alt="copy-icon" />
-        </Button>
+        {type === "candidate" ? (
+          <Button
+            variant={"outline"}
+            className="border border-red mt-10 text-red hover:text-red flex justify-center items-center gap-2 h-12 text-lg"
+            onClick={() => copyToClipboard(userPassword || "", toast)}
+          >
+            Save user Password: {userPassword}
+            <img src={CopyIcon} alt="copy-icon" />
+          </Button>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );

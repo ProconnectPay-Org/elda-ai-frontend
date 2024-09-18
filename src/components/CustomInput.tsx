@@ -3,17 +3,26 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { Control, FieldPath } from "react-hook-form";
 
+// Define the form schema and its inferred type
+const schema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+  // Add other fields as needed
+});
+
+type FormSchema = z.infer<typeof schema>;
+
 // Define a type for the CustomInput component with constraints
-interface CustomInputProps<T extends z.ZodType<any, any, any>> {
-  control: Control<z.infer<T>>;
-  name: FieldPath<z.infer<T>>;
+interface CustomInputProps<T extends FormSchema> {
+  control: Control<T>;
+  name: FieldPath<T>;
   label: string;
   placeholder: string;
   className?: string;
 }
 
 // Update the CustomInput component to use generic type T
-const CustomInput = <T extends z.ZodType<any, any, any>>({
+const CustomInput = <T extends FormSchema>({
   control,
   name,
   label,

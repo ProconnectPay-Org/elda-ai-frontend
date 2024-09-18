@@ -1,14 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AdminLayout from "@/layouts/AdminLayout";
 import { ChevronLeftIcon, XCircleIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import ReactSelect, { MultiValue, SingleValue } from "react-select";
-
-interface OptionType {
-  value: string;
-  label: string;
-}
+import { getAllCandidates } from "@/lib/actions/user.actions";
+import { CandidateData, OptionType } from "@/types";
 
 const AssignCandidate: React.FC = () => {
   const [selectedStaff, setSelectedStaff] =
@@ -16,6 +13,9 @@ const AssignCandidate: React.FC = () => {
   const [selectedCandidates, setSelectedCandidates] = useState<
     MultiValue<OptionType>
   >([]);
+  const [candidateOptions, setCandidateOptions] = useState<OptionType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleStaffChange = (selectedOption: SingleValue<OptionType>) => {
     setSelectedStaff(selectedOption);
@@ -35,21 +35,51 @@ const AssignCandidate: React.FC = () => {
     { value: "staff1", label: "Opeyemi Esther" },
     { value: "staff2", label: "Hannah Mary" },
     { value: "staff3", label: "Joy Nwakwo" },
+    { value: "staff4", label: "Sarah Comfort" },
+    { value: "staff5", label: "Justina Alas" },
+    { value: "staff6", label: "Gabriel Samuel" },
   ];
 
-  const candidateOptions: OptionType[] = [
-    { value: "Jane Cooper", label: "Jane Cooper" },
-    { value: "Wade Warren", label: "Wade Warren" },
-    { value: "Esther Howard", label: "Esther Howard" },
-    { value: "Cameron Williamson", label: "Cameron Williamson" },
-    { value: "Brooklyn Simmons", label: "Brooklyn Simmons" },
-    { value: "Jenny Wilson", label: "Jenny Wilson" },
-  ];
+  const assignCandidate = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  };
+
+  useEffect(() => {
+    const fetchCandidates = async () => {
+      try {
+        const response = await getAllCandidates();
+        if (response && response.results) {
+          const unassignedCandidates = response.results.filter(
+            (candidate: CandidateData) => !candidate.assigned
+          );
+          const options = unassignedCandidates.map(
+            (candidate: CandidateData) => ({
+              value: candidate.full_name,
+              label: candidate.full_name,
+            })
+          );
+          setCandidateOptions(options);
+        } else {
+          setError("Failed to fetch candidates.");
+        }
+      } catch (error) {
+        setError("An error occurred while fetching candidates.");
+        console.error("Error fetching candidates:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCandidates();
+  }, []);
 
   return (
     <AdminLayout>
       <div className="flex items-start lg:gap-24 lg:px-32">
-        <Link to="/admin/invite-employee">
+        <Link to="/admin-dashboard">
           <div className="w-16 cursor-pointer relative">
             <ChevronLeftIcon color="red" />
             <div className="bg-red w-5 h-0.5 absolute top-[11px] left-[11px]"></div>
@@ -85,6 +115,7 @@ const AssignCandidate: React.FC = () => {
                   MultiValueContainer: () => null,
                 }}
               />
+              {error && <p className="text-sm text-red">{error}</p>}
             </div>
           </div>
 
@@ -111,7 +142,13 @@ const AssignCandidate: React.FC = () => {
               </div>
             )}
           </div>
-          <Button className="bg-red mt-10 w-full h-12 text-lg">Assign</Button>
+          <Button
+            className="bg-red mt-10 w-full h-12 text-lg"
+            disabled={isLoading}
+            onClick={assignCandidate}
+          >
+            {isLoading ? "candidate is being assigned..." : "Assign"}
+          </Button>
         </div>
       </div>
     </AdminLayout>

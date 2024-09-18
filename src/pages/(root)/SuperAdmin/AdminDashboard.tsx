@@ -9,24 +9,40 @@ import {
 import { Button } from "@/components/ui/button";
 import Notification from "@/components/Notification";
 import Time from "@/assets/time.png";
-import { NotificationDetails } from "@/constants";
 import EmployeeMail from "@/assets/invite-employee.svg";
 import CandidateIcon from "@/assets/candidate-profile.svg";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getAdminInfo } from "@/lib/actions/user.actions";
-import { Loader2 } from "lucide-react";
+import messageIcon from "@/assets/message-icon.png";
+import shieldIcon from "@/assets/shield-icon.png";
+import { Skeleton } from "@/components/ui/skeleton";
+
+interface Activity {
+  id: string | number;
+  icon: string;
+  date: string;
+  title: string;
+  body: string;
+  activity_type?: string;
+}
 
 const AdminDashboard = () => {
-  const [adminInfo, setAdminInfo] = useState<null | any>(null);
-  const [loading, setLoading] = useState(true);
+  const [recentActivity, setRecentActivity] = useState<Activity[] | null>(null);
+  const [numberOfCandidate, setNumberOfCandidate] = useState<number | null>(
+    null
+  );
+  const [numberOfStaff, setNumberOfStaff] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchAdminInfo = async () => {
       try {
         const data = await getAdminInfo();
-        setAdminInfo(data);
+        setNumberOfStaff(data?.total_staff);
+        setNumberOfCandidate(data?.total_candidates);
+        setRecentActivity(data?.recent_activities);
       } catch (err) {
         setError("Failed to fetch admin info. Please try again later.");
         console.error("Error fetching admin info:", err);
@@ -34,19 +50,10 @@ const AdminDashboard = () => {
         setLoading(false);
       }
     };
-
     fetchAdminInfo();
-
     return () => {};
   }, []);
 
-  if (loading)
-    return (
-      <div className="flex items-center justify-center h-full">
-        <Loader2 className="animate-spin" />
-        <span className="ml-2 font-semibold">Loading...</span>
-      </div>
-    );
   if (error)
     return (
       <div className="flex items-center justify-center h-full font-semibold">
@@ -57,7 +64,7 @@ const AdminDashboard = () => {
   return (
     <AdminLayout>
       <h1 className="text-red text-3xl font-bold">
-        Welcome to the Super Admin Dashboard {adminInfo}
+        Welcome to the Super Admin Dashboard
       </h1>
 
       <div className="flex flex-col-reverse gap-5 md:gap-0 md:flex-row items-start md:items-center justify-between my-8 md:my-10">
@@ -99,7 +106,13 @@ const AdminDashboard = () => {
       <div className="border-red md:border w-full mb-10 rounded-lg flex flex-col md:flex-row gap-2 md:gap-0">
         <div className="p-8 hidden md:flex flex-col gap-4 items-center justify-center w-1/4 border-r border-red">
           <p className="font-medium text-sm">NUMBER OF CANDIDATE</p>
-          <p className="font-bold text-4xl">20</p>
+          <div className="font-bold text-4xl">
+            {loading ? (
+              <Skeleton className="h-10 w-10" />
+            ) : (
+              numberOfCandidate || "0"
+            )}
+          </div>
           <p className="text-xs flex items-center gap-2 capitalize">
             <img src={Time} alt="time-icon" /> just now
           </p>
@@ -111,12 +124,24 @@ const AdminDashboard = () => {
               <img src={Time} alt="time-icon" /> just now
             </p>
           </div>
-          <p className="font-bold text-4xl">20</p>
+          <div className="font-bold text-4xl">
+            {loading ? (
+              <Skeleton className="h-10 w-10" />
+            ) : (
+              numberOfCandidate || "0"
+            )}
+          </div>
         </div>
 
         <div className="p-8 hidden md:flex flex-col gap-4 items-center justify-center w-1/4 border-r border-red">
           <p className="font-medium text-sm">NUMBER OF STAFF</p>
-          <p className="font-bold text-4xl">5</p>
+          <div className="font-bold text-4xl">
+            {loading ? (
+              <Skeleton className="h-10 w-10" />
+            ) : (
+              numberOfStaff || "0"
+            )}
+          </div>
           <p className="text-xs flex items-center gap-2 capitalize">
             <img src={Time} alt="time-icon" /> just now
           </p>
@@ -129,7 +154,13 @@ const AdminDashboard = () => {
               <img src={Time} alt="time-icon" /> just now
             </p>
           </div>
-          <p className="font-bold text-4xl">5</p>
+          <div className="font-bold text-4xl">
+            {loading ? (
+              <Skeleton className="h-10 w-10" />
+            ) : (
+              numberOfStaff || "0"
+            )}
+          </div>
         </div>
 
         <div className="p-8 hidden md:flex flex-col gap-4 items-center justify-center w-1/4 border-r border-red">
@@ -173,15 +204,31 @@ const AdminDashboard = () => {
           <h2 className="text-xl font-medium">Recent Activity</h2>
           <p className="text-red underline cursor-pointer">View all</p>
         </span>
-        {NotificationDetails.map((item) => (
-          <Notification
-            key={item.text}
-            icon={item.icon}
-            date={item.date}
-            title={item.title}
-            text={item.text}
-          />
-        ))}
+
+        {loading ? (
+          <div className="space-y-5 mt-5">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <div key={index} className="flex items-center space-x-4">
+                <Skeleton className="h-12 w-12 rounded-full" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-[250px]" />
+                  <Skeleton className="h-4 w-[200px]" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          recentActivity &&
+          recentActivity.map((item: Activity) => (
+            <Notification
+              key={item.id}
+              icon={item.activity_type === "success" ? messageIcon : shieldIcon}
+              date={item.date}
+              title={item.title}
+              text={item.body}
+            />
+          ))
+        )}
       </div>
     </AdminLayout>
   );

@@ -17,13 +17,76 @@ import { createCandidateProfile } from "@/lib/actions/user.actions";
 const CreateCandidateProfile = () => {
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Input states
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullname, setFullname] = useState("");
   const [university, setUniversity] = useState("");
   const [course, setCourse] = useState("");
 
+  // Error states
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [fullnameError, setFullnameError] = useState("");
+  const [universityError, setUniversityError] = useState("");
+  const [courseError, setCourseError] = useState("");
+
+  const validateFields = () => {
+    let valid = true;
+
+    // Email validation
+    if (!email) {
+      setEmailError("Email is required");
+      valid = false;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      setEmailError("Invalid email format");
+      valid = false;
+    } else {
+      setEmailError("");
+    }
+
+    // Password validation
+    if (!password) {
+      setPasswordError("Password is required");
+      valid = false;
+    } else if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters");
+      valid = false;
+    } else {
+      setPasswordError("");
+    }
+
+    // Full name validation
+    if (!fullname) {
+      setFullnameError("Full name is required");
+      valid = false;
+    } else {
+      setFullnameError("");
+    }
+
+    // University validation
+    if (!university) {
+      setUniversityError("Please select a university");
+      valid = false;
+    } else {
+      setUniversityError("");
+    }
+
+    // Course validation
+    if (!course) {
+      setCourseError("Please select a course");
+      valid = false;
+    } else {
+      setCourseError("");
+    }
+
+    return valid;
+  };
+
   const createProfile = async () => {
+    if (!validateFields()) return;
+
     setIsLoading(true);
 
     try {
@@ -37,7 +100,6 @@ const CreateCandidateProfile = () => {
       });
 
       if (response) {
-        console.log(response);
         setSuccess(true);
         localStorage.setItem("user_password", password);
       } else {
@@ -52,7 +114,12 @@ const CreateCandidateProfile = () => {
 
   return (
     <AdminLayout>
-      {success && <CandidateProfileSuccess />}
+      {success && (
+        <CandidateProfileSuccess
+          type="candidate"
+          text="Registration Successful"
+        />
+      )}
 
       <div className="flex flex-col mx-auto gap-12 lg:max-w-[800px]">
         <div className="flex items-center">
@@ -81,21 +148,25 @@ const CreateCandidateProfile = () => {
                   onChange={(e) => setEmail(e.target.value)} // Update email state
                 />
               </div>
+              {emailError && <p className="text-red text-sm">{emailError}</p>}
             </div>
 
             <div className="flex flex-col w-full gap-1.5">
-              <label htmlFor="email">
+              <label htmlFor="password">
                 Password <span className="text-red">*</span>
               </label>
               <div className="flex border border-gray-border w-full justify-between gap-2 items-center py-2 px-4 rounded-lg">
                 <input
                   className="border-none w-full focus:outline-none"
-                  id="email"
+                  id="password"
                   placeholder="Enter a password for candidate"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)} // Update email state
+                  onChange={(e) => setPassword(e.target.value)} // Update password state
                 />
               </div>
+              {passwordError && (
+                <p className="text-red text-sm">{passwordError}</p>
+              )}
             </div>
 
             <div className="flex flex-col w-full gap-1.5">
@@ -109,10 +180,13 @@ const CreateCandidateProfile = () => {
                   onChange={(e) => setFullname(e.target.value)} // Update fullname state
                 />
               </div>
+              {fullnameError && (
+                <p className="text-red text-sm">{fullnameError}</p>
+              )}
             </div>
 
             <div className="flex flex-col w-full gap-1.5">
-              <p className="">Select University</p>
+              <p>Select University</p>
               <Select onValueChange={setUniversity}>
                 {/* Update university state */}
                 <SelectTrigger className="border-gray-border">
@@ -130,10 +204,13 @@ const CreateCandidateProfile = () => {
                   </SelectItem>
                 </SelectContent>
               </Select>
+              {universityError && (
+                <p className="text-red text-sm">{universityError}</p>
+              )}
             </div>
 
             <div className="flex flex-col w-full gap-1.5">
-              <p className="">Select Course</p>
+              <p>Select Course</p>
               <Select onValueChange={setCourse}>
                 {/* Update course state */}
                 <SelectTrigger className="border-gray-border">
@@ -151,6 +228,7 @@ const CreateCandidateProfile = () => {
                   </SelectItem>
                 </SelectContent>
               </Select>
+              {courseError && <p className="text-red text-sm">{courseError}</p>}
             </div>
           </div>
 

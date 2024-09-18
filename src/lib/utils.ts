@@ -3,6 +3,14 @@ import { twMerge } from "tailwind-merge";
 import { z } from "zod";
 import { FieldError, Merge, FieldErrorsImpl } from "react-hook-form";
 
+interface ToastConfig {
+  variant: "success" | "destructive";
+  title: string;
+  description: string;
+}
+
+type ToastFunction = (config: ToastConfig) => void;
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -19,8 +27,7 @@ export const getErrorMessage = (
   return error.message;
 };
 
-// src/utils/clipboardUtils.ts
-export const copyToClipboard = async (text: string, toast: any): Promise<void> => {
+export const copyToClipboard = async (text: string, toast: ToastFunction): Promise<void> => {
   try {
     await navigator.clipboard.writeText(text);
     toast({
