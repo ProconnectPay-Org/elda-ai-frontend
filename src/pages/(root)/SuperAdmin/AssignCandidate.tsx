@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import ReactSelect, { MultiValue, SingleValue } from "react-select";
 import { getAllCandidates } from "@/lib/actions/user.actions";
-import { CandidateData, OptionType } from "@/types";
+import { AllCandidates, OptionType } from "@/types";
 
 const AssignCandidate: React.FC = () => {
   const [selectedStaff, setSelectedStaff] =
@@ -53,12 +53,12 @@ const AssignCandidate: React.FC = () => {
         const response = await getAllCandidates();
         if (response && response.results) {
           const unassignedCandidates = response.results.filter(
-            (candidate: CandidateData) => !candidate.assigned
+            (candidate: AllCandidates) => !candidate.assigned
           );
           const options = unassignedCandidates.map(
-            (candidate: CandidateData) => ({
-              value: candidate.full_name,
-              label: candidate.full_name,
+            (candidate: AllCandidates) => ({
+              value: candidate.user?.full_name,
+              label: candidate.user?.full_name,
             })
           );
           setCandidateOptions(options);

@@ -1,9 +1,7 @@
 import {
-  AllColumn,
+  CandidateData,
   CreateCandidateProfileProps,
-  Payment,
   TeamMemberColumn,
-  UserType,
   signInProps,
 } from "@/types";
 import RedCircle from "../../assets/red-circle.svg";
@@ -24,6 +22,24 @@ export const adminSignIn = async ({ email, password }: signInProps) => {
     console.error("Sign-in error:", error);
     throw error;
   }
+};
+
+export const logoutAccount = async (role: "candidate" | "staff" | "admin") => {
+  switch (role) {
+    case "admin":
+      localStorage.removeItem("admin_access_token");
+      break;
+    case "staff":
+      localStorage.removeItem("staff_access_token");
+      break;
+    case "candidate":
+      localStorage.removeItem("candidate_access_token");
+      break;
+    default:
+      console.log("Invalid role");
+      return;
+  }
+  console.log(`${role} logged out`);
 };
 
 export const getUserInfo = async () => {};
@@ -171,12 +187,12 @@ export const getSingleStaff = async (id: number | string) => {
   }
 };
 
-export const getLoggedInUser = async (): Promise<UserType | null> => {
+export const getLoggedInUser = async () => {
   try {
-    const token = localStorage.getItem("access_token");
+    const token = localStorage.getItem("staff_access_token");
     if (!token) return null;
 
-    const response = await axios.get<UserType>(`${API_URL}auth/profile/`, {
+    const response = await axios.get(`${API_URL}auth/profile/`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -202,25 +218,20 @@ export const candidateSignIn = async ({ email, password }: signInProps) => {
   }
 };
 
-export const logoutAccount = async () => {
-  localStorage.removeItem("access_token");
-  console.log("logged out");
-};
-
-export async function getData(): Promise<Payment[]> {
+export async function getData(): Promise<CandidateData[]> {
   return [
     {
       id: "m5gr84i9",
       amount: 316,
       email: "ken99@yahoo.com",
-      serialNumber: 1,
+      serial_number: 1,
       name: "Ken Smith",
-      recommendedSchool: "Harvard University",
-      recommendedCourse: "Computer Science",
+      recommended_school: "Harvard University",
+      recommended_course: "Computer Science",
       resume: "resume_1",
       sop: "sop_1",
-      schoolApplicationStarted: RedCircle,
-      schoolApplicationCompleted: RedCircle,
+      school_application_started: RedCircle,
+      school_application_completed: RedCircle,
       status: "completed",
       phone: "+234 709 823 4343",
     },
@@ -228,14 +239,14 @@ export async function getData(): Promise<Payment[]> {
       id: "3u1reuv4",
       amount: 242,
       email: "Abe45@gmail.com",
-      serialNumber: 2,
+      serial_number: 2,
       name: "Abe Johnson",
-      recommendedSchool: "Stanford University",
-      recommendedCourse: "Electrical Engineering",
+      recommended_school: "Stanford University",
+      recommended_course: "Electrical Engineering",
       resume: "resume_2",
       sop: "sop_2",
-      schoolApplicationStarted: RedCircle,
-      schoolApplicationCompleted: RedCircle,
+      school_application_started: RedCircle,
+      school_application_completed: RedCircle,
       status: "not completed",
       phone: "+234 709 823 4343",
     },
@@ -243,14 +254,14 @@ export async function getData(): Promise<Payment[]> {
       id: "derv1ws0",
       amount: 837,
       email: "Monserrat44@gmail.com",
-      serialNumber: 3,
+      serial_number: 3,
       name: "Monserrat Gomez",
-      recommendedSchool: "MIT",
-      recommendedCourse: "Mechanical Engineering",
+      recommended_school: "MIT",
+      recommended_course: "Mechanical Engineering",
       resume: "resume_3",
       sop: "sop_3",
-      schoolApplicationStarted: "true05",
-      schoolApplicationCompleted: "true16",
+      school_application_started: "true05",
+      school_application_completed: "true16",
       status: "completed",
       phone: "+234 709 823 4343",
     },
@@ -258,14 +269,14 @@ export async function getData(): Promise<Payment[]> {
       id: "5kma53ae",
       amount: 874,
       email: "Silas22@gmail.com",
-      serialNumber: 4,
+      serial_number: 4,
       name: "Silas Thompson",
-      recommendedSchool: "UC Berkeley",
-      recommendedCourse: "Data Science",
+      recommended_school: "UC Berkeley",
+      recommended_course: "Data Science",
       resume: "resume_4",
       sop: "sop_4",
-      schoolApplicationStarted: "true07",
-      schoolApplicationCompleted: "true17",
+      school_application_started: "true07",
+      school_application_completed: "true17",
       status: "not completed",
       phone: "+234 709 823 4343",
     },
@@ -273,93 +284,16 @@ export async function getData(): Promise<Payment[]> {
       id: "bhqecj4p",
       amount: 721,
       email: "carmella@hotmail.com",
-      serialNumber: 5,
+      serial_number: 5,
       name: "Carmella Lee",
-      recommendedSchool: "Princeton University",
-      recommendedCourse: "Physics",
+      recommended_school: "Princeton University",
+      recommended_course: "Physics",
       resume: "resume_5",
       sop: "sop_5",
-      schoolApplicationStarted: "true09",
-      schoolApplicationCompleted: "true18",
+      school_application_started: "true09",
+      school_application_completed: "true18",
       status: "completed",
       phone: "+234 709 823 4343",
-    },
-  ];
-}
-
-export async function getAllData(): Promise<AllColumn[]> {
-  return [
-    {
-      id: "m5gr84i9",
-      serialNumber: 1,
-      candidateName: "Ken Smith",
-      country: "Nigeria",
-      assignedUniversity: "Harvard University",
-      assignedCourse: "Computer Science",
-      schoolApplicationStatus: "true01",
-      resumeStatus: "true14",
-      sopStatus: "not completed",
-      duplicate: "Duplicate",
-    },
-    {
-      id: "b2fg93h1",
-      serialNumber: 2,
-      candidateName: "Jane Doe",
-      country: "Ghana",
-      assignedUniversity: "Stanford University",
-      assignedCourse: "Mechanical Engineering",
-      schoolApplicationStatus: "true05",
-      resumeStatus: "true11",
-      sopStatus: "completed",
-      duplicate: "Not Duplicate",
-    },
-    {
-      id: "c8hx67m4",
-      serialNumber: 3,
-      candidateName: "John Carter",
-      country: "South Africa",
-      assignedUniversity: "Massachusetts Institute of Technology",
-      assignedCourse: "Electrical Engineering",
-      schoolApplicationStatus: "true07",
-      resumeStatus: "true10",
-      sopStatus: "not completed",
-      duplicate: "Duplicate",
-    },
-    {
-      id: "d1kl09n8",
-      serialNumber: 4,
-      candidateName: "Emily Clark",
-      country: "Kenya",
-      assignedUniversity: "University of Cambridge",
-      assignedCourse: "Chemical Engineering",
-      schoolApplicationStatus: "true03",
-      resumeStatus: "true13",
-      sopStatus: "completed",
-      duplicate: "Not Duplicate",
-    },
-    {
-      id: "e4mn23v6",
-      serialNumber: 5,
-      candidateName: "Michael Brown",
-      country: "Uganda",
-      assignedUniversity: "University of Oxford",
-      assignedCourse: "Civil Engineering",
-      schoolApplicationStatus: "true02",
-      resumeStatus: "true12",
-      sopStatus: "not completed",
-      duplicate: "Duplicate",
-    },
-    {
-      id: "f9op45w2",
-      serialNumber: 6,
-      candidateName: "Sarah Johnson",
-      country: "Tanzania",
-      assignedUniversity: "California Institute of Technology",
-      assignedCourse: "Aerospace Engineering",
-      schoolApplicationStatus: "true08",
-      resumeStatus: "true09",
-      sopStatus: "completed",
-      duplicate: "Not Duplicate",
     },
   ];
 }

@@ -9,7 +9,7 @@ const HomeNavBar = () => {
         <img src={Logo} alt="logo" className="w-full h-full" />
       </div>
       <Button className="bg-red rounded-lg p-3 w-28 h-12 text-lg flex items-center justify-center">
-        <Link to="/admin/sign-in">Sign In</Link>
+        <Link to="/sign-in">Sign In</Link>
       </Button>
     </div>
   );

@@ -38,7 +38,7 @@ declare type signInProps = {
 
 declare type CreateCandidateProfileProps = {
   email: string;
-  password?: string;
+  password: string;
   full_name?: string;
   role: "candidate" | "admin" | "staff";
 };
@@ -66,41 +66,11 @@ interface Profile {
   user: number;
 }
 
-export interface OptionType {
-  value: string;
-  label: string;
-}
-
-export interface CandidateData {
-  serialNumber: number;
-  full_name: string;
-  country: string;
-  assigned_university: string;
-  assigned_course: string;
-  school_application_status: string;
-  resume_status: string;
-  sop_status: string;
-  duplicate: string;
-  assigned: boolean;
-}
-
 declare type UserType = {
   id: number;
   email: string;
   role: "candidate" | "staff" | "admin";
   profile: Profile;
-};
-
-declare type LoginUser = {
-  email: string;
-  password: string;
-};
-
-declare type NewUserParams = {
-  userId: string;
-  email: string;
-  name: string;
-  password: string;
 };
 
 declare type OptionType = {
@@ -122,20 +92,20 @@ interface User {
   is_superuser?: boolean;
   last_login: Date | null;
   password?: string;
-  user_permissions: string[] | any[]; 
+  user_permissions: string[] | any[];
 }
 
 declare type DottedBoxProps = {
   docType: string;
   icon: string;
-  href: string; // Optional onClick function
+  href: string;
   className: string;
 };
 
 declare type SmallBoxProps = {
   name: string;
   icon: string;
-  number: number; // Optional onClick function
+  number: number;
 };
 
 declare type NotificationProps = {
@@ -144,13 +114,6 @@ declare type NotificationProps = {
   text: string;
   date: string;
 };
-
-declare interface HeaderBoxProps {
-  type?: "title" | "greeting";
-  title: string;
-  subtext: string;
-  user?: string;
-}
 
 declare interface MobileNavProps {
   user: User;
@@ -200,7 +163,6 @@ declare interface ResumeFormData {
 // validationSchemas.ts
 export type Step1FormData = z.infer<typeof step1Schema>;
 export type Step2FormData = z.infer<typeof step2Schema>;
-// Define types for other steps similarly
 export type Step3FormData = z.infer<typeof step3Schema>;
 export type Step4FormData = z.infer<typeof step4Schema>;
 export type Step5FormData = z.infer<typeof step5Schema>;
@@ -211,20 +173,18 @@ export type FormData = Step1FormData &
   Step4FormData &
   Step5FormData;
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Payment = {
+export type CandidateData = {
   id: string;
   amount: number;
   email: string;
-  serialNumber: number;
+  serial_number: number;
   name: string;
-  recommendedSchool: string;
-  recommendedCourse: string;
+  recommended_school: string;
+  recommended_course: string;
   resume: string;
   sop: string;
-  schoolApplicationStarted: string;
-  schoolApplicationCompleted: string;
+  school_application_started: string;
+  school_application_completed: string;
   status: string;
   phone: string;
 };

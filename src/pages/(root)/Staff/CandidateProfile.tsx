@@ -2,14 +2,14 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import RootLayout from "@/layouts/RootLayout";
 import { getData } from "@/lib/actions/user.actions";
-import { Payment } from "@/types";
+import { CandidateData } from "@/types";
 import { MailIcon, PhoneCallIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
 
 const CandidateProfile = () => {
   const { id } = useParams<{ id: string }>();
-  const [candidate, setCandidate] = useState<Payment | null>(null);
+  const [candidate, setCandidate] = useState<CandidateData | null>(null);
 
   useEffect(() => {
     const fetchCandidateData = async () => {
@@ -33,14 +33,16 @@ const CandidateProfile = () => {
             {/* <img src="" alt="" /> */}
             <Avatar className="w-20 h-20">
               <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback className="font-bold">{getInitials(candidate.name)}</AvatarFallback>
+              <AvatarFallback className="font-bold">
+                {getInitials(candidate.name)}
+              </AvatarFallback>
             </Avatar>
           </div>
           <div className="flex flex-col gap-2">
             <p className="font-semibold text-2xl">{candidate.name}</p>
             <p>Profession: Accountant</p>
-            <p>Course: {candidate.recommendedCourse}</p>
-            <p>School: {candidate.recommendedSchool}</p>
+            <p>Course: {candidate.recommended_course}</p>
+            <p>School: {candidate.recommended_school}</p>
             <div className="flex items-center gap-4">
               <div className="bg-pale-bg text-red rounded-xl px-2 text-xs flex items-center gap-1 py-1">
                 <PhoneCallIcon size={16} />
@@ -81,22 +83,30 @@ const CandidateProfile = () => {
       <div className="flex flex-col gap-4">
         <span className="flex gap-5 items-center">
           <h3 className="font-semibold text-lg">EDUCATION HISTORY</h3>
-          <p className="text-[#5E6366] font-semibold">2 degrees(BSc and Masters)</p>
+          <p className="text-[#5E6366] font-semibold">
+            2 degrees(BSc and Masters)
+          </p>
         </span>
         <span className="flex gap-5 items-center">
           <p className="text-[#5E6366] font-semibold">2014-2019</p>
-          <p className="font-semibold">Bachelor of Science at University of Lagos</p>
+          <p className="font-semibold">
+            Bachelor of Science at University of Lagos
+          </p>
         </span>
         <span className="flex gap-5 items-center">
           <p className="text-[#5E6366] font-semibold">2020-2021</p>
-          <p className="font-semibold">Masters of Science at University of Benin</p>
+          <p className="font-semibold">
+            Masters of Science at University of Benin
+          </p>
         </span>
       </div>
       <hr className="w-full h-2 my-8" />
       <div className="flex flex-col gap-4">
         <span className="flex gap-5 items-center">
           <h3 className="font-semibold text-lg">WORK HISTORY</h3>
-          <p className="text-[#5E6366] font-semibold">2 degrees(BSc and Masters)</p>
+          <p className="text-[#5E6366] font-semibold">
+            2 degrees(BSc and Masters)
+          </p>
         </span>
         <span className="flex gap-5 items-center">
           <p className="text-[#5E6366] font-semibold">2014-2019</p>

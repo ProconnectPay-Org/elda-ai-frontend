@@ -10,10 +10,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
-import { Payment } from "@/types";
+import { CandidateData } from "@/types";
 import RedCircle from "@/assets/red-circle.svg";
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<CandidateData>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -37,7 +37,7 @@ export const columns: ColumnDef<Payment>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "serialNumber",
+    accessorKey: "serial_number",
     header: "S/N",
   },
   {
@@ -45,11 +45,11 @@ export const columns: ColumnDef<Payment>[] = [
     header: "Student Name",
   },
   {
-    accessorKey: "recommendedSchool",
+    accessorKey: "recommended_school",
     header: "Recommended School",
   },
   {
-    accessorKey: "recommendedCourse",
+    accessorKey: "recommended_course",
     header: "Recommended Course",
   },
   {
@@ -81,7 +81,7 @@ export const columns: ColumnDef<Payment>[] = [
       ),
   },
   {
-    accessorKey: "schoolApplicationStarted",
+    accessorKey: "school_application_started",
     header: () => (
       <div>
         <p className="text-center">School Application Started</p>
@@ -97,7 +97,7 @@ export const columns: ColumnDef<Payment>[] = [
       ),
   },
   {
-    accessorKey: "schoolApplicationCompleted",
+    accessorKey: "school_application_completed",
     header: () => (
       <div>
         <p className="text-center">School Application Completed</p>

@@ -31,7 +31,7 @@ function App() {
         <Route element={<Home />} path="/" />
         {/* <Route element={<SignUp />} path="/sign-up" /> */}
         {/* SUPER ADMIN */}
-        <Route element={<AdminSignIn />} path="/admin/sign-in" />
+        <Route element={<AdminSignIn />} path="/sign-in" />
         <Route element={<AdminDashboard />} path="/admin-dashboard" />
         <Route
           element={<CreateCandidateProfile />}

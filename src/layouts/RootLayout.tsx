@@ -13,7 +13,7 @@ const RootLayout = ({ children, title }: AuthLayoutProps) => {
 
   useEffect(() => {
     if (!staff_access_token) {
-      navigate("/staff/sign-in");
+      navigate("/sign-in");
     }
   }, [staff_access_token, navigate]);
 

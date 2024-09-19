@@ -17,6 +17,7 @@ import { getAdminInfo } from "@/lib/actions/user.actions";
 import messageIcon from "@/assets/message-icon.png";
 import shieldIcon from "@/assets/shield-icon.png";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AxiosError } from "axios";
 
 interface Activity {
   id: string | number;
@@ -44,7 +45,17 @@ const AdminDashboard = () => {
         setNumberOfCandidate(data?.total_candidates);
         setRecentActivity(data?.recent_activities);
       } catch (err) {
-        setError("Failed to fetch admin info. Please try again later.");
+        if (err instanceof AxiosError) {
+          if (err.response) {
+            setError(err.response.data?.message || "An error occurred");
+          } else if (err.request) {
+            setError("No response from server. Please try again later.");
+          } else {
+            setError("Error in sending request: " + err.message);
+          }
+        } else {
+          setError("An unexpected error occurred. Please try again later.");
+        }
         console.error("Error fetching admin info:", err);
       } finally {
         setLoading(false);

@@ -10,7 +10,7 @@ import { Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import CustomInput from "./CustomInput";
 import { adminSignIn } from "@/lib/actions/user.actions";
-import GoogleIcon from "@/assets/google-logo.svg";
+// import GoogleIcon from "@/assets/google-logo.svg";
 import { toast } from "./ui/use-toast";
 
 const AuthForm = () => {
@@ -20,7 +20,6 @@ const AuthForm = () => {
 
   const formSchema = authFormSchema();
 
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -29,7 +28,6 @@ const AuthForm = () => {
     },
   });
 
-  // 2. Define a submit handler.
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
 
@@ -40,13 +38,28 @@ const AuthForm = () => {
       });
 
       if (response) {
-        localStorage.setItem("access_token", response.access);
         toast({
           title: "Success",
           description: "Sign-in successful. Redirecting...",
           variant: "success",
         });
-        navigate("/admin-dashboard");
+
+        console.log(response);
+
+        const userRole = response.user.role;
+
+        if (userRole === "admin") {
+          localStorage.setItem("access_token", response.access);
+          navigate("/admin-dashboard");
+        } else if (userRole === "staff") {
+          localStorage.setItem("staff_access_token", response.access);
+          navigate("/assigned-candidates");
+        } else if (userRole === "candidate") {
+          localStorage.setItem("candidate_access_token", response.access);
+          navigate("/register");
+        } else {
+          navigate("/");
+        }
       } else {
         toast({
           title: "Error",
@@ -109,19 +122,19 @@ const AuthForm = () => {
         </form>
       </Form>
 
-      <div className="flex items-center my-4">
+      {/* <div className="flex items-center my-4">
         <div className="flex-grow border-t border-gray-300"></div>
         <span className="mx-4 text-gray-500">OR</span>
         <div className="flex-grow border-t border-gray-300"></div>
-      </div>
+      </div> */}
 
-      <Button
+      {/* <Button
         variant={"outline"}
         className="w-full bg-white text-[#333333] border-[#333333] gap-2"
       >
         <img src={GoogleIcon} alt="google icon" />
         Continue with Google
-      </Button>
+      </Button> */}
     </section>
   );
 };

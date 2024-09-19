@@ -6,7 +6,6 @@ import { columns } from "@/components/ui/Columns";
 import { smallBox } from "@/constants";
 // import useAuth from "@/hooks/useAuth";
 import RootLayout from "@/layouts/RootLayout";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -18,13 +17,16 @@ import { copyToClipboard } from "@/lib/utils";
 import DottedBox from "@/components/DottedBox";
 import { CopyIcon, MailIcon, PhoneCallIcon } from "lucide-react";
 import { getData } from "@/lib/actions/user.actions";
-import { Payment } from "@/types";
+import { CandidateData } from "@/types";
 import { useToast } from "@/components/ui/use-toast";
 
 const AssignedCandidates = () => {
-  const [tableData, setTableData] = useState<Payment[]>([]);
-  const [selectedRowData, setSelectedRowData] = useState<Payment | null>(null);
+  const [tableData, setTableData] = useState<CandidateData[]>([]);
+  const [selectedRowData, setSelectedRowData] = useState<CandidateData | null>(
+    null
+  );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const { toast } = useToast();
 
   useEffect(() => {
@@ -36,7 +38,7 @@ const AssignedCandidates = () => {
     fetchTableData();
   }, []);
 
-  const handleRowClick = (row: Payment) => {
+  const handleRowClick = (row: CandidateData) => {
     setSelectedRowData(row);
     setIsDialogOpen(true);
   };
@@ -136,7 +138,7 @@ const AssignedCandidates = () => {
                 <div className="w-1/2">
                   <p>Recommended School</p>
                   <p className="text-primary font-medium">
-                    {selectedRowData.recommendedSchool}
+                    {selectedRowData.recommended_school}
                   </p>
                 </div>
               </div>
@@ -157,7 +159,7 @@ const AssignedCandidates = () => {
                 <div className="w-1/2">
                   <p>Recommended Course</p>
                   <p className="text-primary font-medium">
-                    {selectedRowData.recommendedCourse}
+                    {selectedRowData.recommended_course}
                   </p>
                 </div>
               </div>
@@ -168,9 +170,12 @@ const AssignedCandidates = () => {
                   docType="Draft Statement Of Purpose"
                   icon=""
                 />
-                <Button className="bg-red w-1/2 hover:bg-pale-bg hover:text-red border hover:border-red">
-                  <Link to="/refine-resume">Refine Resume</Link>
-                </Button>
+                <Link
+                  to="/refine-resume"
+                  className="bg-red w-1/2 hover:bg-pale-bg text-white hover:text-red border hover:border-red text-center py-2 rounded-md"
+                >
+                  Refine Resume
+                </Link>
               </div>
             </DialogDescription>
           </DialogContent>

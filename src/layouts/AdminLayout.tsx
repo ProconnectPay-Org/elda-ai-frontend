@@ -48,7 +48,7 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
 
   useEffect(() => {
     if (!access_token) {
-      navigate("/admin/sign-in");
+      navigate("/sign-in");
     }
   }, [access_token, navigate]);
 
