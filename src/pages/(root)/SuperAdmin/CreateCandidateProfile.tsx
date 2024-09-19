@@ -1,12 +1,5 @@
 import AdminLayout from "@/layouts/AdminLayout";
 import Mail from "../../../assets/mail.png";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import CandidateProfileSuccess from "@/components/CandidateProfileSuccess";
 import { useState } from "react";
@@ -22,15 +15,11 @@ const CreateCandidateProfile = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullname, setFullname] = useState("");
-  const [university, setUniversity] = useState("");
-  const [course, setCourse] = useState("");
 
   // Error states
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [fullnameError, setFullnameError] = useState("");
-  const [universityError, setUniversityError] = useState("");
-  const [courseError, setCourseError] = useState("");
 
   const validateFields = () => {
     let valid = true;
@@ -65,22 +54,6 @@ const CreateCandidateProfile = () => {
       setFullnameError("");
     }
 
-    // University validation
-    if (!university) {
-      setUniversityError("Please select a university");
-      valid = false;
-    } else {
-      setUniversityError("");
-    }
-
-    // Course validation
-    if (!course) {
-      setCourseError("Please select a course");
-      valid = false;
-    } else {
-      setCourseError("");
-    }
-
     return valid;
   };
 
@@ -94,8 +67,6 @@ const CreateCandidateProfile = () => {
         email,
         password,
         full_name: fullname,
-        university,
-        course,
         role: "candidate",
       });
 
@@ -114,12 +85,7 @@ const CreateCandidateProfile = () => {
 
   return (
     <AdminLayout>
-      {success && (
-        <CandidateProfileSuccess
-          type="candidate"
-          text="Registration Successful"
-        />
-      )}
+      {success && <CandidateProfileSuccess text="Registration Successful" />}
 
       <div className="flex flex-col mx-auto gap-12 lg:max-w-[800px]">
         <div className="flex items-center">
@@ -185,51 +151,7 @@ const CreateCandidateProfile = () => {
               )}
             </div>
 
-            <div className="flex flex-col w-full gap-1.5">
-              <p>Select University</p>
-              <Select onValueChange={setUniversity}>
-                {/* Update university state */}
-                <SelectTrigger className="border-gray-border">
-                  <SelectValue placeholder="Select University" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Harvard University">
-                    Harvard University
-                  </SelectItem>
-                  <SelectItem value="Cambridge University">
-                    Cambridge University
-                  </SelectItem>
-                  <SelectItem value="Oxford University">
-                    Oxford University
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              {universityError && (
-                <p className="text-red text-sm">{universityError}</p>
-              )}
-            </div>
-
-            <div className="flex flex-col w-full gap-1.5">
-              <p>Select Course</p>
-              <Select onValueChange={setCourse}>
-                {/* Update course state */}
-                <SelectTrigger className="border-gray-border">
-                  <SelectValue placeholder="Select Course" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Product Management">
-                    Product Management
-                  </SelectItem>
-                  <SelectItem value="Estate Management">
-                    Estate Management
-                  </SelectItem>
-                  <SelectItem value="Computer Science">
-                    Computer Science
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              {courseError && <p className="text-red text-sm">{courseError}</p>}
-            </div>
+            {/*  */}
           </div>
 
           <Button

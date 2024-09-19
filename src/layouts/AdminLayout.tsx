@@ -13,6 +13,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { useEffect } from "react";
 
 const sidebarLinks = [
   {
@@ -45,8 +46,14 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
   const access_token = localStorage.getItem("access_token");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!access_token) {
+      navigate("/admin/sign-in");
+    }
+  }, [access_token, navigate]);
+
   if (!access_token) {
-    navigate("/admin/sign-in");
+    return null;
   }
 
   return (

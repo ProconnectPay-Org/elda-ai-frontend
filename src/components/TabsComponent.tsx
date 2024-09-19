@@ -1,43 +1,33 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTable } from "./DataTable";
 import { useEffect, useState } from "react";
-import { AllCandidatesResponse } from "@/types";
+import { AllCandidates, AllCandidatesResponse } from "@/types";
 import { getAllCandidates } from "@/lib/actions/user.actions";
 import { allTabsColumns } from "./AllTabsColumns";
 
-interface CandidateData {
-  serialNumber: number;
-  full_name: string;
-  country: string;
-  university: string;
-  course: string;
-  schoolApplicationStatus: string;
-  resumeStatus: string;
-  sopStatus: string;
-  duplicate: string;
-  assigned: boolean;
-}
-
 const TabsComponent = () => {
-  const [tableData, setTableData] = useState<CandidateData[]>([]);
+  const [tableData, setTableData] = useState<AllCandidates[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchTableData = async () => {
       try {
         const data: AllCandidatesResponse = await getAllCandidates();
+        console.log(data);
 
-        const candidatesWithSerial: CandidateData[] = data.results.map(
+        const candidatesWithSerial: AllCandidates[] = data.results.map(
           (candidate, index) => ({
             ...candidate,
             serialNumber: index + 1,
-            country: candidate.country || "No country", // Set default values
-            university: candidate.university || "No university",
-            course: candidate.course || "No course assigned",
-            schoolApplicationStatus:
-              candidate.schoolApplicationStatus || "No status",
-            resumeStatus: candidate.resumeStatus || "No status",
-            sopStatus: candidate.sopStatus || "No status",
+            full_name: candidate.user?.full_name || "No name",
+            country: candidate.user?.country || "No country",
+            assigned_university:
+              candidate.assigned_university || "No university",
+            assigned_course: candidate.assigned_course || "No course assigned",
+            school_application_status:
+              candidate.school_application_status || "No status",
+            resume_status: candidate.resume_status || "No status",
+            sop_status: candidate.sop_status || "No status",
             duplicate: candidate.duplicate || "none",
           })
         );
@@ -85,17 +75,29 @@ const TabsComponent = () => {
       <div className="w-full">
         {/* Display all candidates */}
         <TabsContent value="all">
-          <DataTable columns={allTabsColumns} data={tableData} isLoading={isLoading} />
+          <DataTable
+            columns={allTabsColumns}
+            data={tableData}
+            isLoading={isLoading}
+          />
         </TabsContent>
 
         {/* Display only assigned candidates */}
         <TabsContent value="assigned">
-          <DataTable columns={allTabsColumns} data={assignedData} isLoading={isLoading} />
+          <DataTable
+            columns={allTabsColumns}
+            data={assignedData}
+            isLoading={isLoading}
+          />
         </TabsContent>
 
         {/* Display only unassigned candidates */}
         <TabsContent value="unassigned">
-          <DataTable columns={allTabsColumns} data={unassignedData} isLoading={isLoading} />
+          <DataTable
+            columns={allTabsColumns}
+            data={unassignedData}
+            isLoading={isLoading}
+          />
         </TabsContent>
       </div>
     </Tabs>

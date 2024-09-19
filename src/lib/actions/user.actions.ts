@@ -53,10 +53,8 @@ export const emailPost = async () => {};
 
 export const createCandidateProfile = async ({
   email,
-  full_name,
-  university,
-  course,
   password,
+  full_name,
   role,
 }: CreateCandidateProfileProps) => {
   try {
@@ -70,10 +68,8 @@ export const createCandidateProfile = async ({
       `${API_URL}auth/create-user/`,
       {
         email,
-        full_name,
-        university,
-        course,
         password,
+        full_name,
         role,
       },
       {
@@ -112,9 +108,68 @@ export const getAllCandidates = async () => {
   }
 };
 
-export const getSingleCandidate = async () => {};
+export const getSingleCandidate = async (id: number | string) => {
+  const access_token = localStorage.getItem("access_token");
 
-export const getStaffDetails = async () => {};
+  if (!access_token) {
+    throw new Error("Access token is missing. Please sign in again.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}all-candidates/${id}/`, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching admin info:", error);
+    throw error;
+  }
+};
+
+export const getAllStaff = async () => {
+  const access_token = localStorage.getItem("access_token");
+
+  if (!access_token) {
+    throw new Error("Access token is missing. Please sign in again.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}all-staffs/`, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching admin info:", error);
+    throw error;
+  }
+};
+
+export const getSingleStaff = async (id: number | string) => {
+  const access_token = localStorage.getItem("access_token");
+
+  if (!access_token) {
+    throw new Error("Access token is missing. Please sign in again.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}all-staffs/${id}`, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching admin info:", error);
+    throw error;
+  }
+};
 
 export const getLoggedInUser = async (): Promise<UserType | null> => {
   try {

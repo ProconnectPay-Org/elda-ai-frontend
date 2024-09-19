@@ -30,16 +30,22 @@ export const StaffColumns: ColumnDef<any>[] = [
   //     header: "S/N",
   //   },
   {
-    accessorKey: "fullName",
+    accessorKey: "full_name",
     header: "Full Name",
+    cell: ({ row }) => (
+      <p className="capitalize">{row.original.full_name || "No name"}</p>
+    ),
   },
   {
-    accessorKey: "staffStatus",
+    accessorKey: "status",
     header: "Staff Status",
   },
   {
-    accessorKey: "assignedCandidates",
+    accessorKey: "assigned_candidates",
     header: "Assigned Candidates",
+    cell: ({ row }) => (
+      <p className="capitalize font-semibold">{row.original.assigned_candidates || "0"}</p>
+    ),
   },
   {
     accessorKey: "permission",

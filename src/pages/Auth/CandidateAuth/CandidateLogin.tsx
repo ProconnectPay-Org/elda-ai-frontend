@@ -41,7 +41,7 @@ const CandidateLogin = () => {
       if (response) {
         localStorage.setItem("candidate_access_token", response.access);
         console.log(response);
-        navigate("/candidate/status");
+        navigate("/register");
       } else {
         console.log("Sign-in failed: Invalid credentials");
       }

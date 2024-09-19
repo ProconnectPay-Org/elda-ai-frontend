@@ -2,18 +2,41 @@ import { DataTable } from "@/components/DataTable";
 import { StaffColumns } from "@/components/StaffColumns";
 import { Button } from "@/components/ui/button";
 import AdminLayout from "@/layouts/AdminLayout";
-import { getTeamMembersData } from "@/lib/actions/user.actions";
-import { TeamMemberColumn } from "@/types";
+import { getAllStaff } from "@/lib/actions/user.actions";
+import { AllStaff, AllStaffResponse } from "@/types";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+
 const Staff = () => {
-  const [tableData, setTableData] = useState<TeamMemberColumn[]>([]);
+  const [tableData, setTableData] = useState<AllStaff[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchTableData = async () => {
-      const data = await getTeamMembersData();
-      setTableData(data);
+      try {
+        const data: AllStaffResponse = await getAllStaff();
+        console.log(data);
+
+        const staffWithSerial: AllStaff[] = data.results.map(
+          (staff, index) => ({
+            ...staff,
+            full_name: staff.user?.full_name || "No name",
+            serialNumber: index + 1,
+            status: staff.status || "Inactive",
+            assigned_candidates: Array.isArray(staff.assigned_candidates)
+            ? staff.assigned_candidates.length
+            : "0",
+            permission: staff.permission || "No permissions granted",
+          })
+        );
+
+        setTableData(staffWithSerial);
+      } catch (error) {
+        console.error("Error fetching candidates:", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchTableData();
@@ -40,7 +63,7 @@ const Staff = () => {
           </Link>
         </div>
 
-        <DataTable columns={StaffColumns} data={tableData} />
+        <DataTable columns={StaffColumns} data={tableData} isLoading={isLoading} />
       </div>
     </AdminLayout>
   );

@@ -4,8 +4,23 @@ import SideBar from "@/components/SideBar";
 import TopNavBar from "@/components/TopNavBar";
 import { AuthLayoutProps } from "@/types";
 import Logo from "../assets/elda-ai-logo-no-bg.png";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const RootLayout = ({ children, title }: AuthLayoutProps) => {
+  const staff_access_token = localStorage.getItem("staff_access_token");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!staff_access_token) {
+      navigate("/staff/sign-in");
+    }
+  }, [staff_access_token, navigate]);
+
+  if (!staff_access_token) {
+    return null;
+  }
+
   return (
     <main className="flex h-screen w-full">
       <SideBar />

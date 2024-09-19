@@ -51,7 +51,9 @@ const InviteEmployee = () => {
       });
 
       if (response) {
+        console.log(response);
         setSuccess(true);
+        localStorage.setItem("user_password", password);
       } else {
         throw new Error("Profile creation failed: Invalid data");
       }
@@ -65,7 +67,7 @@ const InviteEmployee = () => {
   return (
     <AdminLayout>
       {success && (
-        <CandidateProfileSuccess type="" text="Employee Successfully invited" />
+        <CandidateProfileSuccess text="Employee Successfully invited" />
       )}
 
       <div className="flex flex-col mx-auto gap-12 lg:max-w-[800px]">

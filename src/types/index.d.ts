@@ -40,10 +40,8 @@ declare type CreateCandidateProfileProps = {
   email: string;
   password?: string;
   full_name?: string;
-  university?: string;
-  course?: string;
-  role: 'candidate' | 'admin' | 'staff';
-}
+  role: "candidate" | "admin" | "staff";
+};
 
 interface Profile {
   id: number;
@@ -77,11 +75,11 @@ export interface CandidateData {
   serialNumber: number;
   full_name: string;
   country: string;
-  university: string;
-  course: string;
-  schoolApplicationStatus: string;
-  resumeStatus: string;
-  sopStatus: string;
+  assigned_university: string;
+  assigned_course: string;
+  school_application_status: string;
+  resume_status: string;
+  sop_status: string;
   duplicate: string;
   assigned: boolean;
 }
@@ -91,7 +89,7 @@ declare type UserType = {
   email: string;
   role: "candidate" | "staff" | "admin";
   profile: Profile;
-}
+};
 
 declare type LoginUser = {
   email: string;
@@ -108,17 +106,23 @@ declare type NewUserParams = {
 declare type OptionType = {
   value: string;
   label: string;
-}
+};
 
 interface User {
-  user?: {
-    id?: string;
-    name?: string;
-    email?: string;
-    token?: string; // Add token property
-  };
+  id: number | string;
+  token?: string;
+  email?: string;
+  full_name?: string;
+  country?: string;
+  role: "candidate" | "staff" | "admin";
   isLoggedIn?: boolean;
-  setUser?: React.Dispatch<React.SetStateAction<UserContextValue["user"]>>; // Function to update user state
+  groups: string[] | any[];
+  is_active?: boolean;
+  is_staff?: boolean;
+  is_superuser?: boolean;
+  last_login: Date | null;
+  password?: string;
+  user_permissions: string[] | any[]; 
 }
 
 declare type DottedBoxProps = {
@@ -226,25 +230,39 @@ export type Payment = {
 };
 
 declare interface AllCandidates {
-  full_name: string;
-  university: string;
-  course: string;
-  sopStatus?: string;
-  resumeStatus?: string;
-  schoolApplicationStatus?: string;
+  assigned_university: string;
+  assigned_course: string;
+  sop_status?: string;
+  resume_status?: string;
+  school_application_status?: string;
   assigned: boolean;
   duplicate?: string;
   // Add missing fields
-  serialNumber?: number; // Add serial number dynamically
-  country?: string;
+  serialNumber?: number;
+  user?: User;
 }
-
 
 declare interface AllCandidatesResponse {
   count: number;
   next: string | null;
   previous: string | null;
   results: AllCandidates[];
+}
+
+declare interface AllStaff {
+  full_name: string;
+  status?: string;
+  assigned_candidates?: number | string;
+  permission?: string;
+  serialNumber?: number;
+  user?: User;
+}
+
+declare interface AllStaffResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: AllStaff[];
 }
 
 export type AllColumn = {

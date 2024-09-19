@@ -1,19 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "./ui/button";
+import { AllCandidates } from "@/types";
 
-interface CandidateData {
-  serialNumber: number;
-  full_name: string;
-  country: string;
-  university: string;
-  course: string;
-  schoolApplicationStatus: string;
-  resumeStatus: string;
-  sopStatus: string;
-  duplicate: string;
-}
 
-export const allTabsColumns: ColumnDef<CandidateData>[] = [
+
+export const allTabsColumns: ColumnDef<AllCandidates>[] = [
   {
     accessorKey: "serialNumber",
     header: "S/N",
@@ -22,76 +13,76 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
     accessorKey: "full_name",
     header: "Candidate Name",
     cell: ({ row }) => (
-      <p className="capitalize">{row.original.full_name || "No name"}</p>
+      <p className="capitalize">{row.original.user?.full_name || "No name"}</p>
     ),
   },
   {
     accessorKey: "country",
     header: "Country",
     cell: ({ row }) => (
-      <p className="capitalize">{row.original.country || "No country"}</p>
+      <p className="capitalize">{row.original.user?.country || "No country"}</p>
     ),
   },
   {
-    accessorKey: "university",
+    accessorKey: "assigned_university",
     header: "Assigned University",
     cell: ({ row }) => (
-      <p className="capitalize">{row.original.university || "No university"}</p>
+      <p className="capitalize">{row.original.assigned_university || "No university"}</p>
     ),
   },
   {
-    accessorKey: "course",
+    accessorKey: "assigned_course",
     header: "Assigned Course",
     cell: ({ row }) => (
       <p className="capitalize">
-        {row.original.course || "No course assigned"}
+        {row.original.assigned_course || "No course assigned"}
       </p>
     ),
   },
   {
-    accessorKey: "schoolApplicationStatus",
+    accessorKey: "school_application_status",
     header: () => <div className="text-center">School Application Status</div>,
     cell: ({ row }) => (
       <div className="flex justify-center">
         <Button
           className="py-1 h-5 rounded-xl bg-[#D5F4EA] text-[#2A6350] px-5 hover:bg-green-200"
           onClick={() =>
-            alert(`Status: ${row.original.schoolApplicationStatus || "none"}`)
+            alert(`Status: ${row.original.school_application_status || "none"}`)
           }
         >
-          {row.original.schoolApplicationStatus || "none"}
+          {row.original.school_application_status || "none"}
         </Button>
       </div>
     ),
   },
   {
-    accessorKey: "resumeStatus",
+    accessorKey: "resume_status",
     header: () => <div className="text-center">Resume Status</div>,
     cell: ({ row }) => (
       <div className="flex justify-center">
         <Button
           className="py-1 h-5 rounded-xl bg-[#D5F4EA] text-[#2A6350] px-5 hover:bg-green-200"
           onClick={() =>
-            alert(`Resume Status: ${row.original.resumeStatus || "none"}`)
+            alert(`Resume Status: ${row.original.resume_status || "none"}`)
           }
         >
-          {row.original.resumeStatus || "none"}
+          {row.original.resume_status || "none"}
         </Button>
       </div>
     ),
   },
   {
-    accessorKey: "sopStatus",
+    accessorKey: "sop_status",
     header: () => <div className="text-center">SOP Status</div>,
     cell: ({ row }) => (
       <div className="flex justify-center">
         <Button
           className="py-1 h-5 rounded-xl bg-[#D5F4EA] w-full text-[#2A6350] px-5 hover:bg-green-200"
           onClick={() =>
-            alert(`SOP Status: ${row.original.sopStatus || "none"}`)
+            alert(`SOP Status: ${row.original.sop_status || "none"}`)
           }
         >
-          {row.original.sopStatus || "none"}
+          {row.original.sop_status || "none"}
         </Button>
       </div>
     ),

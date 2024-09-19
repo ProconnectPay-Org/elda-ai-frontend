@@ -1,8 +1,23 @@
 import { CandidateLayoutProps } from "@/types";
 import PcpLogo from "../assets/pcplogo.svg";
 import EldaLogo from "../assets/elda-ai-logo-no-bg.png";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const CandidateFormLayout = ({ children }: CandidateLayoutProps) => {
+  const navigate = useNavigate();
+  const loggedInCandidate = localStorage.getItem("candidate_access_token");
+
+  useEffect(() => {
+    if (!loggedInCandidate) {
+      navigate("/candidate/login");
+    }
+  }, [loggedInCandidate, navigate]);
+
+  if (!loggedInCandidate) {
+    return null;
+  }
+
   return (
     <div className="relative min-h-screen w-full form-bg">
       <div className="flex items-center justify-center flex-col pt-8">
