@@ -4,7 +4,11 @@ import { ChevronLeftIcon, XCircleIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import ReactSelect, { MultiValue, SingleValue } from "react-select";
-import { getAllCandidates } from "@/lib/actions/user.actions";
+import {
+  assignCandidateToStaff,
+  getAllCandidates,
+  getAllStaff,
+} from "@/lib/actions/user.actions";
 import { AllCandidates, OptionType } from "@/types";
 
 const AssignCandidate: React.FC = () => {
@@ -14,6 +18,7 @@ const AssignCandidate: React.FC = () => {
     MultiValue<OptionType>
   >([]);
   const [candidateOptions, setCandidateOptions] = useState<OptionType[]>([]);
+  const [staffOptions, setStaffOptions] = useState<OptionType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,7 +27,7 @@ const AssignCandidate: React.FC = () => {
   };
 
   const handleCandidateChange = (selectedOptions: MultiValue<OptionType>) => {
-    setSelectedCandidates(selectedOptions);
+    setSelectedCandidates(selectedOptions);    
   };
 
   const handleRemoveCandidate = (candidate: OptionType) => {
@@ -31,20 +36,33 @@ const AssignCandidate: React.FC = () => {
     );
   };
 
-  const staffOptions: OptionType[] = [
-    { value: "staff1", label: "Opeyemi Esther" },
-    { value: "staff2", label: "Hannah Mary" },
-    { value: "staff3", label: "Joy Nwakwo" },
-    { value: "staff4", label: "Sarah Comfort" },
-    { value: "staff5", label: "Justina Alas" },
-    { value: "staff6", label: "Gabriel Samuel" },
-  ];
-
-  const assignCandidate = () => {
+  const assignCandidate = async () => {
+    if (!selectedStaff || selectedCandidates.length === 0) {
+      setError("Please select both a staff and one or more candidates.");
+      return;
+    }
     setIsLoading(true);
-    setTimeout(() => {
+    try {
+      const candidate_ids = selectedCandidates.map(
+        (candidate) => candidate.value
+      );
+      console.log(selectedStaff.value);
+      
+      const response = await assignCandidateToStaff({
+        candidate_ids,
+        staff_id: selectedStaff.value,
+      });
+
+      console.log("Assign Candidate Responses:", response);
+
+      setError(null);
+      alert("Candidates assigned successfully!");
+    } catch (error) {
+      console.error("Error assigning candidates:", error);
+      setError("An error occurred while assigning candidates.");
+    } finally {
       setIsLoading(false);
-    }, 2000);
+    }
   };
 
   useEffect(() => {
@@ -57,13 +75,26 @@ const AssignCandidate: React.FC = () => {
           );
           const options = unassignedCandidates.map(
             (candidate: AllCandidates) => ({
-              value: candidate.user?.full_name,
+              value: candidate.user?.id,
               label: candidate.user?.full_name,
             })
           );
           setCandidateOptions(options);
         } else {
           setError("Failed to fetch candidates.");
+        }
+
+        const staffResponse = await getAllStaff();
+        if (staffResponse && staffResponse.results) {
+          const options = staffResponse?.results.map(
+            (staff: AllCandidates) => ({
+              value: staff.user?.id,
+              label: staff.user?.full_name,
+            })
+          );
+          setStaffOptions(options);
+        } else {
+          setError("Failed to fetch staff.");
         }
       } catch (error) {
         setError("An error occurred while fetching candidates.");
@@ -147,7 +178,7 @@ const AssignCandidate: React.FC = () => {
             disabled={isLoading}
             onClick={assignCandidate}
           >
-            {isLoading ? "candidate is being assigned..." : "Assign"}
+            {isLoading ? "Candidate is being assigned..." : "Assign"}
           </Button>
         </div>
       </div>

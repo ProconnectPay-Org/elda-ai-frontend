@@ -34,6 +34,8 @@ const AdminDashboard = () => {
     null
   );
   const [numberOfStaff, setNumberOfStaff] = useState<number | null>(null);
+  const [completedJobs, setCompletedJobs] = useState<number | null>(null);
+  const [pendingJobs, setPendingJobs] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,6 +43,8 @@ const AdminDashboard = () => {
     const fetchAdminInfo = async () => {
       try {
         const data = await getAdminInfo();
+        setCompletedJobs(data?.completed_jobs);
+        setPendingJobs(data?.pending_jobs);
         setNumberOfStaff(data?.total_staff);
         setNumberOfCandidate(data?.total_candidates);
         setRecentActivity(data?.recent_activities);
@@ -176,7 +180,9 @@ const AdminDashboard = () => {
 
         <div className="p-8 hidden md:flex flex-col gap-4 items-center justify-center w-1/4 border-r border-red">
           <p className="font-medium text-sm">PENDING JOBS</p>
-          <p className="font-bold text-4xl">100</p>
+          <div className="font-bold text-4xl">
+            {loading ? <Skeleton className="h-10 w-10" /> : pendingJobs || "0"}
+          </div>
           <p className="text-xs flex items-center gap-2 capitalize">
             <img src={Time} alt="time-icon" /> just now
           </p>
@@ -188,12 +194,20 @@ const AdminDashboard = () => {
               <img src={Time} alt="time-icon" /> just now
             </p>
           </div>
-          <p className="font-bold text-4xl">120</p>
+          <div className="font-bold text-4xl">
+            {loading ? <Skeleton className="h-10 w-10" /> : pendingJobs || "0"}
+          </div>
         </div>
 
         <div className="p-8 hidden md:flex flex-col gap-4 items-center justify-center w-1/4">
           <p className="font-medium text-sm">COMPLETED JOBS</p>
-          <p className="font-bold text-4xl">8</p>
+          <div className="font-bold text-4xl">
+            {loading ? (
+              <Skeleton className="h-10 w-10" />
+            ) : (
+              completedJobs || "0"
+            )}
+          </div>
           <p className="text-xs flex items-center gap-2 capitalize">
             <img src={Time} alt="time-icon" /> just now
           </p>
@@ -205,7 +219,13 @@ const AdminDashboard = () => {
               <img src={Time} alt="time-icon" /> just now
             </p>
           </div>
-          <p className="font-bold text-4xl">8</p>
+          <div className="font-bold text-4xl">
+            {loading ? (
+              <Skeleton className="h-10 w-10" />
+            ) : (
+              completedJobs || "0"
+            )}
+          </div>
         </div>
       </div>
 

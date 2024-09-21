@@ -22,6 +22,12 @@ declare type SearchParamProps = {
 
 // ========================================
 
+declare type PasswordProps = {
+  old_password: string;
+  new_password: string;
+  re_new_password: string;
+};
+
 declare type AuthLayoutProps = {
   children: React.ReactNode;
   title?: string;
@@ -74,25 +80,25 @@ declare type UserType = {
 };
 
 declare type OptionType = {
-  value: string;
+  value: number | string;
   label: string;
 };
 
 interface User {
-  id: number | string;
+  id?: number | string;
   token?: string;
   email?: string;
   full_name?: string;
   country?: string;
-  role: "candidate" | "staff" | "admin";
+  role?: "candidate" | "staff" | "admin";
   isLoggedIn?: boolean;
-  groups: string[] | any[];
+  groups?: string[] | any[];
   is_active?: boolean;
   is_staff?: boolean;
   is_superuser?: boolean;
-  last_login: Date | null;
+  last_login?: Date | null;
   password?: string;
-  user_permissions: string[] | any[];
+  user_permissions?: string[] | any[];
 }
 
 declare type DottedBoxProps = {
@@ -197,7 +203,6 @@ declare interface AllCandidates {
   school_application_status?: string;
   assigned: boolean;
   duplicate?: string;
-  // Add missing fields
   serialNumber?: number;
   user?: User;
 }
@@ -223,6 +228,11 @@ declare interface AllStaffResponse {
   next: string | null;
   previous: string | null;
   results: AllStaff[];
+}
+
+declare interface AssignCandidateProps {
+  candidate_ids: (number | string)[];
+  staff_id: number | string;
 }
 
 export type AllColumn = {

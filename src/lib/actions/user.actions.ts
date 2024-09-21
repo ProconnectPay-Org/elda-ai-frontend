@@ -1,13 +1,13 @@
 import {
+  AssignCandidateProps,
   CandidateData,
   CreateCandidateProfileProps,
-  TeamMemberColumn,
+  PasswordProps,
   signInProps,
+  User,
 } from "@/types";
 import RedCircle from "../../assets/red-circle.svg";
 import axios from "axios";
-
-// export const getUserInfo = async () => {};
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -187,9 +187,37 @@ export const getSingleStaff = async (id: number | string) => {
   }
 };
 
+export const assignCandidateToStaff = async ({
+  candidate_ids,
+  staff_id,
+}: AssignCandidateProps) => {
+  const access_token = localStorage.getItem("access_token");
+
+  if (!access_token) {
+    throw new Error("Access token is missing. Please sign in again.");
+  }
+
+  try {
+    const response = await axios.post(
+      `${API_URL}assign-candidate/`,
+      { candidate_ids, staff_id },
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error assigning candidate:", error);
+    throw error;
+  }
+};
+
 export const getLoggedInUser = async () => {
   try {
-    const token = localStorage.getItem("staff_access_token");
+    const token = localStorage.getItem("access_token");
     if (!token) return null;
 
     const response = await axios.get(`${API_URL}auth/profile/`, {
@@ -205,16 +233,58 @@ export const getLoggedInUser = async () => {
   }
 };
 
-export const candidateSignIn = async ({ email, password }: signInProps) => {
+export const updatePassword = async ({
+  old_password,
+  new_password,
+  re_new_password,
+}: PasswordProps) => {
   try {
-    const response = await axios.post(`${API_URL}auth/users/activation/`, {
-      email,
-      password,
-    });
+    const token = localStorage.getItem("access_token");
+    if (!token) return null;
+
+    const response = await axios.patch(
+      `${API_URL}auth/update-password/`,
+      {
+        old_password,
+        new_password,
+        re_new_password,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
     return response.data;
   } catch (error) {
-    console.error("Sign-in error:", error);
-    throw error;
+    console.error("Failed to get logged-in user", error);
+    return null;
+  }
+};
+
+export const updateUsers = async ({ email, full_name }: User) => {
+  try {
+    const token = localStorage.getItem("access_token");
+    if (!token) return null;
+
+    const response = await axios.patch(
+      `${API_URL}auth/update-user/`,
+      {
+        email,
+        full_name,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Failed to get logged-in user", error);
+    return null;
   }
 };
 
@@ -294,91 +364,6 @@ export async function getData(): Promise<CandidateData[]> {
       school_application_completed: "true18",
       status: "completed",
       phone: "+234 709 823 4343",
-    },
-  ];
-}
-
-export async function getTeamMembersData(): Promise<TeamMemberColumn[]> {
-  return [
-    {
-      id: "a1b2c3d4",
-      fullName: "Alice Johnson",
-      staffStatus: "Active",
-      assignedCandidates: "15",
-      permission: "Admin",
-      deleteAccount: "Yes",
-    },
-    {
-      id: "e5f6g7h8",
-      fullName: "Bob Smith",
-      staffStatus: "Inactive",
-      assignedCandidates: "8",
-      permission: "Editor",
-      deleteAccount: "No",
-    },
-    {
-      id: "i9j0k1l2",
-      fullName: "Charlie Brown",
-      staffStatus: "Active",
-      assignedCandidates: "20",
-      permission: "Viewer",
-      deleteAccount: "Yes",
-    },
-    {
-      id: "m3n4o5p6",
-      fullName: "Diana Prince",
-      staffStatus: "Active",
-      assignedCandidates: "25",
-      permission: "Admin",
-      deleteAccount: "No",
-    },
-    {
-      id: "q7r8s9t0",
-      fullName: "Ethan Hunt",
-      staffStatus: "Inactive",
-      assignedCandidates: "5",
-      permission: "Editor",
-      deleteAccount: "Yes",
-    },
-    {
-      id: "u1v2w3x4",
-      fullName: "Fiona Gallagher",
-      staffStatus: "Active",
-      assignedCandidates: "30",
-      permission: "Viewer",
-      deleteAccount: "No",
-    },
-    {
-      id: "y5z6a7b8",
-      fullName: "George Clooney",
-      staffStatus: "Inactive",
-      assignedCandidates: "12",
-      permission: "Admin",
-      deleteAccount: "Yes",
-    },
-    {
-      id: "c9d0e1f2",
-      fullName: "Hannah Montana",
-      staffStatus: "Active",
-      assignedCandidates: "22",
-      permission: "Editor",
-      deleteAccount: "No",
-    },
-    {
-      id: "g3h4i5j6",
-      fullName: "Ian Fleming",
-      staffStatus: "Inactive",
-      assignedCandidates: "7",
-      permission: "Viewer",
-      deleteAccount: "Yes",
-    },
-    {
-      id: "k7l8m9n0",
-      fullName: "Jill Valentine",
-      staffStatus: "Active",
-      assignedCandidates: "18",
-      permission: "Admin",
-      deleteAccount: "No",
     },
   ];
 }
