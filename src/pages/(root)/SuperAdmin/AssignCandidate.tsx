@@ -22,6 +22,8 @@ const AssignCandidate: React.FC = () => {
   const [staffOptions, setStaffOptions] = useState<OptionType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isLoadingCandidates, setIsLoadingCandidates] = useState(false);
+  const [isLoadingStaff, setIsLoadingStaff] = useState(false);
 
   const handleStaffChange = (selectedOption: SingleValue<OptionType>) => {
     setSelectedStaff(selectedOption);
@@ -72,6 +74,7 @@ const AssignCandidate: React.FC = () => {
 
   useEffect(() => {
     const fetchCandidates = async () => {
+      setIsLoadingCandidates(true);
       try {
         const response = await getAllCandidates();
         if (response && response.results) {
@@ -88,28 +91,37 @@ const AssignCandidate: React.FC = () => {
         } else {
           setError("Failed to fetch candidates.");
         }
+      } catch (error) {
+        setError("An error occurred while fetching candidates.");
+        console.error("Error fetching candidates:", error);
+      } finally {
+        setIsLoadingCandidates(false);
+      }
+    };
 
+    const fetchStaff = async () => {
+      setIsLoadingStaff(true);
+      try {
         const staffResponse = await getAllStaff();
         if (staffResponse && staffResponse.results) {
-          const options = staffResponse?.results.map(
-            (staff: AllCandidates) => ({
-              value: staff.id,
-              label: staff.user?.full_name,
-            })
-          );
+          const options = staffResponse.results.map((staff: AllCandidates) => ({
+            value: staff.id,
+            label: staff.user?.full_name,
+          }));
           setStaffOptions(options);
         } else {
           setError("Failed to fetch staff.");
         }
       } catch (error) {
-        setError("An error occurred while fetching candidates.");
-        console.error("Error fetching candidates:", error);
+        setError("An error occurred while fetching staff.");
+        console.error("Error fetching staff:", error);
       } finally {
-        setIsLoading(false);
+        setIsLoadingStaff(false);
       }
     };
 
     fetchCandidates();
+    fetchStaff();
   }, []);
 
   return (
@@ -136,6 +148,7 @@ const AssignCandidate: React.FC = () => {
                 className="border-gray-border"
                 placeholder="Select Staff"
                 value={selectedStaff}
+                isLoading={isLoadingStaff}
               />
             </div>
             <div className="flex flex-col w-full gap-1.5">
@@ -150,6 +163,7 @@ const AssignCandidate: React.FC = () => {
                 components={{
                   MultiValueContainer: () => null,
                 }}
+                isLoading={isLoadingCandidates}
               />
               {error && <p className="text-sm text-red">{error}</p>}
             </div>

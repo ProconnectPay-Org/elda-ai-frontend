@@ -24,7 +24,7 @@ const AdminSettings = () => {
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
-  // UseEffect to update state when loggedInUser is loaded
+
   useEffect(() => {
     if (loggedInUser && loggedInUser.profile) {
       setFullName(
@@ -56,6 +56,7 @@ const AdminSettings = () => {
     }
 
     try {
+      setIsChanging(true);
       const response = await updateUsers({
         email,
         full_name: fullName,
@@ -67,12 +68,11 @@ const AdminSettings = () => {
           description: "Profile updated successfully",
           variant: "success",
         });
-        setIsChanging(false);
       } else {
         console.error("Error updating profile");
         toast({
           title: "Error",
-          description: "Failed to update profile",
+          description: "Custom user with this email address already exists",
           variant: "destructive",
         });
       }
@@ -95,13 +95,13 @@ const AdminSettings = () => {
     }));
   };
 
-  if (loading) {
-    return <p>Loading user details...</p>;
-  }
+  // if (loading) {
+  //   return <p>Loading user details...</p>;
+  // }
 
-  if (!loggedInUser || !loggedInUser.profile) {
-    return <p>No user profile found.</p>;
-  }
+  // if (!loggedInUser || !loggedInUser.profile) {
+  //   return <p>No user profile found.</p>;
+  // }
 
   return (
     <AdminLayout>
@@ -109,86 +109,92 @@ const AdminSettings = () => {
         <SetingsSideBar />
         <div className="flex flex-col justify-between min-h-[70vh] w-full md:w-[60%]">
           <SettingsTabs />
-          <div className="flex flex-col gap-6 mt-5 md:mt-0">
-            <p className="text-[#273240] font-bold">Personal Information</p>
+          {loading ? (
+            "Loading user's personal information..."
+          ) : (
+            <>
+              <div className="flex flex-col gap-6 mt-5 md:mt-0">
+                <p className="text-[#273240] font-bold">Personal Information</p>
 
-            {/* IMAGE AND PROFILE */}
-            <div className="flex items-end gap-4">
-              <div className="relative rounded-full w-[150px] h-[150px] flex items-center justify-center bg-pale-bg">
-                <Avatar className="rounded-none w-full overflow-visible h-full">
-                  <AvatarImage
-                    className="rounded-full"
-                    src="https://github.com/shadcn.png"
-                  />
-                  <AvatarFallback className="font-bold text-[72px] bg-transparent text-red">
-                    {getInitials(email)}
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-              <div className="flex items-center justify-center flex-col gap-2">
-                <Button className="bg-red">Upload an Image</Button>
-                <p className="hover:underline cursor-pointer text-red">
-                  Remove photo
-                </p>
-              </div>
-            </div>
+                {/* IMAGE AND PROFILE */}
+                <div className="flex items-end gap-4">
+                  <div className="relative rounded-full w-[150px] h-[150px] flex items-center justify-center bg-pale-bg">
+                    <Avatar className="rounded-none w-full overflow-visible h-full">
+                      <AvatarImage
+                        className="rounded-full"
+                        src="https://github.com/shadcn.png"
+                      />
+                      <AvatarFallback className="font-bold text-[72px] bg-transparent text-red">
+                        {getInitials(email)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
+                  <div className="flex items-center justify-center flex-col gap-2">
+                    <Button className="bg-red">Upload an Image</Button>
+                    <p className="hover:underline cursor-pointer text-red">
+                      Remove photo
+                    </p>
+                  </div>
+                </div>
 
-            {/* Input fields */}
-            <div className="flex flex-col gap-3">
-              <div className="flex flex-col w-full gap-1.5">
-                <label htmlFor="fullName">Full Name</label>
-                <div className="flex border border-gray-border justify-between gap-2 items-center py-2 px-4 rounded-lg">
-                  <img src={NameIcon} alt="profile icon" />
-                  <input
-                    className="border-none w-full focus:outline-none"
-                    id="fullName"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    disabled={!isEditing.fullName}
-                  />
-                  <img
-                    src={Pen}
-                    alt="pen"
-                    onClick={() => toggleEdit("fullName")}
-                    className="cursor-pointer"
-                  />
+                {/* Input fields */}
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-col w-full gap-1.5">
+                    <label htmlFor="fullName">Full Name</label>
+                    <div className="flex border border-gray-border justify-between gap-2 items-center py-2 px-4 rounded-lg">
+                      <img src={NameIcon} alt="profile icon" />
+                      <input
+                        className="border-none w-full focus:outline-none"
+                        id="fullName"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        disabled={!isEditing.fullName}
+                      />
+                      <img
+                        src={Pen}
+                        alt="pen"
+                        onClick={() => toggleEdit("fullName")}
+                        className="cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col w-full gap-1.5">
+                    <label htmlFor="email">Email Address</label>
+                    <div className="flex border border-gray-border justify-between gap-2 items-center py-2 px-4 rounded-lg">
+                      <img src={Mail} alt="mail icon" />
+                      <input
+                        className="border-none w-full focus:outline-none"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        disabled={!isEditing.email}
+                      />
+                      <img
+                        src={Pen}
+                        alt="pen"
+                        onClick={() => toggleEdit("email")}
+                        className="cursor-pointer"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="flex flex-col w-full gap-1.5">
-                <label htmlFor="email">Email Address</label>
-                <div className="flex border border-gray-border justify-between gap-2 items-center py-2 px-4 rounded-lg">
-                  <img src={Mail} alt="mail icon" />
-                  <input
-                    className="border-none w-full focus:outline-none"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    disabled={!isEditing.email}
-                  />
-                  <img
-                    src={Pen}
-                    alt="pen"
-                    onClick={() => toggleEdit("email")}
-                    className="cursor-pointer"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <div className="mt-6 flex flex-col md:flex-row gap-5 justify-between">
-            <Button
-              onClick={handleSave}
-              disabled={isChanging}
-              className="bg-red w-full md:w-fit"
-            >
-              {isChanging ? "Updating Profile..." : "Save Changes"}
-            </Button>
-            <Button className="bg-red w-full md:w-fit flex items-center gap-2">
-              <img src={DeleteIcon} alt="delete icon" />
-              Delete your super admin account
-            </Button>
-          </div>
+              <div className="mt-6 flex flex-col md:flex-row gap-5 justify-between">
+                <Button
+                  onClick={handleSave}
+                  disabled={isChanging}
+                  className="bg-red w-full md:w-fit"
+                >
+                  {isChanging ? "Updating Profile..." : "Save Changes"}
+                </Button>
+                <Button className="bg-red w-full md:w-fit flex items-center gap-2">
+                  <img src={DeleteIcon} alt="delete icon" />
+                  Delete your super admin account
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </AdminLayout>
