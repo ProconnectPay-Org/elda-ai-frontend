@@ -10,6 +10,7 @@ import {
   getAllStaff,
 } from "@/lib/actions/user.actions";
 import { AllCandidates, OptionType } from "@/types";
+import { toast } from "@/components/ui/use-toast";
 
 const AssignCandidate: React.FC = () => {
   const [selectedStaff, setSelectedStaff] =
@@ -27,7 +28,7 @@ const AssignCandidate: React.FC = () => {
   };
 
   const handleCandidateChange = (selectedOptions: MultiValue<OptionType>) => {
-    setSelectedCandidates(selectedOptions);    
+    setSelectedCandidates(selectedOptions);
   };
 
   const handleRemoveCandidate = (candidate: OptionType) => {
@@ -46,19 +47,23 @@ const AssignCandidate: React.FC = () => {
       const candidate_ids = selectedCandidates.map(
         (candidate) => candidate.value
       );
-      console.log(selectedStaff.value);
-      
-      const response = await assignCandidateToStaff({
+      await assignCandidateToStaff({
         candidate_ids,
         staff_id: selectedStaff.value,
       });
-
-      console.log("Assign Candidate Responses:", response);
-
       setError(null);
-      alert("Candidates assigned successfully!");
+      toast({
+        title: "Success",
+        description: "Candidates assigned",
+        variant: "success",
+      });
     } catch (error) {
       console.error("Error assigning candidates:", error);
+      toast({
+        title: "Error",
+        description: "There was an error assigning candidates.",
+        variant: "destructive",
+      });
       setError("An error occurred while assigning candidates.");
     } finally {
       setIsLoading(false);
@@ -75,7 +80,7 @@ const AssignCandidate: React.FC = () => {
           );
           const options = unassignedCandidates.map(
             (candidate: AllCandidates) => ({
-              value: candidate.user?.id,
+              value: candidate.id,
               label: candidate.user?.full_name,
             })
           );
@@ -88,7 +93,7 @@ const AssignCandidate: React.FC = () => {
         if (staffResponse && staffResponse.results) {
           const options = staffResponse?.results.map(
             (staff: AllCandidates) => ({
-              value: staff.user?.id,
+              value: staff.id,
               label: staff.user?.full_name,
             })
           );

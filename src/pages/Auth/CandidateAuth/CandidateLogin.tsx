@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { adminSignIn } from "@/lib/actions/user.actions";
+import { toast } from "@/components/ui/use-toast";
 
 const CandidateLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -40,12 +41,25 @@ const CandidateLogin = () => {
       });
       if (response) {
         localStorage.setItem("candidate_access_token", response.access);
-        console.log(response);
+        toast({
+          title: "Success",
+          description: "Signed in successfully",
+          variant: "success",
+        });
         navigate("/register");
       } else {
-        console.log("Sign-in failed: Invalid credentials");
+        toast({
+          title: "Error",
+          description: "Sign-in failed: Invalid credentials",
+          variant: "destructive",
+        });
       }
     } catch (error) {
+      toast({
+        title: "Error",
+        description: "Sign-in failed: Invalid credentials",
+        variant: "destructive",
+      });
       console.log(error);
     } finally {
       setIsLoading(false);

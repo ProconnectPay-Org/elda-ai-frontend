@@ -44,8 +44,6 @@ const AuthForm = () => {
           variant: "success",
         });
 
-        console.log(response);
-
         const userRole = response.user.role;
 
         if (userRole === "admin") {

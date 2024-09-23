@@ -196,6 +196,7 @@ export type CandidateData = {
 };
 
 declare interface AllCandidates {
+  id?: number;
   assigned_university: string;
   assigned_course: string;
   sop_status?: string;

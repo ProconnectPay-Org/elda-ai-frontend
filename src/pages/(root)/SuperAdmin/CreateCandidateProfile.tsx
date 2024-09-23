@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ArrowLeftIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createCandidateProfile } from "@/lib/actions/user.actions";
+import { toast } from "@/components/ui/use-toast";
 
 const CreateCandidateProfile = () => {
   const [success, setSuccess] = useState(false);
@@ -74,10 +75,21 @@ const CreateCandidateProfile = () => {
         setSuccess(true);
         localStorage.setItem("user_password", password);
       } else {
-        console.log("Profile creation failed: Invalid data");
+        toast({
+          title: "Error",
+          description:
+            "Profile creation failed: Invalid data or try another password.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.log(error);
+      toast({
+        title: "Error",
+        description:
+          "Profile creation failed: Invalid data or try another password.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }

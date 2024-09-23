@@ -13,7 +13,6 @@ const TabsComponent = () => {
     const fetchTableData = async () => {
       try {
         const data: AllCandidatesResponse = await getAllCandidates();
-        console.log(data);
 
         const candidatesWithSerial: AllCandidates[] = data.results.map(
           (candidate, index) => ({

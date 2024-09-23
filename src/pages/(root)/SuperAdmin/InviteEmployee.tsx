@@ -6,6 +6,7 @@ import Mail from "@/assets/mail.png";
 import CandidateProfileSuccess from "@/components/CandidateProfileSuccess";
 import { useState } from "react";
 import { createCandidateProfile } from "@/lib/actions/user.actions";
+import { toast } from "@/components/ui/use-toast";
 
 const InviteEmployee = () => {
   const [success, setSuccess] = useState(false);
@@ -51,14 +52,24 @@ const InviteEmployee = () => {
       });
 
       if (response) {
-        console.log(response);
         setSuccess(true);
         localStorage.setItem("user_password", password);
       } else {
-        throw new Error("Profile creation failed: Invalid data");
+        toast({
+          title: "Error",
+          description:
+            "Error inviting employee: Invalid data or try another password.",
+          variant: "destructive",
+        });
+        throw new Error("Error inviting employee");
       }
     } catch (error: any) {
       console.error("Error inviting employee:", error);
+      toast({
+        title: "Error",
+        description: "Error inviting employee.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
