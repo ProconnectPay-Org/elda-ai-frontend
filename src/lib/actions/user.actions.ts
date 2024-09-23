@@ -263,6 +263,30 @@ export const updatePassword = async ({
   }
 };
 
+export const getAllActivities = async (url?: string) => {
+  const access_token = localStorage.getItem("access_token");
+
+  if (!access_token) {
+    throw new Error("Access token is missing. Please sign in again.");
+  }
+
+  try {
+    const requestUrl = url ? url : `${API_URL}all-activities/`;
+
+    const response = await axios.get(requestUrl, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching activities:", error);
+    throw error;
+  }
+};
+
+
 export const updateUsers = async ({ email, full_name }: User) => {
   try {
     const token = localStorage.getItem("access_token");

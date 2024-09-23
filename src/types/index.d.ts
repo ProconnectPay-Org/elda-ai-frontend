@@ -115,10 +115,12 @@ declare type SmallBoxProps = {
 };
 
 declare type NotificationProps = {
-  title: string;
-  icon: string;
-  text: string;
+  id?: string | number;
   date: string;
+  title: string;
+  body: string;
+  activity_type: string;
+  profile?: string;
 };
 
 declare interface MobileNavProps {

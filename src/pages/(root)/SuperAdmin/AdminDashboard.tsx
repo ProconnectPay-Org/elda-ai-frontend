@@ -13,23 +13,18 @@ import EmployeeMail from "@/assets/invite-employee.svg";
 import CandidateIcon from "@/assets/candidate-profile.svg";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getAdminInfo } from "@/lib/actions/user.actions";
+import { getAdminInfo, getAllActivities } from "@/lib/actions/user.actions";
 import messageIcon from "@/assets/message-icon.png";
 import shieldIcon from "@/assets/shield-icon.png";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AxiosError } from "axios";
-
-interface Activity {
-  id: string | number;
-  icon: string;
-  date: string;
-  title: string;
-  body: string;
-  activity_type?: string;
-}
+import RecentActivityModal from "@/components/RecentActivityModal";
+import { NotificationProps } from "@/types";
 
 const AdminDashboard = () => {
-  const [recentActivity, setRecentActivity] = useState<Activity[] | null>(null);
+  const [recentActivity, setRecentActivity] = useState<
+    NotificationProps[] | null
+  >(null);
   const [numberOfCandidate, setNumberOfCandidate] = useState<number | null>(
     null
   );
@@ -38,6 +33,7 @@ const AdminDashboard = () => {
   const [pendingJobs, setPendingJobs] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchAdminInfo = async () => {
@@ -47,7 +43,7 @@ const AdminDashboard = () => {
         setPendingJobs(data?.pending_jobs);
         setNumberOfStaff(data?.total_staff);
         setNumberOfCandidate(data?.total_candidates);
-        setRecentActivity(data?.recent_activities);
+        // setRecentActivity(data?.recent_activities);
       } catch (err) {
         if (err instanceof AxiosError) {
           if (err.response) {
@@ -65,7 +61,22 @@ const AdminDashboard = () => {
         setLoading(false);
       }
     };
+
+    const fetchRecentActivities = async () => {
+      setLoading(true);
+      try {
+        const data = await getAllActivities();
+        setRecentActivity(data.results);
+      } catch (err) {
+        setError("Error fetching recent activities: " + err);
+        console.error("Error fetching recent activities:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchAdminInfo();
+    fetchRecentActivities();
     return () => {};
   }, []);
 
@@ -231,9 +242,14 @@ const AdminDashboard = () => {
 
       {/* RECENT ACTIVITY */}
       <div className="w-full lg:min-w-[40%] lg:w-[50%]">
-        <span className="flex justify-between">
+        <span className="flex justify-between items-center">
           <h2 className="text-xl font-medium">Recent Activity</h2>
-          <p className="text-red underline cursor-pointer">View all</p>
+          <Button
+            onClick={() => setIsDialogOpen(true)}
+            className="text-red border-none bg-transparent hover:bg-transparent hover:text-rose-200 underline cursor-pointer"
+          >
+            View all
+          </Button>
         </span>
 
         {loading ? (
@@ -250,17 +266,24 @@ const AdminDashboard = () => {
           </div>
         ) : (
           recentActivity &&
-          recentActivity.map((item: Activity) => (
-            <Notification
-              key={item.id}
-              icon={item.activity_type === "success" ? messageIcon : shieldIcon}
-              date={item.date}
-              title={item.title}
-              text={item.body}
-            />
-          ))
+          recentActivity.slice(0, 5).map(
+            (
+              item: NotificationProps // Display only the first 5 items
+            ) => (
+              <Notification
+                key={item.id}
+                activity_type={
+                  item.activity_type === "success" ? messageIcon : shieldIcon
+                }
+                date={item.date}
+                title={item.title}
+                body={item.body}
+              />
+            )
+          )
         )}
       </div>
+      <RecentActivityModal open={isDialogOpen} onOpenChange={setIsDialogOpen} />
     </AdminLayout>
   );
 };
