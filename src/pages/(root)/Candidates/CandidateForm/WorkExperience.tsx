@@ -110,26 +110,25 @@ const WorkExperience = () => {
                         padding: "1px 0px",
                       }),
                     }}
+                    // Convert selected values to the format ReactSelect expects
                     value={
                       field.value
                         ? careerOptions.filter((option) =>
-                            field.value
-                              .map((item: any) => item.name)
-                              .includes(option.value)
+                            field.value.map((item: any) => item.name).includes(option.value)
                           )
                         : []
                     }
                     onChange={(selectedOptions) => {
-                      // Map the selected options to match the required backend format
                       field.onChange(
                         selectedOptions
                           ? selectedOptions.map((option) => ({
-                              name: option.value, // Send as { name: "career_name" }
+                              name: option.value,
                             }))
                           : []
                       );
                     }}
                   />
+                  
                 )}
               />
               <p className="text-xs text-gray-text">

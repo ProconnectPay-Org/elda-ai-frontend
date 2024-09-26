@@ -11,6 +11,15 @@ import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+const token = localStorage.getItem("candidate_access_token");
+
+const config = {
+  headers: {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  },
+};
+
 export const adminSignIn = async ({ email, password }: signInProps) => {
   try {
     const response = await axios.post(`${API_URL}auth/login/`, {
@@ -286,7 +295,6 @@ export const getAllActivities = async (url?: string) => {
   }
 };
 
-
 export const updateUsers = async ({ email, full_name }: User) => {
   try {
     const token = localStorage.getItem("access_token");
@@ -391,3 +399,52 @@ export async function getData(): Promise<CandidateData[]> {
     },
   ];
 }
+
+const candidateId = localStorage.getItem("candidate_id");
+
+export const updatePersonalDetails = async (personalDetails: any) => {
+  return await axios.patch(
+    `${API_URL}register/candidate/${candidateId}/`,
+    personalDetails,
+    config
+  );
+};
+
+export const submitEducationDetails = async (educationDetails: any) => {
+  return await axios.post(
+    `${API_URL}register/education/`,
+    educationDetails,
+    config
+  );
+};
+
+export const submitWorkExperience = async (
+  workData: any,
+  experienceData: any
+) => {
+  return await Promise.all([
+    axios.post(`${API_URL}register/career/`, workData, config),
+    axios.post(`${API_URL}register/job-experience/`, experienceData, config),
+  ]);
+};
+
+export const submitRefereeDetails = async (refereeDetails: any) => {
+  return await axios.post(
+    `${API_URL}register/loan-referee/`,
+    refereeDetails,
+    config
+  );
+};
+
+export const submitDocuments = async (documentsData: any) => {
+  return await axios.post(
+    `${API_URL}register/verification-documents/`,
+    documentsData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+};

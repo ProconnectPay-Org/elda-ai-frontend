@@ -12,6 +12,12 @@ import { Step1, Step2, Step3, Step4, Step5 } from "@/pages/(root)/Candidates";
 import { FormData } from "@/types";
 import RegisterSuccessModal from "./RegisterSuccessModal";
 import axios from "axios";
+import {
+  submitDocuments,
+  submitEducationDetails,
+  submitWorkExperience,
+  updatePersonalDetails,
+} from "@/lib/actions/user.actions";
 
 const steps = [
   { component: Step1, schema: step1Schema, title: "PERSONAL DETAILS" },
@@ -89,13 +95,7 @@ const MultiStepForm = () => {
           current_house_address: currentFormData.houseAddress,
           postal_code: currentFormData.postalAddress,
         };
-
-        await axios.patch(`${API_URL}register/candidate/${id}/`, personalData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        await updatePersonalDetails(personalData);
       } else if (currentStep === 1) {
         // Step 2: EDUCATION DETAILS
         const educationData = {
@@ -111,18 +111,7 @@ const MultiStepForm = () => {
           has_advanced_degree: currentFormData.advancedDegree,
           candidate: id,
         };
-        console.log(educationData);
-        const response = await axios.post(
-          `${API_URL}register/education/`,
-          educationData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        console.log(response);
+        await submitEducationDetails(educationData);
       } else if (currentStep === 2) {
         // Step 3: WORK EXPERIENCE
         const workData = {
@@ -136,6 +125,9 @@ const MultiStepForm = () => {
             currentFormData.yearsOfProfessionalExperiencePriorToGraduation,
           jobs_to_show: currentFormData.jobsToShowcase,
         };
+
+        console.log(workData);
+        
 
         const experienceData = {
           business_name: currentFormData.workPlaceName,
@@ -153,14 +145,7 @@ const MultiStepForm = () => {
         };
 
         try {
-          await Promise.all([
-            axios.post(`${API_URL}register/career/`, workData, config),
-            axios.post(
-              `${API_URL}register/job-experience/`,
-              experienceData,
-              config
-            ),
-          ]);
+          await submitWorkExperience(workData, experienceData);
         } catch (error) {
           console.error("Error during requests:", error);
         }
@@ -187,7 +172,7 @@ const MultiStepForm = () => {
           axios.post(`${API_URL}register/loan-referee/`, referee2Data, config),
         ]);
       } else if (currentStep === steps.length - 1) {
-        // Final Step: UPLOAD DOCUMENTS
+        // UPLOAD DOCUMENTS
         const documentsData = {
           bsc_hnd_certificate: currentFormData.document1,
           bank_statement: currentFormData.document2,
@@ -201,23 +186,11 @@ const MultiStepForm = () => {
           candidate: id,
         };
 
-        console.log(documentsData);
-
-        await axios.post(
-          `${API_URL}register/verification-documents/`,
-          documentsData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        await submitDocuments(documentsData)
         setIsSubmitted(true);
       }
-
       if (currentStep < steps.length - 1) {
-        nextStep(); // Proceed to the next step
+        nextStep();
       }
     } catch (error) {
       console.error("Error submitting form:", error);
