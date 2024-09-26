@@ -20,9 +20,7 @@ const useAuth = () => {
   useEffect(() => {
     const fetchLoggedInUser = async () => {
       const user = await getLoggedInUser();
-      setLoggedInUser(user);
-      console.log(loggedInUser);
-      
+      setLoggedInUser(user);      
       setLoading(false);
     };
 

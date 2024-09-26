@@ -25,6 +25,8 @@ const AdminSettings = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
 
+  const [avatarImage, setAvatarImage] = useState<string | null>(null);
+
   useEffect(() => {
     if (loggedInUser && loggedInUser.profile) {
       setFullName(
@@ -33,6 +35,15 @@ const AdminSettings = () => {
       setEmail(loggedInUser.email);
     }
   }, [loggedInUser]);
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setAvatarImage(imageUrl);
+      // Optionally, you can handle the file upload to your server here
+    }
+  };
 
   const handleSave = async () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -95,10 +106,6 @@ const AdminSettings = () => {
     }));
   };
 
-  // if (loading) {
-  //   return <p>Loading user details...</p>;
-  // }
-
   // if (!loggedInUser || !loggedInUser.profile) {
   //   return <p>No user profile found.</p>;
   // }
@@ -120,17 +127,29 @@ const AdminSettings = () => {
                 <div className="flex items-end gap-4">
                   <div className="relative rounded-full w-[150px] h-[150px] flex items-center justify-center bg-pale-bg">
                     <Avatar className="rounded-none w-full overflow-visible h-full">
-                      <AvatarImage
-                        className="rounded-full"
-                        src="https://github.com/shadcn.png"
-                      />
-                      <AvatarFallback className="font-bold text-[72px] bg-transparent text-red">
-                        {getInitials(email)}
-                      </AvatarFallback>
+                      {avatarImage ? (
+                        <AvatarImage
+                          className="rounded-full"
+                          src={avatarImage}
+                        />
+                      ) : (
+                        <AvatarFallback className="font-bold text-[72px] bg-transparent text-red">
+                          {getInitials(email)}
+                        </AvatarFallback>
+                      )}
                     </Avatar>
                   </div>
                   <div className="flex items-center justify-center flex-col gap-2">
-                    <Button className="bg-red">Upload an Image</Button>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                      id="imageUpload"
+                    />
+                    <label htmlFor="imageUpload">
+                      <Button className="bg-red">Upload an Image</Button>
+                    </label>
                     <p className="hover:underline cursor-pointer text-red">
                       Remove photo
                     </p>

@@ -54,6 +54,7 @@ const AuthForm = () => {
           navigate("/assigned-candidates");
         } else if (userRole === "candidate") {
           localStorage.setItem("candidate_access_token", response.access);
+          localStorage.setItem("candidate_id", response.candidate.id);
           navigate("/register");
         } else {
           navigate("/");

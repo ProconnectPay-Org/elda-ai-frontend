@@ -137,7 +137,6 @@ export const socialIcons = [
 export const genderOptions = [
   { value: "Male", label: "Male" },
   { value: "Female", label: "Female" },
-  { value: "Other", label: "Other" },
 ];
 
 export const countryOptions = [

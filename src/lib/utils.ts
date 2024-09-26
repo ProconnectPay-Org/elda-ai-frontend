@@ -92,7 +92,7 @@ const baseSchema = z.object({
   yearGraduated: z
     .string()
     .min(4, { message: "Year graduated must be a positive integer" }),
-  advancedDegree: z.enum(["yes", "no"]),
+  advancedDegree: z.enum(["yes", "no"]).transform((val) => val === "yes"),
 });
 
 // Define a schema for users with an advanced degree
@@ -122,7 +122,7 @@ const advancedDegreeSchema = z.object({
 // Combine the base schema with the conditional advanced degree schema
 export const step2Schema = baseSchema.refine(
   (data) => {
-    if (data.advancedDegree === "yes") {
+    if (data.advancedDegree === true) {
       try {
         advancedDegreeSchema.safeParse(data);
         return true;
@@ -165,6 +165,9 @@ export const step3Schema = z.object({
   stateLocation: z.string().min(2, "State/Province location is required"),
   countryLocation: z.string().min(2, "Country location is required"),
   startedDate: z.string().min(2, "Start date is required"),
+  endedDate: z.string().min(2, "End date is required"),
+  jobStatus: z.string().min(2, "Job status is required"),
+  companyDescription: z.string().min(2, "Company description is required"),
   jobSummary: z.string().min(2, "Job summary is required"),
 });
 

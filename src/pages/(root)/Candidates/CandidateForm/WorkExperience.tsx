@@ -1,4 +1,4 @@
-// components/Step2.tsx
+// components/Step3.tsx
 
 import CountrySelect from "@/components/CountrySelect";
 import { careerOptions } from "@/constants";
@@ -110,18 +110,22 @@ const WorkExperience = () => {
                         padding: "1px 0px",
                       }),
                     }}
-                    // Convert selected values to the format ReactSelect expects
                     value={
                       field.value
                         ? careerOptions.filter((option) =>
-                            field.value.includes(option.value)
+                            field.value
+                              .map((item: any) => item.name)
+                              .includes(option.value)
                           )
                         : []
                     }
                     onChange={(selectedOptions) => {
+                      // Map the selected options to match the required backend format
                       field.onChange(
                         selectedOptions
-                          ? selectedOptions.map((option) => option.value)
+                          ? selectedOptions.map((option) => ({
+                              name: option.value, // Send as { name: "career_name" }
+                            }))
                           : []
                       );
                     }}
@@ -280,12 +284,15 @@ const WorkExperience = () => {
               <label htmlFor="employmentType" className="form-label">
                 Employment Type <span className="text-red">*</span>
               </label>
-              <input
+              <select
+                className={"border border-gray-border rounded-md py-2 px-4"}
                 id="employmentType"
-                type="text"
                 {...register("employmentType")}
-                className="border border-gray-border rounded-md py-2 px-4"
-              />
+              >
+                <option value="">Select status</option>
+                <option value="full-time">Full Time</option>
+                <option value="part-time">Part time</option>
+              </select>
               {errors.employmentType && (
                 <p className="text-red text-sm">
                   {getErrorMessage(errors.employmentType)}
@@ -318,6 +325,48 @@ const WorkExperience = () => {
             />
           </div>
 
+          <div className="flex justify-between gap-4 md:gap-8">
+            <div className="flex flex-col w-1/2">
+              <label htmlFor="jobStatus" className="form-label">
+                Job Status
+                <span className="text-red">*</span>
+              </label>
+              <select
+                className={"border border-gray-border rounded-md py-2 px-4"}
+                id="jobStatus"
+                {...register("jobStatus")}
+              >
+                <option value="">Select job status</option>
+                <option value="current">Current</option>
+                <option value="former">Former</option>
+              </select>
+              {errors.jobStatus && (
+                <p className="text-red text-sm">
+                  {getErrorMessage(errors.jobStatus)}
+                </p>
+              )}
+            </div>
+
+            <div className="w-full md:w-1/2 gap-8 flex flex-col">
+              <div className="flex flex-col w-full">
+                <label htmlFor="startedDate" className="form-label">
+                  Year and Month Ended <span className="text-red">*</span>
+                </label>
+                <input
+                  id="endedDate"
+                  type="date"
+                  {...register("endedDate")}
+                  className="border border-gray-border rounded-md py-2 px-4"
+                />
+                {errors.endedDate && (
+                  <p className="text-red text-sm">
+                    {getErrorMessage(errors.endedDate)}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
           <div className="flex flex-col md:flex-row justify-between gap-4 md:gap-8">
             <div className="w-full md:w-1/2 gap-8 flex flex-col">
               <div className="flex flex-col w-full">
@@ -326,7 +375,7 @@ const WorkExperience = () => {
                 </label>
                 <input
                   id="startedDate"
-                  type="month"
+                  type="date"
                   {...register("startedDate")}
                   className="border border-gray-border rounded-md py-2 px-4"
                 />
@@ -337,22 +386,22 @@ const WorkExperience = () => {
                 )}
               </div>
               <div className="flex flex-col w-full">
-                <label htmlFor="jobSummary" className="form-label">
+                <label htmlFor="companyDescription" className="form-label">
                   Provide Company Description with Vision and Mission Statement{" "}
                   <span className="text-red">*</span>
                 </label>
                 <textarea
-                  id="jobSummary"
-                  {...register("jobSummary")}
+                  id="companyDescription"
+                  {...register("companyDescription")}
                   className="border border-gray-border rounded-md py-2 px-4"
                 />
                 <p className="text-xs text-gray-text">
                   Please describe in third person with the name of the company
                   prominently stated.
                 </p>
-                {errors.jobSummary && (
+                {errors.companyDescription && (
                   <p className="text-red text-sm">
-                    {getErrorMessage(errors.jobSummary)}
+                    {getErrorMessage(errors.companyDescription)}
                   </p>
                 )}
               </div>
@@ -396,10 +445,10 @@ const WorkExperience = () => {
       </div>
 
       {/* FORMER JOB */}
-      <div className="border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
+      {/* <div className="border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
         <h3 className="text-2xl font-medium mb-5">Former Job</h3>
         <div className="flex flex-col gap-8">
-          <div className="flex justify-between gap-4 md:gap-8">
+          {/* <div className="flex justify-between gap-4 md:gap-8">
             <div className="flex flex-col w-1/2">
               <label htmlFor="workPlaceName" className="form-label">
                 Name of Work or Business Place{" "}
@@ -434,9 +483,9 @@ const WorkExperience = () => {
                 </p>
               )}
             </div>
-          </div>
+          </div> */}
 
-          <div className="flex justify-between gap-4 md:gap-8">
+      {/* <div className="flex justify-between gap-4 md:gap-8">
             <div className="flex flex-col w-1/2">
               <label htmlFor="currentJobTitle" className="form-label">
                 Current Job Title <span className="text-red">*</span>
@@ -469,12 +518,12 @@ const WorkExperience = () => {
                 </p>
               )}
             </div>
-          </div>
+          </div> */}
 
-          <div className="flex justify-between gap-4 md:gap-8">
+      {/* <div className="flex justify-between gap-4 md:gap-8">
             <div className="flex flex-col w-1/2">
               <label htmlFor="stateLocation" className="form-label">
-                State/Province Location of Current Job{" "}
+                State/Province Location of Current Job
                 <span className="text-red">*</span>
               </label>
               <input
@@ -491,7 +540,7 @@ const WorkExperience = () => {
             </div>
             <div className="flex flex-col w-1/2">
               <label htmlFor="countryLocation" className="form-label">
-                Country Location of Current Job{" "}
+                Country Location of Current Job
                 <span className="text-red">*</span>
               </label>
               <select
@@ -501,20 +550,20 @@ const WorkExperience = () => {
               >
                 <option value="">Select a country</option>
                 {/* Add options as needed */}
-                <option value="United States">United States</option>
+      {/* <option value="United States">United States</option>
                 <option value="Canada">Canada</option>
-                <option value="United Kingdom">United Kingdom</option>
-                {/* Add other options here */}
-              </select>
+                <option value="United Kingdom">United Kingdom</option> */}
+      {/* Add other options here */}
+      {/* </select>
               {errors.countryLocation && (
                 <p className="text-red text-sm">
                   {getErrorMessage(errors.countryLocation)}
                 </p>
               )}
-            </div>
-          </div>
+            </div> */}
+      {/* </div> */}
 
-          <div className="flex justify-between gap-4 md:gap-8">
+      {/* <div className="flex justify-between gap-4 md:gap-8">
             <div className="flex flex-col w-1/2">
               <label htmlFor="startedDate" className="form-label">
                 Year and Month Started <span className="text-red">*</span>
@@ -548,9 +597,9 @@ const WorkExperience = () => {
                 </p>
               )}
             </div>
-          </div>
+          </div> */}
 
-          <div className="flex justify-between gap-4 md:gap-8">
+      {/* <div className="flex justify-between gap-4 md:gap-8">
             <div className="flex flex-col w-1/2">
               <label htmlFor="jobSummary" className="form-label">
                 Provide Company Description with Vision and Mission Statement{" "}
@@ -604,9 +653,9 @@ const WorkExperience = () => {
               <img src={promptWhiteImage} alt="prompt" />
               Refine Job Summary and Key Achievements with eLDa AI
             </Button>
-          </div>
-        </div>
-      </div>
+          </div> */}
+      {/* </div> */}
+      {/* </div> */}
     </div>
   );
 };

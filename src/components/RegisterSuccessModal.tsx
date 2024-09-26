@@ -21,12 +21,10 @@ const RegisterSuccessModal: React.FC<SuccessModalProps> = ({
           Your form has been submitted. We will review the documents and get
           back to you.
         </p>
-        <p>Check your email for the next steps</p>
-        <p className="text-center">Not received a mail yet ?</p>
         <p>
-          Contact us here
-          <a href="/" className="underline text-blue-400">
-            Customer Care
+          Meanwhile you can check out your status{" "}
+          <a target="_blank" href="/candidate/status" className="underline text-blue-400">
+            here
           </a>
         </p>
         <button

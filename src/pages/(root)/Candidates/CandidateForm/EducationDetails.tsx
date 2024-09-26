@@ -31,8 +31,6 @@ const EducationDetails = () => {
                 <option value="">Select status</option>
                 <option value="student">Student</option>
                 <option value="graduate">Graduate</option>
-                <option value="employed">Employed</option>
-                <option value="unemployed">Unemployed</option>
               </select>
               {errors.currentStatus && (
                 <span className="text-red text-sm">
@@ -52,7 +50,7 @@ const EducationDetails = () => {
                 <option value="">Select degree type</option>
                 <option value="bachelor">Bachelor</option>
                 <option value="master">Master</option>
-                <option value="doctorate">Doctorate</option>
+                <option value="phd">PHD</option>
               </select>
               {errors.degreeType && (
                 <span className="text-red text-sm">
@@ -117,10 +115,11 @@ const EducationDetails = () => {
                 {...register("degreeClass")}
               >
                 <option value="">Select class of degree</option>
-                <option value="first">First Class</option>
-                <option value="secondUpper">Second Class Upper</option>
-                <option value="secondLower">Second Class Lower</option>
-                <option value="third">Third Class</option>
+                <option value="first_class">First Class</option>
+                <option value="second_class">Second Class</option>
+                <option value="third_class">Third Class</option>
+                <option value="no_class">No Class</option>
+                <option value="other">Other</option>
               </select>
               <p className="text-xs text-gray-text">
                 select your class of degree you graduated with

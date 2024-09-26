@@ -26,14 +26,13 @@ const UploadDocuments: React.FC = () => {
   const labels = [
     "BSC or HND certificate",
     "Bank statement of 1k USD",
-    "Post-graduate degree msc/mba/pgd",
     "Int'l Passport",
     "First Degree Transcript",
     "Current CV",
     "NIN Slip",
     "Upload utility bill with house address",
-    "Post-Graduate Certificate",
     "Post-Graduate Transcript",
+    "Post-Graduate Certificate",
   ];
 
   const handleFileChange = (
@@ -100,7 +99,7 @@ const UploadDocuments: React.FC = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
-      {Array.from({ length: 10 }, (_, i) => (
+      {Array.from({ length: 9 }, (_, i) => (
         <div key={i} className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
             Upload {i + 1}

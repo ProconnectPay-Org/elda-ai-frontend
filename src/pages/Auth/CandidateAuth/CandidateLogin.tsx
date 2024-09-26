@@ -41,6 +41,7 @@ const CandidateLogin = () => {
       });
       if (response) {
         localStorage.setItem("candidate_access_token", response.access);
+        localStorage.setItem("candidate_id", response.candidate.id);
         toast({
           title: "Success",
           description: "Signed in successfully",
