@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getPersonalDetails } from "@/lib/actions/candidate.actions";
 import { Loader2 } from "lucide-react";
+import Cookies from "js-cookie";
 
 const PersonalDetails = () => {
   const {
@@ -17,10 +18,13 @@ const PersonalDetails = () => {
     setValue,
     formState: { errors },
   } = useFormContext<Step1FormData>();
+  const candidateId = Cookies.get("candidate_id");
+
   const { isLoading, data: candidateData } = useQuery({
-    queryKey: ["personalDetails"],
+    queryKey: ["personalDetails", candidateId],
     queryFn: getPersonalDetails,
     staleTime: 5 * 1000,
+    enabled: !!candidateId,
   });
 
   useEffect(() => {

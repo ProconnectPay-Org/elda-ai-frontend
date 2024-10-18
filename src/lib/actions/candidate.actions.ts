@@ -11,7 +11,7 @@ const work_experience_id = Cookies.get("work_experience_id");
 const verificationDocumentsId = Cookies.get("verification_document_id");
 const referee1Id = Cookies.get("referee1_id");
 const referee2Id = Cookies.get("referee2_id");
-// const advancedId = Cookies.get("advanced_education1_id");
+const advancedId = Cookies.get("advanced_education1_id");
 
 const config = {
   headers: {
@@ -27,6 +27,7 @@ export const updatePersonalDetails = async (personalDetails: any) => {
     config
   );
 };
+
 export const getPersonalDetails = async () => {
   return await axios.get(
     `${API_URL}register/candidate/${candidateId}/`,
@@ -60,7 +61,7 @@ export const hasAdvancedDegree = async (degreeDetails: any) => {
 
 export const updateAdvancedDegree = async (degreeDetails: any) => {
   return await axios.patch(
-    `${API_URL}register/advanced-education/5/`,
+    `${API_URL}register/advanced-education/${advancedId}/`,
     degreeDetails,
     config
   );

@@ -84,8 +84,6 @@ const RefineResume = () => {
     if (currentStep === steps.length - 1) {
       console.log("Form Submitted:", currentFormData);
       if (resumeData && resumeData.resume) {
-        console.log("url", resumeData.resume);
-
         window.open(resumeData.resume.resume, "_blank");
       } else {
         console.error("Resume URL not found.");

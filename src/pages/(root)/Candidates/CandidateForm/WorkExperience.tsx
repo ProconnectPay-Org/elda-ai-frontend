@@ -43,14 +43,14 @@ const WorkExperience = () => {
     queryKey: ["careerData", careerId],
     queryFn: fetchCareerData,
     enabled: !!careerId,
-    staleTime: 5 * 1000,
+    staleTime: 5 * 1000 * 60,
   });
 
   const { isLoading: isJobExpLoading, data: jobExperienceData } = useQuery({
     queryKey: ["jobExperienceData", jobExperienceId],
     queryFn: fetchJobExperienceData,
     enabled: !!jobExperienceId,
-    staleTime: 5 * 1000,
+    staleTime: 5 * 1000 * 60,
   });
 
   useEffect(() => {
@@ -480,7 +480,7 @@ const WorkExperience = () => {
 
             <div className="w-full md:w-1/2 gap-8 flex flex-col">
               <div className={divClass}>
-                <label htmlFor="startedDate" className="form-label">
+                <label htmlFor="endedDate" className="form-label">
                   Year and Month Ended <span className="text-red">*</span>
                 </label>
                 <input

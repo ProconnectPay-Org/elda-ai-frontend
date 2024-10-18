@@ -20,6 +20,7 @@ import {
   updatePersonalDetails,
 } from "@/lib/actions/candidate.actions";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const steps = [
   { component: Step1, schema: step1Schema, title: "PERSONAL DETAILS" },
@@ -32,10 +33,12 @@ const steps = [
 const totalSteps = steps.length;
 
 const MultiStepForm = () => {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(4);
   const [formData, setFormData] = useState<FormData>({} as FormData);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const methods = useForm({
     resolver: zodResolver(steps[currentStep].schema),
@@ -188,6 +191,10 @@ const MultiStepForm = () => {
 
         await submitDocuments(documentsData);
         setIsSubmitted(true);
+        // Redirect after 3 seconds
+        setTimeout(() => {
+          navigate("/candidate/status");
+        }, 3000);
       }
       if (currentStep < steps.length - 1) {
         nextStep();
@@ -202,7 +209,7 @@ const MultiStepForm = () => {
   const progressBarWidth = ((currentStep + 1) / totalSteps) * 100;
 
   const closeModal = () => {
-    setIsSubmitted(false); // Close the modal
+    setIsSubmitted(false);
   };
 
   return (

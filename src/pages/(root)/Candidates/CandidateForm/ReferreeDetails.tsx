@@ -30,16 +30,16 @@ const ReferreeDetails = () => {
 
   const { isLoading: isReferee1Loading, data: referee1Data } = useQuery({
     queryKey: ["referee1Data"],
-    queryFn: () => fetchReferee1(),
+    queryFn: fetchReferee1,
     enabled: !!referee1Id,
-    staleTime: 5 * 1000,
+    staleTime: 5 * 1000 * 60,
   });
 
   const { isLoading: isReferee2Loading, data: referee2Data } = useQuery({
     queryKey: ["referee2Data"],
-    queryFn: () => fetchReferee2(),
+    queryFn: fetchReferee2,
     enabled: !!referee2Id,
-    staleTime: 5 * 1000,
+    staleTime: 5 * 1000 * 60,
   });
 
   useEffect(() => {

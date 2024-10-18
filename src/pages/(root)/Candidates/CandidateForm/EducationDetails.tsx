@@ -18,17 +18,21 @@ const EducationDetails = () => {
     setValue,
     formState: { errors },
   } = useFormContext<Step2FormData>();
+  const educationId = Cookies.get("education_id");
+  const advancedId = Cookies.get("advanced_education1_id");
 
   const { isLoading: isEducationLoading, data } = useQuery({
-    queryKey: ["educationData"],
+    queryKey: ["educationData", educationId],
     queryFn: fetchEducationData,
     staleTime: 5 * 1000,
+    enabled: !!educationId,
   });
 
   const { isLoading: isAdvancedLoading, data: advancedDegreeData } = useQuery({
-    queryKey: ["advancedDegreeData"],
+    queryKey: ["advancedDegreeData", advancedId],
     queryFn: getAdvancedDegree,
     staleTime: 5 * 1000,
+    enabled: !!advancedId,
   });
 
   useEffect(() => {

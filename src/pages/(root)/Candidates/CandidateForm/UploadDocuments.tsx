@@ -7,6 +7,7 @@ import FileIcon from "@/assets/icon-file.png";
 import { useQuery } from "@tanstack/react-query";
 import { fetchVerificationDocument } from "@/lib/actions/candidate.actions";
 import { Loader2 } from "lucide-react";
+import Cookies from "js-cookie";
 
 type UploadState = {
   progress: number;
@@ -26,6 +27,7 @@ const UploadDocuments: React.FC = () => {
     [key: number]: UploadState;
   }>({});
   const [isUploaded, setIsUploaded] = useState<boolean[]>(Array(9).fill(false));
+  const verificationDocumentsId = Cookies.get("verification_document_id");
 
   const labels = [
     "bsc_hnd_certificate",
@@ -54,7 +56,8 @@ const UploadDocuments: React.FC = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["verificationDocumentsDatas"],
     queryFn: fetchVerificationDocument,
-    staleTime: 5 * 1000,
+    staleTime: 5 * 1000 * 60,
+    enabled: !!verificationDocumentsId,
   });
 
   useEffect(() => {
@@ -130,8 +133,10 @@ const UploadDocuments: React.FC = () => {
               <div className="mt-1 w-full p-4 border border-gray-border rounded-md shadow-sm bg-white text-gray-text flex gap-4 items-center">
                 <img src={FileIcon} alt="file icon" />
                 <div className="flex flex-col gap-8 w-full">
-                  {uploadStates[i]?.file?.name ||
-                    data[labels[i]].split("/").pop()}
+                  <span className="truncate max-w-60">
+                    {uploadStates[i]?.file?.name ||
+                      data[labels[i]].split("/").pop()}
+                  </span>
                   <div className="bg-red h-2.5 rounded-full"></div>
                 </div>
               </div>
