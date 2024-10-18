@@ -154,7 +154,7 @@ const WorkExperience = () => {
                 Mode
               </label>
               <input
-                className="border border-gray-border rounded-full py-2 px-4"
+                className="border capitalize border-gray-border rounded-full py-2 px-4"
                 id="mode"
                 {...register("mode")}
                 placeholder="Hybrid"

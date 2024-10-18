@@ -83,11 +83,10 @@ const RefineResume = () => {
 
     if (currentStep === steps.length - 1) {
       console.log("Form Submitted:", currentFormData);
-      localStorage.setItem("ResumeData", JSON.stringify(currentFormData)); // Store as JSON string
       if (resumeData && resumeData.resume) {
         console.log("url", resumeData.resume);
 
-        window.open(resumeData.resume, "_blank");
+        window.open(resumeData.resume.resume, "_blank");
       } else {
         console.error("Resume URL not found.");
       }
