@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 import { CandidateData } from "@/types";
-import RedCircle from "@/assets/red-circle.svg";
+import { Link } from "react-router-dom";
 
 export const columns: ColumnDef<CandidateData>[] = [
   {
@@ -55,14 +55,11 @@ export const columns: ColumnDef<CandidateData>[] = [
   {
     accessorKey: "resume",
     header: "Resume",
-    cell: ({ row }) =>
-      typeof row.original === "string" ? (
-        row.original
-      ) : (
-        <div className="flex justify-center">
-          <img src={RedCircle} alt="Red Circle" width={20} height={20} />
-        </div>
-      ),
+    cell: ({ row }) => (
+      <p className="capitalize text-center">
+        {row.original.resume || "No name"}
+      </p>
+    ),
   },
   {
     accessorKey: "sop",
@@ -71,46 +68,22 @@ export const columns: ColumnDef<CandidateData>[] = [
         <p className="text-center">SOP</p>
       </div>
     ),
-    cell: ({ row }) =>
-      typeof row.original === "string" ? (
-        row.original
-      ) : (
-        <div className="flex justify-center">
-          <img src={RedCircle} alt="Red Circle" width={20} height={20} />
-        </div>
-      ),
+    cell: ({ row }) => (
+      <p className="capitalize text-center">{row.original.sop || "No name"}</p>
+    ),
   },
   {
-    accessorKey: "school_application_started",
+    accessorKey: "school_application_status",
     header: () => (
       <div>
-        <p className="text-center">School Application Started</p>
+        <p className="text-center">School Application Status</p>
       </div>
     ),
-    cell: ({ row }) =>
-      typeof row.original === "string" ? (
-        row.original
-      ) : (
-        <div className="flex justify-center">
-          <img src={RedCircle} alt="Red Circle" width={20} height={20} />
-        </div>
-      ),
-  },
-  {
-    accessorKey: "school_application_completed",
-    header: () => (
-      <div>
-        <p className="text-center">School Application Completed</p>
-      </div>
+    cell: ({ row }) => (
+      <p className="capitalize text-center">
+        {row.original.school_application_status || "No name"}
+      </p>
     ),
-    cell: ({ row }) =>
-      typeof row.original === "string" ? (
-        row.original
-      ) : (
-        <div className="flex justify-center">
-          <img src={RedCircle} alt="Red Circle" width={20} height={20} />
-        </div>
-      ),
   },
   {
     id: "actions",
@@ -128,14 +101,18 @@ export const columns: ColumnDef<CandidateData>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem>
+              <Link to={`/refine-resume/${payment.id}`}>Refine Resume</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link to={`/craft-sop/${payment.id}`}>Craft SOP</Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(payment.id)}
             >
-              Copy payment ID
+              Copy candidate ID
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

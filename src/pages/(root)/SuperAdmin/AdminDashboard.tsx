@@ -17,9 +17,37 @@ import { getAdminInfo, getAllActivities } from "@/lib/actions/user.actions";
 import messageIcon from "@/assets/message-icon.png";
 import shieldIcon from "@/assets/shield-icon.png";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AxiosError } from "axios";
 import RecentActivityModal from "@/components/RecentActivityModal";
-import { NotificationProps } from "@/types";
+import { CustomAxiosError, NotificationProps } from "@/types";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "@/components/ui/use-toast";
+import { AxiosError } from "axios";
+
+interface staticCardProps {
+  title: string;
+  value: number | null;
+  isLoading: boolean;
+  className?: string;
+}
+
+const StatisticCard = ({
+  title,
+  value,
+  isLoading,
+  className,
+}: staticCardProps) => (
+  <div
+    className={`p-8 hidden md:flex flex-col gap-4 items-center justify-center ${className} w-1/4 border-red`}
+  >
+    <p className="font-medium text-sm">{title}</p>
+    <div className="font-bold text-4xl">
+      {isLoading ? <Skeleton className="h-10 w-10" /> : value ?? "0"}
+    </div>
+    <p className="text-xs flex items-center gap-2 capitalize">
+      <img src={Time} alt="time-icon" /> just now
+    </p>
+  </div>
+);
 
 const AdminDashboard = () => {
   const [recentActivity, setRecentActivity] = useState<
@@ -31,54 +59,73 @@ const AdminDashboard = () => {
   const [numberOfStaff, setNumberOfStaff] = useState<number | null>(null);
   const [completedJobs, setCompletedJobs] = useState<number | null>(null);
   const [pendingJobs, setPendingJobs] = useState<number | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  const {
+    isLoading: isAdminLoading,
+    data: AdminData,
+    error: adminError,
+  } = useQuery({
+    queryKey: ["adminData"],
+    queryFn: getAdminInfo,
+    staleTime: 5 * 1000,
+  });
+
+  const {
+    isLoading: isRecentActivityLoading,
+    data: RcentActivity,
+    error: activityError,
+  } = useQuery({
+    queryKey: ["recentActivity"],
+    queryFn: () => getAllActivities(),
+    staleTime: 5 * 60 * 1000,
+  });
+
   useEffect(() => {
-    const fetchAdminInfo = async () => {
-      try {
-        const data = await getAdminInfo();
-        setCompletedJobs(data?.completed_jobs);
-        setPendingJobs(data?.pending_jobs);
-        setNumberOfStaff(data?.total_staff);
-        setNumberOfCandidate(data?.total_candidates);
-        // setRecentActivity(data?.recent_activities);
-      } catch (err) {
-        if (err instanceof AxiosError) {
-          if (err.response) {
-            setError(err.response.data?.message || "An error occurred");
-          } else if (err.request) {
-            setError("No response from server. Please try again later.");
-          } else {
-            setError("Error in sending request: " + err.message);
-          }
-        } else {
-          setError("An unexpected error occurred. Please try again later.");
-        }
-        console.error("Error fetching admin info:", err);
-      } finally {
-        setLoading(false);
+    const handleAxiosError = (error: unknown) => {
+      if ((error as AxiosError).response && (error as AxiosError).response?.data) {
+        const axiosError = error as CustomAxiosError;
+        return axiosError.response?.data?.detail || "Unknown error occurred.";
       }
+      return "An error occurred. Please try again.";
     };
+  
+    if (adminError) {
+      setError("Failed to fetch admin data.");
+      const errorMessage = handleAxiosError(adminError);
+      toast({
+        title: "Error",
+        description: `${errorMessage} Login again.`,
+        variant: "destructive",
+      });
+    }
+  
+    if (activityError) {
+      setError("Failed to fetch recent activities.");
+      const errorMessage = handleAxiosError(activityError);
+      toast({
+        title: "Error",
+        description: `${errorMessage} Login again.`,
+        variant: "destructive",
+      });
+    }
+  }, [adminError, activityError]);
 
-    const fetchRecentActivities = async () => {
-      setLoading(true);
-      try {
-        const data = await getAllActivities();
-        setRecentActivity(data.results);
-      } catch (err) {
-        setError("Error fetching recent activities: " + err);
-        console.error("Error fetching recent activities:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  useEffect(() => {
+    if (AdminData) {
+      setCompletedJobs(AdminData.completed_jobs || 0);
+      setPendingJobs(AdminData.pending_jobs || 0);
+      setNumberOfStaff(AdminData.total_staff || 0);
+      setNumberOfCandidate(AdminData.total_candidates || 0);
+    }
+  }, [AdminData]);
 
-    fetchAdminInfo();
-    fetchRecentActivities();
-    return () => {};
-  }, []);
+  useEffect(() => {
+    if (RcentActivity) {
+      setRecentActivity(RcentActivity.results || []);
+    }
+  }, [RcentActivity]);
 
   if (error)
     return (
@@ -130,19 +177,12 @@ const AdminDashboard = () => {
       </div>
 
       <div className="border-red md:border w-full mb-10 rounded-lg flex flex-col md:flex-row gap-2 md:gap-0">
-        <div className="p-8 hidden md:flex flex-col gap-4 items-center justify-center w-1/4 border-r border-red">
-          <p className="font-medium text-sm">NUMBER OF CANDIDATE</p>
-          <div className="font-bold text-4xl">
-            {loading ? (
-              <Skeleton className="h-10 w-10" />
-            ) : (
-              numberOfCandidate || "0"
-            )}
-          </div>
-          <p className="text-xs flex items-center gap-2 capitalize">
-            <img src={Time} alt="time-icon" /> just now
-          </p>
-        </div>
+        <StatisticCard
+          title="NUMBER OF CANDIDATE"
+          value={numberOfCandidate}
+          isLoading={isAdminLoading}
+          className="border-r"
+        />
         <div className="py-8 px-4 flex md:hidden gap-4 items-center justify-between rounded-lg border border-red">
           <div>
             <p className="font-medium text-sm">NUMBER OF CANDIDATE</p>
@@ -151,7 +191,7 @@ const AdminDashboard = () => {
             </p>
           </div>
           <div className="font-bold text-4xl">
-            {loading ? (
+            {isAdminLoading ? (
               <Skeleton className="h-10 w-10" />
             ) : (
               numberOfCandidate || "0"
@@ -159,19 +199,12 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="p-8 hidden md:flex flex-col gap-4 items-center justify-center w-1/4 border-r border-red">
-          <p className="font-medium text-sm">NUMBER OF STAFF</p>
-          <div className="font-bold text-4xl">
-            {loading ? (
-              <Skeleton className="h-10 w-10" />
-            ) : (
-              numberOfStaff || "0"
-            )}
-          </div>
-          <p className="text-xs flex items-center gap-2 capitalize">
-            <img src={Time} alt="time-icon" /> just now
-          </p>
-        </div>
+        <StatisticCard
+          title="NUMBER OF STAFF"
+          value={numberOfStaff}
+          isLoading={isAdminLoading}
+          className="border-r"
+        />
 
         <div className="py-8 px-4 flex md:hidden gap-4 items-center justify-between rounded-lg border border-red">
           <div>
@@ -181,7 +214,7 @@ const AdminDashboard = () => {
             </p>
           </div>
           <div className="font-bold text-4xl">
-            {loading ? (
+            {isAdminLoading ? (
               <Skeleton className="h-10 w-10" />
             ) : (
               numberOfStaff || "0"
@@ -189,15 +222,13 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="p-8 hidden md:flex flex-col gap-4 items-center justify-center w-1/4 border-r border-red">
-          <p className="font-medium text-sm">PENDING JOBS</p>
-          <div className="font-bold text-4xl">
-            {loading ? <Skeleton className="h-10 w-10" /> : pendingJobs || "0"}
-          </div>
-          <p className="text-xs flex items-center gap-2 capitalize">
-            <img src={Time} alt="time-icon" /> just now
-          </p>
-        </div>
+        <StatisticCard
+          title="PENDING JOBS"
+          value={pendingJobs}
+          isLoading={isAdminLoading}
+          className="border-r"
+        />
+
         <div className="py-8 px-4 flex md:hidden gap-4 items-center justify-between rounded-lg border border-red">
           <div>
             <p className="font-medium text-sm">PENDING JOBS</p>
@@ -206,23 +237,19 @@ const AdminDashboard = () => {
             </p>
           </div>
           <div className="font-bold text-4xl">
-            {loading ? <Skeleton className="h-10 w-10" /> : pendingJobs || "0"}
+            {isAdminLoading ? (
+              <Skeleton className="h-10 w-10" />
+            ) : (
+              pendingJobs || "0"
+            )}
           </div>
         </div>
 
-        <div className="p-8 hidden md:flex flex-col gap-4 items-center justify-center w-1/4">
-          <p className="font-medium text-sm">COMPLETED JOBS</p>
-          <div className="font-bold text-4xl">
-            {loading ? (
-              <Skeleton className="h-10 w-10" />
-            ) : (
-              completedJobs || "0"
-            )}
-          </div>
-          <p className="text-xs flex items-center gap-2 capitalize">
-            <img src={Time} alt="time-icon" /> just now
-          </p>
-        </div>
+        <StatisticCard
+          title="COMPLETED JOBS"
+          value={completedJobs}
+          isLoading={isAdminLoading}
+        />
         <div className="py-8 px-4 flex md:hidden gap-4 items-center justify-between rounded-lg border border-red">
           <div>
             <p className="font-medium text-sm">COMPLETED JOBS</p>
@@ -231,7 +258,7 @@ const AdminDashboard = () => {
             </p>
           </div>
           <div className="font-bold text-4xl">
-            {loading ? (
+            {isAdminLoading ? (
               <Skeleton className="h-10 w-10" />
             ) : (
               completedJobs || "0"
@@ -252,7 +279,7 @@ const AdminDashboard = () => {
           </Button>
         </span>
 
-        {loading ? (
+        {isRecentActivityLoading ? (
           <div className="space-y-5 mt-5">
             {Array.from({ length: 5 }).map((_, index) => (
               <div key={index} className="flex items-center space-x-4">

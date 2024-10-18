@@ -42,6 +42,12 @@ declare type signInProps = {
   password: string;
 };
 
+interface ErrorResponse {
+  detail: string;
+}
+
+declare type CustomAxiosError = AxiosError<ErrorResponse>;
+
 declare type CreateCandidateProfileProps = {
   email: string;
   password: string;
@@ -87,10 +93,10 @@ declare type OptionType = {
 interface User {
   id?: number | string;
   token?: string;
-  email?: string;
-  full_name?: string;
+  email: string;
+  full_name: string;
   country?: string;
-  role?: "candidate" | "staff" | "admin";
+  role: "candidate" | "staff" | "admin";
   isLoggedIn?: boolean;
   groups?: string[] | any[];
   is_active?: boolean;
@@ -99,6 +105,13 @@ interface User {
   last_login?: Date | null;
   password?: string;
   user_permissions?: string[] | any[];
+}
+
+interface Staff {
+  jobs_completed: number;
+  jobs_pending: number;
+  number_of_assigned_candidates: number;
+  staff_candidates: [];
 }
 
 declare type DottedBoxProps = {
@@ -181,20 +194,41 @@ export type FormData = Step1FormData &
   Step4FormData &
   Step5FormData;
 
+declare interface EducationHistory {
+  degree: string;
+  school: string;
+  year: string;
+}
+
+declare interface WorkHistory {
+  position: string;
+  company: string;
+  year: string;
+}  
+
 export type CandidateData = {
   id: string;
   amount: number;
-  email: string;
+  assigned_course: string;
+  assigned_university: string;
+  career_strategic_purpose: string;
+  email_address: string;
+  education_history: EducationHistory[];
   serial_number: number;
   name: string;
   recommended_school: string;
   recommended_course: string;
   resume: string;
+  resume_status?: string;
+  gender?: string;
   sop: string;
-  school_application_started: string;
-  school_application_completed: string;
+  sop_status?: string;
+  school_application_status: "Pending" | "Complete" | "Started";
   status: string;
-  phone: string;
+  phone_number: string;
+  profession?: string;
+  work_history: WorkHistory[];
+  user?: User;
 };
 
 declare interface AllCandidates {

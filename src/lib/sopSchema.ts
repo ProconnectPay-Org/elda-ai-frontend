@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const ResumeStep1Schema = z.object({
+export const SopStep1Schema = z.object({
   fullName: z.string().nonempty("Full name is required"),
   phoneNumber: z.string().nonempty("Phone number is required"),
   email: z.string().email("Invalid email address"),

@@ -12,6 +12,8 @@ import { Loader2 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { adminSignIn } from "@/lib/actions/user.actions";
 import { toast } from "@/components/ui/use-toast";
+import { CustomAxiosError } from "@/types";
+import Cookies from "js-cookie";
 
 const CandidateLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -39,29 +41,69 @@ const CandidateLogin = () => {
         email: data.email,
         password: data.password,
       });
+
       if (response) {
-        localStorage.setItem("candidate_access_token", response.access);
-        localStorage.setItem("candidate_id", response.candidate.id);
+        console.log(response);
+        const userRole = response.user.role;
+
+        Cookies.set("user_role", userRole, { expires: 7 });
+        Cookies.set("candidate_access_token", response.access, { expires: 7 });
+        Cookies.set("candidate_id", response.candidate.id, { expires: 7 });
+        Cookies.set("education_id", response.candidate.education[0], {
+          expires: 7,
+        });
+        Cookies.set("career_id", response.candidate.career[0], { expires: 7 });
+        Cookies.set(
+          "verification_document_id",
+          response.candidate.verification_documents[0],
+          { expires: 7 }
+        );
+        Cookies.set(
+          "work_experience_id",
+          response.candidate.job_experience[0],
+          { expires: 7 }
+        );
+        Cookies.set("advanced_education1_id", response.advanced_education[0], {
+          expires: 7,
+        });
+        Cookies.set("advanced_education2_id", response.advanced_education[1], {
+          expires: 7,
+        });
+        Cookies.set("referee1_id", response.candidate.loan_referees[0], {
+          expires: 7,
+        });
+        Cookies.set("referee2_id", response.candidate.loan_referees[1], {
+          expires: 7,
+        });
+
         toast({
           title: "Success",
           description: "Signed in successfully",
           variant: "success",
         });
-        navigate("/register");
+
+        // Redirect based on application status
+        if (response.candidate.has_completed_application) {
+          navigate("/candidate/status");
+        } else {
+          navigate("/register");
+        }
+      }
+    } catch (error) {
+      const axiosError = error as CustomAxiosError;
+      if (axiosError.response && axiosError.response.data) {
+        toast({
+          title: "Error",
+          description: axiosError.response.data.detail,
+          variant: "destructive",
+        });
       } else {
         toast({
           title: "Error",
-          description: "Sign-in failed: Invalid credentials",
+          description: "An unknown error occurred.",
           variant: "destructive",
         });
       }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Sign-in failed: Invalid credentials",
-        variant: "destructive",
-      });
-      console.log(error);
     } finally {
       setIsLoading(false);
     }

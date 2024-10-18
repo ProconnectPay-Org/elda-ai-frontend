@@ -2,12 +2,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getLoggedInUser, logoutAccount } from "@/lib/actions/user.actions";
-import { UserType } from "@/types";
+import { User } from "@/types";
+import { useQuery } from "@tanstack/react-query";
+import Cookies from "js-cookie";
 
 const useAuth = () => {
-  const [loggedInUser, setLoggedInUser] = useState<UserType | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
   const navigate = useNavigate();
+
+  const userRole = Cookies.get("user_role");
 
   const handleLogout = async () => {
     if (loggedInUser) {
@@ -17,20 +20,23 @@ const useAuth = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchLoggedInUser = async () => {
-      const user = await getLoggedInUser();
-      setLoggedInUser(user);      
-      setLoading(false);
-    };
+  const { data, isLoading } = useQuery({
+    queryKey: ["loggedInUser", userRole],
+    queryFn: () => getLoggedInUser(userRole as "staff" | "admin" | "candidate"),
+    enabled: !!userRole,
+    staleTime: 5 * 1000,
+  });
 
-    fetchLoggedInUser();
-  }, []); // Runs only once after the initial render
+  useEffect(() => {
+    if (data) {
+      setLoggedInUser(data);
+    }
+  }, [userRole, data]);
 
   return {
     loggedInUser,
     handleLogout,
-    loading,
+    isLoading,
   };
 };
 

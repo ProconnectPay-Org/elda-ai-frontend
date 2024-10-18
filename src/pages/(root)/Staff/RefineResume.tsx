@@ -7,17 +7,18 @@ import {
   ResumeStep2Schema,
   ResumeStep3Schema,
   ResumeStep4Schema,
-  ResumeStep5Schema,
+  // ResumeStep5Schema,
 } from "@/lib/resumeSchema";
 import {
   ResumeStep1,
   ResumeStep2,
   ResumeStep3,
   ResumeStep4,
-  ResumeStep5,
+  // ResumeStep5,
 } from ".";
 import RootLayout from "@/layouts/RootLayout";
-import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { craftCandidateResume } from "@/lib/actions/staff.actions";
 
 const steps = [
   {
@@ -40,11 +41,11 @@ const steps = [
     schema: ResumeStep4Schema,
     title: "REFEREE DETAILS",
   },
-  {
-    component: ResumeStep5,
-    schema: ResumeStep5Schema,
-    title: "UPLOAD DOCUMENTS",
-  },
+  // {
+  //   component: ResumeStep5,
+  //   schema: ResumeStep5Schema,
+  //   title: "UPLOAD DOCUMENTS",
+  // },
 ];
 
 const totalSteps = steps.length;
@@ -52,7 +53,11 @@ const totalSteps = steps.length;
 const RefineResume = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<any>({});
-  const navigate = useNavigate();
+
+  const { data: resumeData } = useQuery({
+    queryKey: ["candidateResume"],
+    queryFn: () => craftCandidateResume(3),
+  });
 
   const methods = useForm({
     resolver: zodResolver(steps[currentStep].schema),
@@ -79,7 +84,13 @@ const RefineResume = () => {
     if (currentStep === steps.length - 1) {
       console.log("Form Submitted:", currentFormData);
       localStorage.setItem("ResumeData", JSON.stringify(currentFormData)); // Store as JSON string
-      navigate("final-resume"); // Route to the new path
+      if (resumeData && resumeData.resume) {
+        console.log("url", resumeData.resume);
+
+        window.open(resumeData.resume, "_blank");
+      } else {
+        console.error("Resume URL not found.");
+      }
     } else {
       setFormData(currentFormData);
       nextStep();
@@ -116,7 +127,7 @@ const RefineResume = () => {
               type="submit"
               className="form-btn bg-red text-white w-28 px-10 py-2 rounded-md flex items-center justify-center"
             >
-              Next
+              {currentStep === steps.length - 1 ? "Submit" : "Next"}
             </button>
           </div>
         </form>

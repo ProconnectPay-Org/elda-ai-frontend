@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
+import Cookies from "js-cookie";
 
 const sidebarLinks = [
   {
@@ -43,7 +44,7 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
   const isSettingsActive = location.pathname.startsWith("/settings");
   const isDashboardActive = location.pathname.startsWith("/admin");
 
-  const access_token = localStorage.getItem("access_token");
+  const access_token = Cookies.get("access_token");
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -12,6 +12,8 @@ import CustomInput from "./CustomInput";
 import { adminSignIn } from "@/lib/actions/user.actions";
 // import GoogleIcon from "@/assets/google-logo.svg";
 import { toast } from "./ui/use-toast";
+import { CustomAxiosError } from "@/types";
+import Cookies from "js-cookie";
 
 const AuthForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -45,16 +47,39 @@ const AuthForm = () => {
         });
 
         const userRole = response.user.role;
+        Cookies.set("user_role", userRole);
 
         if (userRole === "admin") {
-          localStorage.setItem("access_token", response.access);
+          Cookies.set("access_token", response.access, { expires: 7 }); // 7 days expiration
           navigate("/admin-dashboard");
         } else if (userRole === "staff") {
-          localStorage.setItem("staff_access_token", response.access);
+          Cookies.set("staff_access_token", response.access, { expires: 7 });
           navigate("/assigned-candidates");
         } else if (userRole === "candidate") {
-          localStorage.setItem("candidate_access_token", response.access);
-          localStorage.setItem("candidate_id", response.candidate.id);
+          Cookies.set("candidate_access_token", response.access, {
+            expires: 7,
+          });
+          Cookies.set("candidate_id", response.candidate.id, { expires: 7 });
+          Cookies.set("education_id", response.candidate.education[0], {
+            expires: 7,
+          });
+          Cookies.set("career_id", response.candidate.career[0], { expires: 7 });
+          Cookies.set(
+            "verification_document_id",
+            response.candidate.verification_documents[0],
+            { expires: 7 }
+          );
+          Cookies.set(
+            "work_experience_id",
+            response.candidate.job_experience[0],
+            { expires: 7 }
+          );
+          Cookies.set("referee1_id", response.candidate.loan_referees[0], {
+            expires: 7,
+          });
+          Cookies.set("referee2_id", response.candidate.loan_referees[1], {
+            expires: 7,
+          });
           navigate("/register");
         } else {
           navigate("/");
@@ -67,12 +92,20 @@ const AuthForm = () => {
         });
       }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again later.",
-        variant: "destructive",
-      });
-      console.log(error);
+      const axiosError = error as CustomAxiosError;
+      if (axiosError.response && axiosError.response.data) {
+        toast({
+          title: "Error",
+          description: axiosError.response.data.detail,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: axiosError.message,
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }

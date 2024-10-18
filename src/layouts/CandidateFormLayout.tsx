@@ -3,10 +3,11 @@ import PcpLogo from "../assets/pcplogo.svg";
 import EldaLogo from "../assets/elda-ai-logo-no-bg.png";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import Cookies from "js-cookie";
 
 const CandidateFormLayout = ({ children }: CandidateLayoutProps) => {
   const navigate = useNavigate();
-  const loggedInCandidate = localStorage.getItem("candidate_access_token");
+  const loggedInCandidate = Cookies.get("candidate_access_token");
 
   useEffect(() => {
     if (!loggedInCandidate) {

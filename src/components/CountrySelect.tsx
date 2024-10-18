@@ -36,23 +36,43 @@ const CountrySelect: React.FC<CountrySelectProps> = ({
         name={name}
         control={control}
         render={({ field: { onChange, value } }) => (
-          <select
-            id={name}
-            value={value}
-            onChange={onChange}
-            className={`border border-gray-border h-[42px] bg-white rounded-md py-2 px-4 ${
-              errors[name] ? "border-red-500" : ""
-            }`}
-          >
-            <option value="">Select your country</option>
-            {countries.map((country) => (
-              <option key={country.isoCode} value={country.isoCode}>
-                {country.name}
-              </option>
-            ))}
-          </select>
+          <div className="relative w-full">
+            <select
+              id={name}
+              value={value}
+              onChange={onChange}
+              className={`border border-gray-border w-full h-[42px] shadow-none bg-white rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                errors[name] ? "border-red-500" : ""
+              }`}
+            >
+              <option value="">Select your country</option>
+              {countries.map((country) => (
+                <option key={country.isoCode} value={country.isoCode}>
+                  {country.name}
+                </option>
+              ))}
+            </select>
+
+            <span className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 9l-7 7-7-7"
+                ></path>
+              </svg>
+            </span>
+          </div>
         )}
       />
+
       <p className="text-xs text-gray-text">{smallText && smallText}</p>
       {/* Error message */}
       {errors[name] && (

@@ -3,13 +3,9 @@ import { AdminSignIn, CandidateLogin, Home } from "./pages";
 import {
   AssignedCandidates,
   CandidateProfile,
-  CraftSOP,
   FinalResume,
   Profile,
   RefineResume,
-  Step2,
-  Step3,
-  Step4,
 } from "./pages/(root)/Staff";
 import RegistrationForm from "./pages/(root)/Candidates/CandidateForm/RegistrationForm";
 import {
@@ -22,7 +18,15 @@ import {
   InviteEmployee,
   Staff,
 } from "./pages/(root)/SuperAdmin";
-import { CandidateStatus, CandidateView, Complaints, Feedback, LinkedInMasterclass } from "./pages/(root)/Candidates";
+import {
+  CandidateStatus,
+  CandidateView,
+  Complaints,
+  Feedback,
+  LinkedInMasterclass,
+} from "./pages/(root)/Candidates";
+import CraftSOP from "./pages/(root)/Staff/CraftSOP";
+import CandidateSelection from "./pages/(root)/Staff/CandidateSelection";
 
 function App() {
   return (
@@ -43,19 +47,15 @@ function App() {
         <Route element={<Candidates />} path="/candidates" />
         <Route element={<AdminSettings />} path="settings/account" />
         <Route element={<AdminSecurity />} path="settings/security" />
-
         {/* STAFF */}
-
         <Route element={<AssignedCandidates />} path="/assigned-candidates" />
         <Route element={<CandidateProfile />} path="/assigned-candidates/:id" />
-        <Route element={<CraftSOP />} path="/craft-sop" />
-        <Route element={<Step2 />} path="/craft-sop/2" />
-        <Route element={<Step3 />} path="/craft-sop/3" />
-        <Route element={<Step4 />} path="/craft-sop/4" />
+        <Route element={<CraftSOP />} path="/craft-sop/:id" />
+        <Route path="/refine-resume" element={<CandidateSelection />} />
+        <Route path="/craft-sop" element={<CandidateSelection />} />
         <Route element={<FinalResume />} path="/refine-resume/final-resume" />
-        <Route element={<RefineResume />} path="/refine-resume" />
+        <Route element={<RefineResume />} path="/refine-resume/:id" />
         <Route element={<Profile />} path="/profile" />
-
         {/* CANDIDATES */}
         <Route element={<RegistrationForm />} path="/register" />
         <Route element={<CandidateLogin />} path="/candidate/login" />
@@ -64,8 +64,6 @@ function App() {
         <Route element={<Feedback />} path="/feedback" />
         <Route element={<LinkedInMasterclass />} path="/masterclass" />
         <Route element={<Complaints />} path="/complaints" />
-
-
       </Routes>
     </BrowserRouter>
   );

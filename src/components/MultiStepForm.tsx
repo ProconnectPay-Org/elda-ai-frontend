@@ -11,13 +11,15 @@ import {
 import { Step1, Step2, Step3, Step4, Step5 } from "@/pages/(root)/Candidates";
 import { FormData } from "@/types";
 import RegisterSuccessModal from "./RegisterSuccessModal";
-import axios from "axios";
 import {
+  hasAdvancedDegree,
   submitDocuments,
   submitEducationDetails,
+  submitRefereeDetails,
   submitWorkExperience,
   updatePersonalDetails,
-} from "@/lib/actions/user.actions";
+} from "@/lib/actions/candidate.actions";
+import Cookies from "js-cookie";
 
 const steps = [
   { component: Step1, schema: step1Schema, title: "PERSONAL DETAILS" },
@@ -28,17 +30,6 @@ const steps = [
 ];
 
 const totalSteps = steps.length;
-
-const API_URL = import.meta.env.VITE_API_URL;
-
-const token = localStorage.getItem("candidate_access_token");
-
-const config = {
-  headers: {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  },
-};
 
 const MultiStepForm = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -66,14 +57,13 @@ const MultiStepForm = () => {
     }
   };
 
-  const id = localStorage.getItem("candidate_id");
+  const id = Cookies.get("candidate_id");
 
   const onSubmit = async (data: FormData) => {
     const currentFormData = { ...formData, ...data };
     setFormData(currentFormData);
     setIsLoading(true);
-
-    // Handle API submission based on the current step
+    // Handling API submission based on the current step
     try {
       if (currentStep === 0) {
         // Step 1: PERSONAL DETAILS
@@ -112,6 +102,22 @@ const MultiStepForm = () => {
           candidate: id,
         };
         await submitEducationDetails(educationData);
+
+        if (currentFormData.advancedDegree) {
+          const advancedDegreeData = {
+            advanced_degree_type: currentFormData.advancedDegreeType,
+            graduate_type: currentFormData.graduateType,
+            country: currentFormData.advancedCountry,
+            school_name: currentFormData.advancedInstitutionName,
+            class_of_degree: currentFormData.advancedDegreeClass,
+            specific_cgpa: currentFormData.advancedCurrentCGPA,
+            year_graduated: currentFormData.advancedYearGraduated,
+            year_admitted: currentFormData.advancedYearAdmitted,
+            candidate: id,
+          };
+
+          await hasAdvancedDegree(advancedDegreeData);
+        }
       } else if (currentStep === 2) {
         // Step 3: WORK EXPERIENCE
         const workData = {
@@ -125,9 +131,6 @@ const MultiStepForm = () => {
             currentFormData.yearsOfProfessionalExperiencePriorToGraduation,
           jobs_to_show: currentFormData.jobsToShowcase,
         };
-
-        console.log(workData);
-        
 
         const experienceData = {
           business_name: currentFormData.workPlaceName,
@@ -167,10 +170,7 @@ const MultiStepForm = () => {
           candidate: id,
         };
 
-        await Promise.all([
-          axios.post(`${API_URL}register/loan-referee/`, referee1Data, config),
-          axios.post(`${API_URL}register/loan-referee/`, referee2Data, config),
-        ]);
+        await submitRefereeDetails(referee1Data, referee2Data);
       } else if (currentStep === steps.length - 1) {
         // UPLOAD DOCUMENTS
         const documentsData = {
@@ -186,7 +186,7 @@ const MultiStepForm = () => {
           candidate: id,
         };
 
-        await submitDocuments(documentsData)
+        await submitDocuments(documentsData);
         setIsSubmitted(true);
       }
       if (currentStep < steps.length - 1) {

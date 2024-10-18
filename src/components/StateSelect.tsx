@@ -29,17 +29,35 @@ const StateSelect = () => {
         name="stateOfResidence"
         control={control}
         render={({ field }) => (
-          <select
-            {...field}
-            className="border border-gray-border bg-white rounded-md h-[42px] py-2 px-4"
-          >
-            <option value="">Select your state</option>
-            {states.map((state) => (
-              <option key={state.isoCode} value={state.isoCode}>
-                {state.name}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              {...field}
+              className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
+            >
+              <option value="">Select your state</option>
+              {states.map((state) => (
+                <option key={state.isoCode} value={state.isoCode}>
+                  {state.name}
+                </option>
+              ))}
+            </select>
+            <span className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 9l-7 7-7-7"
+                ></path>
+              </svg>
+            </span>
+          </div>
         )}
       />
       {errors.stateOfResidence && (

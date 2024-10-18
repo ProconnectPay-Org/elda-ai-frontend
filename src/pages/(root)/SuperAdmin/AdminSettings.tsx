@@ -14,7 +14,7 @@ import { updateUsers } from "@/lib/actions/user.actions";
 import { toast } from "@/components/ui/use-toast";
 
 const AdminSettings = () => {
-  const { loggedInUser, loading } = useAuth();
+  const { loggedInUser, isLoading } = useAuth();
 
   const [isChanging, setIsChanging] = useState(false);
   const [isEditing, setIsEditing] = useState({
@@ -28,10 +28,8 @@ const AdminSettings = () => {
   const [avatarImage, setAvatarImage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (loggedInUser && loggedInUser.profile) {
-      setFullName(
-        `${loggedInUser.profile.first_name} ${loggedInUser.profile.last_name}`
-      );
+    if (loggedInUser) {
+      setFullName(loggedInUser.full_name);
       setEmail(loggedInUser.email);
     }
   }, [loggedInUser]);
@@ -116,7 +114,7 @@ const AdminSettings = () => {
         <SetingsSideBar />
         <div className="flex flex-col justify-between min-h-[70vh] w-full md:w-[60%]">
           <SettingsTabs />
-          {loading ? (
+          {isLoading ? (
             "Loading user's personal information..."
           ) : (
             <>

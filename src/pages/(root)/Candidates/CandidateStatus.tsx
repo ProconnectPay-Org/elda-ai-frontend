@@ -4,8 +4,8 @@ import IconCheck from "@/assets/icon-check.svg";
 import ExclamationRed from "@/assets/exclamation-red.svg";
 import ExclamationWhite from "@/assets/exclamation-white.svg";
 import IconProgress from "@/assets/icon-progress.svg";
+import { statusProps } from "@/constants";
 
-// Adjusted StatusBox to accept a JSX.Element for the icon prop
 const StatusBox = ({
   text,
   status,
@@ -28,37 +28,6 @@ const StatusBox = ({
     </div>
   );
 };
-
-const statusProps = [
-  {
-    title: "Resume",
-    status: "Completed",
-  },
-  {
-    title: "Statement of purpose 1",
-    status: "In Progress",
-  },
-  {
-    title: "Statement of purpose 2",
-    status: "Not Started",
-  },
-  {
-    title: "School application submission 1",
-    status: "Not Started",
-  },
-  {
-    title: "School application submission 2",
-    status: "Not Started",
-  },
-  {
-    title: "Extra Statement of Purpose",
-    status: "Not Started",
-  },
-  {
-    title: "Extra School Application Submission",
-    status: "Not Started",
-  },
-];
 
 const CandidateStatus = () => {
   return (

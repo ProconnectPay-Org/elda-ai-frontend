@@ -4,43 +4,31 @@ import { Button } from "@/components/ui/button";
 import AdminLayout from "@/layouts/AdminLayout";
 import { getAllStaff } from "@/lib/actions/user.actions";
 import { AllStaff, AllStaffResponse } from "@/types";
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
+import { useQuery } from "@tanstack/react-query";
 
 const Staff = () => {
-  const [tableData, setTableData] = useState<AllStaff[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { data, isLoading, error } = useQuery<AllStaffResponse, Error>({
+    queryKey: ["allStaff"],
+    queryFn: getAllStaff,
+    staleTime: 5 * 60 * 1000,
+  });
 
-  useEffect(() => {
-    const fetchTableData = async () => {
-      try {
-        const data: AllStaffResponse = await getAllStaff();
-        console.log(data);
+  const tableData: AllStaff[] =
+    data?.results.map((staff, index) => ({
+      ...staff,
+      full_name: staff.user?.full_name || "No name",
+      serialNumber: index + 1,
+      status: staff.status || "Inactive",
+      assigned_candidates: Array.isArray(staff.assigned_candidates)
+        ? staff.assigned_candidates.length
+        : "0",
+      permission: staff.permission || "No permissions granted",
+    })) || [];
 
-        const staffWithSerial: AllStaff[] = data.results.map(
-          (staff, index) => ({
-            ...staff,
-            full_name: staff.user?.full_name || "No name",
-            serialNumber: index + 1,
-            status: staff.status || "Inactive",
-            assigned_candidates: Array.isArray(staff.assigned_candidates)
-            ? staff.assigned_candidates.length
-            : "0",
-            permission: staff.permission || "No permissions granted",
-          })
-        );
-
-        setTableData(staffWithSerial);
-      } catch (error) {
-        console.error("Error fetching candidates:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchTableData();
-  }, []);
+  if (error) {
+    return <p className="text-center text-red-600">Error loading staff data</p>;
+  }
 
   return (
     <AdminLayout>
@@ -63,7 +51,11 @@ const Staff = () => {
           </Link>
         </div>
 
-        <DataTable columns={StaffColumns} data={tableData} isLoading={isLoading} />
+        <DataTable
+          columns={StaffColumns}
+          data={tableData}
+          isLoading={isLoading}
+        />
       </div>
     </AdminLayout>
   );

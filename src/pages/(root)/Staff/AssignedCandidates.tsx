@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import { DataTable } from "@/components/DataTable";
 import SmallBox from "@/components/SmallBox";
 import { columns } from "@/components/ui/Columns";
-import { smallBox } from "@/constants";
-// import useAuth from "@/hooks/useAuth";
+import icon1 from "@/assets/Icon1.svg";
+import icon2 from "@/assets/Icon2.svg";
+import icon3 from "@/assets/Icon3.svg";
 import RootLayout from "@/layouts/RootLayout";
 import {
   Dialog,
@@ -16,27 +17,64 @@ import {
 import { copyToClipboard } from "@/lib/utils";
 import DottedBox from "@/components/DottedBox";
 import { CopyIcon, MailIcon, PhoneCallIcon } from "lucide-react";
-import { getData } from "@/lib/actions/user.actions";
 import { CandidateData } from "@/types";
 import { useToast } from "@/components/ui/use-toast";
+import { Skeleton } from "@/components/ui/skeleton";
+import useAuth from "@/hooks/useAuth";
+import useStaffDetails from "@/hooks/useStaffDetails";
 
 const AssignedCandidates = () => {
-  const [tableData, setTableData] = useState<CandidateData[]>([]);
   const [selectedRowData, setSelectedRowData] = useState<CandidateData | null>(
     null
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+  const [assignedCandidates, setAssignedCandidates] = useState(0);
   const { toast } = useToast();
+  const { loggedInUser } = useAuth();
+  const { loggedInStaff, isStaffLoading } = useStaffDetails();
 
   useEffect(() => {
-    const fetchTableData = async () => {
-      const data = await getData();
-      setTableData(data);
-    };
+    if (loggedInStaff) {
+      setAssignedCandidates(loggedInStaff.number_of_assigned_candidates);
+    }
+  }, [loggedInStaff]);
 
-    fetchTableData();
-  }, []);
+  const smallBox = loggedInStaff
+    ? [
+        {
+          name: "Jobs Completed",
+          number: loggedInStaff.jobs_completed,
+          icon: icon1,
+        },
+        {
+          name: "Jobs Pending",
+          number: loggedInStaff.jobs_pending,
+          icon: icon2,
+        },
+        {
+          name: "Assigned Candidates",
+          number: loggedInStaff.number_of_assigned_candidates,
+          icon: icon3,
+        },
+      ]
+    : [];
+
+  const candidateTableData: CandidateData[] =
+    loggedInStaff?.staff_candidates.map(
+      (candidate: CandidateData, index: number) => ({
+        ...candidate,
+        serial_number: index + 1,
+        name: `${candidate.user?.full_name}` || "No name",
+        status: candidate.status || "Inactive",
+        recommended_course: candidate.assigned_course || "No course assigned",
+        recommended_school:
+          candidate.assigned_university || "No school assigned",
+        resume: candidate.resume_status || "Not Started",
+        sop: candidate.sop_status || "Not Started",
+        school_application_status:
+          candidate.school_application_status || "Not available",
+      })
+    ) || [];
 
   const handleRowClick = (row: CandidateData) => {
     setSelectedRowData(row);
@@ -48,25 +86,26 @@ const AssignedCandidates = () => {
   //   setIsDialogOpen(false);
   // };
 
-  // const { loggedInUser } = useAuth();
-
   return (
     <RootLayout title="Assigned Candidates">
-      {/* {loggedInUser && ( */}
       <p className="text-red text-[32px] font-semibold">
-        {/* Welcome, {loggedInUser.name}! */}
-        Welcome, Elda David!
+        Welcome, {loggedInUser?.full_name}!
       </p>
-      {/* )} */}
       <div className="flex justify-between w-full gap-8 flex-wrap mt-4">
-        {smallBox.map((box) => (
-          <SmallBox
-            key={box.name}
-            name={box.name}
-            number={box.number}
-            icon={box.icon}
-          />
-        ))}
+        {isStaffLoading
+          ? [1, 2, 3].map((_, i) => (
+              <div key={i} className="flex-1 p-4">
+                <Skeleton className="h-24 w-full mb-2" />
+              </div>
+            ))
+          : smallBox.map((box) => (
+              <SmallBox
+                key={box.name}
+                name={box.name}
+                number={box.number}
+                icon={box.icon}
+              />
+            ))}
       </div>
       <div className="border-2 border-gray w-full rounded-lg mt-8">
         <div className="px-2 md:px-5 py-5 flex items-center md:gap-4 justify-between md:justify-normal">
@@ -74,14 +113,29 @@ const AssignedCandidates = () => {
             Assigned Candidates
           </p>
           <span className="text-xs md:text-sm bg-pale-bg py-2 px-4 rounded-3xl text-red">
-            10 new candidates
+            {assignedCandidates === 1
+              ? `${assignedCandidates} new candidate`
+              : `${assignedCandidates} new candidates`}
           </span>
         </div>
-        <DataTable
-          columns={columns}
-          data={tableData}
-          onRowClick={handleRowClick}
-        />
+        {isStaffLoading ? (
+          <div className="p-4">
+            {[1, 2, 3, 4].map((_, i) => (
+              <div key={i} className="flex justify-between mb-4">
+                <Skeleton className="h-6 w-1/12" />
+                <Skeleton className="h-6 w-1/3" />
+                <Skeleton className="h-6 w-1/4" />
+                <Skeleton className="h-6 w-1/4" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <DataTable
+            columns={columns}
+            data={candidateTableData}
+            onRowClick={handleRowClick}
+          />
+        )}
       </div>
 
       {selectedRowData && (
@@ -103,13 +157,13 @@ const AssignedCandidates = () => {
             <DialogDescription className="flex flex-col gap-8">
               <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
                 <div className="w-1/2">
-                  <p>Full Name</p>
+                  <label>Full Name</label>
                   <p className="text-primary font-medium">
                     {selectedRowData.name}
                   </p>
                 </div>
                 <div className="w-1/2 flex flex-col items-start">
-                  <p>Status</p>
+                  <label>Status</label>
                   <p
                     className={`${
                       selectedRowData.status === "completed"
@@ -123,20 +177,20 @@ const AssignedCandidates = () => {
               </div>
               <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
                 <div>
-                  <p>Phone Number</p>
-                  <p
+                  <label>Phone Number</label>
+                  <span
                     onClick={() =>
-                      copyToClipboard(selectedRowData.phone || "", toast)
+                      copyToClipboard(selectedRowData.phone_number || "", toast)
                     }
                     className="text-primary font-medium flex items-center gap-1"
                   >
                     <PhoneCallIcon size={16} />
-                    {selectedRowData.phone}
+                    {selectedRowData.phone_number}
                     <CopyIcon size={16} cursor="pointer" />
-                  </p>
+                  </span>
                 </div>
                 <div className="w-1/2">
-                  <p>Recommended School</p>
+                  <label>Recommended School</label>
                   <p className="text-primary font-medium">
                     {selectedRowData.recommended_school}
                   </p>
@@ -144,20 +198,20 @@ const AssignedCandidates = () => {
               </div>
               <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
                 <div>
-                  <p>Email Address</p>
-                  <p
+                  <label>Email Address</label>
+                  <span
                     onClick={() =>
-                      copyToClipboard(selectedRowData.email || "", toast)
+                      copyToClipboard(selectedRowData.user?.email || "", toast)
                     }
                     className="text-primary font-medium flex items-center gap-1"
                   >
                     <MailIcon size={16} />
-                    {selectedRowData.email}
+                    {selectedRowData.user?.email}
                     <CopyIcon size={16} cursor="pointer" />
-                  </p>
+                  </span>
                 </div>
                 <div className="w-1/2">
-                  <p>Recommended Course</p>
+                  <label>Recommended Course</label>
                   <p className="text-primary font-medium">
                     {selectedRowData.recommended_course}
                   </p>
@@ -166,12 +220,12 @@ const AssignedCandidates = () => {
               <div className="flex flex-col md:flex-row items-center gap-5 md:gap-0 justify-between">
                 <DottedBox
                   className="border-red rounded-md text-sm font-bold p-2 hover:bg-pale-bg"
-                  href="/craft-sop"
+                  href={`/craft-sop/${selectedRowData.id}`}
                   docType="Draft Statement Of Purpose"
                   icon=""
                 />
                 <Link
-                  to="/refine-resume"
+                  to={`/refine-resume/${selectedRowData.id}`}
                   className="bg-red w-1/2 hover:bg-pale-bg text-white hover:text-red border hover:border-red text-center py-2 rounded-md"
                 >
                   Refine Resume

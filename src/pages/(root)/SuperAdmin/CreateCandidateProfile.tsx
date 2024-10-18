@@ -7,6 +7,8 @@ import { ArrowLeftIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createCandidateProfile } from "@/lib/actions/user.actions";
 import { toast } from "@/components/ui/use-toast";
+import { CustomAxiosError } from "@/types";
+import Cookies from "js-cookie";
 
 const CreateCandidateProfile = () => {
   const [success, setSuccess] = useState(false);
@@ -73,23 +75,32 @@ const CreateCandidateProfile = () => {
 
       if (response) {
         setSuccess(true);
-        localStorage.setItem("user_password", password);
+        Cookies.set("user_password", password);
+      }
+    } catch (error) {
+      const axiosError = error as CustomAxiosError;
+      if (axiosError.response && axiosError.response.data) {
+        const errorData = axiosError.response.data;
+        if (Array.isArray(errorData)) {
+          toast({
+            title: "Error",
+            description: errorData.join(", "),
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Error",
+            description: errorData.detail || "An error occurred.",
+            variant: "destructive",
+          });
+        }
       } else {
         toast({
           title: "Error",
-          description:
-            "Profile creation failed: Invalid data or try another password.",
+          description: "An unknown error occurred.",
           variant: "destructive",
         });
       }
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Error",
-        description:
-          "Profile creation failed: Invalid data or try another password.",
-        variant: "destructive",
-      });
     } finally {
       setIsLoading(false);
     }

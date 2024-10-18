@@ -1,44 +1,86 @@
+import { useState } from "react";
 import RootLayout from "@/layouts/RootLayout";
-import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon } from "lucide-react";
-import { Link } from "react-router-dom";
-import helpIcon from "@/assets/help-icon.svg";
-import mailIcon from "@/assets/mail.svg";
+import { SopStep1, SopStep2, SopStep4 } from ".";
+import { useParams } from "react-router-dom";
+
+const steps = [
+  {
+    component: SopStep1,
+    title: "Draft Statement Of Purpose",
+  },
+  {
+    component: SopStep2,
+    title: "Draft Statement Of Purpose",
+  },
+  {
+    component: SopStep4,
+    title: "Draft Statement Of Purpose",
+  },
+];
+
+const totalSteps = steps.length;
 
 const CraftSOP = () => {
+  const { id = "" } = useParams<{ id: string }>();
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const StepComponent = steps[currentStep].component;
+
+  const nextStep = () => {
+    if (currentStep < totalSteps - 1) {
+      setCurrentStep((prev) => prev + 1);
+    }
+  };
+
+  const prevStep = () => {
+    if (currentStep > 0) {
+      setCurrentStep((prev) => prev - 1);
+    }
+  };
+
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    nextStep();
+  };
+
+  const progressBarWidth = ((currentStep + 1) / totalSteps) * 100;
+
   return (
     <RootLayout title="Draft Statement Of Purpose">
-      <div className="bg-gray w-full min-h-[50vh] rounded-3xl px-4 py-10 md:p-12">
-        <Link to="/assigned-candidates">
-          <div className="w-16 cursor-pointer relative mb-8 md:mb-16">
-            <ChevronLeftIcon color="red" />
-            <div className="bg-red w-5 h-0.5 absolute top-[11px] left-[11px]"></div>
-          </div>
-        </Link>
-        <div className="flex items-center flex-col gap-8 justify-center md:w-3/4 mx-auto">
-          <h2 className="text-red font-bold text-lg text-center md:text-3xl">
-            Enter Candidate&apos;s Name or Email Address
-          </h2>
-          <div className="flex flex-col w-full gap-1.5">
-            <label htmlFor="email">
-              Email <span className="text-red">*</span>
-            </label>
-            <div className="w-full flex items-center gap-4 border border-[#667085] p-3 rounded-full overflow-hidden">
-              <img src={mailIcon} alt="mail icon" />
-              <input
-                type="email"
-                className="bg-transparent w-full focus:ring-0 focus-visible:ring-0 focus:outline-none border-0 focus-within:ring-0 max-h-fit"
-              />
-              <img src={helpIcon} alt="help icon" />
-            </div>
-          </div>
-          <div className="flex items-center justify-end w-full">
-            <Link to="/craft-sop/2">
-              <Button className="bg-red text-white w-32 h-12">Next</Button>
-            </Link>
-          </div>
+      <form onSubmit={onSubmit}>
+        <div className="step-indicator">
+          <span className="text-red">Step {currentStep + 1}</span> of{" "}
+          {totalSteps}
         </div>
-      </div>
+        <div className="progress-container mb-4">
+          <div
+            className="progress-bar"
+            style={{ width: `${progressBarWidth}%` }}
+          ></div>
+        </div>
+
+        <StepComponent prevStep={prevStep} candidateId={id} />
+
+        {currentStep === 0 && (
+          <div className="flex mt-10 items-center justify-between gap-8">
+            {currentStep > 0 && (
+              <button
+                type="button"
+                onClick={prevStep}
+                className="form-btn border border-red text-red w-28 px-10 py-2 rounded-md flex items-center justify-center"
+              >
+                Back
+              </button>
+            )}
+            <button
+              type="submit"
+              className="form-btn bg-red text-white w-28 px-10 py-2 rounded-md flex items-center justify-center"
+            >
+              Next
+            </button>
+          </div>
+        )}
+      </form>
     </RootLayout>
   );
 };

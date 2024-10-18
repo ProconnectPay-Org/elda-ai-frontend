@@ -13,8 +13,7 @@ import { MenuIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import PcpLogo from "../assets/pcplogo.svg";
 
-
-const sidebarLinks = [
+const navbarLinks = [
   {
     route: "/candidate/status",
     label: "Status",
@@ -48,12 +47,14 @@ const CandidateLayout = ({ children }: AuthLayoutProps) => {
           <img src={Logo} alt="logo" className="w-2/3 h-full" />
         </div>
         <div className="hidden md:flex gap-1 lg:gap-4 items-center">
-          {sidebarLinks.map((link) => (
+          {navbarLinks.map((link) => (
             <NavLink
               to={link.route}
               key={link.label}
               className={({ isActive }) =>
-                `px-4 py-2 rounded md:text-sm xl:text-base whitespace-nowrap ${isActive ? "bg-red text-white" : ""}`
+                `px-4 py-2 rounded md:text-sm xl:text-base whitespace-nowrap ${
+                  isActive ? "bg-red text-white" : ""
+                }`
               }
             >
               {link.label}
@@ -80,7 +81,7 @@ const CandidateLayout = ({ children }: AuthLayoutProps) => {
                   </SheetDescription>
                 </SheetHeader>
                 <ul className="flex flex-col items-start justify-start gap-5">
-                  {sidebarLinks.map((item) => {
+                  {navbarLinks.map((item) => {
                     const isActive =
                       location.pathname === item.route ||
                       location.pathname.startsWith(`${item.route}/`);

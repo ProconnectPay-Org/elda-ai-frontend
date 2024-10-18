@@ -6,9 +6,10 @@ import { AuthLayoutProps } from "@/types";
 import Logo from "../assets/elda-ai-logo-no-bg.png";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import Cookies from "js-cookie";
 
 const RootLayout = ({ children, title }: AuthLayoutProps) => {
-  const staff_access_token = localStorage.getItem("staff_access_token");
+  const staff_access_token = Cookies.get("staff_access_token");
   const navigate = useNavigate();
 
   useEffect(() => {

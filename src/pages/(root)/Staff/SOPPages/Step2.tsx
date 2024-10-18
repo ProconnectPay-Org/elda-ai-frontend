@@ -1,7 +1,5 @@
-import RootLayout from "@/layouts/RootLayout";
 import { Button } from "@/components/ui/button";
 import { ChevronLeftIcon } from "lucide-react";
-import { Link } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -12,16 +10,14 @@ import {
 import sendIcon from "@/assets/send.svg";
 import sendIcon2 from "@/assets/send-2.svg";
 
-const Step2 = () => {
+const Step2 = ({ prevStep }: { prevStep: () => void }) => {
   return (
-    <RootLayout title="Draft Statement Of Purpose">
+    <>
       <div className="bg-gray w-full min-h-[50vh] rounded-3xl px-4 py-10 lg:p-12">
-        <Link to="/craft-sop">
-          <div className="w-16 cursor-pointer relative mb-5">
-            <ChevronLeftIcon color="red" />
-            <div className="bg-red w-5 h-0.5 absolute top-[11px] left-[11px]"></div>
-          </div>
-        </Link>
+        <div className="w-16 cursor-pointer relative mb-5" onClick={prevStep}>
+          <ChevronLeftIcon color="red" />
+          <div className="bg-red w-5 h-0.5 absolute top-[11px] left-[11px]"></div>
+        </div>
         <div className="flex items-start flex-col gap-8 justify-center mx-auto">
           <h2 className="text-red font-bold text-center w-full text-lg md:text-3xl">
             Candidate&apos;s Details
@@ -146,11 +142,9 @@ const Step2 = () => {
         </div>
       </div>
       <div className="flex items-center mt-10 justify-end w-full">
-        <Link to="/craft-sop/3">
-          <Button className="bg-red text-white w-32 h-12">Review</Button>
-        </Link>
+        <Button className="bg-red text-white w-32 h-12">Review</Button>
       </div>
-    </RootLayout>
+    </>
   );
 };
 

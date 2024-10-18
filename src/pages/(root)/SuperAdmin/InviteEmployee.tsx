@@ -7,6 +7,8 @@ import CandidateProfileSuccess from "@/components/CandidateProfileSuccess";
 import { useState } from "react";
 import { createCandidateProfile } from "@/lib/actions/user.actions";
 import { toast } from "@/components/ui/use-toast";
+import { CustomAxiosError } from "@/types";
+import Cookies from "js-cookie";
 
 const InviteEmployee = () => {
   const [success, setSuccess] = useState(false);
@@ -53,23 +55,33 @@ const InviteEmployee = () => {
 
       if (response) {
         setSuccess(true);
-        localStorage.setItem("user_password", password);
+        Cookies.set("user_password", password);
+      }
+    } catch (error) {
+      const axiosError = error as CustomAxiosError;
+      if (axiosError.response && axiosError.response.data) {
+        const errorData = axiosError.response.data;
+
+        if (Array.isArray(errorData)) {
+          toast({
+            title: "Error",
+            description: errorData.join(", "),
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Error",
+            description: errorData.detail || "An error occurred.",
+            variant: "destructive",
+          });
+        }
       } else {
         toast({
           title: "Error",
-          description:
-            "Error inviting employee: Invalid data or try another password.",
+          description: "An unknown error occurred.",
           variant: "destructive",
         });
-        throw new Error("Error inviting employee");
       }
-    } catch (error: any) {
-      console.error("Error inviting employee:", error);
-      toast({
-        title: "Error",
-        description: "Error inviting employee.",
-        variant: "destructive",
-      });
     } finally {
       setIsLoading(false);
     }

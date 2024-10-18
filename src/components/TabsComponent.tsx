@@ -1,50 +1,38 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTable } from "./DataTable";
-import { useEffect, useState } from "react";
 import { AllCandidates, AllCandidatesResponse } from "@/types";
 import { getAllCandidates } from "@/lib/actions/user.actions";
 import { allTabsColumns } from "./AllTabsColumns";
+import { useQuery } from "@tanstack/react-query";
 
 const TabsComponent = () => {
-  const [tableData, setTableData] = useState<AllCandidates[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { data, isLoading, error } = useQuery<AllCandidatesResponse, Error>({
+    queryKey: ["allCandidates"],
+    queryFn: getAllCandidates,
+    staleTime: 5 * 1000,
+  });
 
-  useEffect(() => {
-    const fetchTableData = async () => {
-      try {
-        const data: AllCandidatesResponse = await getAllCandidates();
+  const tableData: AllCandidates[] =
+    data?.results.map((candidate, index) => ({
+      ...candidate,
+      serialNumber: index + 1,
+      full_name: candidate.user?.full_name || "No name",
+      country: candidate.user?.country || "No country",
+      assigned_university: candidate.assigned_university || "No university",
+      assigned_course: candidate.assigned_course || "No course assigned",
+      school_application_status:
+        candidate.school_application_status || "No status",
+      resume_status: candidate.resume_status || "No status",
+      sop_status: candidate.sop_status || "No status",
+      duplicate: candidate.duplicate || "none",
+    })) || [];
 
-        const candidatesWithSerial: AllCandidates[] = data.results.map(
-          (candidate, index) => ({
-            ...candidate,
-            serialNumber: index + 1,
-            full_name: candidate.user?.full_name || "No name",
-            country: candidate.user?.country || "No country",
-            assigned_university:
-              candidate.assigned_university || "No university",
-            assigned_course: candidate.assigned_course || "No course assigned",
-            school_application_status:
-              candidate.school_application_status || "No status",
-            resume_status: candidate.resume_status || "No status",
-            sop_status: candidate.sop_status || "No status",
-            duplicate: candidate.duplicate || "none",
-          })
-        );
-
-        setTableData(candidatesWithSerial);
-      } catch (error) {
-        console.error("Error fetching candidates:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchTableData();
-  }, []);
-
-  // Filter candidates based on their assigned status
   const assignedData = tableData.filter((candidate) => candidate.assigned);
   const unassignedData = tableData.filter((candidate) => !candidate.assigned);
+
+  if (error) {
+    return <p className="text-center text-red-600">Error loading candidates</p>;
+  }
 
   return (
     <Tabs

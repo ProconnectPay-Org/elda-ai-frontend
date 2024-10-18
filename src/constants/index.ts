@@ -6,9 +6,6 @@ import settingsRed from "../assets/settings-red.svg";
 import DocumentsRed from "../assets/documents-red.svg";
 import SolarDocumentsRed from "../assets/solar-red.svg";
 import chartRed from "../assets/chart-red.svg";
-import icon1 from "../assets/Icon1.svg";
-import icon2 from "../assets/Icon2.svg";
-import icon3 from "../assets/Icon3.svg";
 import SocialIcons1 from "../assets/Social icons1.png";
 import SocialIcons3 from "../assets/Social icons3.png";
 import SocialIcons4 from "../assets/Social icons4.png";
@@ -40,24 +37,6 @@ export const sidebarLinks = [
     route: "/profile",
     label: "Profile",
     isActive: settingsRed,
-  },
-];
-
-export const smallBox = [
-  {
-    icon: icon1,
-    number: 10,
-    name: "Number Of Assigned Candidates",
-  },
-  {
-    icon: icon2,
-    number: 2,
-    name: "Number Of Jobs Completed",
-  },
-  {
-    icon: icon3,
-    number: 8,
-    name: "Number Of Jobs Unfinished",
   },
 ];
 
@@ -371,4 +350,35 @@ export const careerOptions: OptionType[] = [
   { value: "Cybersecurity", label: "Cybersecurity" },
   { value: "Journalism", label: "Journalism" },
   { value: "Architecture", label: "Architecture" },
+];
+
+export const statusProps = [
+  {
+    title: "Resume",
+    status: "Completed",
+  },
+  {
+    title: "Statement of purpose 1",
+    status: "In Progress",
+  },
+  {
+    title: "Statement of purpose 2",
+    status: "Not Started",
+  },
+  {
+    title: "School application submission 1",
+    status: "Not Started",
+  },
+  {
+    title: "School application submission 2",
+    status: "Not Started",
+  },
+  {
+    title: "Extra Statement of Purpose",
+    status: "Not Started",
+  },
+  {
+    title: "Extra School Application Submission",
+    status: "Not Started",
+  },
 ];

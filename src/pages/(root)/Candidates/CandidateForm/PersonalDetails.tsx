@@ -6,15 +6,51 @@ import "react-phone-input-2/lib/style.css";
 import StateSelect from "@/components/StateSelect";
 import CountrySelect from "@/components/CountrySelect";
 import PhoneInputField from "@/components/PhoneInputField";
+import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getPersonalDetails } from "@/lib/actions/candidate.actions";
+import { Loader2 } from "lucide-react";
 
 const PersonalDetails = () => {
   const {
     register,
+    setValue,
     formState: { errors },
   } = useFormContext<Step1FormData>();
+  const { isLoading, data: candidateData } = useQuery({
+    queryKey: ["personalDetails"],
+    queryFn: getPersonalDetails,
+    staleTime: 5 * 1000,
+  });
+
+  useEffect(() => {
+    if (candidateData) {
+      setValue("firstName", candidateData.data.first_name || "");
+      setValue("middleName", candidateData.data.middle_name || "");
+      setValue("surname", candidateData.data.last_name || "");
+      setValue("preferredName", candidateData.data.preferred_call_name || "");
+      setValue("dateOfBirth", candidateData.data.birth_date || "");
+      setValue("gender", candidateData.data.gender || "");
+      setValue("cityOfBirth", candidateData.data.city_of_birth || "");
+      setValue("stateOfBirth", candidateData.data.state_of_birth || "");
+      setValue("countryOfBirth", candidateData.data.country_of_birth || "");
+      setValue("emailAddress", candidateData.data.email_address || "");
+      setValue("phoneNumber", candidateData.data.phone_number || "");
+      setValue("cityOfResidence", candidateData.data.city_current_reside || "");
+      setValue("houseAddress", candidateData.data.current_house_address || "");
+      setValue("postalAddress", candidateData.data.postal_code || "");
+    }
+  }, [candidateData, setValue]);
 
   return (
     <div className="border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
+      {isLoading && (
+        <div className="fixed inset-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="text-white text-xl flex items-center justify-center gap-2">
+            <Loader2 className="animate-spin" /> Loading...
+          </div>
+        </div>
+      )}
       <div className="flex flex-col gap-8">
         <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
           <div className="flex flex-col sm:w-1/2">
@@ -115,18 +151,36 @@ const PersonalDetails = () => {
             <label htmlFor="gender">
               Gender <span className="text-red">*</span>
             </label>
-            <select
-              id="gender"
-              {...register("gender")}
-              className="border border-gray-border bg-white h-[42px] rounded-md py-2 px-4"
-            >
-              <option value="">Select your gender</option>
-              {genderOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                id="gender"
+                {...register("gender")}
+                className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
+              >
+                <option value="">Select your gender</option>
+                {genderOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <span className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </span>
+            </div>
             {errors.gender && (
               <span className="text-red text-sm">
                 {getErrorMessage(errors.gender)}

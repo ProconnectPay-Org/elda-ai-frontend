@@ -5,9 +5,10 @@ import Success from "../assets/success.svg";
 import { Link } from "react-router-dom";
 import { copyToClipboard } from "@/lib/utils";
 import { useToast } from "./ui/use-toast";
+import Cookies from "js-cookie";
 
 const CandidateProfileSuccess = ({ text }: { text: string }) => {
-  const userPassword = localStorage.getItem("user_password");
+  const userPassword = Cookies.get("user_password");
   const { toast } = useToast();
 
   return (

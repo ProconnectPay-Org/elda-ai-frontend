@@ -1,5 +1,5 @@
+import { useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { countryOptions, stateOptions } from "@/constants";
 import { getErrorMessage } from "@/lib/utils";
 import { ResumeStep1FormData } from "@/types";
 import { Controller, useFormContext } from "react-hook-form";
@@ -7,13 +7,51 @@ import ReactPhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import helpIcon from "@/assets/help-icon.svg";
 import mailIcon from "@/assets/mail.svg";
+import { useQuery } from "@tanstack/react-query";
+import { getStaffDetails } from "@/lib/actions/staff.actions";
+import { useParams } from "react-router-dom";
 
 const HeaderDetails = () => {
   const {
     register,
     control,
     formState: { errors },
+    setValue,
   } = useFormContext<ResumeStep1FormData>();
+
+  const { id } = useParams<{ id: string }>();
+
+  const { isLoading, data, error } = useQuery({
+    queryKey: ["staffCandidateDetails", id],
+    queryFn: getStaffDetails,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  useEffect(() => {
+    if (data) {
+      const foundCandidate = data.staff_candidates.find(
+        (candidate: ResumeStep1FormData) => String(candidate.id) === String(id)
+      );
+      if (foundCandidate) {
+        setValue("fullName", foundCandidate.user.full_name || "");
+        setValue("phoneNumber", foundCandidate.phone_number || "");
+        setValue("email", foundCandidate.user.email || "");
+        setValue("city", foundCandidate.city_current_reside || "");
+        setValue("state", foundCandidate.state_of_birth || "");
+        setValue("country", foundCandidate.country || "");
+        setValue("coreSkills", foundCandidate.birth_date || "");
+        setValue("profession", foundCandidate.city_of_birth || "");
+      }
+    }
+  }, [data, id, setValue]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error fetching data</div>;
+  }
 
   return (
     <div className="space-y-10">
@@ -26,6 +64,8 @@ const HeaderDetails = () => {
           <Input
             type="email"
             className="bg-transparent focus:ring-0 focus-visible:ring-0 outline-none border-0 focus-within:ring-0 max-h-fit"
+            {...register("email")}
+            placeholder="Enter your email"
           />
           <img src={helpIcon} alt="help icon" />
         </div>
@@ -42,7 +82,7 @@ const HeaderDetails = () => {
                 className="border border-gray-border rounded-full py-2 px-4"
                 id="fullName"
                 {...register("fullName")}
-                placeholder="Enter your first name"
+                placeholder="Enter your full name"
               />
               {errors.fullName && (
                 <span className="text-red text-sm">
@@ -89,22 +129,6 @@ const HeaderDetails = () => {
 
           <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
             <div className="flex flex-col sm:w-1/2">
-              <label htmlFor="surname" className="text-[#344054]">
-                Email Address <span className="text-red">*</span>
-              </label>
-              <input
-                className="border border-gray-border rounded-full py-2 px-4"
-                id="email"
-                {...register("email")}
-                placeholder="Enter your email address"
-              />
-              {errors.email && (
-                <span className="text-red text-sm">
-                  {getErrorMessage(errors.email)}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col sm:w-1/2">
               <label htmlFor="city" className="text-[#344054]">
                 City <span className="text-red">*</span>
               </label>
@@ -120,52 +144,18 @@ const HeaderDetails = () => {
                 </span>
               )}
             </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
             <div className="flex flex-col sm:w-1/2">
               <label htmlFor="stateOfResidence" className="text-[#344054]">
-                State
-                <span className="text-red">*</span>
+                State <span className="text-red">*</span>
               </label>
-              <select
-                id="state"
+              <input
+                type="text"
                 {...register("state")}
                 className="border border-gray-border h-[42px] rounded-full py-2 px-4"
-              >
-                <option value="">Select your state</option>
-                {stateOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+              />
               {errors.state && (
                 <span className="text-red text-sm">
                   {getErrorMessage(errors.state)}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col sm:w-1/2">
-              <label htmlFor="country" className="text-[#344054]">
-                Country
-                <span className="text-red">*</span>
-              </label>
-              <select
-                id="country"
-                {...register("country")}
-                className="border border-gray-border rounded-full h-[42px] py-2 px-4"
-              >
-                <option value="">Select your country</option>
-                {countryOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              {errors.country && (
-                <span className="text-red text-sm">
-                  {getErrorMessage(errors.country)}
                 </span>
               )}
             </div>
@@ -180,7 +170,7 @@ const HeaderDetails = () => {
                 className="border border-gray-border rounded-full py-2 px-4"
                 id="coreSkills"
                 {...register("coreSkills")}
-                placeholder="Enter your city of birth"
+                placeholder="Enter your core skills"
               />
               {errors.coreSkills && (
                 <span className="text-red text-sm">
@@ -196,7 +186,7 @@ const HeaderDetails = () => {
                 className="border border-gray-border rounded-full py-2 px-4"
                 id="profession"
                 {...register("profession")}
-                placeholder="Enter your state of birth"
+                placeholder="Enter your profession"
               />
               {errors.profession && (
                 <span className="text-red text-sm">

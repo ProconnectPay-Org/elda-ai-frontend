@@ -27,7 +27,10 @@ export const getErrorMessage = (
   return error.message;
 };
 
-export const copyToClipboard = async (text: string, toast: ToastFunction): Promise<void> => {
+export const copyToClipboard = async (
+  text: string,
+  toast: ToastFunction
+): Promise<void> => {
   try {
     await navigator.clipboard.writeText(text);
     toast({
@@ -42,6 +45,15 @@ export const copyToClipboard = async (text: string, toast: ToastFunction): Promi
       description: "Failed to copy text.",
     });
   }
+};
+
+export const calculateYearsOfExperience = (
+  startDate: string,
+  endDate: string
+) => {
+  const startYear = new Date(startDate).getFullYear();
+  const endYear = new Date(endDate).getFullYear();
+  return endYear - startYear;
 };
 
 export const getInitials = (name: string) => {
@@ -145,7 +157,9 @@ export const step3Schema = z.object({
   careerInterest: z
     .array(
       z.object({
-        name: z.string().min(2, "Each career interest must be at least 2 characters long"),
+        name: z
+          .string()
+          .min(2, "Each career interest must be at least 2 characters long"),
       })
     )
     .min(1, "At least one career interest is required"),
@@ -155,7 +169,10 @@ export const step3Schema = z.object({
   yearsOfProfessionalExperiencePriorToGraduation: z
     .string()
     .min(1, "Must be a positive number"),
-  jobsToShowcase: z.string().min(1, "Must be a positive number"),
+  jobsToShowcase: z
+    .string()
+    .min(1, "Must be at least 1")
+    .max(1, "Must be no more than 3"),
   workPlaceName: z.string().min(2, "Name of work place is required"),
   currentProfessionalStatus: z
     .string()
