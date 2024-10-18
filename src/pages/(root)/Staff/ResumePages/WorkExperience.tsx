@@ -29,7 +29,7 @@ const WorkExperience = () => {
 
   const { isLoading: workExpLoading, data: workExpData } = useQuery({
     queryKey: ["fetchWorkExperienceData", foundCandidate?.career[0]],
-    queryFn: () => fetchJobExperienceData(3),
+    queryFn: () => fetchJobExperienceData(id),
     enabled: !!foundCandidate?.career[0],
     staleTime: 5 * 60 * 1000,
   });

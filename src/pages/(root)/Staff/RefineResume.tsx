@@ -19,6 +19,7 @@ import {
 import RootLayout from "@/layouts/RootLayout";
 import { useQuery } from "@tanstack/react-query";
 import { craftCandidateResume } from "@/lib/actions/staff.actions";
+import { useParams } from "react-router-dom";
 
 const steps = [
   {
@@ -53,10 +54,12 @@ const totalSteps = steps.length;
 const RefineResume = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<any>({});
+  const { id } = useParams<{ id: string }>();
+
 
   const { data: resumeData } = useQuery({
     queryKey: ["candidateResume"],
-    queryFn: () => craftCandidateResume(3),
+    queryFn: () => craftCandidateResume(id),
   });
 
   const methods = useForm({
