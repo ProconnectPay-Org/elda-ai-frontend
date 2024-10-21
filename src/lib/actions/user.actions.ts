@@ -25,7 +25,7 @@ export const adminSignIn = async ({ email, password }: signInProps) => {
 export const logoutAccount = async (role: "candidate" | "staff" | "admin") => {
   switch (role) {
     case "admin":
-      Cookies.remove("admin_access_token");
+      Cookies.remove("access_token");
       break;
     case "staff":
       Cookies.remove("staff_access_token");
@@ -316,7 +316,7 @@ export const updateUsers = async ({
 
     return response.data;
   } catch (error) {
-    console.error("Failed to get logged-in user", error);
+    console.error(error);
     return null;
   }
 };

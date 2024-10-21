@@ -104,10 +104,6 @@ const AdminSettings = () => {
     }));
   };
 
-  // if (!loggedInUser || !loggedInUser.profile) {
-  //   return <p>No user profile found.</p>;
-  // }
-
   return (
     <AdminLayout>
       <div className="flex items-start gap-12">

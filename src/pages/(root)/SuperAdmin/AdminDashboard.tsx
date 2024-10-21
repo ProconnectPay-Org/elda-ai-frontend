@@ -69,7 +69,7 @@ const AdminDashboard = () => {
   } = useQuery({
     queryKey: ["adminData"],
     queryFn: getAdminInfo,
-    staleTime: 5 * 1000,
+    staleTime: 5 * 60 * 1000,
   });
 
   const {
@@ -178,7 +178,7 @@ const AdminDashboard = () => {
 
       <div className="border-red md:border w-full mb-10 rounded-lg flex flex-col md:flex-row gap-2 md:gap-0">
         <StatisticCard
-          title="NUMBER OF CANDIDATE"
+          title="NUMBER OF CANDIDATES"
           value={numberOfCandidate}
           isLoading={isAdminLoading}
           className="border-r"

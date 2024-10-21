@@ -15,6 +15,8 @@ import {
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
+import { Button } from "@/components/ui/button";
+import useAuth from "@/hooks/useAuth";
 
 const sidebarLinks = [
   {
@@ -44,6 +46,8 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
   const isSettingsActive = location.pathname.startsWith("/settings");
   const isDashboardActive = location.pathname.startsWith("/admin");
 
+  const { handleLogout } = useAuth();
+
   const access_token = Cookies.get("access_token");
   const navigate = useNavigate();
 
@@ -59,7 +63,7 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
 
   return (
     <div>
-      <nav className="flex items-center justify-between md:justify-normal bg-pale-bg h-28 p-4 lg:p-12 gap-16">
+      <nav className="flex items-center justify-between bg-pale-bg h-28 p-4 lg:p-12 gap-16">
         <div className="w-[40%] sm:w-[30%] md:w-[15%]">
           <img src={Logo} alt="logo" className="w-full h-full" />
         </div>
@@ -107,6 +111,22 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
             Settings
           </NavLink>
         </div>
+        <Button
+          className="h-fit w-fit bg-red hover:bg-rose-900 items-center justify-center md:flex hidden"
+          onClick={handleLogout}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="1em"
+            height="1em"
+            fill="white"
+            viewBox="0 0 256 256"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M124,216a12,12,0,0,1-12,12H48a12,12,0,0,1-12-12V40A12,12,0,0,1,48,28h64a12,12,0,0,1,0,24H60V204h52A12,12,0,0,1,124,216Zm108.49-96.49-40-40a12,12,0,0,0-17,17L195,116H112a12,12,0,0,0,0,24h83l-19.52,19.51a12,12,0,0,0,17,17l40-40A12,12,0,0,0,232.49,119.51Z"></path>
+          </svg>
+        </Button>
         {/* mobile navbar */}
         <div className="md:hidden">
           <Sheet>
@@ -147,6 +167,22 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
                     );
                   })}
                 </ul>
+                <Button
+                  className="h-fit mt-4 w-fit bg-red hover:bg-rose-900 flex items-center justify-center md:hidden"
+                  onClick={handleLogout}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1em"
+                    height="1em"
+                    fill="white"
+                    viewBox="0 0 256 256"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path d="M124,216a12,12,0,0,1-12,12H48a12,12,0,0,1-12-12V40A12,12,0,0,1,48,28h64a12,12,0,0,1,0,24H60V204h52A12,12,0,0,1,124,216Zm108.49-96.49-40-40a12,12,0,0,0-17,17L195,116H112a12,12,0,0,0,0,24h83l-19.52,19.51a12,12,0,0,0,17,17l40-40A12,12,0,0,0,232.49,119.51Z"></path>
+                  </svg>
+                </Button>
               </div>
             </SheetContent>
           </Sheet>
