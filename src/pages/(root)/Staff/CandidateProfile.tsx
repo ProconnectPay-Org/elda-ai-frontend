@@ -55,13 +55,13 @@ const CandidateProfile = () => {
   const { data: advancedEducationData } = useQuery({
     queryKey: ["advancedEducationInfo", advancedEducation_id],
     queryFn: () => getAdvancedDegree(advancedEducation_id),
-    enabled: advancedEducation_id.length > 0, 
+    enabled: advancedEducation_id.length > 0,
   });
 
   const combinedEducationData = [
     ...(educationData ? [educationData] : []),
     ...(advancedEducationData ? [advancedEducationData] : []),
-  ];
+  ];  
 
   const { isLoading: isWorkExpLoading, data: careerData } = useQuery({
     queryKey: ["careerData", careerId],
@@ -206,9 +206,7 @@ const CandidateProfile = () => {
       <div className="flex flex-col gap-4">
         <span className="flex gap-5 items-center">
           <h3 className="font-semibold text-lg">WORK HISTORY</h3>
-          <p className="text-[#5E6366] font-semibold">
-            
-          </p>
+          <p className="text-[#5E6366] font-semibold"></p>
         </span>
         <span className="flex gap-5 items-center">
           <p className="text-[#5E6366] font-semibold md:w-60">

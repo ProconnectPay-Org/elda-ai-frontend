@@ -21,8 +21,9 @@ const config = {
 };
 
 export const updatePersonalDetails = async (personalDetails: any) => {
+  const canId = Cookies.get("candidate_id");  
   return await axios.patch(
-    `${API_URL}register/candidate/${candidateId}/`,
+    `${API_URL}register/candidate/${canId}/`,
     personalDetails,
     config
   );
@@ -69,7 +70,7 @@ export const updateAdvancedDegree = async (degreeDetails: any) => {
 
 export const getAdvancedDegree = async () => {
   const { data } = await axios.get(
-    `${API_URL}register/advanced-education/6/`,
+    `${API_URL}register/advanced-education/${advancedId}/`,
     config
   );
   return data;
@@ -80,11 +81,7 @@ export const submitWorkExperience = async (
   experienceData: any
 ) => {
   return await Promise.all([
-    axios.patch(
-      `${API_URL}register/career/${careerId}/`,
-      workData,
-      config
-    ),
+    axios.patch(`${API_URL}register/career/${careerId}/`, workData, config),
     axios.patch(
       `${API_URL}register/job-experience/${work_experience_id}/`,
       experienceData,
@@ -109,11 +106,22 @@ export const fetchJobExperienceData = async () => {
   return data;
 };
 
-export const submitRefereeDetails = async (referee1Data: any, referee2Data: any) => {
+export const submitRefereeDetails = async (
+  referee1Data: any,
+  referee2Data: any
+) => {
   try {
     await Promise.all([
-      axios.patch(`${API_URL}register/loan-referee/${referee1Id}/`, referee1Data, config),
-      axios.patch(`${API_URL}register/loan-referee/${referee2Id}/`, referee2Data, config),
+      axios.patch(
+        `${API_URL}register/loan-referee/${referee1Id}/`,
+        referee1Data,
+        config
+      ),
+      axios.patch(
+        `${API_URL}register/loan-referee/${referee2Id}/`,
+        referee2Data,
+        config
+      ),
     ]);
   } catch (error) {
     console.error("Error during referee details submission:", error);
