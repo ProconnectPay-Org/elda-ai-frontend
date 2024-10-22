@@ -26,16 +26,6 @@ const Step2 = ({ prevStep }: { prevStep: () => void }) => {
           <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
             <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
               <label htmlFor="email" className="text-sm">
-                Email
-              </label>
-              <input
-                className="border-none w-full focus:outline-none bg-transparent"
-                id="email"
-                placeholder="Havard University"
-              />
-            </div>
-            <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
-              <label htmlFor="email" className="text-sm">
                 Program Type
               </label>
               <Select>
@@ -49,9 +39,6 @@ const Step2 = ({ prevStep }: { prevStep: () => void }) => {
                 </SelectContent>
               </Select>
             </div>
-          </div>
-
-          <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
             <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
               <label htmlFor="email" className="text-sm">
                 Assigned University
@@ -67,6 +54,9 @@ const Step2 = ({ prevStep }: { prevStep: () => void }) => {
                 </SelectContent>
               </Select>
             </div>
+          </div>
+
+          <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
             <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
               <label htmlFor="email" className="text-sm">
                 Assigned Course
@@ -82,9 +72,6 @@ const Step2 = ({ prevStep }: { prevStep: () => void }) => {
                 </SelectContent>
               </Select>
             </div>
-          </div>
-
-          <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
             <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
               <label htmlFor="email" className="text-sm">
                 Number of Years of Professional Work Experience
@@ -92,10 +79,40 @@ const Step2 = ({ prevStep }: { prevStep: () => void }) => {
               <input
                 className="border-none w-full focus:outline-none bg-transparent"
                 id="email"
-                placeholder="2"
+                placeholder="1"
               />
             </div>
+          </div>
+
+          <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
             <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
+              <label htmlFor="email" className="text-sm">
+                Manually Add Course Description
+              </label>
+              <input
+                className="border-none w-full focus:outline-none bg-transparent"
+                id="email"
+                placeholder="Lorem ipsum dolor sit amet consectetur. Sit rhoncus"
+              />
+            </div>
+            <div className="flex flex-row justify-between items-end gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-2 px-4">
+              <div>
+                <label htmlFor="text" className="text-sm">
+                  Generate Course Description
+                </label>
+                <input
+                  className="border-none w-full focus:outline-none bg-transparent"
+                  id="text"
+                />
+              </div>
+              <button>
+                <img src={sendIcon} alt="send icon" />
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
+          <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
               <label htmlFor="email" className="text-sm">
                 Manually Add School Description
               </label>
@@ -105,24 +122,6 @@ const Step2 = ({ prevStep }: { prevStep: () => void }) => {
                 placeholder="Lorem ipsum dolor sit amet consectetur. Sit rhoncus"
               />
             </div>
-          </div>
-
-          <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
-            <div className="flex flex-row justify-between items-end gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-2 px-4">
-              <div>
-                <label htmlFor="text" className="text-sm">
-                  Generate Course Description
-                </label>
-                <input
-                  className="border-none w-full focus:outline-none bg-transparent"
-                  id="text"
-                  placeholder="Havard University"
-                />
-              </div>
-              <div>
-                <img src={sendIcon} alt="send icon" />
-              </div>
-            </div>
             <div className="flex flex-row justify-between items-end gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-2 px-4">
               <div>
                 <label htmlFor="text" className="text-sm">
@@ -131,13 +130,13 @@ const Step2 = ({ prevStep }: { prevStep: () => void }) => {
                 <input
                   className="border-none w-full focus:outline-none bg-transparent"
                   id="text"
-                  placeholder="Havard University"
                 />
               </div>
-              <div>
+              <button>
                 <img src={sendIcon2} alt="send icon" />
-              </div>
+              </button>
             </div>
+            
           </div>
         </div>
       </div>

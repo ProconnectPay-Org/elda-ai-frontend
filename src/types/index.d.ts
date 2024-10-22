@@ -111,7 +111,7 @@ interface Staff {
   jobs_completed: number;
   jobs_pending: number;
   number_of_assigned_candidates: number;
-  staff_candidates: [];
+  staff_candidates: CandidateData[];
 }
 
 declare type DottedBoxProps = {
@@ -204,17 +204,21 @@ declare interface WorkHistory {
   position: string;
   company: string;
   year: string;
-}  
+}
 
 export type CandidateData = {
   id: string;
   amount: number;
+  advanced_education: string[];
   assigned_course: string;
   assigned_university: string;
   career_strategic_purpose: string;
+  career: string[];
   email_address: string;
   education_history: EducationHistory[];
+  education: string[];
   serial_number: number;
+  job_experience: string[];
   name: string;
   recommended_school: string;
   recommended_course: string;
