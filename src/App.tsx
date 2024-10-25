@@ -53,7 +53,7 @@ function App() {
         <Route element={<CraftSOP />} path="/craft-sop/:id" />
         <Route path="/refine-resume" element={<CandidateSelection />} />
         <Route path="/craft-sop" element={<CandidateSelection />} />
-        <Route element={<FinalResume />} path="/refine-resume/final-resume" />
+        <Route element={<FinalResume />} path="/refine-resume/final-resume/:id" />
         <Route element={<RefineResume />} path="/refine-resume/:id" />
         <Route element={<Profile />} path="/profile" />
         {/* CANDIDATES */}

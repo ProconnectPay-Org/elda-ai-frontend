@@ -62,14 +62,14 @@ export const columns: ColumnDef<CandidateData>[] = [
     ),
   },
   {
-    accessorKey: "sop",
+    accessorKey: "sop_status",
     header: () => (
       <div>
         <p className="text-center">SOP</p>
       </div>
     ),
     cell: ({ row }) => (
-      <p className="capitalize text-center">{row.original.sop || "No name"}</p>
+      <p className="capitalize text-center">{row.original.sop_status || "No name"}</p>
     ),
   },
   {

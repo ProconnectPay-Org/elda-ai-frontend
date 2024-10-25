@@ -3,10 +3,9 @@ import { getErrorMessage } from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
 import "react-phone-input-2/lib/style.css";
 import { genderOptions } from "@/constants";
-import { useEffect, useState } from "react";
-import { fetchCareerData, getStaffDetails } from "@/lib/actions/staff.actions";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useCandidates } from "@/hooks/useCandidiates";
 
 const BioData = () => {
   const {
@@ -15,60 +14,44 @@ const BioData = () => {
     formState: { errors },
   } = useFormContext<ResumeStep2FormData>();
   const { id } = useParams<{ id: string }>();
-  const [callName, setCallName] = useState("");
-  const [foundCandidate, setFoundCandidate] =
-    useState<ResumeStep2FormData | null>(null);
 
-  const { isLoading, data, error } = useQuery({
-    queryKey: ["staffCandidateDetails", id],
-    queryFn: getStaffDetails,
-    staleTime: 5 * 1000,
-  });
-
-  const { isLoading: careerLoading, data: careerData } = useQuery({
-    queryKey: ["fetchCareerData", foundCandidate?.career[0]],
-    queryFn: () => fetchCareerData(foundCandidate?.career[0]),
-    enabled: !!foundCandidate?.career[0],
-    staleTime: 5 * 60 * 1000,
-  });
+  if (!id) {
+    console.error("No ID provided");
+    return;
+  }
+  const { singleCandidate, singleCandidateLoading, singleCandidateError } =
+    useCandidates(id);
 
   useEffect(() => {
-    if (data) {
-      const candidate = data.staff_candidates.find(
-        (candidate: ResumeStep2FormData) => String(candidate.id) === String(id)
-      );
-      setFoundCandidate(candidate || null);
-      if (candidate) {
-        setValue("gender", candidate.gender || "");
-        setValue("dateOfBirth", candidate.birth_date || "");
-        setValue("nationality", candidate.city_current_reside || "");
-        setCallName(candidate.preferred_call_name);
+    if (singleCandidate) {
+      const foundCandidate = singleCandidate;
+
+      setValue("gender", foundCandidate.gender || "");
+      setValue("dateOfBirth", foundCandidate.birth_date || "");
+      setValue("nationality", foundCandidate.country_of_birth || "");
+
+      if (foundCandidate.career && foundCandidate.career.length > 0) {
+        const careerInterestsString =
+          foundCandidate.career[0].career_interests
+            ?.map((interest: { id: string; name: string }) => interest.name)
+            .join(", ") || "";
+        setValue("interest", careerInterestsString);
       }
     }
-  }, [data, id, setValue]);
+  }, [singleCandidate, id, setValue]);
 
-  useEffect(() => {
-    if (careerData) {
-      const careerInterestsString =
-        careerData.career_interests
-          ?.map((interest: { id: string; name: string }) => interest.name)
-          .join(", ") || "";
-      setValue("interest", careerInterestsString);
-    }
-  }, [careerData, setValue]);
-
-  if (isLoading || careerLoading) {
+  if (singleCandidateLoading) {
     return <div>Loading...</div>;
   }
 
-  if (error) {
+  if (singleCandidateError) {
     return <div>Error fetching data</div>;
   }
 
   return (
     <div className="space-y-10">
       <div className="space-y-2">
-        <p>PREFERRED CALL NAME: {callName}</p>
+        <p>PREFERRED CALL NAME: {singleCandidate?.preferred_call_name}</p>
       </div>
       <div className="bg-gray py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl">
         <div className="flex flex-col gap-8">

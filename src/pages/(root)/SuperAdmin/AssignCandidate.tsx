@@ -6,13 +6,15 @@ import { Button } from "@/components/ui/button";
 import ReactSelect, { MultiValue, SingleValue } from "react-select";
 import {
   assignCandidateToStaff,
-  getAllCandidates,
   getAllStaff,
 } from "@/lib/actions/user.actions";
 import { AllCandidates, OptionType } from "@/types";
 import { toast } from "@/components/ui/use-toast";
+import { useCandidates } from "@/hooks/useCandidiates";
+import { useQuery } from "@tanstack/react-query";
 
 const AssignCandidate: React.FC = () => {
+  const { allCandidates, allCandidatesLoading } = useCandidates();
   const [selectedStaff, setSelectedStaff] =
     useState<SingleValue<OptionType>>(null);
   const [selectedCandidates, setSelectedCandidates] = useState<
@@ -22,8 +24,12 @@ const AssignCandidate: React.FC = () => {
   const [staffOptions, setStaffOptions] = useState<OptionType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isLoadingCandidates, setIsLoadingCandidates] = useState(false);
-  const [isLoadingStaff, setIsLoadingStaff] = useState(false);
+
+  const { data: staffResponse, isLoading: isLoadingStaff } = useQuery({
+    queryKey: ["staff"],
+    queryFn: getAllStaff,
+    staleTime: 5 * 1000,
+  });
 
   const handleStaffChange = (selectedOption: SingleValue<OptionType>) => {
     setSelectedStaff(selectedOption);
@@ -73,56 +79,29 @@ const AssignCandidate: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchCandidates = async () => {
-      setIsLoadingCandidates(true);
-      try {
-        const response = await getAllCandidates();
-        if (response && response.results) {
-          const unassignedCandidates = response.results.filter(
-            (candidate: AllCandidates) => !candidate.assigned
-          );
-          const options = unassignedCandidates.map(
-            (candidate: AllCandidates) => ({
-              value: candidate.id,
-              label: candidate.user?.full_name,
-            })
-          );
-          setCandidateOptions(options);
-        } else {
-          setError("Failed to fetch candidates.");
-        }
-      } catch (error) {
-        setError("An error occurred while fetching candidates.");
-        console.error("Error fetching candidates:", error);
-      } finally {
-        setIsLoadingCandidates(false);
-      }
-    };
+    if (allCandidates) {
+      const unassignedCandidates = allCandidates.results.filter(
+        (candidate: AllCandidates) => !candidate.assigned
+      );
+      const options = unassignedCandidates.map((candidate: AllCandidates) => ({
+        value: candidate.id,
+        label: candidate.user?.full_name,
+      }));
+      setCandidateOptions(options);
+    }
+  }, [allCandidates]);
 
-    const fetchStaff = async () => {
-      setIsLoadingStaff(true);
-      try {
-        const staffResponse = await getAllStaff();
-        if (staffResponse && staffResponse.results) {
-          const options = staffResponse.results.map((staff: AllCandidates) => ({
-            value: staff.id,
-            label: staff.user?.full_name,
-          }));
-          setStaffOptions(options);
-        } else {
-          setError("Failed to fetch staff.");
-        }
-      } catch (error) {
-        setError("An error occurred while fetching staff.");
-        console.error("Error fetching staff:", error);
-      } finally {
-        setIsLoadingStaff(false);
-      }
-    };
-
-    fetchCandidates();
-    fetchStaff();
-  }, []);
+  useEffect(() => {
+    if (staffResponse && staffResponse.results) {
+      const options = staffResponse.results.map((staff: AllCandidates) => ({
+        value: staff.id,
+        label: staff.user?.full_name,
+      }));
+      setStaffOptions(options);
+    } else {
+      setError("Failed to fetch staff.");
+    }
+  }, [staffResponse]);
 
   return (
     <AdminLayout>
@@ -163,7 +142,7 @@ const AssignCandidate: React.FC = () => {
                 components={{
                   MultiValueContainer: () => null,
                 }}
-                isLoading={isLoadingCandidates}
+                isLoading={allCandidatesLoading}
               />
               {error && <p className="text-sm text-red">{error}</p>}
             </div>

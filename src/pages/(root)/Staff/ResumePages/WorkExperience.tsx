@@ -1,12 +1,8 @@
 import { Input } from "@/components/ui/input";
-import {
-  fetchJobExperienceData,
-  getStaffDetails,
-} from "@/lib/actions/staff.actions";
+import { useCandidates } from "@/hooks/useCandidiates";
 import { getErrorMessage } from "@/lib/utils";
 import { ResumeStep4FormData } from "@/types";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import "react-phone-input-2/lib/style.css";
 import { useParams } from "react-router-dom";
@@ -18,53 +14,32 @@ const WorkExperience = () => {
     formState: { errors },
   } = useFormContext<ResumeStep4FormData>();
   const { id } = useParams<{ id: string }>();
-  const [foundCandidate, setFoundCandidate] =
-    useState<ResumeStep4FormData | null>(null);
-
-  const { isLoading, data, error } = useQuery({
-    queryKey: ["staffCandidateDetails", id],
-    queryFn: getStaffDetails,
-    staleTime: 5 * 1000,
-  });
-
-  const { isLoading: workExpLoading, data: workExpData } = useQuery({
-    queryKey: ["fetchWorkExperienceData", foundCandidate?.career[0]],
-    queryFn: () => fetchJobExperienceData(id),
-    enabled: !!foundCandidate?.career[0],
-    staleTime: 5 * 60 * 1000,
-  });
+  if (!id) {
+    console.error("No ID provided");
+    return;
+  }
+  const { singleCandidate, singleCandidateLoading, singleCandidateError } =
+    useCandidates(id);
 
   useEffect(() => {
-    if (data) {
-      const candidate = data.staff_candidates.find(
-        (candidate: ResumeStep4FormData) => String(candidate.id) === String(id)
-      );
-      setFoundCandidate(candidate || null);
-      if (foundCandidate) {
-        setValue("city", foundCandidate.city_current_reside || "");
-        setValue("state", foundCandidate.state_of_birth || "");
-      }
+    if (singleCandidate) {
+      const foundCandidate = singleCandidate;
+      setValue("nameOfCompany", foundCandidate.job_experience[0].business_name || "");
+      setValue("typeOfCompany", foundCandidate.job_experience[0].job_summary || "");
+      setValue("jobTitle", foundCandidate.job_experience[0].job_title || "");
+      setValue("companyDescription", foundCandidate.job_experience[0].company_description || "");
+      setValue("mode", foundCandidate.job_experience[0].employment_type || "");
+      setValue("location", foundCandidate.job_experience[0].state || "");
+      setValue("startDate", String(foundCandidate.job_experience[0].year_started) || "");
+      setValue("endDate", String(foundCandidate.job_experience[0].year_ended) || "");
     }
-  }, [data, id, setValue]);
+  }, [singleCandidate, id, setValue]);
 
-  useEffect(() => {
-    if (workExpData) {
-      setValue("nameOfCompany", workExpData.business_name || "");
-      setValue("typeOfCompany", workExpData.professional_status || "");
-      setValue("jobTitle", workExpData.job_title || "");
-      setValue("companyDescription", workExpData.company_description || "");
-      setValue("mode", workExpData.employment_type || "");
-      setValue("location", workExpData.state || "");
-      setValue("startDate", String(workExpData.year_started) || "");
-      setValue("endDate", String(workExpData.year_ended) || "");
-    }
-  }, [workExpData, setValue]);
-
-  if (isLoading || workExpLoading) {
+  if (singleCandidateLoading) {
     return <div>Loading...</div>;
   }
 
-  if (error) {
+  if (singleCandidateError) {
     return <div>Error fetching data</div>;
   }
 

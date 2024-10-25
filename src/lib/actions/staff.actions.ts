@@ -75,13 +75,13 @@ export const craftCandidateResume = async (id: any) => {
   return data;
 };
 
-// export const careerStrategyPurpose = async (id: any) => {
-//   const { data } = await axios.get(
-//     `${API_URL}staff-dashboard/generate-career-strategic-purpose/${id}/`,
-//     config
-//   );
-//   return data;
-// };
+export const careerStrategyPurpose = async (id: any) => {
+  const { data } = await axios.get(
+    `${API_URL}staff-dashboard/generate-career-strategy-purpose/${id}/`,
+    config
+  );
+  return data;
+};
 
 export const generateSop = async (id: any) => {
   const { data } = await axios.get(

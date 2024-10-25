@@ -9,7 +9,7 @@ import ReactSelect from "react-select";
 import promptImage from "@/assets/prompt.svg";
 import promptWhiteImage from "@/assets/prompt-white.svg";
 import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -17,6 +17,7 @@ import {
   fetchJobExperienceData,
 } from "@/lib/actions/candidate.actions";
 import Cookies from "js-cookie";
+import { refinePrompt } from "@/lib/actions/user.actions";
 
 type CareerInterestOption = {
   name: string;
@@ -28,9 +29,12 @@ const WorkExperience = () => {
   const {
     register,
     control,
+    getValues,
     setValue,
     formState: { errors },
   } = useFormContext<Step3FormData>();
+
+  const [refineLoading, setRefineLoading] = useState(false);
 
   const divClass = "flex flex-col w-full md:w-1/2";
   const outerDivClass =
@@ -101,6 +105,24 @@ const WorkExperience = () => {
       setValue("jobSummary", jobExperienceData.job_summary || "");
     }
   }, [jobExperienceData, setValue]);
+
+  const handleRefine = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setRefineLoading(true);
+    try {
+      const jobSummary = getValues("jobSummary");
+      if (jobSummary) {
+        const refinedContent = await refinePrompt({ prompt: jobSummary });
+        setValue("jobSummary", refinedContent.refined_content);
+      } else {
+        console.log("Please provide a job summary.");
+      }
+    } catch (error) {
+      console.error("Error refining prompt:", error);
+    } finally {
+      setRefineLoading(false);
+    }
+  };
 
   const isLoading = isWorkExpLoading || isJobExpLoading;
 
@@ -565,11 +587,14 @@ const WorkExperience = () => {
           <div className="flex items-end w-full flex-col md:flex-row justify-between gap-4 md:gap-8">
             <div className="w-full md:w-1/2 hidden md:flex"></div>
             <Button
-              onClick={(e) => e.preventDefault()}
+              onClick={handleRefine}
+              disabled={refineLoading}
               className="w-full text-xs md:w-1/2 bg-red flex gap-2 md:text-base"
             >
               <img src={promptWhiteImage} alt="prompt" />
-              Refine Job Summary and Key Achievements with eLDa AI
+              {refineLoading
+                ? "Refining your prompt..."
+                : "Refine Job Summary and Key Achievements with eLDa AI"}
             </Button>
           </div>
         </div>

@@ -97,17 +97,18 @@ export const createCandidateProfile = async ({
   }
 };
 
-export const getAllCandidates = async () => {
-  const access_token = Cookies.get("access_token");
+const getToken = () => {
+  return Cookies.get("staff_access_token") || Cookies.get("access_token");
+};
 
-  if (!access_token) {
-    throw new Error("Access token is missing. Please sign in again.");
-  }
+export const getAllCandidates = async () => {
+  const token = getToken();
+  if (!token) throw new Error("Access token is missing. Please sign in again.");
 
   try {
     const response = await axios.get(`${API_URL}all-candidates/`, {
       headers: {
-        Authorization: `Bearer ${access_token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -119,24 +120,13 @@ export const getAllCandidates = async () => {
 };
 
 export const getSingleCandidate = async (id: number | string) => {
-  const access_token = Cookies.get("access_token"); // Fetch token from cookies
+  const token = getToken();
+  if (!token) throw new Error("Access token is missing. Please sign in again.");
 
-  if (!access_token) {
-    throw new Error("Access token is missing. Please sign in again.");
-  }
-
-  try {
-    const response = await axios.get(`${API_URL}all-candidates/${id}/`, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
-
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching admin info:", error);
-    throw error;
-  }
+  const response = await axios.get(`${API_URL}all-candidates/${id}/`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
 };
 
 export const getAllStaff = async () => {
@@ -306,6 +296,33 @@ export const updateUsers = async ({
       {
         email,
         full_name,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const refinePrompt = async ({ prompt }: { prompt: string }) => {
+  try {
+    const token =
+      Cookies.get("access_token") ||
+      Cookies.get("staff_access_token") ||
+      Cookies.get("candidate_access_token");
+    if (!token) return null;
+
+    const response = await axios.post(
+      `${API_URL}refine-content/`,
+      {
+        prompt,
       },
       {
         headers: {

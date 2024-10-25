@@ -7,9 +7,8 @@ import ReactPhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import helpIcon from "@/assets/help-icon.svg";
 import mailIcon from "@/assets/mail.svg";
-import { useQuery } from "@tanstack/react-query";
-import { getStaffDetails } from "@/lib/actions/staff.actions";
 import { useParams } from "react-router-dom";
+import { useCandidates } from "@/hooks/useCandidiates";
 
 const HeaderDetails = () => {
   const {
@@ -21,35 +20,32 @@ const HeaderDetails = () => {
 
   const { id } = useParams<{ id: string }>();
 
-  const { isLoading, data, error } = useQuery({
-    queryKey: ["staffCandidateDetails", id],
-    queryFn: getStaffDetails,
-    staleTime: 5 * 60 * 1000,
-  });
+  if (!id) {
+    console.error("No ID provided");
+    return;
+  }
+  const { singleCandidate, singleCandidateLoading, singleCandidateError } =
+    useCandidates(id);
 
   useEffect(() => {
-    if (data) {
-      const foundCandidate = data.staff_candidates.find(
-        (candidate: ResumeStep1FormData) => String(candidate.id) === String(id)
-      );
-      if (foundCandidate) {
-        setValue("fullName", foundCandidate.user.full_name || "");
-        setValue("phoneNumber", foundCandidate.phone_number || "");
-        setValue("email", foundCandidate.user.email || "");
-        setValue("city", foundCandidate.city_current_reside || "");
-        setValue("state", foundCandidate.state_of_birth || "");
-        setValue("country", foundCandidate.country || "");
-        setValue("coreSkills", foundCandidate.birth_date || "");
-        setValue("profession", foundCandidate.city_of_birth || "");
-      }
+    if (singleCandidate) {
+      const foundCandidate = singleCandidate;
+      setValue("fullName", foundCandidate.user.full_name || "");
+      setValue("phoneNumber", foundCandidate.phone_number || "");
+      setValue("email", foundCandidate.user.email || "");
+      setValue("city", foundCandidate.city_current_reside || "");
+      setValue("state", foundCandidate.state_of_birth || "");
+      setValue("country", foundCandidate.country_of_birth || "");
+      setValue("profession", foundCandidate.career[0].profession || "");
+      setValue("coreSkills", foundCandidate.career[0].technical_skill || "");
     }
-  }, [data, id, setValue]);
+  }, [singleCandidate, id, setValue]);
 
-  if (isLoading) {
+  if (singleCandidateLoading) {
     return <div>Loading...</div>;
   }
 
-  if (error) {
+  if (singleCandidateError) {
     return <div>Error fetching data</div>;
   }
 

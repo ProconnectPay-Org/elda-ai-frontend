@@ -7,6 +7,7 @@ import {
   ResumeStep2Schema,
   ResumeStep3Schema,
   ResumeStep4Schema,
+  ResumeStep5Schema,
   // ResumeStep5Schema,
 } from "@/lib/resumeSchema";
 import {
@@ -14,7 +15,7 @@ import {
   ResumeStep2,
   ResumeStep3,
   ResumeStep4,
-  // ResumeStep5,
+  ResumeStep5,
 } from ".";
 import RootLayout from "@/layouts/RootLayout";
 import { useQuery } from "@tanstack/react-query";
@@ -42,11 +43,11 @@ const steps = [
     schema: ResumeStep4Schema,
     title: "REFEREE DETAILS",
   },
-  // {
-  //   component: ResumeStep5,
-  //   schema: ResumeStep5Schema,
-  //   title: "UPLOAD DOCUMENTS",
-  // },
+  {
+    component: ResumeStep5,
+    schema: ResumeStep5Schema,
+    title: "UPLOAD DOCUMENTS",
+  },
 ];
 
 const totalSteps = steps.length;
@@ -87,7 +88,7 @@ const RefineResume = () => {
     if (currentStep === steps.length - 1) {
       console.log("Form Submitted:", currentFormData);
       if (resumeData && resumeData.resume) {
-        window.open(resumeData.resume.resume, "_blank");
+        window.open(`/refine-resume/final-resume/${id}`, "_blank");
       } else {
         console.error("Resume URL not found.");
       }

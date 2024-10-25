@@ -1,11 +1,7 @@
-import {
-  fetchEducationData,
-  getStaffDetails,
-} from "@/lib/actions/staff.actions";
+import { useCandidates } from "@/hooks/useCandidiates";
 import { getErrorMessage } from "@/lib/utils";
 import { ResumeStep3FormData } from "@/types";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import "react-phone-input-2/lib/style.css";
 import { useParams } from "react-router-dom";
@@ -18,52 +14,33 @@ const EducationHistory = () => {
   } = useFormContext<ResumeStep3FormData>();
 
   const { id } = useParams<{ id: string }>();
-  const [foundCandidate, setFoundCandidate] =
-    useState<ResumeStep3FormData | null>(null);
-
-  const { isLoading, data, error } = useQuery({
-    queryKey: ["staffCandidateDetails", id],
-    queryFn: getStaffDetails,
-    staleTime: 5 * 1000,
-  });
-
-  const { isLoading: educationLoading, data: educationData } = useQuery({
-    queryKey: ["fetchEducationData", foundCandidate?.education[0]],
-    queryFn: () => fetchEducationData(foundCandidate?.education[0]),
-    enabled: !!foundCandidate?.education[0],
-    staleTime: 5 * 1000,
-  });
+  if (!id) {
+    console.error("No ID provided");
+    return;
+  }
+  const { singleCandidate, singleCandidateLoading, singleCandidateError } =
+    useCandidates(id);
 
   useEffect(() => {
-    if (data) {
-      const candidate = data.staff_candidates.find(
-        (candidate: ResumeStep3FormData) => String(candidate.id) === String(id)
-      );
-      setFoundCandidate(candidate || null);
-      if (foundCandidate) {
-        setValue("city", foundCandidate.city_current_reside || "");
-        setValue("state", foundCandidate.state_of_birth || "");
-      }
+    if (singleCandidate) {
+      const foundCandidate = singleCandidate;
+      setValue("city", foundCandidate.city_current_reside || "");
+      setValue("state", foundCandidate.state_of_birth || "");
+      setValue("country", foundCandidate.country_of_birth || "");
+      setValue("degree", foundCandidate.education[0].degree_type || "");
+      setValue("kindOfDegree", foundCandidate.education[0].degree_type || "");
+      setValue("tertiaryInstitutionAttended", foundCandidate.education[0].school_name || "");
+      setValue("course", foundCandidate.education[0].specific_course_of_study || "");
+      setValue("startDate", String(foundCandidate.education[0].year_admitted) || "");
+      setValue("endDate", String(foundCandidate.education[0].year_graduated) || "");
     }
-  }, [data, id, setValue, foundCandidate]);
+  }, [singleCandidate, id, setValue]);
 
-  useEffect(() => {
-    if (educationData) {
-      setValue("degree", educationData.degree_type || "");
-      setValue("kindOfDegree", educationData.degree_type || "");
-      setValue("tertiaryInstitutionAttended", educationData.school_name || "");
-      setValue("country", educationData.country || "");
-      setValue("course", educationData.specific_course_of_study || "");
-      setValue("startDate", String(educationData.year_admitted) || "");
-      setValue("endDate", String(educationData.year_graduated) || "");
-    }
-  }, [educationData, setValue]);
-
-  if (isLoading || educationLoading) {
+  if (singleCandidateLoading) {
     return <div>Loading...</div>;
   }
 
-  if (error) {
+  if (singleCandidateError) {
     return <div>Error fetching data</div>;
   }
 

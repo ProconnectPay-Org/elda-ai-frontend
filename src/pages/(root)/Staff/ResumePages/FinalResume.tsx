@@ -1,56 +1,82 @@
-import { useState, useEffect } from "react";
 import RootLayout from "@/layouts/RootLayout";
-import { ResumeFormData } from "@/types";
 import { Button } from "@/components/ui/button";
+import { useParams } from "react-router-dom";
+import FinalResumeSkeleton from "@/components/FinalResumeSkeleton";
+import { useCandidates } from "@/hooks/useCandidiates";
+import {
+  CandidateCareer,
+  CareerInterest,
+  EducationHistory,
+  JobExperience,
+} from "@/types";
 
 const FinalResume = () => {
-  const [formData, setFormData] = useState<ResumeFormData | null>(null);
+  const { id } = useParams<{ id: string }>();
 
-  useEffect(() => {
-    const storedData = localStorage.getItem("ResumeData");
-    if (storedData) {
-      setFormData(JSON.parse(storedData));
-    }
-  }, []);
+  if (!id) {
+    console.error("No ID provided");
+    return;
+  }
 
-  if (!formData) {
-    return <p>Loading...</p>;
+  const {
+    singleCandidate: formData,
+    singleCandidateLoading,
+    singleCandidateError,
+  } = useCandidates(id);
+
+  if (singleCandidateLoading) {
+    return <FinalResumeSkeleton />;
+  }
+
+  if (singleCandidateError) {
+    return <div>Error fetching data</div>;
   }
 
   return (
     <RootLayout title="Final Resume Refined">
-      <div className="border md:min-w-[484px] space-y-5 pb-5 max-w-[600px] mx-auto min-h-svh rounded-lg overflow-hidden">
+      <div className="border md:min-w-[484px] space-y-5 pb-5 max-w-[800px] mx-auto min-h-svh rounded-lg overflow-hidden">
         <div className="bg-[#F1F8F9] p-5 w-full flex flex-col items-center gap-3">
           <h1 className="font-bold underline text-lg uppercase">
-            {formData.fullName}
+            {formData?.user?.full_name}
           </h1>
           <div className="flex items-center flex-wrap justify-center gap-3">
             <div>
               <img src="" alt="" />
-              <p className="text-xs md:text-sm">{formData.email}</p>
+              <p className="text-xs md:text-sm">{formData?.user?.email}</p>
             </div>
             <div>
               <img src="" alt="" />
-              <p className="text-xs md:text-sm">{formData.phoneNumber}</p>
+              <p className="text-xs md:text-sm">{formData?.phone_number}</p>
             </div>
             <div>
               <img src="" alt="" />
               <p className="text-xs md:text-sm">
-                {formData.city}, {formData.state} {formData.country}
+                {formData?.city_current_reside}, {formData?.state_of_birth}{" "}
+                {formData?.country_of_birth}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <div>
-              <img src="" alt="" />
-              <p className="text-sm font-semibold">{formData.jobTitle}</p>
-            </div>
-            <hr className="h-4 w-[2px] bg-black" />
-            <div>
-              <img src="" alt="" />
-              <p className="text-sm font-semibold">{formData.interest}</p>
-            </div>
+            {formData?.career.map((item: CandidateCareer, index: number) => (
+              <div key={index} className="flex items-center gap-3">
+                <p className="text-sm font-semibold">{item.profession}</p>
+                <hr className="h-4 w-[2px] bg-black" />
+                {item.career_interests.map(
+                  (interest: CareerInterest, interestIndex: number) => (
+                    <div key={interest.id} className="flex items-center gap-3">
+                      <p className="text-sm font-semibold">{interest.name}</p>
+                      {interestIndex < item.career_interests.length - 1 && (
+                        <hr className="h-4 w-[2px] bg-black" />
+                      )}
+                    </div>
+                  )
+                )}
+                {index < formData.career.length - 1 && (
+                  <hr className="h-4 w-[2px] bg-black" />
+                )}
+              </div>
+            ))}
           </div>
         </div>
 
@@ -59,16 +85,9 @@ const FinalResume = () => {
             CAREER STRATEGIC PURPOSE
           </h2>
           <p className="text-sm">
-            My strategic career objective is to leverage my extensive experience
-            in {formData.profession} to drive transformative growth for
-            organization. I aim to strategically position businesses for success
-            through innovative sales and marketing strategies, fostering
-            meaningful client relationships, and optimizing communication
-            channels. With a commitment to achieving and exceeding revenue
-            targets, my goal is to contribute as a dynamic leader, utilizing a
-            comprehensive skill set to propel business expansion, enhance market
-            presence, and cultivate lasting partnerships in a dynamic and
-            competitive business landscape.
+            {formData?.career_strategic_purpose ||
+              formData?.sop?.[0]?.text ||
+              "Not Provided"}
           </p>
         </div>
 
@@ -77,24 +96,35 @@ const FinalResume = () => {
           <div>
             <div className="flex">
               <p className="font-medium w-[200px]">Date of Birth:</p>
-              <p className="font-medium w-[200px]">{formData.dateOfBirth}</p>
+              <p className="font-medium w-[200px]">{formData?.birth_date}</p>
             </div>
             <div className="flex">
               <p className="font-medium w-[200px]">Gender:</p>
-              <p className="font-medium w-[200px]">{formData.gender}</p>
+              <p className="font-medium w-[200px]">{formData?.gender}</p>
             </div>
             <div className="flex">
               <p className="font-medium w-[200px]">Nationality:</p>
-              <p className="font-medium w-[200px]">{formData.nationality}</p>
+              <p className="font-medium w-[200px]">
+                {formData?.country_of_birth}
+              </p>
             </div>
             <div className="flex">
-              <p className="font-medium w-[200px]">Interest:</p>
-              <p className="font-medium">{formData.interest}</p>
+              <p className="font-medium w-[200px]">Interests:</p>
+              <p className="font-medium">
+                {formData?.career
+                  ?.flatMap((item: CandidateCareer) =>
+                    item.career_interests.map(
+                      (interest: CareerInterest) => interest.name
+                    )
+                  )
+                  .join(", ") || "Not Provided"}
+              </p>
             </div>
+
             <div className="flex">
               <p className="font-medium w-[200px]">Preferred Call Name:</p>
               <p className="font-medium w-[200px]">
-                {formData.fullName.split(" ")[0]}
+                {formData?.preferred_call_name || "Not Provided"}
               </p>
             </div>
           </div>
@@ -102,63 +132,51 @@ const FinalResume = () => {
 
         <div className="space-y-2 px-5 w-full">
           <h2 className="text-[#102694] font-bold text-lg">WORK EXPERIENCE</h2>
-          <div>
-            <p className="font-bold">
-              {formData.nameOfCompany} - {formData.jobTitle}
-            </p>
-            <div className="flex gap-3 items-center">
-              <p className="font-medium">Location: {formData.location}</p>
-              <hr className="h-4 w-[2px] bg-black" />
-              <p className="font-medium">
-                Duration: {formData.startDate} -{" "}
-                {formData.endDate || "Till Date"}
-              </p>
+          {formData?.job_experience?.map((experience: JobExperience) => (
+            <div key={experience.id}>
+              <div>
+                <p className="font-bold">
+                  {experience.business_name} - {experience.job_title}
+                </p>
+                <div className="flex gap-3 items-center">
+                  <p className="font-medium">
+                    Location: {experience.state}, {experience.country}
+                  </p>
+                  <hr className="h-4 w-[2px] bg-black" />
+                  <p className="font-medium">
+                    Duration: {experience.year_started} -{" "}
+                    {experience.year_ended}
+                  </p>
+                </div>
+              </div>
+              <div className="mt-4">
+                <p className="text-red font-bold">
+                  JOB DESCRIPTION AND KEY ACHIEVEMENT(S)
+                </p>
+                <p className="text-sm font-semibold">
+                  {experience.company_description}
+                </p>
+                <p className="text-sm">{experience.job_summary}</p>
+              </div>
             </div>
-          </div>
-          <div>
-            <p className="text-red font-bold">
-              JOB DESCRIPTION AND KEY ACHIEVEMENT
-            </p>
-            <p className="text-sm">{formData.companyDescription}</p>
-          </div>
-
-          <div>
-            <p className="font-bold">
-              SCREAM AWARDS NIGERIA - Media Presenter/ Business Development
-              Manager
-            </p>
-            <div className="flex gap-3 items-center">
-              <p className="font-medium">Location: Lagos State (In-Person)</p>
-              <hr className="h-4 w-[2px] bg-black" />
-              <p className="font-medium">
-                Duration: September 2021 - Till Date
-              </p>
-            </div>
-          </div>
-          <div>
-            <p className="text-red font-bold">
-              JOB DESCRIPTION AND KEY ACHIEVEMENT
-            </p>
-            <p className="text-sm">
-              Lorem ipsum dolor sit amet consectetur. Imperdiet sit cras at
-              suscipit a. Sit in nulla tempus facilisi diam. Nulla dictumst
-              malesuada ut nunc placerat penatibus imperdiet commodo. Vel enim
-              tempus sit donec cras. Sed tortor egestas sit nisi scelerisque in
-              purus. Vitae arcu adipiscing libero gravida risus tortor. Magnis
-              dictumst nulla mattis tellus nec ipsum adipiscing. Arcu massa
-              hendrerit mattis
-            </p>
-          </div>
+          ))}
         </div>
 
         <div className="space-y-1 px-5 w-full">
           <h2 className="text-[#102694] font-bold text-lg">
             TRAININGS AND EDUCATION
           </h2>
-          <p className="font-semibold">
-            {formData.kindOfDegree} ({formData.course})
-          </p>
-          <p className="text-sm">{formData.tertiaryInstitutionAttended}</p>
+          {formData?.education?.map((item: EducationHistory) => (
+            <div key={item.id}>
+              <p className="font-semibold capitalize">
+                {item.degree_type} ({item.specific_course_of_study}){" "}
+                {item.year_graduated}
+              </p>
+              <p className="text-sm">
+                {item.school_name}, {item.country}
+              </p>
+            </div>
+          ))}
         </div>
 
         <div className="px-5 w-full">

@@ -1,24 +1,20 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTable } from "./DataTable";
-import { AllCandidates, AllCandidatesResponse } from "@/types";
-import { getAllCandidates } from "@/lib/actions/user.actions";
+import { AllCandidates } from "@/types";
 import { allTabsColumns } from "./AllTabsColumns";
-import { useQuery } from "@tanstack/react-query";
+import { useCandidates } from "@/hooks/useCandidiates";
 
 const TabsComponent = () => {
-  const { data, isLoading, error } = useQuery<AllCandidatesResponse, Error>({
-    queryKey: ["allCandidates"],
-    queryFn: getAllCandidates,
-    staleTime: 5 * 1000,
-  });
+  const { allCandidates, allCandidatesError, allCandidatesLoading } =
+    useCandidates();
 
   const tableData: AllCandidates[] =
-    data?.results.map((candidate, index) => ({
+    allCandidates?.results.map((candidate: AllCandidates, index: number) => ({
       ...candidate,
       serialNumber: index + 1,
       full_name: candidate.user?.full_name || "No name",
-      country: candidate.user?.country || "No country",
-      assigned_university: candidate.assigned_university || "No university",
+      country: candidate.country_of_birth || "No country",
+      assigned_university: candidate.assigned_university || "None Assigned",
       assigned_course: candidate.assigned_course || "No course assigned",
       school_application_status:
         candidate.school_application_status || "No status",
@@ -30,9 +26,7 @@ const TabsComponent = () => {
   const assignedData = tableData.filter((candidate) => candidate.assigned);
   const unassignedData = tableData.filter((candidate) => !candidate.assigned);
 
-  if (error) {
-    return <p className="text-center text-red-600">Error loading candidates</p>;
-  }
+  if (allCandidatesError) return <p>Error: {allCandidatesError.message}</p>;
 
   return (
     <Tabs
@@ -65,7 +59,7 @@ const TabsComponent = () => {
           <DataTable
             columns={allTabsColumns}
             data={tableData}
-            isLoading={isLoading}
+            isLoading={allCandidatesLoading}
           />
         </TabsContent>
 
@@ -74,7 +68,7 @@ const TabsComponent = () => {
           <DataTable
             columns={allTabsColumns}
             data={assignedData}
-            isLoading={isLoading}
+            isLoading={allCandidatesLoading}
           />
         </TabsContent>
 
@@ -83,7 +77,7 @@ const TabsComponent = () => {
           <DataTable
             columns={allTabsColumns}
             data={unassignedData}
-            isLoading={isLoading}
+            isLoading={allCandidatesLoading}
           />
         </TabsContent>
       </div>

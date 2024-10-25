@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon } from "lucide-react";
+import { ChevronLeftIcon, Loader2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -7,10 +7,66 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import sendIcon from "@/assets/send.svg";
+// import sendIcon from "@/assets/send.svg";
 import sendIcon2 from "@/assets/send-2.svg";
+import { useEffect, useState } from "react";
+import { refinePrompt } from "@/lib/actions/user.actions";
+import { useCandidates } from "@/hooks/useCandidiates";
 
-const Step2 = ({ prevStep }: { prevStep: () => void }) => {
+const Step2 = ({
+  prevStep,
+  candidateId: id,
+}: {
+  prevStep: () => void;
+  candidateId: string;
+}) => {
+  const [manualDescription, setManualDescription] = useState("");
+  const [refinedDescription, setRefinedDescription] = useState("");
+  const [refineLoading, setRefineLoading] = useState(false);
+  const [programType, setProgramType] = useState("");
+  const [assignedUniversity, setAssignedUniversity] = useState("");
+  const [assignedCourse, setAssignedCourse] = useState("");
+  const [yearsOfExperience, setYearsOfExperience] = useState("");
+
+  if (!id) {
+    console.error("No ID provided");
+    return;
+  }
+  const { singleCandidate, singleCandidateLoading, singleCandidateError } =
+    useCandidates(id);
+
+  useEffect(() => {
+    if (singleCandidate) {
+      console.log(singleCandidate);
+
+      setProgramType(singleCandidate.education[0].degree_type || "");
+      setAssignedUniversity(singleCandidate.assigned_university || "");
+      setAssignedCourse(singleCandidate.assigned_course || "");
+      setYearsOfExperience(singleCandidate.yearsOfExperience?.toString() || "");
+    }
+  }, [singleCandidate]);
+
+  if (singleCandidateLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (singleCandidateError) {
+    return <div>Error fetching data</div>;
+  }
+
+  const handleRefine = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setRefineLoading(true);
+    try {
+      const refinedContent = await refinePrompt({ prompt: manualDescription });
+      setRefinedDescription(refinedContent?.refined_content || "");
+    } catch (error) {
+      console.error("Error refining prompt:", error);
+    } finally {
+      setRefineLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="bg-gray w-full min-h-[50vh] rounded-3xl px-4 py-10 lg:p-12">
@@ -25,32 +81,41 @@ const Step2 = ({ prevStep }: { prevStep: () => void }) => {
 
           <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
             <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
-              <label htmlFor="email" className="text-sm">
+              <label htmlFor="programType" className="text-sm">
                 Program Type
               </label>
-              <Select>
+              <Select value={programType} onValueChange={setProgramType}>
                 <SelectTrigger className="w-full p-0 h-full rounded-none bg-transparent outline-none border-none focus:outline-none focus-visible:outline-none active:border-none focus:border-none">
                   <SelectValue placeholder="MBA" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="light">HND</SelectItem>
-                  <SelectItem value="dark">Masters</SelectItem>
-                  <SelectItem value="system">First Degree</SelectItem>
+                  <SelectItem value="HND">HND</SelectItem>
+                  <SelectItem value="master">Masters</SelectItem>
+                  <SelectItem value="bsc">First Degree</SelectItem>
+                  <SelectItem value="MBA">MBA</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
-              <label htmlFor="email" className="text-sm">
+              <label htmlFor="assignedUniversity" className="text-sm">
                 Assigned University
               </label>
-              <Select>
+              <Select
+                value={assignedUniversity}
+                onValueChange={setAssignedUniversity}
+              >
                 <SelectTrigger className="w-full p-0 h-full rounded-none bg-transparent outline-none border-none focus:outline-none focus-visible:outline-none active:border-none focus:border-none">
                   <SelectValue placeholder="Havard University" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="light">HND</SelectItem>
-                  <SelectItem value="dark">Masters</SelectItem>
-                  <SelectItem value="system">First Degree</SelectItem>
+                  <SelectItem value="harvard">Harvard University</SelectItem>
+                  <SelectItem value="britain">
+                    Great Britain University
+                  </SelectItem>
+                  <SelectItem value="crawford">Crawford University</SelectItem>
+                  <SelectItem value="manitoba">
+                    University Of Manitoba
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -58,10 +123,10 @@ const Step2 = ({ prevStep }: { prevStep: () => void }) => {
 
           <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
             <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
-              <label htmlFor="email" className="text-sm">
+              <label htmlFor="assignedCourse" className="text-sm">
                 Assigned Course
               </label>
-              <Select>
+              <Select value={assignedCourse} onValueChange={setAssignedCourse}>
                 <SelectTrigger className="w-full p-0 h-full rounded-none bg-transparent outline-none border-none focus:outline-none focus-visible:outline-none active:border-none focus:border-none">
                   <SelectValue placeholder="Project Management" />
                 </SelectTrigger>
@@ -78,41 +143,51 @@ const Step2 = ({ prevStep }: { prevStep: () => void }) => {
               </label>
               <input
                 className="border-none w-full focus:outline-none bg-transparent"
-                id="email"
+                id="yearsOfExperience"
                 placeholder="1"
+                value={yearsOfExperience}
               />
             </div>
           </div>
 
           <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
             <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
-              <label htmlFor="email" className="text-sm">
+              <label htmlFor="courseDescription" className="text-sm">
                 Manually Add Course Description
               </label>
-              <input
+              <textarea
                 className="border-none w-full focus:outline-none bg-transparent"
-                id="email"
-                placeholder="Lorem ipsum dolor sit amet consectetur. Sit rhoncus"
+                id="courseDescription"
+                placeholder="A brief course description"
+                value={manualDescription}
+                onChange={(e) => setManualDescription(e.target.value)}
               />
             </div>
             <div className="flex flex-row justify-between items-end gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-2 px-4">
               <div>
-                <label htmlFor="text" className="text-sm">
+                <label htmlFor="refinedCourseDescription" className="text-sm">
                   Generate Course Description
                 </label>
-                <input
+                <textarea
                   className="border-none w-full focus:outline-none bg-transparent"
-                  id="text"
+                  id="refinedCourseDescription"
+                  value={refinedDescription}
+                  onChange={(e) => setRefinedDescription(e.target.value)}
+                  placeholder="Generated description will appear here"
                 />
               </div>
-              <button>
-                <img src={sendIcon} alt="send icon" />
+              <button onClick={handleRefine} disabled={refineLoading}>
+                {refineLoading ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  <img src={sendIcon2} alt="send icon" />
+                )}
               </button>
             </div>
           </div>
 
-          <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
-          <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
+          {/* <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
+            <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
               <label htmlFor="email" className="text-sm">
                 Manually Add School Description
               </label>
@@ -136,8 +211,7 @@ const Step2 = ({ prevStep }: { prevStep: () => void }) => {
                 <img src={sendIcon2} alt="send icon" />
               </button>
             </div>
-            
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="flex items-center mt-10 justify-end w-full">

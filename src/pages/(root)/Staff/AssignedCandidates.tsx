@@ -70,7 +70,7 @@ const AssignedCandidates = () => {
         recommended_school:
           candidate.assigned_university || "No school assigned",
         resume: candidate.resume_status || "Not Started",
-        sop: candidate.sop_status || "Not Started",
+        sop_status: candidate.sop_status || "Not Started",
         school_application_status:
           candidate.school_application_status || "Not available",
       })

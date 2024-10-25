@@ -194,45 +194,145 @@ export type FormData = Step1FormData &
   Step4FormData &
   Step5FormData;
 
-declare interface EducationHistory {
-  degree: string;
-  school: string;
-  year: string;
-}
+declare type Resume = {
+  id: number;
+  resume: string;
+  candidate: number;
+};
 
-declare interface WorkHistory {
+export type EducationHistory = {
+  id: number;
+  current_status: string;
+  degree_type: string;
+  country: string;
+  school_name: string;
+  specific_course_of_study: string;
+  class_of_degree: string;
+  specific_cgpa: string | null;
+  year_graduated: number | null;
+  year_admitted: number | null;
+  has_advanced_degree: boolean;
+  candidate: number;
+};
+
+export type WorkHistory = {
   position: string;
   company: string;
   year: string;
 }
 
+export type Sop = {
+  id: number;
+  text: string;
+  file: string;
+  candidate: number;
+}
+
+export type CareerInterest = {
+  id: number;
+  name: string;
+}
+
+export type CandidateCareer = {
+  id: number;
+  profession: string;
+  sector: string;
+  technical_skill: string;
+  career_interests: CareerInterest[];
+  years_of_experience_post_degree: number;
+  years_of_experience_pre_graduation: number;
+  jobs_to_show: number;
+}
+
+export type JobExperience = {
+  id: number;
+  business_name: string;
+  professional_status: string;
+  job_title: string;
+  employment_type: string;
+  state: string;
+  country: string;
+  year_started: string;
+  company_description: string;
+  job_summary: string;
+  year_ended: string;
+  job_status: string;
+  candidate: number;
+};
+
+export type LoanReferee = {
+  id: number;
+  name: string;
+  email: string;
+  phone_number: string;
+  relationship: string;
+  candidate: number;
+};
+
+export type VerificationDocument = {
+  id: number;
+  bsc_hnd_certificate: string;
+  bank_statement: string;
+  first_degree_transcript: string | null;
+  current_cv: string | null;
+  intl_passport: string | null;
+  nin_slip: string | null;
+  utility_bill: string | null;
+  post_graduate_certificate: string | null;
+  post_graduate_transcript: string | null;
+  candidate: number;
+};
+
+export type AdvancedEducation = {
+  id: number;
+  advanced_degree_type: string;
+  graduate_type: string;
+  country: string;
+  school_name: string;
+  class_of_degree: string;
+  specific_cgpa: string | null;
+  year_graduated: number | null;
+  year_admitted: number | null;
+  candidate: number;
+};
+
 export type CandidateData = {
   id: string;
-  amount: number;
+  user?: User;
   advanced_education: string[];
   assigned_course: string;
   assigned_university: string;
+  birth_date?: string;
   career_strategic_purpose: string;
-  career: string[];
+  city_current_reside: string;
+  city_of_birth: string;
+  country_current_reside: string;
+  country_of_birth: string;
+  date_of_birth: string;
   email_address: string;
-  education_history: EducationHistory[];
-  education: string[];
   serial_number: number;
-  job_experience: string[];
   name: string;
+  preferred_call_name: string;
   recommended_school: string;
   recommended_course: string;
   resume: string;
   resume_status?: string;
   gender?: string;
-  sop: string;
   sop_status?: string;
   school_application_status: "Pending" | "Complete" | "Started";
+  state_of_birth: string;
   status: string;
   phone_number: string;
   profession?: string;
+  sop: Sop[];
+  resume: Resume[];
+  education: EducationHistory[];
+  career: CandidateCareer[];
+  job_experience: JobExperience[];
+  loan_referees: LoanReferee[];
   work_history: WorkHistory[];
-  user?: User;
+  verification_documents: VerificationDocument;
+  advanced_education: AdvancedEducation[];
 };
 
 declare interface AllCandidates {
@@ -240,6 +340,7 @@ declare interface AllCandidates {
   assigned_university: string;
   assigned_course: string;
   sop_status?: string;
+  country_of_birth: string;
   resume_status?: string;
   school_application_status?: string;
   assigned: boolean;

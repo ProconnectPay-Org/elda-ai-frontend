@@ -1,8 +1,15 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "./ui/button";
 import { AllCandidates } from "@/types";
-
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { Link } from "react-router-dom";
 
 export const allTabsColumns: ColumnDef<AllCandidates>[] = [
   {
@@ -20,14 +27,16 @@ export const allTabsColumns: ColumnDef<AllCandidates>[] = [
     accessorKey: "country",
     header: "Country",
     cell: ({ row }) => (
-      <p className="capitalize">{row.original.user?.country || "No country"}</p>
+      <p className="capitalize">{row.original.country_of_birth || "No country"}</p>
     ),
   },
   {
     accessorKey: "assigned_university",
     header: "Assigned University",
     cell: ({ row }) => (
-      <p className="capitalize">{row.original.assigned_university || "No university"}</p>
+      <p className="capitalize">
+        {row.original.assigned_university || "None Assigned"}
+      </p>
     ),
   },
   {
@@ -87,20 +96,47 @@ export const allTabsColumns: ColumnDef<AllCandidates>[] = [
       </div>
     ),
   },
+  // {
+  //   accessorKey: "duplicate",
+  //   header: () => <div className="text-center">Duplicate</div>,
+  //   cell: ({ row }) => (
+  //     <div className="flex justify-center">
+  //       <Button
+  //         className="bg-[#D74632] w-full"
+  //         onClick={() =>
+  //           alert(`Duplicate: ${row.original.duplicate || "none"}`)
+  //         }
+  //       >
+  //         {row.original.duplicate || "none"}
+  //       </Button>
+  //     </div>
+  //   ),
+  // },
   {
-    accessorKey: "duplicate",
-    header: () => <div className="text-center">Duplicate</div>,
-    cell: ({ row }) => (
-      <div className="flex justify-center">
-        <Button
-          className="bg-[#D74632] w-full"
-          onClick={() =>
-            alert(`Duplicate: ${row.original.duplicate || "none"}`)
-          }
-        >
-          {row.original.duplicate || "none"}
-        </Button>
-      </div>
-    ),
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => {
+      const payment = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <DotsHorizontalIcon className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem>
+              <Link to={`/refine-resume/${payment.id}`}>View Resume</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link to={`/craft-sop/${payment.id}`}>View Crafted SOP</Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
   },
 ];

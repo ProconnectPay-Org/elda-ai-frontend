@@ -3,30 +3,31 @@ import { Link } from "react-router-dom";
 import helpIcon from "@/assets/help-icon.svg";
 import mailIcon from "@/assets/mail.svg";
 import { useEffect, useState } from "react";
-import { CandidateData } from "@/types";
-import useStaffDetails from "@/hooks/useStaffDetails";
+import { useCandidates } from "@/hooks/useCandidiates";
 
 const Step1 = ({ candidateId }: { candidateId: string }) => {
-  const { isStaffLoading, loggedInStaff } = useStaffDetails();
   const [email, setEmail] = useState("");
 
+  if (!candidateId) {
+    console.error("No ID provided");
+    return;
+  }
+  const { singleCandidate, singleCandidateLoading, singleCandidateError } =
+    useCandidates(candidateId);
+
   useEffect(() => {
-    if (loggedInStaff) {
-      const foundCandidate = (
-        loggedInStaff.staff_candidates as CandidateData[]
-      ).find(
-        (candidate: CandidateData) =>
-          String(candidate.id) === String(candidateId)
-      );
-
-      if (foundCandidate?.user?.email) {
-        setEmail(foundCandidate.user.email || "");
-      }
+    if (singleCandidate) {
+      const foundCandidate = singleCandidate;
+      setEmail(foundCandidate.user.email || "");
     }
-  }, [loggedInStaff, candidateId]);
+  }, [singleCandidate, candidateId]);
 
-  if (isStaffLoading) {
+  if (singleCandidateLoading) {
     return <div>Loading...</div>;
+  }
+
+  if (singleCandidateError) {
+    return <div>Error fetching data</div>;
   }
 
   return (

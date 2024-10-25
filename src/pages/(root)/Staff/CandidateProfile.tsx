@@ -1,81 +1,33 @@
 import { Link, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import RootLayout from "@/layouts/RootLayout";
-import { CandidateData, Staff } from "@/types";
+import { CandidateData } from "@/types";
 import { MailIcon, PhoneCallIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
 import useAuth from "@/hooks/useAuth";
-import {
-  fetchCareerData,
-  fetchEducationData,
-  fetchJobExperienceData,
-  getAdvancedDegree,
-  // getStaffDetails,
-} from "@/lib/actions/staff.actions";
+
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
-import useStaffDetails from "@/hooks/useStaffDetails";
+import { getSingleCandidate } from "@/lib/actions/user.actions";
 
 const CandidateProfile = () => {
   const { id } = useParams<{ id: string }>();
-  const [candidate, setCandidate] = useState<CandidateData | null>(null);
-  const [careerId, setCareerId] = useState("");
-  const [education_id, setEducation_id] = useState("");
-  const [advancedEducation_id, setAdvancedEducation_id] = useState("");
-  const [jobExperienceId, setJobExperienceId] = useState("");
   const { loggedInUser } = useAuth();
-  const { loggedInStaff, isStaffLoading } = useStaffDetails();
 
-  const staffData = loggedInStaff as Staff | null;
+  if (!id) {
+    console.error("No ID provided");
+    return;
+  }
 
-  useEffect(() => {
-    if (staffData) {
-      const foundCandidate = staffData.staff_candidates.find(
-        (candidate: CandidateData) => String(candidate.id) === String(id)
-      );
-      setCandidate(foundCandidate || null);
-      setCareerId(foundCandidate?.career[0] || "");
-      setEducation_id(foundCandidate?.education[0] || "");
-      setJobExperienceId(foundCandidate?.job_experience[0] || "");
-      setAdvancedEducation_id(foundCandidate?.advanced_education[0] || "");
-    }
-  }, [staffData, id]);
-
-  const { data: educationData } = useQuery({
-    queryKey: ["educationInfo", education_id],
-    queryFn: () => fetchEducationData(education_id),
-    enabled: !!education_id,
-    staleTime: 10 * 60 * 1000,
-  });  
-
-  const { data: advancedEducationData } = useQuery({
-    queryKey: ["advancedEducationInfo", advancedEducation_id],
-    queryFn: () => getAdvancedDegree(advancedEducation_id),
-    enabled: advancedEducation_id.length > 0,
-    staleTime: 10 * 60 * 1000,
+  const { data: candidate, isLoading } = useQuery<CandidateData>({
+    queryKey: ["candidateData", id],
+    queryFn: () => getSingleCandidate(id),
+    staleTime: 5 * 1000 * 60,
   });
 
-  const combinedEducationData = [
-    ...(educationData ? [educationData] : []),
-    ...(advancedEducationData ? [advancedEducationData] : []),
-  ];
+  console.log(candidate);
 
-  const { isLoading: isWorkExpLoading, data: careerData } = useQuery({
-    queryKey: ["careerData", careerId],
-    queryFn: () => fetchCareerData(careerId),
-    enabled: !!careerId,
-    staleTime: 10 * 60 * 1000,
-  });
-
-  const { isLoading: isJobExpLoading, data: jobExperienceData } = useQuery({
-    queryKey: ["jobExperienceData", jobExperienceId],
-    queryFn: () => fetchJobExperienceData(jobExperienceId),
-    enabled: !!jobExperienceId,
-    staleTime: 10 * 60 * 1000,
-  });
-
-  if (isStaffLoading || isWorkExpLoading || isJobExpLoading || !candidate) {
+  if (isLoading || !candidate) {
     return (
       <RootLayout title="Candidate Profile">
         <div className="flex flex-col md:flex-row justify-between gap-5 md:gap-0">
@@ -129,13 +81,23 @@ const CandidateProfile = () => {
               {candidate.user?.full_name || ""}
             </p>
             <p>
-              Profession: {careerData?.profession || "No profession provided"}
+              Preferred Call Name:{" "}
+              {candidate?.preferred_call_name || "No name provided"}
             </p>
             <p>
-              Course: {educationData?.specific_course_of_study || "No course provided"}
+              Profession: {candidate?.profession || "No profession provided"}
             </p>
             <p>
-              School: {educationData?.school_name || "No school provided"}
+              Course:{" "}
+              {candidate?.education?.map(
+                (edu) => edu.specific_course_of_study || "No course provided"
+              )}
+            </p>
+            <p>
+              School:{" "}
+              {candidate?.education?.map(
+                (edu) => edu.school_name || "No school provided"
+              )}
             </p>
             <div className="flex items-center gap-4">
               <div className="bg-pale-bg text-red rounded-xl px-2 text-xs flex items-center gap-1 py-1">
@@ -179,13 +141,13 @@ const CandidateProfile = () => {
       <div className="flex flex-col gap-4">
         <span className="flex gap-5 items-center">
           <h3 className="font-semibold text-lg">EDUCATION HISTORY</h3>
-          <p className="text-[#5E6366] font-semibold">
+          {/* <p className="text-[#5E6366] font-semibold">
             {combinedEducationData.length
               ? `${combinedEducationData.length} degrees`
               : "No education history provided"}
-          </p>
+          </p> */}
         </span>
-        {combinedEducationData.map((education, index: number) => (
+        {candidate?.education?.map((education, index: number) => (
           <span key={index} className="flex gap-5 items-center">
             <p className="text-[#5E6366] font-semibold md:w-60">
               {`${education.year_admitted || "No year set"} - ${
@@ -206,15 +168,28 @@ const CandidateProfile = () => {
           <h3 className="font-semibold text-lg">WORK HISTORY</h3>
           <p className="text-[#5E6366] font-semibold"></p>
         </span>
-        <span className="flex gap-5 items-center">
-          <p className="text-[#5E6366] font-semibold md:w-60">
-            {jobExperienceData?.year_started || "No start year"} -{" "}
-            {jobExperienceData?.year_ended || "No end year"}
-          </p>
-          <p className="font-semibold capitalize">{`${
-            jobExperienceData?.job_title || "No job title"
-          } at ${jobExperienceData?.business_name || "No business name"}`}</p>
-        </span>
+        {candidate?.job_experience?.map((jobExperienceData, index: number) => (
+          <span key={index} className="flex gap-5 items-center">
+            <p className="text-[#5E6366] font-semibold md:w-60">
+              {jobExperienceData?.year_started || "No start year"} -{" "}
+              {jobExperienceData?.year_ended || "No end year"}
+            </p>
+            <p className="font-semibold capitalize">{`${
+              jobExperienceData?.job_title || "No job title"
+            } at ${jobExperienceData?.business_name || "No business name"}`}</p>
+          </span>
+        ))}
+      </div>
+      <hr className="w-full h-2 my-8" />
+      <div>
+        <h3 className="font-semibold text-lg mb-4">JOB SUMMARY</h3>
+        <div className="text-[#5E6366]">
+          {candidate?.job_experience?.map((job) => job.job_summary) || (
+            <span className="flex gap-4 items-center">
+              <p>No career strategic purpose provided</p>
+            </span>
+          )}
+        </div>
       </div>
     </RootLayout>
   );
