@@ -2,7 +2,7 @@ import { sidebarLinks } from "@/constants";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
 import Footer from "./Footer";
-import Logo from "../assets/elda-ai-logo-no-bg.png";
+import Logo from "../assets/elda-new-logo.png";
 
 const SideBar = () => {
   const navLocation = useLocation();
@@ -13,7 +13,9 @@ const SideBar = () => {
           to="/"
           className="flex cursor-pointer items-center justify-center w-[240px] h-20 mb-8"
         >
-          <img src={Logo} alt="logo" className="w-[200px]" />
+          <div className="flex items-center justify-center w-[160px] sm:w-[240px]">
+            <img src={Logo} alt="logo" className="w-full h-full scale-150" />
+          </div>
         </Link>
         {sidebarLinks.map((item) => {
           const isActive =
@@ -28,17 +30,9 @@ const SideBar = () => {
             >
               <div className="relative top-0.5 size-6">
                 {!isActive ? (
-                  <img
-                    src={item.imgURL}
-                    alt={item.label}
-                    
-                  />
+                  <img src={item.imgURL} alt={item.label} />
                 ) : (
-                  <img
-                    src={item.isActive}
-                    alt={item.label}
-                   
-                  />
+                  <img src={item.isActive} alt={item.label} />
                 )}
               </div>
               <p className={cn("sidebar-label", { "!text-red": isActive })}>

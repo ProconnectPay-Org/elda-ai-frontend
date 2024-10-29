@@ -1,7 +1,7 @@
 // AdminLayout.tsx
 
 import { AuthLayoutProps } from "@/types";
-import Logo from "../assets/elda-ai-logo-no-bg.png";
+import Logo from "../assets/elda-new-logo.png";
 import Hamburger from "@/assets/mobile_hamburger.svg";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -63,11 +63,11 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
 
   return (
     <div>
-      <nav className="flex items-center justify-between bg-pale-bg h-28 p-4 lg:p-12 gap-16">
-        <div className="w-[40%] sm:w-[30%] md:w-[15%]">
-          <img src={Logo} alt="logo" className="w-full h-full" />
+      <nav className="flex items-center justify-between bg-pale-bg h-28 p-4 lg:p-12 gap-16 overflow-y-hidden">
+        <div className="flex items-center justify-center w-[200px] overflow-hidden">
+          <img src={Logo} alt="logo" className="w-fit scale-150" />
         </div>
-        <div className="hidden md:flex gap-4 items-center">
+        <div className="hidden lg:flex gap-4 items-center">
           <NavLink
             to="/admin-dashboard"
             className={() =>
@@ -112,7 +112,7 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
           </NavLink>
         </div>
         <Button
-          className="h-fit w-fit bg-red hover:bg-rose-900 items-center justify-center md:flex hidden"
+          className="h-fit w-fit bg-red hover:bg-rose-900 items-center justify-center lg:flex hidden"
           onClick={handleLogout}
         >
           <svg
@@ -128,7 +128,7 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
           </svg>
         </Button>
         {/* mobile navbar */}
-        <div className="md:hidden">
+        <div className="lg:hidden">
           <Sheet>
             <SheetTrigger>
               <img src={Hamburger} alt="menu icon" />

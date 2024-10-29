@@ -1,5 +1,5 @@
 import { AuthLayoutProps } from "@/types";
-import Logo from "../assets/elda-ai-logo-no-bg.png";
+import Logo from "../assets/elda-new-logo.png";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import {
   Sheet,
@@ -11,7 +11,9 @@ import {
 } from "@/components/ui/sheet";
 import { MenuIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import PcpLogo from "../assets/pcplogo.svg";
+// import PcpLogo from "../assets/proconnect-logo-new-no-bg.png";
+import { Button } from "@/components/ui/button";
+import useAuth from "@/hooks/useAuth";
 
 const navbarLinks = [
   {
@@ -38,13 +40,16 @@ const navbarLinks = [
 
 const CandidateLayout = ({ children }: AuthLayoutProps) => {
   const location = useLocation();
+  const { handleLogout } = useAuth();
 
   return (
     <div>
-      <nav className="flex items-center justify-between md:justify-normal bg-[#F5F7F9] h-28 p-4 lg:p-12 gap-20 lg:gap-36">
-        <div className="w-[40%] sm:w-[30%] md:w-[15%] flex gap-4">
-          <img src={PcpLogo} alt="pcp-logo" className="w-1/2" />
-          <img src={Logo} alt="logo" className="w-2/3 h-full" />
+      <nav className="flex items-center justify-between bg-[#F5F7F9] h-28 p-4 lg:p-12">
+        <div className="w-[200px] sm:w-[30%] md:w-[15%] flex gap-4">
+          {/* <img src={PcpLogo} alt="pcp-logo" className="w-1/2 scale-125" /> */}
+          <div className="flex items-center justify-center w-[160px] sm:w-[240px]">
+            <img src={Logo} alt="logo" className="w-full h-full scale-150" />
+          </div>
         </div>
         <div className="hidden md:flex gap-1 lg:gap-4 items-center">
           {navbarLinks.map((link) => (
@@ -61,6 +66,22 @@ const CandidateLayout = ({ children }: AuthLayoutProps) => {
             </NavLink>
           ))}
         </div>
+        <Button
+          className="hidden h-fit w-fit bg-red hover:bg-rose-900 items-center justify-center md:flex"
+          onClick={handleLogout}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="1em"
+            height="1em"
+            fill="white"
+            viewBox="0 0 256 256"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M124,216a12,12,0,0,1-12,12H48a12,12,0,0,1-12-12V40A12,12,0,0,1,48,28h64a12,12,0,0,1,0,24H60V204h52A12,12,0,0,1,124,216Zm108.49-96.49-40-40a12,12,0,0,0-17,17L195,116H112a12,12,0,0,0,0,24h83l-19.52,19.51a12,12,0,0,0,17,17l40-40A12,12,0,0,0,232.49,119.51Z"></path>
+          </svg>
+        </Button>
         {/* mobile navbar */}
         <div className="md:hidden">
           <Sheet>
@@ -74,7 +95,7 @@ const CandidateLayout = ({ children }: AuthLayoutProps) => {
               <div>
                 <SheetHeader className="my-5">
                   <SheetTitle className="flex items-start justify-start">
-                    Admin Dashboard
+                    Candidate Dashboard
                   </SheetTitle>
                   <SheetDescription className="flex items-start justify-start">
                     MENU
@@ -102,6 +123,23 @@ const CandidateLayout = ({ children }: AuthLayoutProps) => {
                   })}
                 </ul>
               </div>
+              <Button
+                className="h-fit w-fit bg-red hover:bg-rose-900 flex gap-2 items-center justify-center"
+                onClick={handleLogout}
+              >
+                Logout
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1em"
+                  height="1em"
+                  fill="white"
+                  viewBox="0 0 256 256"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path d="M124,216a12,12,0,0,1-12,12H48a12,12,0,0,1-12-12V40A12,12,0,0,1,48,28h64a12,12,0,0,1,0,24H60V204h52A12,12,0,0,1,124,216Zm108.49-96.49-40-40a12,12,0,0,0-17,17L195,116H112a12,12,0,0,0,0,24h83l-19.52,19.51a12,12,0,0,0,17,17l40-40A12,12,0,0,0,232.49,119.51Z"></path>
+                </svg>
+              </Button>
             </SheetContent>
           </Sheet>
         </div>

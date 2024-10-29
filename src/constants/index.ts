@@ -54,12 +54,12 @@ export const businessLinks = [
     name: "Signify your interest",
   },
   {
-    url: "https://proconnectpay.com/local-loan",
-    name: "Local loan",
+    url: "https://proconnectpay.com/faqs",
+    name: "FAQs",
   },
   {
-    url: "https://proconnectpay.com/global-loan",
-    name: "Global Loan",
+    url: "https://proconnectpay.com/study-abroad-financing-services",
+    name: "Study Abroad Financing Services",
   },
   {
     url: "https://proconnectpay.com/privacy-policy",

@@ -5,6 +5,7 @@ import ExclamationRed from "@/assets/exclamation-red.svg";
 import ExclamationWhite from "@/assets/exclamation-white.svg";
 import IconProgress from "@/assets/icon-progress.svg";
 import { statusProps } from "@/constants";
+import useAuth from "@/hooks/useAuth";
 
 const StatusBox = ({
   text,
@@ -30,10 +31,14 @@ const StatusBox = ({
 };
 
 const CandidateStatus = () => {
+  const { loggedInUser } = useAuth();
+  console.log(loggedInUser);
+  
+
   return (
     <CandidateLayout>
-      <section className="md:w-[880px] mx-auto space-y-10">
-        <h1 className="font-bold text-4xl">Welcome, Grace</h1>
+      <section className="md:max-w-[880px] mx-auto space-y-10">
+        <h1 className="font-bold text-4xl">Welcome, {loggedInUser?.full_name}</h1>
 
         <div className="h-[80px] rounded-2xl w-full p-5 bg-gradient-to-r from-red to-[#919293] gap-2 flex items-center">
           <img src={ExclamationWhite} alt="exclamation mark" />

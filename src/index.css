@@ -90,11 +90,11 @@
 }
 
 .sidebar-link {
-  @apply flex gap-2 items-center py-1 md:p-3 rounded-lg justify-center xl:justify-start;
+  @apply flex gap-2 items-center py-1 md:p-3 rounded-lg justify-start;
 }
 
 .sidebar-label {
-  @apply font-semibold text-black max-xl:hidden;
+  @apply font-semibold text-black max-md:hidden;
 }
 
 /* Mobile Root Layout */

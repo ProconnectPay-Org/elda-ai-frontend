@@ -1,30 +1,58 @@
 import { Link } from "react-router-dom";
-import Logo from "../assets/pcp-logo-1.png";
+import Logo from "../assets/proconnect-logo-new.jpg";
 import Buisness from "../assets/company.png";
 import Location from "../assets/location.png";
 import { businessLinks, locationLinks, socialIcons } from "@/constants";
+import { useEffect, useState } from "react";
 
 const HomeFooter = () => {
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+  useEffect(() => {
+    const updateYear = () => {
+      setCurrentYear(new Date().getFullYear());
+    };
+
+    const intervalId = setInterval(updateYear, 60000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
     <div className="flex flex-col py-12 px-8 sm:p-12 lg:p-16 gap-16">
       <div className="flex flex-col md:flex-row items-start justify-between">
         <div className="md:w-1/3 flex flex-col gap-5 items-start">
-          <a href="https://proconnectpay.com" target="_blank">
-            <img src={Logo} alt="pcp-logo" />
+          <a
+            href="https://proconnectpay.com"
+            target="_blank"
+            className="relative -left-16 w-80 h-24"
+          >
+            <img
+              src={Logo}
+              alt="pcp-logo"
+              className="w-full h-full object-cover"
+            />
           </a>
-          <p className="text-lg leading-relaxed">
-            ProconnectPAY is an African Edu-FinTech Company that works with
-            other financial institutions to drive adoption of Education-oriented
-            Loans.{" "}
+          <p className="font-semibold text-justify">
+            Proconnect is a global financial services provider specializing in
+            education and mobility solutions. We help students gain access to
+            over 5,000 universities in 17 countries, offering tailored financing
+            that makes studying abroad more accessible. Additionally, we
+            streamline the relocation process by covering essential expenses
+            such as flights, living costs, and rent, ensuring a smooth
+            transition for individuals pursuing global opportunities. With our
+            comprehensive approach and global partnerships, Proconnect empowers
+            students and professionals to focus on their ambitions while we
+            manage the financial logistics.
           </p>
-          <p className="text-lg leading-relaxed">
+          <p className="text-justify font-semibold">
             ProconnectPAY is legally registered in Nigeria and the United
             States. RC Number in Nigeria is{" "}
-            <span className="text-[#1E4580] font-semibold">
-              1884617 (Proconnect Tech Solutions Limited),
+            <span className="text-[#1E4580]">
+              1884617 (Proconnect Tech Solutions Limited) ,
             </span>{" "}
             Assigned Filling No in the United States is{" "}
-            <span className="text-red font-semibold">
+            <span className="text-[#DB251A]">
               7044965 (ProconnectPAY EduFinTech Inc.)
             </span>
           </p>
@@ -38,7 +66,9 @@ const HomeFooter = () => {
             {businessLinks.map((footerLink) => {
               return (
                 <Link key={footerLink.name} to={footerLink.url}>
-                  <li className="font-medium lg:font-semibold text-lg hover:font-normal">{footerLink.name}</li>
+                  <li className="font-medium lg:font-semibold text-lg hover:font-normal">
+                    {footerLink.name}
+                  </li>
                 </Link>
               );
             })}
@@ -53,7 +83,9 @@ const HomeFooter = () => {
             {locationLinks.map((locationLink, index) => {
               return (
                 <Link key={index} to={locationLink.url}>
-                  <li className="font-medium lg:font-semibold text-lg hover:font-normal">{locationLink.name}</li>
+                  <li className="font-medium lg:font-semibold text-lg hover:font-normal">
+                    {locationLink.name}
+                  </li>
                 </Link>
               );
             })}
@@ -62,7 +94,9 @@ const HomeFooter = () => {
       </div>
 
       <div className="flex flex-col-reverse md:flex-row gap-4 justify-between items-center">
-        <p className="text-gray-500 text-lg text-center md:text-left">@ 2024 Proconnectpay. All rights reserved.</p>
+        <p className="text-gray-500 text-lg text-center md:text-left">
+          @ {currentYear} Proconnectpay. All rights reserved.
+        </p>
         <div className="flex gap-8 items-center">
           {socialIcons.map((icon, index) => {
             return (
