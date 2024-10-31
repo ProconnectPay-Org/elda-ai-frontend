@@ -37,8 +37,6 @@ const Step2 = ({
 
   useEffect(() => {
     if (singleCandidate) {
-      console.log(singleCandidate);
-
       setProgramType(singleCandidate.education[0].degree_type || "");
       setAssignedUniversity(singleCandidate.assigned_university || "");
       setAssignedCourse(singleCandidate.assigned_course || "");

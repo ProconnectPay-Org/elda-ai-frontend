@@ -3,75 +3,107 @@ import Cookies from "js-cookie";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const token = Cookies.get("candidate_access_token");
-const candidateId = Cookies.get("candidate_id");
-const careerId = Cookies.get("career_id");
-const educationId = Cookies.get("education_id");
-const work_experience_id = Cookies.get("work_experience_id");
-const verificationDocumentsId = Cookies.get("verification_document_id");
-const referee1Id = Cookies.get("referee1_id");
-const referee2Id = Cookies.get("referee2_id");
-const advancedId = Cookies.get("advanced_education1_id");
-
-const config = {
-  headers: {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  },
-};
-
 export const updatePersonalDetails = async (personalDetails: any) => {
-  const canId = Cookies.get("candidate_id");  
+  const token = Cookies.get("candidate_access_token");
+  const canId = Cookies.get("candidate_id");
   return await axios.patch(
     `${API_URL}register/candidate/${canId}/`,
     personalDetails,
-    config
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
   );
 };
 
 export const getPersonalDetails = async () => {
-  return await axios.get(
-    `${API_URL}register/candidate/${candidateId}/`,
-    config
-  );
+  const token = Cookies.get("candidate_access_token");
+  const candidateId = Cookies.get("candidate_id");
+  return await axios.get(`${API_URL}register/candidate/${candidateId}/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
 };
 
 export const submitEducationDetails = async (educationDetails: any) => {
+  const educationId = Cookies.get("education_id");
+  const token = Cookies.get("candidate_access_token");
+
   return await axios.patch(
     `${API_URL}register/education/${educationId}/`,
     educationDetails,
-    config
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
   );
 };
 
 export const fetchEducationData = async () => {
+  const educationId = Cookies.get("education_id");
+  const token = Cookies.get("candidate_access_token");
+
   const { data } = await axios.get(
     `${API_URL}register/education/${educationId}/`,
-    config
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
   );
   return data;
 };
 
 export const hasAdvancedDegree = async (degreeDetails: any) => {
+  const token = Cookies.get("candidate_access_token");
+
   return await axios.post(
     `${API_URL}register/advanced-education/`,
     degreeDetails,
-    config
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
   );
 };
 
 export const updateAdvancedDegree = async (degreeDetails: any) => {
+  const token = Cookies.get("candidate_access_token");
+  const advancedId = Cookies.get("advanced_education1_id");
+  
   return await axios.patch(
     `${API_URL}register/advanced-education/${advancedId}/`,
     degreeDetails,
-    config
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
   );
 };
 
 export const getAdvancedDegree = async () => {
+  const token = Cookies.get("candidate_access_token");
+
+  const advancedId = Cookies.get("advanced_education1_id");
   const { data } = await axios.get(
     `${API_URL}register/advanced-education/${advancedId}/`,
-    config
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
   );
   return data;
 };
@@ -80,28 +112,55 @@ export const submitWorkExperience = async (
   workData: any,
   experienceData: any
 ) => {
+  const token = Cookies.get("candidate_access_token");
+
+  const careerId = Cookies.get("career_id");
+  const work_experience_id = Cookies.get("work_experience_id");
   return await Promise.all([
-    axios.patch(`${API_URL}register/career/${careerId}/`, workData, config),
+    axios.patch(`${API_URL}register/career/${careerId}/`, workData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }),
     axios.patch(
       `${API_URL}register/job-experience/${work_experience_id}/`,
       experienceData,
-      config
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
     ),
   ]);
 };
 
 export const fetchCareerData = async () => {
-  const { data } = await axios.get(
-    `${API_URL}register/career/${careerId}/`,
-    config
-  );
+  const token = Cookies.get("candidate_access_token");
+
+  const careerId = Cookies.get("career_id");
+  const { data } = await axios.get(`${API_URL}register/career/${careerId}/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
   return data;
 };
 
 export const fetchJobExperienceData = async () => {
+  const token = Cookies.get("candidate_access_token");
+
+  const work_experience_id = Cookies.get("work_experience_id");
   const { data } = await axios.get(
     `${API_URL}register/job-experience/${work_experience_id}/`,
-    config
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
   );
   return data;
 };
@@ -110,17 +169,31 @@ export const submitRefereeDetails = async (
   referee1Data: any,
   referee2Data: any
 ) => {
+  const token = Cookies.get("candidate_access_token");
+
+  const referee1Id = Cookies.get("referee1_id");
+  const referee2Id = Cookies.get("referee2_id");
   try {
     await Promise.all([
       axios.patch(
         `${API_URL}register/loan-referee/${referee1Id}/`,
         referee1Data,
-        config
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
       ),
       axios.patch(
         `${API_URL}register/loan-referee/${referee2Id}/`,
         referee2Data,
-        config
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
       ),
     ]);
   } catch (error) {
@@ -130,22 +203,41 @@ export const submitRefereeDetails = async (
 };
 
 export const fetchReferee1 = async () => {
+  const token = Cookies.get("candidate_access_token");
+
+  const referee1Id = Cookies.get("referee1_id");
   const { data } = await axios.get(
     `${API_URL}register/loan-referee/${referee1Id}/`,
-    config
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
   );
   return data;
 };
 
 export const fetchReferee2 = async () => {
+  const token = Cookies.get("candidate_access_token");
+
+  const referee2Id = Cookies.get("referee2_id");
   const { data } = await axios.get(
     `${API_URL}register/loan-referee/${referee2Id}/`,
-    config
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
   );
   return data;
 };
 
 export const submitDocuments = async (documentsData: any) => {
+  const token = Cookies.get("candidate_access_token");
+
+  const verificationDocumentsId = Cookies.get("verification_document_id");
   return await axios.patch(
     `${API_URL}register/verification-documents/${verificationDocumentsId}/`,
     documentsData,
@@ -159,9 +251,17 @@ export const submitDocuments = async (documentsData: any) => {
 };
 
 export const fetchVerificationDocument = async () => {
+  const token = Cookies.get("candidate_access_token");
+
+  const verificationDocumentsId = Cookies.get("verification_document_id");
   const { data } = await axios.get(
     `${API_URL}register/verification-documents/${verificationDocumentsId}/`,
-    config
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
   );
   return data;
 };

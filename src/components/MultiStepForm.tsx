@@ -12,11 +12,11 @@ import { Step1, Step2, Step3, Step4, Step5 } from "@/pages/(root)/Candidates";
 import { FormData } from "@/types";
 import RegisterSuccessModal from "./RegisterSuccessModal";
 import {
-  hasAdvancedDegree,
   submitDocuments,
   submitEducationDetails,
   submitRefereeDetails,
   submitWorkExperience,
+  updateAdvancedDegree,
   updatePersonalDetails,
 } from "@/lib/actions/candidate.actions";
 import Cookies from "js-cookie";
@@ -119,7 +119,10 @@ const MultiStepForm = () => {
             candidate: id,
           };
 
-          await hasAdvancedDegree(advancedDegreeData);
+          console.log(advancedDegreeData);
+          
+
+          await updateAdvancedDegree(advancedDegreeData);
         }
       } else if (currentStep === 2) {
         // Step 3: WORK EXPERIENCE

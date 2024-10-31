@@ -36,7 +36,7 @@ const StateSelect = () => {
             >
               <option value="">Select your state</option>
               {states.map((state) => (
-                <option key={state.isoCode} value={state.isoCode}>
+                <option key={state.isoCode} value={state.name}>
                   {state.name}
                 </option>
               ))}

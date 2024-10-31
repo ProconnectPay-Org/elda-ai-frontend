@@ -86,7 +86,6 @@ const RefineResume = () => {
     const currentFormData = { ...formData, ...data };
 
     if (currentStep === steps.length - 1) {
-      console.log("Form Submitted:", currentFormData);
       if (resumeData && resumeData.resume) {
         window.open(`/refine-resume/final-resume/${id}`, "_blank");
       } else {

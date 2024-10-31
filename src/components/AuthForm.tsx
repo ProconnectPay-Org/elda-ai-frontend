@@ -37,7 +37,7 @@ const AuthForm = () => {
       const response = await adminSignIn({
         email: data.email,
         password: data.password,
-      });
+      });      
 
       if (response) {
         toast({
@@ -63,7 +63,9 @@ const AuthForm = () => {
           Cookies.set("education_id", response.candidate.education[0], {
             expires: 7,
           });
-          Cookies.set("career_id", response.candidate.career[0], { expires: 7 });
+          Cookies.set("career_id", response.candidate.career[0], {
+            expires: 7,
+          });
           Cookies.set(
             "verification_document_id",
             response.candidate.verification_documents[0],
@@ -74,13 +76,31 @@ const AuthForm = () => {
             response.candidate.job_experience[0],
             { expires: 7 }
           );
+          Cookies.set(
+            "advanced_education1_id",
+            response.advanced_education[0],
+            {
+              expires: 7,
+            }
+          );
+          Cookies.set(
+            "advanced_education2_id",
+            response.advanced_education[1],
+            {
+              expires: 7,
+            }
+          );
           Cookies.set("referee1_id", response.candidate.loan_referees[0], {
             expires: 7,
           });
           Cookies.set("referee2_id", response.candidate.loan_referees[1], {
             expires: 7,
           });
-          navigate("/register");
+          if (response.candidate.has_completed_application) {
+            navigate("/candidate/status");
+          } else {
+            navigate("/register");
+          }
         } else {
           navigate("/");
         }

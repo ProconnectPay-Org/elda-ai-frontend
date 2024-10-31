@@ -1,4 +1,3 @@
-// components/CountrySelect.tsx
 import React, { useEffect, useState } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import { Country } from "country-state-city";
@@ -18,8 +17,9 @@ const CountrySelect: React.FC<CountrySelectProps> = ({
 }) => {
   const {
     control,
+    setValue,
     formState: { errors },
-  } = useFormContext(); // Destructure errors from formState
+  } = useFormContext();
   const [countries, setCountries] = useState<ICountry[]>([]);
 
   useEffect(() => {
@@ -40,7 +40,14 @@ const CountrySelect: React.FC<CountrySelectProps> = ({
             <select
               id={name}
               value={value}
-              onChange={onChange}
+              onChange={(e) => {
+                const selectedIsoCode = e.target.value;
+                const selectedCountry = countries.find(
+                  (country) => country.isoCode === selectedIsoCode
+                );
+                setValue(name, selectedCountry?.name || "");
+                onChange(selectedIsoCode);
+              }}
               className={`border border-gray-border w-full h-[42px] shadow-none bg-white rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 ${
                 errors[name] ? "border-red-500" : ""
               }`}

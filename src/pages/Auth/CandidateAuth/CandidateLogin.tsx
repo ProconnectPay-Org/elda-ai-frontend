@@ -40,10 +40,9 @@ const CandidateLogin = () => {
       const response = await adminSignIn({
         email: data.email,
         password: data.password,
-      });
+      });      
 
       if (response) {
-        console.log(response);
         const userRole = response.user.role;
 
         Cookies.set("user_role", userRole, { expires: 7 });
@@ -81,8 +80,6 @@ const CandidateLogin = () => {
           description: "Signed in successfully",
           variant: "success",
         });
-
-        // Redirect based on application status
         if (response.candidate.has_completed_application) {
           navigate("/candidate/status");
         } else {

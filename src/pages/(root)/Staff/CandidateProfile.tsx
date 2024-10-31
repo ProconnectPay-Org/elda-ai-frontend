@@ -25,8 +25,6 @@ const CandidateProfile = () => {
     staleTime: 5 * 1000 * 60,
   });
 
-  console.log(candidate);
-
   if (isLoading || !candidate) {
     return (
       <RootLayout title="Candidate Profile">

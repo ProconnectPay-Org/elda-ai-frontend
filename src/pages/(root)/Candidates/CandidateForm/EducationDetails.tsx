@@ -51,17 +51,15 @@ const EducationDetails = () => {
 
     if (advancedDegreeData) {
       console.log(advancedDegreeData);
-      Cookies.set("advancedId", advancedDegreeData.id);
-
       setValue(
         "advancedDegreeType",
-        advancedDegreeData.advanced_degree_name || ""
+        advancedDegreeData.advanced_degree_type || ""
       );
       setValue("graduateType", advancedDegreeData.graduate_type || "");
       setValue("advancedCountry", advancedDegreeData.country || "");
       setValue("advancedDegreeClass", advancedDegreeData.class_of_degree || "");
-      setValue("advancedInstitutionName", advancedDegreeData.institution || "");
-      setValue("advancedCurrentCGPA", advancedDegreeData.current_cgpa || "");
+      setValue("advancedInstitutionName", advancedDegreeData.school_name || "");
+      setValue("advancedCurrentCGPA", advancedDegreeData.specific_cgpa || "");
       setValue("advancedYearAdmitted", advancedDegreeData.year_admitted || "");
       setValue(
         "advancedYearGraduated",
@@ -385,10 +383,10 @@ const EducationDetails = () => {
                     {...register("advancedDegreeClass")}
                   >
                     <option value="">Select class of degree</option>
-                    <option value="first">First Class</option>
-                    <option value="secondUpper">Second Class Upper</option>
-                    <option value="secondLower">Second Class Lower</option>
-                    <option value="third">Third Class</option>
+                    <option value="first_class">First Class</option>
+                    <option value="second_class">Second Class</option>
+                    <option value="third_class">Third Class</option>
+                    <option value="no_class">No Class</option>
                     <option value="other">Other</option>
                   </select>
                   {svgSpan}

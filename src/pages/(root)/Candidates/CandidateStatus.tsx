@@ -31,9 +31,7 @@ const StatusBox = ({
 };
 
 const CandidateStatus = () => {
-  const { loggedInUser } = useAuth();
-  console.log(loggedInUser);
-  
+  const { loggedInUser } = useAuth();  
 
   return (
     <CandidateLayout>
