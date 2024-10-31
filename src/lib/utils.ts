@@ -87,8 +87,8 @@ export const step1Schema = z.object({
   houseAddress: z.string().nonempty("House address is required"),
 });
 
-// Define a base schema for common fields
-const baseSchema = z.object({
+// Existing Step 2 Schema
+export const step2Schema = z.object({
   currentStatus: z.string().min(1, { message: "Current status is required" }),
   degreeType: z.string().min(1, { message: "Degree type is required" }),
   countryOfEducation: z.string().min(1, { message: "Country is required" }),
@@ -105,50 +105,15 @@ const baseSchema = z.object({
     .string()
     .min(4, { message: "Year graduated must be a positive integer" }),
   advancedDegree: z.enum(["yes", "no"]).transform((val) => val === "yes"),
+  advancedDegreeType: z.string().optional(),
+  graduateType: z.string().optional(),
+  advancedCountry: z.string().optional(),
+  advancedDegreeClass: z.string().optional(),
+  advancedInstitutionName: z.string().optional(),
+  advancedCurrentCGPA: z.string().optional(),
+  advancedYearAdmitted: z.string().optional(),
+  advancedYearGraduated: z.string().optional(),
 });
-
-// Define a schema for users with an advanced degree
-const advancedDegreeSchema = z.object({
-  advancedDegreeType: z
-    .string()
-    .min(1, { message: "Advanced Degree Type is required" }),
-  graduateType: z.string().min(1, { message: "Graduate Type is required" }),
-  advancedCountry: z.string().min(1, { message: "Country is required" }),
-  advancedDegreeClass: z
-    .string()
-    .min(1, { message: "Class of degree is required" }),
-  advancedInstitutionName: z
-    .string()
-    .min(1, { message: "Name of tertiary institution is required" }),
-  advancedCurrentCGPA: z
-    .string()
-    .min(1, { message: "Current CGPA is required" }),
-  advancedYearAdmitted: z
-    .string()
-    .min(4, { message: "Year admitted must be a positive integer" }),
-  advancedYearGraduated: z
-    .string()
-    .min(4, { message: "Year graduated must be a positive integer" }),
-});
-
-// Combine the base schema with the conditional advanced degree schema
-export const step2Schema = baseSchema.refine(
-  (data) => {
-    if (data.advancedDegree === true) {
-      try {
-        advancedDegreeSchema.safeParse(data);
-        return true;
-      } catch {
-        return false;
-      }
-    }
-    return true; // If 'advancedDegree' is 'no', no need to check advanced fields
-  },
-  {
-    path: ["advancedDegree"], // Show error on the 'advancedDegree' field if validation fails
-    message: "All advanced degree fields are required when 'Yes' is selected",
-  }
-);
 
 export const step3Schema = z.object({
   profession: z.string().min(2, "Profession is required"),

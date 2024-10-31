@@ -5,11 +5,9 @@ import CountrySelect from "@/components/CountrySelect";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  fetchEducationData,
-  getAdvancedDegree,
-} from "@/lib/actions/candidate.actions";
+import { fetchEducationData } from "@/lib/actions/candidate.actions";
 import Cookies from "js-cookie";
+import AdvancedDegree from "@/components/AdvancedDegree";
 
 const EducationDetails = () => {
   const {
@@ -19,20 +17,12 @@ const EducationDetails = () => {
     formState: { errors },
   } = useFormContext<Step2FormData>();
   const educationId = Cookies.get("education_id");
-  const advancedId = Cookies.get("advanced_education1_id");
 
   const { isLoading: isEducationLoading, data } = useQuery({
     queryKey: ["educationData", educationId],
     queryFn: fetchEducationData,
     staleTime: 5 * 1000,
     enabled: !!educationId,
-  });
-
-  const { isLoading: isAdvancedLoading, data: advancedDegreeData } = useQuery({
-    queryKey: ["advancedDegreeData", advancedId],
-    queryFn: getAdvancedDegree,
-    staleTime: 5 * 1000,
-    enabled: !!advancedId,
   });
 
   useEffect(() => {
@@ -48,25 +38,7 @@ const EducationDetails = () => {
       setValue("yearGraduated", String(data.year_graduated) || "");
       setValue("advancedDegree", data.has_advanced_degree ? "yes" : "no");
     }
-
-    if (advancedDegreeData) {
-      console.log(advancedDegreeData);
-      setValue(
-        "advancedDegreeType",
-        advancedDegreeData.advanced_degree_type || ""
-      );
-      setValue("graduateType", advancedDegreeData.graduate_type || "");
-      setValue("advancedCountry", advancedDegreeData.country || "");
-      setValue("advancedDegreeClass", advancedDegreeData.class_of_degree || "");
-      setValue("advancedInstitutionName", advancedDegreeData.school_name || "");
-      setValue("advancedCurrentCGPA", advancedDegreeData.specific_cgpa || "");
-      setValue("advancedYearAdmitted", advancedDegreeData.year_admitted || "");
-      setValue(
-        "advancedYearGraduated",
-        advancedDegreeData.year_graduated || ""
-      );
-    }
-  }, [data, advancedDegreeData, setValue]);
+  }, [data, setValue]);
 
   const hasAdvancedDegree = watch("advancedDegree") === "yes";
 
@@ -95,7 +67,7 @@ const EducationDetails = () => {
     </span>
   );
 
-  const isLoading = isEducationLoading || isAdvancedLoading;
+  const isLoading = isEducationLoading;
 
   return (
     <div className="flex flex-col gap-10">
@@ -314,167 +286,7 @@ const EducationDetails = () => {
         </div>
       </div>
 
-      {hasAdvancedDegree && (
-        <div className="border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
-          <div className="flex flex-col gap-8">
-            <div className={outerDivClass}>
-              <div className={divClass}>
-                <label htmlFor="advancedDegreeType">
-                  Advanced Degree Type <span className="text-red">*</span>
-                </label>
-                <div className="relative">
-                  <select
-                    className={inputClass}
-                    id="advancedDegreeType"
-                    {...register("advancedDegreeType")}
-                  >
-                    <option value="">Select advanced degree type</option>
-                    <option value="masters">Masters</option>
-                    <option value="phd">PHD</option>
-                    <option value="other">Other</option>
-                  </select>
-                  {svgSpan}
-                </div>
-                {errors.advancedDegreeType && (
-                  <span className="text-red text-sm">
-                    {getErrorMessage(errors.advancedDegreeType)}
-                  </span>
-                )}
-              </div>
-              <div className={divClass}>
-                <label htmlFor="graduateType">
-                  Graduate Type <span className="text-red">*</span>
-                </label>
-                <div className="relative">
-                  <select
-                    className={inputClass}
-                    id="graduateType"
-                    {...register("graduateType")}
-                  >
-                    <option value="">Select advanced degree type</option>
-                    <option value="research">Research</option>
-                    <option value="taught">Taught</option>
-                    <option value="other">Other</option>
-                  </select>
-                  {svgSpan}
-                </div>
-                {errors.graduateType && (
-                  <span className="text-red text-sm">
-                    {getErrorMessage(errors.graduateType)}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <div className={outerDivClass}>
-              <CountrySelect
-                label="Country"
-                name="advancedCountry"
-                smallText="location of the school you attended"
-              />
-              <div className={divClass}>
-                <label htmlFor="advancedDegreeClass">
-                  Class of Degree <span className="text-red">*</span>
-                </label>
-                <div className="relative">
-                  <select
-                    className={inputClass}
-                    id="advancedDegreeClass"
-                    {...register("advancedDegreeClass")}
-                  >
-                    <option value="">Select class of degree</option>
-                    <option value="first_class">First Class</option>
-                    <option value="second_class">Second Class</option>
-                    <option value="third_class">Third Class</option>
-                    <option value="no_class">No Class</option>
-                    <option value="other">Other</option>
-                  </select>
-                  {svgSpan}
-                </div>
-                {errors.advancedDegreeClass && (
-                  <span className="text-red text-sm">
-                    {getErrorMessage(errors.advancedDegreeClass)}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <div className={outerDivClass}>
-              <div className={divClass}>
-                <label htmlFor="advancedInstitutionName">
-                  Name of tertiary institution attended{" "}
-                  <span className="text-red">*</span>
-                </label>
-                <input
-                  className={inputClass}
-                  id="advancedInstitutionName"
-                  {...register("advancedInstitutionName")}
-                  placeholder="Enter the name of institution"
-                />
-                {errors.advancedInstitutionName && (
-                  <span className="text-red text-sm">
-                    {getErrorMessage(errors.advancedInstitutionName)}
-                  </span>
-                )}
-              </div>
-              <div className={divClass}>
-                <label htmlFor="advancedCurrentCGPA">
-                  Specific CGPA (e.g 3.5/5.0){" "}
-                  <span className="text-red">*</span>
-                </label>
-                <input
-                  className={inputClass}
-                  id="advancedCurrentCGPA"
-                  {...register("advancedCurrentCGPA")}
-                  placeholder="Enter your current CGPA"
-                />
-                {errors.advancedCurrentCGPA && (
-                  <span className="text-red text-sm">
-                    {getErrorMessage(errors.advancedCurrentCGPA)}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <div className={outerDivClass}>
-              <div className={divClass}>
-                <label htmlFor="advancedYearAdmitted">
-                  Year Admitted <span className="text-red">*</span>
-                </label>
-                <input
-                  className={`${inputClass} pr-1`}
-                  id="advancedYearAdmitted"
-                  type="number"
-                  {...register("advancedYearAdmitted")}
-                  placeholder="Enter the year you were admitted"
-                />
-                {errors.advancedYearAdmitted && (
-                  <span className="text-red text-sm">
-                    {getErrorMessage(errors.advancedYearAdmitted)}
-                  </span>
-                )}
-              </div>
-              <div className={divClass}>
-                <label htmlFor="advancedYearGraduated">
-                  Year Graduated <span className="text-red">*</span>
-                </label>
-                <input
-                  className={`${inputClass} pr-1`}
-                  id="advancedYearGraduated"
-                  type="number"
-                  {...register("advancedYearGraduated")}
-                  placeholder="Enter the year you graduated"
-                />
-                {errors.advancedYearGraduated && (
-                  <span className="text-red text-sm">
-                    {getErrorMessage(errors.advancedYearGraduated)}
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {hasAdvancedDegree && <AdvancedDegree />}
     </div>
   );
 };

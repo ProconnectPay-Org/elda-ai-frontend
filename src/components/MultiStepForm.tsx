@@ -90,6 +90,8 @@ const MultiStepForm = () => {
         };
         await updatePersonalDetails(personalData);
       } else if (currentStep === 1) {
+        console.log(currentFormData);
+        
         // Step 2: EDUCATION DETAILS
         const educationData = {
           current_status: currentFormData.currentStatus,
@@ -118,9 +120,6 @@ const MultiStepForm = () => {
             year_admitted: currentFormData.advancedYearAdmitted,
             candidate: id,
           };
-
-          console.log(advancedDegreeData);
-          
 
           await updateAdvancedDegree(advancedDegreeData);
         }
