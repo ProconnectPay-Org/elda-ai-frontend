@@ -129,10 +129,10 @@ export const allTabsColumns: ColumnDef<AllCandidates>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem>
-              <Link to={`/refine-resume/final-resume/${payment.id}`}>View Resume</Link>
+              <Link target="_blank" to={`/download-resume/${payment.id}`}>View Resume</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link to={`/craft-sop/${payment.id}`}>View Crafted SOP</Link>
+              <Link target="_blank" to={`/craft-sop/${payment.id}`}>View Crafted SOP</Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

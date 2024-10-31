@@ -31,6 +31,7 @@ const ResumePdf = () => {
   }
   return (
     <div className="border md:min-w-[484px] space-y-5 pb-5 max-w-[800px] mx-auto min-h-svh rounded-lg overflow-hidden">
+      {" "}
       <div className="bg-[#F1F8F9] p-5 w-full flex flex-col items-center gap-3">
         <h1 className="font-bold underline text-lg uppercase">
           {formData?.user?.full_name}
@@ -75,7 +76,6 @@ const ResumePdf = () => {
           ))}
         </div>
       </div>
-
       <div className="space-y-2 px-5 w-full">
         <h2 className="text-[#102694] font-bold text-lg">
           CAREER STRATEGIC PURPOSE
@@ -86,7 +86,6 @@ const ResumePdf = () => {
             "Not Provided"}
         </p>
       </div>
-
       <div className="space-y-2 px-5 w-full">
         <h2 className="text-[#102694] font-bold text-lg">BIODATA</h2>
         <div>
@@ -125,7 +124,6 @@ const ResumePdf = () => {
           </div>
         </div>
       </div>
-
       <div className="space-y-2 px-5 w-full">
         <h2 className="text-[#102694] font-bold text-lg">WORK EXPERIENCE</h2>
         {formData?.job_experience?.map((experience: JobExperience) => (
@@ -156,7 +154,6 @@ const ResumePdf = () => {
           </div>
         ))}
       </div>
-
       <div className="space-y-1 px-5 w-full">
         <h2 className="text-[#102694] font-bold text-lg">
           TRAININGS AND EDUCATION
@@ -188,7 +185,6 @@ const ResumePdf = () => {
           )
         )}
       </div>
-
       <div className="px-5 w-full">
         <h2 className="text-[#102694] font-bold text-lg">REFERENCES</h2>
         <p className="text-sm">Available on request</p>
