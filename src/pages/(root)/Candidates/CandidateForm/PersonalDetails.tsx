@@ -28,18 +28,20 @@ const PersonalDetails = () => {
   });
 
   useEffect(() => {
-    if (candidateData) {
+    if (candidateData) {      
       setValue("firstName", candidateData.data.first_name || "");
       setValue("middleName", candidateData.data.middle_name || "");
       setValue("surname", candidateData.data.last_name || "");
       setValue("preferredName", candidateData.data.preferred_call_name || "");
-      setValue("dateOfBirth", candidateData.data.birth_date || "");
       setValue("gender", candidateData.data.gender || "");
+      setValue("dateOfBirth", candidateData.data.birth_date || "");
       setValue("cityOfBirth", candidateData.data.city_of_birth || "");
       setValue("stateOfBirth", candidateData.data.state_of_birth || "");
       setValue("countryOfBirth", candidateData.data.country_of_birth || "");
       setValue("emailAddress", candidateData.data.email_address || "");
       setValue("phoneNumber", candidateData.data.phone_number || "");
+      setValue("countryOfResidence", candidateData.data.country_current_reside || "");
+      setValue("stateOfResidence", candidateData.data.state_current_reside || "");
       setValue("cityOfResidence", candidateData.data.city_current_reside || "");
       setValue("houseAddress", candidateData.data.current_house_address || "");
       setValue("postalAddress", candidateData.data.postal_code || "");
