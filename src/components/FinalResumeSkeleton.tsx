@@ -1,9 +1,8 @@
-import RootLayout from "@/layouts/RootLayout";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const FinalResumeSkeleton = () => {
   return (
-    <RootLayout title="Final Resume Refined">
+    <>
       <div className="border md:min-w-[484px] space-y-5 pb-5 max-w-[600px] mx-auto min-h-svh rounded-lg overflow-hidden">
         {/* Header Section */}
         <div className="bg-[#F1F8F9] p-5 w-full flex flex-col items-center gap-3">
@@ -101,7 +100,7 @@ const FinalResumeSkeleton = () => {
       <div className="mt-5 md:mt-8 w-full flex items-center justify-end">
         <Skeleton className="h-10 w-32 rounded-md" />
       </div>
-    </RootLayout>
+    </>
   );
 };
 

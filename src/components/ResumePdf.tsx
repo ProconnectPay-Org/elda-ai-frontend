@@ -31,7 +31,6 @@ const ResumePdf = () => {
   }
   return (
     <div className="border md:min-w-[484px] space-y-5 pb-5 max-w-[800px] mx-auto min-h-svh rounded-lg overflow-hidden">
-      {" "}
       <div className="bg-[#F1F8F9] p-5 w-full flex flex-col items-center gap-3">
         <h1 className="font-bold underline text-lg uppercase">
           {formData?.user?.full_name}
