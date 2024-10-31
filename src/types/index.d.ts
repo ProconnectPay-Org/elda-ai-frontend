@@ -219,19 +219,19 @@ export type WorkHistory = {
   position: string;
   company: string;
   year: string;
-}
+};
 
 export type Sop = {
   id: number;
   text: string;
   file: string;
   candidate: number;
-}
+};
 
 export type CareerInterest = {
   id: number;
   name: string;
-}
+};
 
 export type CandidateCareer = {
   id: number;
@@ -242,7 +242,7 @@ export type CandidateCareer = {
   years_of_experience_post_degree: number;
   years_of_experience_pre_graduation: number;
   jobs_to_show: number;
-}
+};
 
 export type JobExperience = {
   id: number;
@@ -299,7 +299,6 @@ export type AdvancedEducation = {
 export type CandidateData = {
   id: string;
   user?: User;
-  advanced_education: string[];
   assigned_course: string;
   assigned_university: string;
   birth_date?: string;
@@ -324,6 +323,7 @@ export type CandidateData = {
   status: string;
   phone_number: string;
   profession?: string;
+  advanced_education: AdvancedEducation[];
   sop: Sop[];
   resume: Resume[];
   education: EducationHistory[];

@@ -116,7 +116,7 @@ const BioData = () => {
             </div>
             <div className="flex flex-col sm:w-1/2">
               <label htmlFor="interest" className="text-[#344054]">
-                Interest
+                Interest(s)
               </label>
               <input
                 className="border border-gray-border rounded-full py-2 px-4"

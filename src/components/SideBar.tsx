@@ -13,8 +13,8 @@ const SideBar = () => {
           to="/"
           className="flex cursor-pointer items-center justify-center w-[240px] h-20 mb-8"
         >
-          <div className="flex items-center justify-center w-[160px] sm:w-[240px]">
-            <img src={Logo} alt="logo" className="w-full h-full scale-150" />
+          <div className="flex items-center justify-center w-[160px] sm:w-[240px] sm:h-[160px] overflow-hidden">
+            <img src={Logo} alt="logo" className="w-full h-full scale-150 sm:object-cover" />
           </div>
         </Link>
         {sidebarLinks.map((item) => {

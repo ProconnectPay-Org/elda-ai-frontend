@@ -23,6 +23,8 @@ const WorkExperience = () => {
 
   useEffect(() => {
     if (singleCandidate) {
+      console.log(singleCandidate);
+      
       const foundCandidate = singleCandidate;
       setValue("nameOfCompany", foundCandidate.job_experience[0].business_name || "");
       setValue("typeOfCompany", foundCandidate.job_experience[0].job_summary || "");

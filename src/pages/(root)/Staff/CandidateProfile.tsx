@@ -25,6 +25,8 @@ const CandidateProfile = () => {
     staleTime: 5 * 1000 * 60,
   });
 
+  console.log(candidate);
+
   if (isLoading || !candidate) {
     return (
       <RootLayout title="Candidate Profile">
@@ -83,7 +85,8 @@ const CandidateProfile = () => {
               {candidate?.preferred_call_name || "No name provided"}
             </p>
             <p>
-              Profession: {candidate?.profession || "No profession provided"}
+              Profession:{" "}
+              {candidate?.career[0].profession || "No profession provided"}
             </p>
             <p>
               Course:{" "}
@@ -159,6 +162,26 @@ const CandidateProfile = () => {
             </p>
           </span>
         )) || <p>No education history available</p>}
+
+        {/* Advanced Education */}
+        {candidate?.advanced_education?.map((education, index: number) =>
+          education.year_admitted === null ? (
+            ""
+          ) : (
+            <span key={index} className="flex gap-5 items-center">
+              <p className="text-[#5E6366] font-semibold md:w-60">
+                {`${education.year_admitted || "No year set"} - ${
+                  education.year_graduated || "No year set"
+                }`}
+              </p>
+              <p className="font-semibold capitalize">
+                {`${education.advanced_degree_type} in ${
+                  education.graduate_type
+                } at ${education.school_name || "No school"}`}
+              </p>
+            </span>
+          )
+        ) || <p>No education history available</p>}
       </div>
       <hr className="w-full h-2 my-8" />
       <div className="flex flex-col gap-4">

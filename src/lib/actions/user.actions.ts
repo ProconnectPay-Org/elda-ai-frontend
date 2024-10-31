@@ -120,7 +120,7 @@ export const getAllCandidates = async () => {
 };
 
 export const getSingleCandidate = async (id: number | string) => {
-  const token = getToken();
+  const token =  Cookies.get("staff_access_token") || Cookies.get("access_token");
   if (!token) throw new Error("Access token is missing. Please sign in again.");
 
   const response = await axios.get(`${API_URL}all-candidates/${id}/`, {
