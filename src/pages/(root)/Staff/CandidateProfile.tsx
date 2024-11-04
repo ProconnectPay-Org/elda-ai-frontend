@@ -235,7 +235,7 @@ const CandidateProfile = () => {
         <div className="text-[#5E6366]">
           {candidate?.job_experience?.map((job) => job.job_summary) || (
             <span className="flex gap-4 items-center">
-              <p>No career strategic purpose provided</p>
+              <p>No job summary provided</p>
             </span>
           )}
         </div>

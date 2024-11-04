@@ -102,7 +102,7 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const { id, resume_status, sop_status } = row.original;
+      const { id, resume_status, sop_status, sop } = row.original;
 
       const isResumeDisabled = resume_status !== "Completed";
       const isSopDisabled = sop_status !== "Completed";
@@ -131,7 +131,7 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Link
-                to={`/craft-sop/${id}`}
+                to={`${sop[0]?.file}`}
                 target="_blank"
                 className={
                   isSopDisabled ? "text-gray-400 cursor-not-allowed pointer-events-none" : ""

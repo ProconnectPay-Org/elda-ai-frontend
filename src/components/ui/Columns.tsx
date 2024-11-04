@@ -69,7 +69,9 @@ export const columns: ColumnDef<CandidateData>[] = [
       </div>
     ),
     cell: ({ row }) => (
-      <p className="capitalize text-center">{row.original.sop_status || "No name"}</p>
+      <p className="capitalize text-center">
+        {row.original.sop_status || "No name"}
+      </p>
     ),
   },
   {
@@ -89,7 +91,10 @@ export const columns: ColumnDef<CandidateData>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original;
+      const { id, resume_status, sop_status, sop } = row.original;      
+
+      const isResumeDisabled = resume_status !== "Completed";
+      const isSopDisabled = sop_status !== "Completed";
 
       return (
         <DropdownMenu>
@@ -100,18 +105,30 @@ export const columns: ColumnDef<CandidateData>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuLabel>Other Actions</DropdownMenuLabel>
             <DropdownMenuItem>
-              <Link to={`/refine-resume/${payment.id}`}>Refine Resume</Link>
+              <Link
+                to={
+                  isResumeDisabled
+                    ? `/refine-resume/${id}`
+                    : `/download-resume/${id}`
+                }
+                target="_blank"
+              >
+                {isResumeDisabled ? "Refine Resume" : "View Resume"}
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link to={`/craft-sop/${payment.id}`}>Craft SOP</Link>
+              <Link
+                to={isSopDisabled ? `/craft-sop/${id}` : `${sop[0]?.file}`}
+                target="_blank"
+              >
+                {isSopDisabled ? "Craft SOP" : "View Crafted SOP"}
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy candidate ID
+            <DropdownMenuItem>
+              <Link to={`/assigned-candidates/${id}`}>Candidate Profile</Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
