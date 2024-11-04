@@ -10,6 +10,9 @@ import {
 } from "./ui/dropdown-menu";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Link } from "react-router-dom";
+import { Country } from "country-state-city";
+
+const countries = Country.getAllCountries();
 
 export const allTabsColumns: ColumnDef<CandidateData>[] = [
   {
@@ -26,20 +29,12 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
   {
     accessorKey: "country",
     header: "Country",
-    cell: ({ row }) => (
-      <p className="capitalize">
-        {row.original.country_of_birth || "No country"}
-      </p>
-    ),
-  },
-  {
-    accessorKey: "assigned_university",
-    header: "Assigned University",
-    cell: ({ row }) => (
-      <p className="capitalize">
-        {row.original.assigned_university || "None Assigned"}
-      </p>
-    ),
+    cell: ({ row }) => {
+      const countryIso = row.original.country_of_birth;
+      const country = countries.find((c) => c.isoCode === countryIso)?.name;
+
+      return <p className="capitalize">{country || "No country"}</p>;
+    },
   },
   {
     accessorKey: "assigned_course",
@@ -122,7 +117,9 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
                 to={`/download-resume/${id}`}
                 target="_blank"
                 className={
-                  isResumeDisabled ? "text-gray-400 cursor-not-allowed pointer-events-none" : ""
+                  isResumeDisabled
+                    ? "text-gray-400 cursor-not-allowed pointer-events-none"
+                    : ""
                 }
                 aria-disabled={isResumeDisabled}
               >
@@ -134,7 +131,9 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
                 to={`${sop[0]?.file}`}
                 target="_blank"
                 className={
-                  isSopDisabled ? "text-gray-400 cursor-not-allowed pointer-events-none" : ""
+                  isSopDisabled
+                    ? "text-gray-400 cursor-not-allowed pointer-events-none"
+                    : ""
                 }
                 aria-disabled={isSopDisabled}
               >

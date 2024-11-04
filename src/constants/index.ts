@@ -123,6 +123,8 @@ export const careerOptions: OptionType[] = [
   { value: "Data Science", label: "Data Science" },
   { value: "Graphic Design", label: "Graphic Design" },
   { value: "Marketing", label: "Marketing" },
+  { value: "Artificial Intelligence", label: "Artificial Intelligence" },
+  { value: "Machine Learning", label: "Machine Learning" },
   { value: "Finance", label: "Finance" },
   { value: "Healthcare Administration", label: "Healthcare Administration" },
   { value: "Mechanical Engineering", label: "Mechanical Engineering" },
@@ -162,6 +164,28 @@ export const statusProps = [
     title: "Extra School Application Submission",
     status: "Not Started",
   },
+];
+
+export const degreeOptions = [
+  "Bachelor of Science (BSC)",
+  "Bachelor of Arts (B.A)",
+  "Bachelor of Engineering (B.ENG)",
+  "Bachelor of Medicine and Bachelor of Surgery (MBBS)",
+  "Bachelor in Law (LLB)",
+  "Master of Education (M.ED)",
+  "Bachelor of Pharmacy",
+  "Bachelor of Nursing",
+  "Bachelor of Medical Laboratory Science",
+  "Bachelor of Technology",
+  "Master of Science (MSC)",
+  "Master of Arts (MA)",
+  "Master of Engineering (M.ENG)",
+  "Master of Law (LLM)",
+  "Master of Education (M.ED)",
+  "Master of Pharmacy",
+  "Master of Nursing",
+  "Master of Medical Laboratory Science",
+  "Master of Technology",
 ];
 
 export const supportedSchools = [

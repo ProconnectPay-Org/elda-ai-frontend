@@ -8,6 +8,7 @@ import {
   EducationHistory,
   JobExperience,
 } from "@/types";
+import { getCountryNameFromISO } from "@/lib/utils";
 const ResumePdf = () => {
   const { id } = useParams<{ id: string }>();
 
@@ -22,6 +23,8 @@ const ResumePdf = () => {
     singleCandidateError,
   } = useCandidates(id);
 
+  console.log(formData);
+
   if (singleCandidateLoading) {
     return <FinalResumeSkeleton />;
   }
@@ -30,53 +33,41 @@ const ResumePdf = () => {
     return <div>Error fetching data</div>;
   }
   return (
-    <div className="border md:min-w-[484px] space-y-5 pb-5 max-w-[800px] mx-auto min-h-svh rounded-lg overflow-hidden">
+    <div className="border md:min-w-[484px] space-y-4 pb-5 max-w-[800px] mx-auto min-h-svh rounded-lg overflow-hidden">
       <div className="bg-[#F1F8F9] p-5 w-full flex flex-col items-center gap-3">
-        <h1 className="font-bold underline text-lg uppercase">
-          {formData?.user?.full_name}
+        <h1 className="font-bold text-4xl uppercase">
+          {formData?.first_name} {formData?.middle_name} {formData?.last_name}
         </h1>
         <div className="flex items-center flex-wrap justify-center gap-3">
+          <p className="text-sm text-blue-900">{formData?.email_address}</p>
+          <hr className="h-4 w-[2px] bg-black" />
+          <p className="text-sm">{formData?.phone_number}</p>
+          <hr className="h-4 w-[2px] bg-black" />
           <div>
-            <img src="" alt="" />
-            <p className="text-xs md:text-sm">{formData?.user?.email}</p>
-          </div>
-          <div>
-            <img src="" alt="" />
-            <p className="text-xs md:text-sm">{formData?.phone_number}</p>
-          </div>
-          <div>
-            <img src="" alt="" />
-            <p className="text-xs md:text-sm">
-              {formData?.city_current_reside}, {formData?.state_of_birth}{" "}
-              {formData?.country_of_birth}
+            <p className="text-sm">
+              {formData?.city_of_birth}, {formData?.state_of_birth} State,{" "}
+              {getCountryNameFromISO(formData?.country_of_birth)}
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          {formData?.career.map((item: CandidateCareer, index: number) => (
-            <div key={index} className="flex items-center gap-3">
-              <p className="text-sm font-semibold">{item.profession}</p>
-              <hr className="h-4 w-[2px] bg-black" />
-              {item.career_interests.map(
-                (interest: CareerInterest, interestIndex: number) => (
-                  <div key={interest.id} className="flex items-center gap-3">
-                    <p className="text-sm font-semibold">{interest.name}</p>
-                    {interestIndex < item.career_interests.length - 1 && (
-                      <hr className="h-4 w-[2px] bg-black" />
-                    )}
-                  </div>
-                )
-              )}
-              {index < formData.career.length - 1 && (
-                <hr className="h-4 w-[2px] bg-black" />
-              )}
-            </div>
-          ))}
+          <p className="text-sm font-semibold">{formData?.career[0].sector}</p>
+          <hr className="h-4 w-[2px] bg-black" />
+          <p className="text-sm font-semibold">
+            {formData?.career[0].profession}
+          </p>
+          <hr className="h-4 w-[2px] bg-black" />
+          <p className="text-sm font-semibold">Global Citizen</p>
+          <hr className="h-4 w-[2px] bg-black" />
+          <p className="text-sm font-semibold">
+            {formData?.job_experience[0].job_title}
+          </p>
         </div>
       </div>
-      <div className="space-y-2 px-5 w-full">
-        <h2 className="text-[#102694] font-bold text-lg">
+
+      <div className="px-5 w-full">
+        <h2 className="text-[#102694] font-bold text-base">
           CAREER STRATEGIC PURPOSE
         </h2>
         <p className="text-sm">
@@ -85,26 +76,27 @@ const ResumePdf = () => {
             "Not Provided"}
         </p>
       </div>
-      <div className="space-y-2 px-5 w-full">
-        <h2 className="text-[#102694] font-bold text-lg">BIODATA</h2>
+
+      <div className="px-5 w-full">
+        <h2 className="text-[#102694] font-bold text-base">PERSONAL BIODATA</h2>
         <div>
           <div className="flex">
-            <p className="font-medium w-[200px]">Date of Birth:</p>
-            <p className="font-medium w-[200px]">{formData?.birth_date}</p>
+            <p className="font-bold w-[200px] text-sm">Date of Birth:</p>
+            <p className="w-[200px] text-sm">{formData?.birth_date}</p>
           </div>
           <div className="flex">
-            <p className="font-medium w-[200px]">Gender:</p>
-            <p className="font-medium w-[200px]">{formData?.gender}</p>
+            <p className="font-bold w-[200px] text-sm">Gender:</p>
+            <p className="w-[200px] text-sm">{formData?.gender}</p>
           </div>
           <div className="flex">
-            <p className="font-medium w-[200px]">Nationality:</p>
-            <p className="font-medium w-[200px]">
-              {formData?.country_of_birth}
+            <p className="font-bold w-[200px] text-sm">Nationality:</p>
+            <p className="w-[200px] text-sm">
+              {getCountryNameFromISO(formData?.country_of_birth)}
             </p>
           </div>
           <div className="flex">
-            <p className="font-medium w-[200px]">Interests:</p>
-            <p className="font-medium">
+            <p className="font-bold w-[200px] text-sm">Interests:</p>
+            <p className="text-sm">
               {formData?.career
                 ?.flatMap((item: CandidateCareer) =>
                   item.career_interests.map(
@@ -116,55 +108,55 @@ const ResumePdf = () => {
           </div>
 
           <div className="flex">
-            <p className="font-medium w-[200px]">Preferred Call Name:</p>
-            <p className="font-medium w-[200px]">
+            <p className="font-bold w-[200px] text-sm">Preferred Call Name:</p>
+            <p className="w-[200px] text-sm">
               {formData?.preferred_call_name || "Not Provided"}
             </p>
           </div>
         </div>
       </div>
-      <div className="space-y-2 px-5 w-full">
-        <h2 className="text-[#102694] font-bold text-lg">WORK EXPERIENCE</h2>
+
+      <div className="px-5 w-full">
+        <h2 className="text-[#102694] font-bold text-base">WORK EXPERIENCE</h2>
         {formData?.job_experience?.map((experience: JobExperience) => (
           <div key={experience.id}>
             <div>
-              <p className="font-bold">
-                {experience.business_name} - {experience.job_title}
+              <p className="font-bold text-sm">
+                {experience.business_name}: {experience.job_title}
               </p>
               <div className="flex gap-3 items-center">
-                <p className="font-medium">
+                <p className="font-medium text-sm">
                   Location: {experience.state}, {experience.country}
                 </p>
                 <hr className="h-4 w-[2px] bg-black" />
-                <p className="font-medium">
+                <p className="font-medium text-sm">
                   Duration: {experience.year_started} - {experience.year_ended}
                 </p>
               </div>
             </div>
-            <div className="mt-4">
-              <p className="text-red font-bold">
-                JOB DESCRIPTION AND KEY ACHIEVEMENT(S)
-              </p>
-              <p className="text-sm font-semibold">
-                {experience.company_description}
+            <div className="">
+              <p className="text-red font-bold text-sm">
+                Job Description and Key Achievements
               </p>
               <p className="text-sm">{experience.job_summary}</p>
             </div>
           </div>
         ))}
       </div>
-      <div className="space-y-1 px-5 w-full">
-        <h2 className="text-[#102694] font-bold text-lg">
-          TRAININGS AND EDUCATION
+
+      <div className="px-5 w-full">
+        <h2 className="text-[#102694] font-bold text-base">
+          EDUCATION AND TRAINING
         </h2>
         {formData?.education?.map((item: EducationHistory) => (
           <div key={item.id}>
-            <p className="font-semibold capitalize">
+            <p className="font-semibold capitalize text-sm">
               {item.degree_type} ({item.specific_course_of_study}){" "}
-              {item.year_graduated}
             </p>
-            <p className="text-sm">
-              {item.school_name}, {item.country}
+            <p className="text-sm flex gap-2 items-center">
+              {item.school_name}, {getCountryNameFromISO(item.country)}{" "}
+              <hr className="h-4 w-[2px] bg-black" />
+              Graduated {item.year_graduated}
             </p>
           </div>
         ))}
@@ -173,19 +165,21 @@ const ResumePdf = () => {
             ""
           ) : (
             <div key={item.id}>
-              <p className="font-semibold capitalize">
+              <p className="font-semibold flex gap-2 text-sm capitalize">
                 {item.advanced_degree_type} ({item.graduate_type}){" "}
-                {item.year_graduated}
+                <hr className="h-4 w-[2px] bg-black" />
+                Graduated {item.year_graduated}
               </p>
               <p className="text-sm">
-                {item.school_name}, {item.country}
+                {item.school_name}, {getCountryNameFromISO(item.country)}
               </p>
             </div>
           )
         )}
       </div>
+
       <div className="px-5 w-full">
-        <h2 className="text-[#102694] font-bold text-lg">REFERENCES</h2>
+        <h2 className="text-[#102694] font-bold text-base">REFERENCES</h2>
         <p className="text-sm">Available on request</p>
       </div>
     </div>

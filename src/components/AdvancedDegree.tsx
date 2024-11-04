@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAdvancedDegree } from "@/lib/actions/candidate.actions";
 import Cookies from "js-cookie";
 import { Loader2 } from "lucide-react";
+import { degreeOptions } from "@/constants";
 
 const AdvancedDegree = () => {
   const {
@@ -92,9 +93,8 @@ const AdvancedDegree = () => {
                 {...register("advancedDegreeType")}
               >
                 <option value="">Select advanced degree type</option>
-                <option value="masters">Masters</option>
-                <option value="phd">PHD</option>
-                <option value="other">Other</option>
+                <option value="MSC">MSC</option>
+                <option value="MBA">MBA</option>
               </select>
               {svgSpan}
             </div>
@@ -114,10 +114,11 @@ const AdvancedDegree = () => {
                 id="graduateType"
                 {...register("graduateType")}
               >
-                <option value="">Select advanced degree type</option>
-                <option value="research">Research</option>
-                <option value="taught">Taught</option>
-                <option value="other">Other</option>
+                {degreeOptions.map((option, index) => (
+                  <option value={option} key={index}>
+                    {option}
+                  </option>
+                ))}
               </select>
               {svgSpan}
             </div>
@@ -150,7 +151,6 @@ const AdvancedDegree = () => {
                 <option value="second_class">Second Class</option>
                 <option value="third_class">Third Class</option>
                 <option value="no_class">No Class</option>
-                <option value="other">Other</option>
               </select>
               {svgSpan}
             </div>

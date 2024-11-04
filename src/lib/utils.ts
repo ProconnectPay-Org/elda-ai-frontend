@@ -2,7 +2,18 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { z } from "zod";
 import { FieldError, Merge, FieldErrorsImpl } from "react-hook-form";
+import { Country } from "country-state-city";
 
+/**
+ * Converts an ISO country code to the full country name.
+ * @param {string} isoCode - The ISO country code.
+ * @returns {string} - The full country name or "Unknown" if not found.
+ */
+
+export function getCountryNameFromISO(isoCode: string) {
+  const country = Country.getCountryByCode(isoCode);
+  return country ? country.name : "Unknown";
+}
 interface ToastConfig {
   variant: "success" | "destructive";
   title: string;
