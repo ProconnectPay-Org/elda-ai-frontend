@@ -16,6 +16,7 @@ import {
   submitEducationDetails,
   submitRefereeDetails,
   submitWorkExperience,
+  toggleApplicationStatus,
   updateAdvancedDegree,
   updatePersonalDetails,
 } from "@/lib/actions/candidate.actions";
@@ -193,7 +194,7 @@ const MultiStepForm = () => {
 
         await submitDocuments(documentsData);
         setIsSubmitted(true);
-        // Redirect after 3 seconds
+        await toggleApplicationStatus();
         setTimeout(() => {
           navigate("/candidate/status");
         }, 3000);

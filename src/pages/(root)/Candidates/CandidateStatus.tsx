@@ -1,11 +1,14 @@
 import CandidateLayout from "@/layouts/CandidateLayout";
-import { ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import IconCheck from "@/assets/icon-check.svg";
 import ExclamationRed from "@/assets/exclamation-red.svg";
 import ExclamationWhite from "@/assets/exclamation-white.svg";
 import IconProgress from "@/assets/icon-progress.svg";
 import { statusProps } from "@/constants";
 import useAuth from "@/hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
+import { fetchVerificationDocument } from "@/lib/actions/candidate.actions";
+import { useState } from "react";
 
 const StatusBox = ({
   text,
@@ -25,18 +28,39 @@ const StatusBox = ({
           <p className="text-[10px] text-center text-gray-text">{status}</p>
         </div>
       </div>
-      <ChevronRight color="red" size={20} />
+      {/* <ChevronRight color="red" size={20} /> */}
     </div>
   );
 };
 
 const CandidateStatus = () => {
-  const { loggedInUser } = useAuth();  
+  const { loggedInUser } = useAuth();
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const { data } = useQuery({
+    queryKey: ["documents"],
+    queryFn: fetchVerificationDocument,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const documents = {
+    bank_statement: "Bank Statement",
+    bsc_hnd_certificate: "BSc/HND Certificate",
+    current_cv: "Current CV",
+    first_degree_transcript: "First Degree Transcript",
+    intl_passport: "International Passport",
+    nin_slip: "NIN Slip",
+    post_graduate_certificate: "Post-Graduate Certificate",
+    post_graduate_transcript: "Post-Graduate Transcript",
+    utility_bill: "Utility Bill",
+  };
 
   return (
     <CandidateLayout>
       <section className="md:max-w-[880px] mx-auto space-y-10">
-        <h1 className="font-bold text-4xl">Welcome, {loggedInUser?.full_name}</h1>
+        <h1 className="font-bold text-4xl">
+          Welcome, {loggedInUser?.full_name}
+        </h1>
 
         <div className="h-[80px] rounded-2xl w-full p-5 bg-gradient-to-r from-red to-[#919293] gap-2 flex items-center">
           <img src={ExclamationWhite} alt="exclamation mark" />
@@ -60,6 +84,48 @@ const CandidateStatus = () => {
               status={item.status}
             />
           ))}
+          <div
+            className="w-full h-[60px] rounded-2xl bg-[#F5F7F9] flex justify-between items-center p-5 cursor-pointer"
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            <div className="flex items-center gap-4">
+              <p className="font-semibold text-2xl text-red">
+                Verification Documents
+              </p>
+              <div className="border border-red px-2 h-6 flex items-center gap-2 rounded-md">
+                <img src={IconProgress} alt="Progress Icon" />
+                <p className="text-[10px] text-center text-gray-text">
+                  In Progress
+                </p>
+              </div>
+            </div>
+            {!isExpanded ? (
+              <ChevronRight color="red" size={20} />
+            ) : (
+              <ChevronDown color="red" size={20} />
+            )}
+          </div>
+          {isExpanded && (
+            <div className="space-y-4 m-4">
+              {Object.entries(documents).map(([key, label]) => (
+                <div key={key} className="flex justify-between items-center">
+                  <p className="text-lg font-semibold">{label}</p>
+                  {data?.[key] ? (
+                    <a
+                      href={data[key]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-green-600 underline"
+                    >
+                      Uploaded
+                    </a>
+                  ) : (
+                    <span className="text-red-600">Not Uploaded</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </CandidateLayout>

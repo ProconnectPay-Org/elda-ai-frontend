@@ -79,7 +79,7 @@ export const hasAdvancedDegree = async (degreeDetails: any) => {
 export const updateAdvancedDegree = async (degreeDetails: any) => {
   const token = Cookies.get("candidate_access_token");
   const advancedId = Cookies.get("advanced_education1_id");
-  
+
   return await axios.patch(
     `${API_URL}register/advanced-education/${advancedId}/`,
     degreeDetails,
@@ -256,6 +256,22 @@ export const fetchVerificationDocument = async () => {
   const verificationDocumentsId = Cookies.get("verification_document_id");
   const { data } = await axios.get(
     `${API_URL}register/verification-documents/${verificationDocumentsId}/`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return data;
+};
+
+export const toggleApplicationStatus = async () => {
+  const token = Cookies.get("candidate_access_token");
+  const canId = Cookies.get("candidate_id");
+
+  const { data } = await axios.get(
+    `${API_URL}register/toggle-application-status/${canId}/`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
