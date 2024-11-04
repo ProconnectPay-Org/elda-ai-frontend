@@ -1,13 +1,13 @@
+import { useState } from "react";
 import { FormControl, FormField, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { Control, FieldPath } from "react-hook-form";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-// Define the form schema and its inferred type
 const schema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
-  // Optional fields
   gender: z.string().optional(),
   fullName: z.string().optional(),
   dateOfBirth: z.string().optional(),
@@ -20,7 +20,6 @@ const schema = z.object({
 
 type FormSchema = z.infer<typeof schema>;
 
-// Define a type for the CustomInput component with constraints
 interface CustomInputProps<T extends FormSchema> {
   control: Control<T>;
   name: FieldPath<T>;
@@ -29,7 +28,6 @@ interface CustomInputProps<T extends FormSchema> {
   className?: string;
 }
 
-// Update the CustomInput component to use generic type T
 const CustomInput = <T extends FormSchema>({
   control,
   name,
@@ -37,6 +35,14 @@ const CustomInput = <T extends FormSchema>({
   placeholder,
   className,
 }: CustomInputProps<T>) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const isPasswordField =
+    name === "password" ||
+    name === "newPassword" ||
+    name === "currentPassword" ||
+    name === "confirmPassword";
+
   return (
     <FormField
       control={control}
@@ -44,16 +50,30 @@ const CustomInput = <T extends FormSchema>({
       render={({ field }) => (
         <div className={className}>
           <FormLabel className="form-label">{label}</FormLabel>
-          <div className="flex w-full flex-col">
+          <div className="flex w-full flex-col relative">
             <FormControl>
               <Input
                 id={name}
                 placeholder={placeholder}
                 className="input-class"
-                type={name === "password" ? "password" : "text"}
+                type={
+                  isPasswordField && showPassword
+                    ? "text"
+                    : isPasswordField
+                    ? "password"
+                    : "text"
+                }
                 {...field}
               />
             </FormControl>
+            {isPasswordField && (
+              <div
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </div>
+            )}
             <FormMessage className="form-message mt-2" />
           </div>
         </div>

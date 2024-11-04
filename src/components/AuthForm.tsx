@@ -173,20 +173,6 @@ const AuthForm = () => {
           </div>
         </form>
       </Form>
-
-      {/* <div className="flex items-center my-4">
-        <div className="flex-grow border-t border-gray-300"></div>
-        <span className="mx-4 text-gray-500">OR</span>
-        <div className="flex-grow border-t border-gray-300"></div>
-      </div> */}
-
-      {/* <Button
-        variant={"outline"}
-        className="w-full bg-white text-[#333333] border-[#333333] gap-2"
-      >
-        <img src={GoogleIcon} alt="google icon" />
-        Continue with Google
-      </Button> */}
     </section>
   );
 };

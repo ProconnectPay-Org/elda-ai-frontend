@@ -20,14 +20,14 @@ const navbarLinks = [
     route: "/candidate/status",
     label: "Status",
   },
-  {
-    route: "/candidate/view",
-    label: "View",
-  },
-  {
-    route: "/feedback",
-    label: "Feedback",
-  },
+  // {
+  //   route: "/candidate/view",
+  //   label: "View",
+  // },
+  // {
+  //   route: "/feedback",
+  //   label: "Feedback",
+  // },
   {
     route: "/masterclass",
     label: "LinkedIn Masterclass",

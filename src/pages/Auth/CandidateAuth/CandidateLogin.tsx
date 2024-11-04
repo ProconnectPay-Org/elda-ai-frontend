@@ -9,7 +9,6 @@ import { Form } from "@/components/ui/form";
 import CustomInput from "@/components/CustomInput";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
 import { adminSignIn } from "@/lib/actions/user.actions";
 import { toast } from "@/components/ui/use-toast";
 import { CustomAxiosError } from "@/types";
@@ -135,10 +134,6 @@ const CandidateLogin = () => {
                 label="Password"
                 placeholder="Enter your password"
               />
-              <div className="flex gap-1 items-center">
-                <Checkbox className="w-4 h-4 rounded-none flex p-1 items-center justify-center" />
-                <small>Remember me</small>
-              </div>
             </div>
 
             <div className="flex flex-col gap-4">
