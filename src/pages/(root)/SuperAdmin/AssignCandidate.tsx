@@ -8,7 +8,7 @@ import {
   assignCandidateToStaff,
   getAllStaff,
 } from "@/lib/actions/user.actions";
-import { AllCandidates, OptionType } from "@/types";
+import { CandidateData, OptionType } from "@/types";
 import { toast } from "@/components/ui/use-toast";
 import { useCandidates } from "@/hooks/useCandidiates";
 import { useQuery } from "@tanstack/react-query";
@@ -81,9 +81,9 @@ const AssignCandidate: React.FC = () => {
   useEffect(() => {
     if (allCandidates) {
       const unassignedCandidates = allCandidates.results.filter(
-        (candidate: AllCandidates) => !candidate.assigned
+        (candidate: CandidateData) => !candidate.assigned
       );
-      const options = unassignedCandidates.map((candidate: AllCandidates) => ({
+      const options = unassignedCandidates.map((candidate: CandidateData) => ({
         value: candidate.id,
         label: candidate.user?.full_name,
       }));
@@ -93,11 +93,12 @@ const AssignCandidate: React.FC = () => {
 
   useEffect(() => {
     if (staffResponse && staffResponse.results) {
-      const options = staffResponse.results.map((staff: AllCandidates) => ({
+      const options = staffResponse.results.map((staff: CandidateData) => ({
         value: staff.id,
         label: staff.user?.full_name,
       }));
       setStaffOptions(options);
+      setError("");
     } else {
       setError("Failed to fetch staff.");
     }

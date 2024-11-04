@@ -113,6 +113,34 @@ const CandidateProfile = () => {
               </div>
             </div>
             <p className="text-xs">Candidate ID: {id}</p>
+            <div className="flex items-center gap-4">
+              <button className="text-sm bg-red text-white rounded-lg p-2">
+                <Link
+                  to={
+                    candidate.resume_status === "Completed"
+                      ? `/refine-resume/final-resume/${id}`
+                      : `/refine-resume/${id}`
+                  }
+                >
+                  {candidate.resume_status === "Completed"
+                    ? "View Resume"
+                    : "Refine Resume"}
+                </Link>
+              </button>
+              <button className="text-sm bg-red text-white rounded-lg p-2">
+                <Link
+                  to={
+                    candidate.sop_status === "Completed"
+                      ? `${candidate.sop[0].file}`
+                      : `/craft-sop/${id}`
+                  }
+                >
+                  {candidate.sop_status === "Completed"
+                    ? "View SOP"
+                    : "Craft SOP"}
+                </Link>
+              </button>
+            </div>
           </div>
         </div>
         <div>

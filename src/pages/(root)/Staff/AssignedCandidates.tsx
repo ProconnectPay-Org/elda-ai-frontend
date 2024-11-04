@@ -66,15 +66,15 @@ const AssignedCandidates = () => {
         serial_number: index + 1,
         name: `${candidate.user?.full_name}` || "No name",
         status: candidate.status || "Inactive",
-        recommended_course: candidate.assigned_course || "No course assigned",
+        recommended_course: candidate.education[0].specific_course_of_study || "No course assigned",
         recommended_school:
-          candidate.assigned_university || "No school assigned",
+        candidate.education[0].school_name || "No school assigned",
         resume: candidate.resume_status || "Not Started",
         sop_status: candidate.sop_status || "Not Started",
         school_application_status:
-          candidate.school_application_status || "Not available",
+        candidate.school_application_status || "Not available",
       })
-    ) || [];
+    ) || [];    
 
   const handleRowClick = (row: CandidateData) => {
     setSelectedRowData(row);

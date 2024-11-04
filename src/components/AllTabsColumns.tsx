@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "./ui/button";
-import { AllCandidates } from "@/types";
+import { CandidateData } from "@/types";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +11,7 @@ import {
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Link } from "react-router-dom";
 
-export const allTabsColumns: ColumnDef<AllCandidates>[] = [
+export const allTabsColumns: ColumnDef<CandidateData>[] = [
   {
     accessorKey: "serialNumber",
     header: "S/N",
@@ -27,7 +27,9 @@ export const allTabsColumns: ColumnDef<AllCandidates>[] = [
     accessorKey: "country",
     header: "Country",
     cell: ({ row }) => (
-      <p className="capitalize">{row.original.country_of_birth || "No country"}</p>
+      <p className="capitalize">
+        {row.original.country_of_birth || "No country"}
+      </p>
     ),
   },
   {
@@ -96,27 +98,14 @@ export const allTabsColumns: ColumnDef<AllCandidates>[] = [
       </div>
     ),
   },
-  // {
-  //   accessorKey: "duplicate",
-  //   header: () => <div className="text-center">Duplicate</div>,
-  //   cell: ({ row }) => (
-  //     <div className="flex justify-center">
-  //       <Button
-  //         className="bg-[#D74632] w-full"
-  //         onClick={() =>
-  //           alert(`Duplicate: ${row.original.duplicate || "none"}`)
-  //         }
-  //       >
-  //         {row.original.duplicate || "none"}
-  //       </Button>
-  //     </div>
-  //   ),
-  // },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original;
+      const { id, resume_status, sop_status } = row.original;
+
+      const isResumeDisabled = resume_status !== "Completed";
+      const isSopDisabled = sop_status !== "Completed";
 
       return (
         <DropdownMenu>
@@ -129,10 +118,28 @@ export const allTabsColumns: ColumnDef<AllCandidates>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem>
-              <Link target="_blank" to={`/download-resume/${payment.id}`}>View Resume</Link>
+              <Link
+                to={`/download-resume/${id}`}
+                target="_blank"
+                className={
+                  isResumeDisabled ? "text-gray-400 cursor-not-allowed pointer-events-none" : ""
+                }
+                aria-disabled={isResumeDisabled}
+              >
+                View Resume
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link target="_blank" to={`/craft-sop/${payment.id}`}>View Crafted SOP</Link>
+              <Link
+                to={`/craft-sop/${id}`}
+                target="_blank"
+                className={
+                  isSopDisabled ? "text-gray-400 cursor-not-allowed pointer-events-none" : ""
+                }
+                aria-disabled={isSopDisabled}
+              >
+                View Crafted SOP
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

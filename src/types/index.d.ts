@@ -299,6 +299,7 @@ export type AdvancedEducation = {
 export type CandidateData = {
   id: string;
   user?: User;
+  assigned: boolean;
   assigned_course: string;
   assigned_university: string;
   birth_date?: string;
@@ -308,8 +309,8 @@ export type CandidateData = {
   country_current_reside: string;
   country_of_birth: string;
   date_of_birth: string;
+  duplicate?: string;
   email_address: string;
-  serial_number: number;
   name: string;
   preferred_call_name: string;
   recommended_school: string;
@@ -318,6 +319,7 @@ export type CandidateData = {
   resume_status?: string;
   gender?: string;
   sop_status?: string;
+  serial_number: number;
   school_application_status: "Pending" | "Complete" | "Started";
   state_of_birth: string;
   status: string;
@@ -335,25 +337,11 @@ export type CandidateData = {
   advanced_education: AdvancedEducation[];
 };
 
-declare interface AllCandidates {
-  id?: number;
-  assigned_university: string;
-  assigned_course: string;
-  sop_status?: string;
-  country_of_birth: string;
-  resume_status?: string;
-  school_application_status?: string;
-  assigned: boolean;
-  duplicate?: string;
-  serialNumber?: number;
-  user?: User;
-}
-
 declare interface AllCandidatesResponse {
   count: number;
   next: string | null;
   previous: string | null;
-  results: AllCandidates[];
+  results: CandidateData[];
 }
 
 declare interface AllStaff {

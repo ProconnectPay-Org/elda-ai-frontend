@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon, Loader2 } from "lucide-react";
+import { ChevronLeftIcon } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -7,11 +7,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import sendIcon from "@/assets/send.svg";
-import sendIcon2 from "@/assets/send-2.svg";
 import { useEffect, useState } from "react";
-import { refinePrompt } from "@/lib/actions/user.actions";
 import { useCandidates } from "@/hooks/useCandidiates";
+import { supportedSchools } from "@/constants";
 
 const Step2 = ({
   prevStep,
@@ -21,8 +19,6 @@ const Step2 = ({
   candidateId: string;
 }) => {
   const [manualDescription, setManualDescription] = useState("");
-  const [refinedDescription, setRefinedDescription] = useState("");
-  const [refineLoading, setRefineLoading] = useState(false);
   const [programType, setProgramType] = useState("");
   const [assignedUniversity, setAssignedUniversity] = useState("");
   const [assignedCourse, setAssignedCourse] = useState("");
@@ -38,8 +34,10 @@ const Step2 = ({
   useEffect(() => {
     if (singleCandidate) {
       setProgramType(singleCandidate.education[0].degree_type || "");
-      setAssignedUniversity(singleCandidate.assigned_university || "");
-      setAssignedCourse(singleCandidate.assigned_course || "");
+      setAssignedUniversity(singleCandidate.education[0].school_name || "");
+      setAssignedCourse(
+        singleCandidate.education[0].specific_course_of_study || ""
+      );
       setYearsOfExperience(singleCandidate.yearsOfExperience?.toString() || "");
     }
   }, [singleCandidate]);
@@ -51,19 +49,6 @@ const Step2 = ({
   if (singleCandidateError) {
     return <div>Error fetching data</div>;
   }
-
-  const handleRefine = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setRefineLoading(true);
-    try {
-      const refinedContent = await refinePrompt({ prompt: manualDescription });
-      setRefinedDescription(refinedContent?.refined_content || "");
-    } catch (error) {
-      console.error("Error refining prompt:", error);
-    } finally {
-      setRefineLoading(false);
-    }
-  };
 
   return (
     <>
@@ -87,10 +72,10 @@ const Step2 = ({
                   <SelectValue placeholder="MBA" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="HND">HND</SelectItem>
+                  <SelectItem value="hnd">HND</SelectItem>
                   <SelectItem value="master">Masters</SelectItem>
                   <SelectItem value="bsc">First Degree</SelectItem>
-                  <SelectItem value="MBA">MBA</SelectItem>
+                  <SelectItem value="mba">MBA</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -103,17 +88,14 @@ const Step2 = ({
                 onValueChange={setAssignedUniversity}
               >
                 <SelectTrigger className="w-full p-0 h-full rounded-none bg-transparent outline-none border-none focus:outline-none focus-visible:outline-none active:border-none focus:border-none">
-                  <SelectValue placeholder="Havard University" />
+                  <SelectValue placeholder="Assign a university" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="harvard">Harvard University</SelectItem>
-                  <SelectItem value="britain">
-                    Great Britain University
-                  </SelectItem>
-                  <SelectItem value="crawford">Crawford University</SelectItem>
-                  <SelectItem value="manitoba">
-                    University Of Manitoba
-                  </SelectItem>
+                  {supportedSchools.map((school, index) => (
+                    <SelectItem key={index} value={school.name}>
+                      {school.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -161,7 +143,7 @@ const Step2 = ({
                 onChange={(e) => setManualDescription(e.target.value)}
               />
             </div>
-            <div className="flex flex-row justify-between items-end gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-2 px-4">
+            {/* <div className="flex flex-row justify-between items-end gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-2 px-4">
               <div>
                 <label htmlFor="refinedCourseDescription" className="text-sm">
                   Generate Course Description
@@ -181,7 +163,7 @@ const Step2 = ({
                   <img src={sendIcon2} alt="send icon" />
                 )}
               </button>
-            </div>
+            </div> */}
           </div>
 
           {/* <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">

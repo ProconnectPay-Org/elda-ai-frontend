@@ -71,7 +71,7 @@ const InviteEmployee = () => {
         } else {
           toast({
             title: "Error",
-            description: errorData.detail || "An error occurred.",
+            description: errorData.password[0] || "An error occurred.",
             variant: "destructive",
           });
         }
@@ -145,7 +145,7 @@ const InviteEmployee = () => {
               <label htmlFor="password">Password</label>
               <div className="flex border border-gray-border justify-between gap-2 items-center py-2 px-4 rounded-lg">
                 <input
-                  type="password"
+                  type="text"
                   className="border-none w-full focus:outline-none"
                   id="password"
                   placeholder="Enter a password for staff"
