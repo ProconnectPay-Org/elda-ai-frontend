@@ -1,5 +1,5 @@
 import { getInitials } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarFallback } from "./ui/avatar";
 import useAuth from "@/hooks/useAuth";
 import { Button } from "./ui/button";
 
@@ -9,8 +9,7 @@ const Footer = () => {
   return (
     <div className="flex items-center justify-start gap-4">
       <Avatar>
-        <AvatarImage src="https://github.com/shadcn.png" />
-        <AvatarFallback>
+        <AvatarFallback className="bg-red">
           {getInitials(loggedInUser?.full_name || "")}
         </AvatarFallback>
       </Avatar>
