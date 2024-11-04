@@ -32,6 +32,16 @@ export const logoutAccount = async (role: "candidate" | "staff" | "admin") => {
       break;
     case "candidate":
       Cookies.remove("candidate_access_token");
+      Cookies.remove("user_role");
+      Cookies.remove("candidate_id");
+      Cookies.remove("education_id");
+      Cookies.remove("career_id");
+      Cookies.remove("verification_document_id");
+      Cookies.remove("work_experience_id");
+      Cookies.remove("advanced_education1_id");
+      Cookies.remove("advanced_education2_id");
+      Cookies.remove("referee1_id");
+      Cookies.remove("referee2_id");
       break;
     default:
       console.log("Invalid role");
@@ -120,7 +130,8 @@ export const getAllCandidates = async () => {
 };
 
 export const getSingleCandidate = async (id: number | string) => {
-  const token =  Cookies.get("staff_access_token") || Cookies.get("access_token");
+  const token =
+    Cookies.get("staff_access_token") || Cookies.get("access_token");
   if (!token) throw new Error("Access token is missing. Please sign in again.");
 
   const response = await axios.get(`${API_URL}all-candidates/${id}/`, {

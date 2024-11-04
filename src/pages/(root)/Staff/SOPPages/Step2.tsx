@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
 import { useCandidates } from "@/hooks/useCandidiates";
-import { supportedSchools } from "@/constants";
 
 const Step2 = ({
   prevStep,
@@ -38,7 +37,9 @@ const Step2 = ({
       setAssignedCourse(
         singleCandidate.education[0].specific_course_of_study || ""
       );
-      setYearsOfExperience(singleCandidate.yearsOfExperience?.toString() || "");
+      setYearsOfExperience(
+        singleCandidate.career[0].years_of_experience_post_degree || ""
+      );
     }
   }, [singleCandidate]);
 
@@ -74,7 +75,7 @@ const Step2 = ({
                 <SelectContent>
                   <SelectItem value="hnd">HND</SelectItem>
                   <SelectItem value="master">Masters</SelectItem>
-                  <SelectItem value="bsc">First Degree</SelectItem>
+                  <SelectItem value="bachelor">Bachelor</SelectItem>
                   <SelectItem value="mba">MBA</SelectItem>
                 </SelectContent>
               </Select>
@@ -83,21 +84,11 @@ const Step2 = ({
               <label htmlFor="assignedUniversity" className="text-sm">
                 Assigned University
               </label>
-              <Select
+              <input
+                type="text"
                 value={assignedUniversity}
-                onValueChange={setAssignedUniversity}
-              >
-                <SelectTrigger className="w-full p-0 h-full rounded-none bg-transparent outline-none border-none focus:outline-none focus-visible:outline-none active:border-none focus:border-none">
-                  <SelectValue placeholder="Assign a university" />
-                </SelectTrigger>
-                <SelectContent>
-                  {supportedSchools.map((school, index) => (
-                    <SelectItem key={index} value={school.name}>
-                      {school.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                className="bg-transparent outline-none"
+              />
             </div>
           </div>
 
@@ -106,16 +97,11 @@ const Step2 = ({
               <label htmlFor="assignedCourse" className="text-sm">
                 Assigned Course
               </label>
-              <Select value={assignedCourse} onValueChange={setAssignedCourse}>
-                <SelectTrigger className="w-full p-0 h-full rounded-none bg-transparent outline-none border-none focus:outline-none focus-visible:outline-none active:border-none focus:border-none">
-                  <SelectValue placeholder="Project Management" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="light">HND</SelectItem>
-                  <SelectItem value="dark">Masters</SelectItem>
-                  <SelectItem value="system">First Degree</SelectItem>
-                </SelectContent>
-              </Select>
+              <input
+                type="text"
+                value={assignedCourse}
+                className="bg-transparent outline-none"
+              />
             </div>
             <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
               <label htmlFor="email" className="text-sm">
@@ -130,68 +116,18 @@ const Step2 = ({
             </div>
           </div>
 
-          <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
-            <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
-              <label htmlFor="courseDescription" className="text-sm">
-                Manually Add Course Description
-              </label>
-              <textarea
-                className="border-none w-full focus:outline-none bg-transparent"
-                id="courseDescription"
-                placeholder="A brief course description"
-                value={manualDescription}
-                onChange={(e) => setManualDescription(e.target.value)}
-              />
-            </div>
-            {/* <div className="flex flex-row justify-between items-end gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-2 px-4">
-              <div>
-                <label htmlFor="refinedCourseDescription" className="text-sm">
-                  Generate Course Description
-                </label>
-                <textarea
-                  className="border-none w-full focus:outline-none bg-transparent"
-                  id="refinedCourseDescription"
-                  value={refinedDescription}
-                  onChange={(e) => setRefinedDescription(e.target.value)}
-                  placeholder="Generated description will appear here"
-                />
-              </div>
-              <button onClick={handleRefine} disabled={refineLoading}>
-                {refineLoading ? (
-                  <Loader2 className="animate-spin" />
-                ) : (
-                  <img src={sendIcon2} alt="send icon" />
-                )}
-              </button>
-            </div> */}
+          <div className="flex flex-col gap-2 border border-gray-border w-full rounded-lg py-1 px-4">
+            <label htmlFor="courseDescription" className="text-sm">
+              Manually Add Course Description
+            </label>
+            <textarea
+              className="border-none w-full focus:outline-none bg-transparent"
+              id="courseDescription"
+              placeholder="A brief course description"
+              value={manualDescription}
+              onChange={(e) => setManualDescription(e.target.value)}
+            />
           </div>
-
-          {/* <div className="flex flex-col lg:flex-row justify-between w-full gap-6 lg:gap-12 items-center">
-            <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
-              <label htmlFor="email" className="text-sm">
-                Manually Add School Description
-              </label>
-              <input
-                className="border-none w-full focus:outline-none bg-transparent"
-                id="email"
-                placeholder="Lorem ipsum dolor sit amet consectetur. Sit rhoncus"
-              />
-            </div>
-            <div className="flex flex-row justify-between items-end gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-2 px-4">
-              <div>
-                <label htmlFor="text" className="text-sm">
-                  Generate School Description
-                </label>
-                <input
-                  className="border-none w-full focus:outline-none bg-transparent"
-                  id="text"
-                />
-              </div>
-              <button>
-                <img src={sendIcon2} alt="send icon" />
-              </button>
-            </div>
-          </div> */}
         </div>
       </div>
       <div className="flex items-center mt-10 justify-end w-full">
