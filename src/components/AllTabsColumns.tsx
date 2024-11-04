@@ -10,9 +10,7 @@ import {
 } from "./ui/dropdown-menu";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Link } from "react-router-dom";
-import { Country } from "country-state-city";
-
-const countries = Country.getAllCountries();
+import { getCountryNameFromISO } from "@/lib/utils";
 
 export const allTabsColumns: ColumnDef<CandidateData>[] = [
   {
@@ -30,9 +28,7 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
     accessorKey: "country",
     header: "Country",
     cell: ({ row }) => {
-      const countryIso = row.original.country_of_birth;
-      const country = countries.find((c) => c.isoCode === countryIso)?.name;
-
+      const country = getCountryNameFromISO(row.original.country_of_birth);
       return <p className="capitalize">{country || "No country"}</p>;
     },
   },
