@@ -37,7 +37,16 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
     header: "Assigned Course",
     cell: ({ row }) => (
       <p className="capitalize">
-        {row.original.assigned_course || "No course assigned"}
+        {row.original.assigned_course1 || "No course assigned"}
+      </p>
+    ),
+  },
+  {
+    accessorKey: "assigned_school",
+    header: "Assigned School",
+    cell: ({ row }) => (
+      <p className="capitalize">
+        {row.original.assigned_university1 || "No school assigned"}
       </p>
     ),
   },

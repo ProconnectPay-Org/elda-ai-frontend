@@ -1,18 +1,22 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import CandidateLayout from "@/layouts/CandidateLayout";
-
-interface ComplaintFormData {
-  issue: string;
-  title: string;
-  body: string;
-}
+import { ComplaintType } from "@/types";
+import { postComplaints } from "@/lib/actions/candidate.actions";
 
 const Complaints = () => {
-  const [formData, setFormData] = useState<ComplaintFormData>({
-    issue: "",
-    title: "",
-    body: "",
+  const getDate = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const [formData, setFormData] = useState<ComplaintType>({
+    complaint: "",
+    complaint_status: "",
+    complaint_date: getDate(),
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionMessage, setSubmissionMessage] = useState<string | null>(
@@ -25,29 +29,28 @@ const Complaints = () => {
     setSubmissionMessage(null);
 
     // Simple validation check
-    if (!formData.issue || !formData.title || !formData.body) {
+    if (!formData.complaint || !formData.complaint_status) {
       setSubmissionMessage("All fields are required.");
       setIsSubmitting(false);
       return;
     }
 
+    console.log(formData);
+
     try {
-      // Replace with actual API call
-      await fakeApiCall(formData);
+      await postComplaints({
+        complaint: formData.complaint,
+        complaint_status: formData.complaint_status,
+        complaint_date: formData.complaint_date,
+      });
 
       setSubmissionMessage("Complaint submitted successfully.");
-      setFormData({ issue: "", title: "", body: "" }); // Reset form
+      setFormData({ complaint: "", complaint_status: "", complaint_date: "" }); // Reset form
     } catch (error) {
       setSubmissionMessage("Failed to submit complaint. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  // Simulate API call - replace with actual API call in production
-  const fakeApiCall = (data: ComplaintFormData) => {
-    console.log("Submitting data:", data); // Use the data for logging/debugging
-    return new Promise<void>((resolve) => setTimeout(resolve, 1000));
   };
 
   const handleChange = (
@@ -67,46 +70,43 @@ const Complaints = () => {
         </h1>
         <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
           <div className="flex flex-col w-full gap-1.5">
-            <label htmlFor="issue" className="text-[#666666]">
+            <label htmlFor="complaint" className="text-[#666666]">
               Issue Type
             </label>
             <select
-              name="issue"
-              id="issue"
-              value={formData.issue}
+              name="complaint"
+              id="complaint"
+              value={formData.complaint}
               onChange={handleChange}
               className="border px-4 rounded-lg py-3"
             >
               <option value="">--Select an issue type--</option>
-              <option value="signInError">Error while signing in</option>
-              <option value="documentNotFound">Cannot find document</option>
-              <option value="noResponse">No response</option>
+              <option value="School Application Issue">
+                School Application Issue
+              </option>
+              <option value="Loan Application Issue">
+                Loan Application Issue
+              </option>
+              <option value="Visa Processing Issue">
+                Visa Processing Issue
+              </option>
+              <option value="Other Issues">Other Issues</option>
             </select>
           </div>
+
           <div className="flex flex-col w-full gap-1.5">
-            <label htmlFor="title" className="text-[#666666]">
-              Title
-            </label>
-            <input
-              id="title"
-              name="title"
-              type="text"
-              value={formData.title}
-              onChange={handleChange}
-              className="w-full border rounded-lg px-4 py-3"
-            />
-          </div>
-          <div className="flex flex-col w-full gap-1.5">
-            <label htmlFor="body" className="text-[#666666]">
-              Body
+            <label htmlFor="complaint_status" className="text-[#666666]">
+              Describe your issue here
             </label>
             <textarea
-              id="body"
-              name="body"
-              value={formData.body}
+              id="complaint_status"
+              name="complaint_status"
+              value={formData.complaint_status}
               onChange={handleChange}
               className="w-full border rounded-lg px-4 py-3"
+              maxLength={255}
             />
+            <i className="text-xs">Max 255 characters</i>
           </div>
           {submissionMessage && (
             <p

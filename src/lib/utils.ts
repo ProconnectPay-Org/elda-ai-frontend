@@ -149,19 +149,17 @@ export const step3Schema = z.object({
     .string()
     .min(1, "Must be at least 1")
     .max(1, "Must be no more than 3"),
-  workPlaceName: z.string().min(2, "Name of work place is required"),
-  currentProfessionalStatus: z
-    .string()
-    .min(2, "Current professional status is required"),
-  currentJobTitle: z.string().min(2, "Current job title is required"),
-  employmentType: z.string().min(2, "Employment type is required"),
-  stateLocation: z.string().min(2, "State/Province location is required"),
-  countryLocation: z.string().min(2, "Country location is required"),
-  startedDate: z.string().min(2, "Start date is required"),
-  endedDate: z.string().min(2, "End date is required"),
-  jobStatus: z.string().min(2, "Job status is required"),
-  companyDescription: z.string().min(2, "Company description is required"),
-  jobSummary: z.string().min(2, "Job summary is required"),
+  workPlaceName: z.string().optional(),
+  currentProfessionalStatus: z.string().optional(),
+  currentJobTitle: z.string().optional(),
+  employmentType: z.string().optional(),
+  stateLocation: z.string().optional(),
+  countryLocation: z.string().optional(),
+  startedDate: z.string().optional(),
+  endedDate: z.string().optional(),
+  jobStatus: z.string().optional(),
+  companyDescription: z.string().optional(),
+  jobSummary: z.string().optional(),
 });
 
 // Define the allowed values for relationships

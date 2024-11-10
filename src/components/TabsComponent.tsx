@@ -15,15 +15,18 @@ const TabsComponent = () => {
       full_name: candidate.user?.full_name || "No name",
       country: candidate.country_of_birth || "No country",
       assigned_university:
-        candidate.education[0].school_name || "None Assigned",
+        candidate.assigned_university1 || "None Assigned",
       assigned_course:
-        candidate.education[0].specific_course_of_study || "No course assigned",
+        candidate.assigned_course1 || "No course assigned",
       school_application_status:
         candidate.school_application_status || "No status",
       resume_status: candidate.resume_status || "No status",
       sop_status: candidate.sop_status || "No status",
       duplicate: candidate.duplicate || "none",
     })) || [];
+
+    console.log(tableData)
+    
 
   const assignedData = tableData.filter((candidate) => candidate.assigned);
   const unassignedData = tableData.filter((candidate) => !candidate.assigned);

@@ -109,7 +109,7 @@ const ResumePdf = () => {
 
           <div className="flex">
             <p className="font-bold w-[200px] text-sm">Preferred Call Name:</p>
-            <p className="w-[200px] text-sm">
+            <p className="w-[200px] text-sm capitalize">
               {formData?.preferred_call_name || "Not Provided"}
             </p>
           </div>

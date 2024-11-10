@@ -11,7 +11,7 @@ const Staff = () => {
   const { data, isLoading, error } = useQuery<AllStaffResponse, Error>({
     queryKey: ["allStaff"],
     queryFn: getAllStaff,
-    staleTime: 2 * 60 * 1000,
+    staleTime: 1 * 60 * 1000,
   });
 
   const tableData: AllStaff[] =
@@ -24,7 +24,7 @@ const Staff = () => {
         ? staff.assigned_candidates.length
         : "0",
       permission: staff.permission || "No permissions granted",
-    })) || [];
+    })) || [];    
 
   if (error) {
     return <p className="text-center text-red-600">Error loading staff data</p>;

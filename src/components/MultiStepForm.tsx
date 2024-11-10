@@ -12,6 +12,7 @@ import { Step1, Step2, Step3, Step4, Step5 } from "@/pages/(root)/Candidates";
 import { FormData } from "@/types";
 import RegisterSuccessModal from "./RegisterSuccessModal";
 import {
+  postJobExperience,
   submitDocuments,
   submitEducationDetails,
   submitRefereeDetails,
@@ -34,7 +35,7 @@ const steps = [
 const totalSteps = steps.length;
 
 const MultiStepForm = () => {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(2);
   const [formData, setFormData] = useState<FormData>({} as FormData);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -92,7 +93,7 @@ const MultiStepForm = () => {
         await updatePersonalDetails(personalData);
       } else if (currentStep === 1) {
         console.log(currentFormData);
-        
+
         // Step 2: EDUCATION DETAILS
         const educationData = {
           current_status: currentFormData.currentStatus,
@@ -138,26 +139,36 @@ const MultiStepForm = () => {
           jobs_to_show: currentFormData.jobsToShowcase,
         };
 
-        const experienceData = {
-          business_name: currentFormData.workPlaceName,
-          professional_status: currentFormData.currentProfessionalStatus,
-          job_title: currentFormData.currentJobTitle,
-          employment_type: currentFormData.employmentType,
-          state: currentFormData.stateLocation,
-          country: currentFormData.countryLocation,
-          year_started: currentFormData.startedDate,
-          company_description: currentFormData.companyDescription,
-          job_summary: currentFormData.jobSummary,
-          year_ended: currentFormData.endedDate,
-          job_status: currentFormData.jobStatus,
-          candidate: id,
-        };
+        await submitWorkExperience(workData);
 
-        try {
-          await submitWorkExperience(workData, experienceData);
-        } catch (error) {
-          console.error("Error during requests:", error);
-        }
+        const jobCount = parseInt(currentFormData.jobsToShowcase, 10);
+        
+        if (jobCount > 0) {
+          const jobExperiences = [];
+          for (let i = 0; i < jobCount; i++) {
+            const experienceData = {
+              business_name: currentFormData[`workPlaceName${i}`],
+              professional_status:
+                currentFormData[`currentProfessionalStatus${i}`],
+              job_title: currentFormData[`currentJobTitle${i}`],
+              employment_type: currentFormData[`employmentType${i}`],
+              state: currentFormData[`stateLocation${i}`],
+              country: currentFormData[`countryLocation${i}`],
+              year_started: currentFormData[`startedDate${i}`],
+              company_description: currentFormData[`companyDescription${i}`],
+              job_summary: currentFormData[`jobSummary${i}`],
+              year_ended: currentFormData[`endedDate${i}`],
+              job_status: currentFormData[`jobStatus${i}`],
+              candidate: id,
+            };
+            jobExperiences.push(postJobExperience(experienceData));
+            console.log("Job Experience Data:", experienceData);
+          }
+          console.log("Job Experience Requests:", jobExperiences);
+          
+          
+          await Promise.all(jobExperiences);
+         }
       } else if (currentStep === 3) {
         // Step 4: REFEREE DETAILS
         const referee1Data = {

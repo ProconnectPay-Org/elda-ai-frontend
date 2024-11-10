@@ -1,6 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
+import { deleteStaff } from "@/lib/actions/user.actions";
 
 export const StaffColumns: ColumnDef<any>[] = [
   {
@@ -25,10 +26,6 @@ export const StaffColumns: ColumnDef<any>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-  //   {
-  //     accessorKey: "serialNumber",
-  //     header: "S/N",
-  //   },
   {
     accessorKey: "full_name",
     header: "Full Name",
@@ -44,7 +41,9 @@ export const StaffColumns: ColumnDef<any>[] = [
     accessorKey: "assigned_candidates",
     header: "Assigned Candidates",
     cell: ({ row }) => (
-      <p className="capitalize font-semibold">{row.original.assigned_candidates || "0"}</p>
+      <p className="capitalize font-semibold">
+        {row.original.assigned_candidates || "0"}
+      </p>
     ),
   },
   {
@@ -54,11 +53,25 @@ export const StaffColumns: ColumnDef<any>[] = [
   {
     accessorKey: "deleteAccount",
     header: () => <div className="text-center">Delete Account</div>,
-    cell: () => (
+    cell: ({ row }) => (
       <div className="flex justify-center">
         <Button
           className="bg-[#D74632]"
-          onClick={() => alert(`Status: Deleted`)}
+          onClick={async () => {
+            const confirmed = window.confirm(
+              `Are you sure you want to delete ${row.original.full_name}'s account?`
+            );
+
+            if (confirmed) {
+              try {
+                await deleteStaff(row.original.id);
+                alert(`Staff ${row.original.full_name} deleted successfully.`);
+              } catch (error) {
+                alert("Failed to delete staff. Please try again.");
+                console.error("Error deleting staff:", error);
+              }
+            }
+          }}
         >
           Delete Account
         </Button>

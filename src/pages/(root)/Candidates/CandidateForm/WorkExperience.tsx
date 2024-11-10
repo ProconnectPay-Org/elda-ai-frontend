@@ -25,7 +25,7 @@ const WorkExperience = () => {
     setValue,
     formState: { errors },
   } = useFormContext<Step3FormData>();
-  const [jobsCount, setJobsCount] = useState(0);
+  const [jobsCount, setJobsCount] = useState(1);
 
   const divClass = "flex flex-col w-full md:w-1/2";
   const outerDivClass =
@@ -63,15 +63,17 @@ const WorkExperience = () => {
         "yearsOfProfessionalExperiencePriorToGraduation",
         String(careerData.years_of_experience_pre_graduation || 0)
       );
-      setValue("jobsToShowcase", String(careerData.jobs_to_show || 0));
-      setJobsCount(careerData.jobs_to_show || 0);
+      setValue("jobsToShowcase", String(careerData.jobs_to_show || 1));
+      setJobsCount(careerData.jobs_to_show || 1);
     }
   }, [careerData, setValue]);
 
-  const handleJobsCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleJobsCountChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const count = parseInt(event.target.value, 10);
-    setJobsCount(count > 0 ? count : 0); // Update jobs count
-    setValue("jobsToShowcase", event.target.value); // Update form value
+    setJobsCount(count > 0 ? count : 1);
+    setValue("jobsToShowcase", event.target.value);
   };
 
   const isLoading = isWorkExpLoading;
@@ -293,10 +295,11 @@ const WorkExperience = () => {
       {/* Reuseable Job Container */}
       <div>
         {[...Array(jobsCount)].map((_, index) => (
-          <ReuseableJobs key={index} />
+          <ReuseableJobs
+            key={index}
+          />
         ))}
       </div>
-
     </div>
   );
 };

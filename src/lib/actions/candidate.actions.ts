@@ -1,3 +1,4 @@
+import { ComplaintType } from "@/types";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -108,14 +109,10 @@ export const getAdvancedDegree = async () => {
   return data;
 };
 
-export const submitWorkExperience = async (
-  workData: any,
-  experienceData: any
-) => {
+export const submitWorkExperience = async (workData: any) => {
   const token = Cookies.get("candidate_access_token");
 
   const careerId = Cookies.get("career_id");
-  const work_experience_id = Cookies.get("work_experience_id");
   return await Promise.all([
     axios.patch(`${API_URL}register/career/${careerId}/`, workData, {
       headers: {
@@ -123,17 +120,21 @@ export const submitWorkExperience = async (
         "Content-Type": "application/json",
       },
     }),
-    axios.patch(
-      `${API_URL}register/job-experience/${work_experience_id}/`,
-      experienceData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    ),
   ]);
+};
+
+export const postJobExperience = async (experienceData: any) => {
+  const token = Cookies.get("candidate_access_token");
+  return await axios.post(
+    `${API_URL}register/job-experience/`,
+    experienceData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
 };
 
 export const fetchCareerData = async () => {
@@ -272,6 +273,26 @@ export const toggleApplicationStatus = async () => {
 
   const { data } = await axios.get(
     `${API_URL}register/toggle-application-status/${canId}/`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return data;
+};
+
+export const postComplaints = async ({
+  complaint,
+  complaint_status,
+  complaint_date,
+}: ComplaintType) => {
+  const token = Cookies.get("candidate_access_token");
+
+  const { data } = await axios.post(
+    `${API_URL}complaints/`,
+    { complaint, complaint_status, complaint_date },
     {
       headers: {
         Authorization: `Bearer ${token}`,

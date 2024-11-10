@@ -33,9 +33,9 @@ const Step2 = ({
   useEffect(() => {
     if (singleCandidate) {
       setProgramType(singleCandidate.education[0].degree_type || "");
-      setAssignedUniversity(singleCandidate.education[0].school_name || "");
+      setAssignedUniversity(singleCandidate.assigned_university1 || "");
       setAssignedCourse(
-        singleCandidate.education[0].specific_course_of_study || ""
+        singleCandidate.assigned_course1 || ""
       );
       setYearsOfExperience(
         singleCandidate.career[0].years_of_experience_post_degree || ""

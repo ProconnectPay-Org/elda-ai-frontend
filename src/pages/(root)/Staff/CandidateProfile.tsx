@@ -80,21 +80,21 @@ const CandidateProfile = () => {
             <p className="font-semibold text-2xl">
               {candidate.user?.full_name || ""}
             </p>
-            <p>
+            <p className="capitalize">
               Preferred Call Name:{" "}
               {candidate?.preferred_call_name || "No name provided"}
             </p>
-            <p>
+            <p className="capitalize">
               Profession:{" "}
               {candidate?.career[0].profession || "No profession provided"}
             </p>
-            <p>
+            <p className="capitalize">
               Course:{" "}
               {candidate?.education?.map(
                 (edu) => edu.specific_course_of_study || "No course provided"
               )}
             </p>
-            <p>
+            <p className="capitalize">
               School:{" "}
               {candidate?.education?.map(
                 (edu) => edu.school_name || "No school provided"

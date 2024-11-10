@@ -53,6 +53,12 @@ declare type CreateCandidateProfileProps = {
   password: string;
   full_name?: string;
   role: "candidate" | "admin" | "staff";
+  assigned_course1?: string;
+  assigned_university1?: string;
+  assigned_course2?: string;
+  assigned_university2?: string;
+  program_type1?: string;
+  program_type2?: string;
 };
 
 interface Profile {
@@ -98,13 +104,13 @@ interface User {
   country?: string;
   role: "candidate" | "staff" | "admin";
   isLoggedIn?: boolean;
-  groups?: string[] | any[];
+  groups?: string[];
   is_active?: boolean;
   is_staff?: boolean;
   is_superuser?: boolean;
   last_login?: Date | null;
   password?: string;
-  user_permissions?: string[] | any[];
+  user_permissions?: string[];
 }
 
 interface Staff {
@@ -301,7 +307,11 @@ export type CandidateData = {
   user?: User;
   assigned: boolean;
   assigned_course: string;
+  assigned_course1: string;
+  assigned_course2: string;
   assigned_university: string;
+  assigned_university1: string;
+  assigned_university2: string;
   birth_date?: string;
   career_strategic_purpose: string;
   city_current_reside: string;
@@ -385,6 +395,12 @@ export type TeamMemberColumn = {
   assignedCandidates: string;
   permission: string;
   deleteAccount: string;
+};
+
+export type ComplaintType = {
+  complaint: string;
+  complaint_status: string;
+  complaint_date: string;
 };
 
 // ResumevalidationSchemas.ts
