@@ -90,3 +90,20 @@ export const generateSop = async (id: any) => {
   );
   return data;
 };
+
+export const postEditedCandidate = async (id: any, data: any) => {
+  const { data: response } = await axios.patch(
+    `${API_URL}staff-dashboard/edit-candidate/${id}/`,
+    data,
+    config
+  );
+  return response;
+};
+
+export const getEditedCandidate = async (id: any) => {
+  const { data } = await axios.get(
+    `${API_URL}staff-dashboard/edit-candidate/${id}/`,
+    config
+  );
+  return data;
+};

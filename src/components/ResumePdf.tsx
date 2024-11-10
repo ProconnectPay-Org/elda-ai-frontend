@@ -118,30 +118,33 @@ const ResumePdf = () => {
 
       <div className="px-5 w-full">
         <h2 className="text-[#102694] font-bold text-base">WORK EXPERIENCE</h2>
-        {formData?.job_experience?.map((experience: JobExperience) => (
-          <div key={experience.id}>
-            <div>
-              <p className="font-bold text-sm">
-                {experience.business_name}: {experience.job_title}
-              </p>
-              <div className="flex gap-3 items-center">
-                <p className="font-medium text-sm">
-                  Location: {experience.state}, {experience.country}
+        {formData?.job_experience?.map((experience: JobExperience) =>
+          experience.business_name ? (
+            <div key={experience.id}>
+              <div>
+                <p className="font-bold text-sm">
+                  {experience.business_name}: {experience.job_title}
                 </p>
-                <hr className="h-4 w-[2px] bg-black" />
-                <p className="font-medium text-sm">
-                  Duration: {experience.year_started} - {experience.year_ended}
+                <div className="flex gap-3 items-center">
+                  <p className="font-medium text-sm">
+                    Location: {experience.state}, {experience.country}
+                  </p>
+                  <hr className="h-4 w-[2px] bg-black" />
+                  <p className="font-medium text-sm">
+                    Duration: {experience.year_started} -{" "}
+                    {experience.year_ended}
+                  </p>
+                </div>
+              </div>
+              <div className="">
+                <p className="text-red font-bold text-sm">
+                  Job Description and Key Achievements
                 </p>
+                <p className="text-sm">{experience.job_summary}</p>
               </div>
             </div>
-            <div className="">
-              <p className="text-red font-bold text-sm">
-                Job Description and Key Achievements
-              </p>
-              <p className="text-sm">{experience.job_summary}</p>
-            </div>
-          </div>
-        ))}
+          ) : null
+        )}
       </div>
 
       <div className="px-5 w-full">

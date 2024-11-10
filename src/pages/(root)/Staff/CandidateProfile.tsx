@@ -25,8 +25,6 @@ const CandidateProfile = () => {
     staleTime: 5 * 1000 * 60,
   });
 
-  console.log(candidate);
-
   if (isLoading || !candidate) {
     return (
       <RootLayout title="Candidate Profile">
@@ -217,17 +215,19 @@ const CandidateProfile = () => {
           <h3 className="font-semibold text-lg">WORK HISTORY</h3>
           <p className="text-[#5E6366] font-semibold"></p>
         </span>
-        {candidate?.job_experience?.map((jobExperienceData, index: number) => (
-          <span key={index} className="flex gap-5 items-center">
-            <p className="text-[#5E6366] font-semibold md:w-60">
-              {jobExperienceData?.year_started || "No start year"} -{" "}
-              {jobExperienceData?.year_ended || "No end year"}
-            </p>
-            <p className="font-semibold capitalize">{`${
-              jobExperienceData?.job_title || "No job title"
-            } at ${jobExperienceData?.business_name || "No business name"}`}</p>
-          </span>
-        ))}
+        {candidate?.job_experience?.map((jobExperienceData, index: number) =>
+          jobExperienceData.business_name ? (
+            <span key={index} className="flex gap-5 items-center">
+              <p className="text-[#5E6366] font-semibold md:w-60">
+                {jobExperienceData?.year_started || "No start year"} -{" "}
+                {jobExperienceData?.year_ended || "No end year"}
+              </p>
+              <p className="font-semibold capitalize">{`${
+                jobExperienceData?.job_title || "No job title"
+              } at ${jobExperienceData?.business_name}`}</p>
+            </span>
+          ) : null
+        )}
       </div>
       <hr className="w-full h-2 my-8" />
       <div>

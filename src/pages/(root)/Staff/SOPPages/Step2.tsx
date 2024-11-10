@@ -9,6 +9,11 @@ import {
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
 import { useCandidates } from "@/hooks/useCandidiates";
+import {
+  getEditedCandidate,
+  postEditedCandidate,
+} from "@/lib/actions/staff.actions";
+import { useQuery } from "@tanstack/react-query";
 
 const Step2 = ({
   prevStep,
@@ -23,33 +28,42 @@ const Step2 = ({
   const [assignedCourse, setAssignedCourse] = useState("");
   const [yearsOfExperience, setYearsOfExperience] = useState("");
 
-  if (!id) {
-    console.error("No ID provided");
-    return;
-  }
   const { singleCandidate, singleCandidateLoading, singleCandidateError } =
     useCandidates(id);
 
   useEffect(() => {
     if (singleCandidate) {
-      setProgramType(singleCandidate.education[0].degree_type || "");
+      setProgramType(singleCandidate.education[0]?.degree_type || "");
       setAssignedUniversity(singleCandidate.assigned_university1 || "");
-      setAssignedCourse(
-        singleCandidate.assigned_course1 || ""
-      );
+      setAssignedCourse(singleCandidate.assigned_course1 || "");
       setYearsOfExperience(
-        singleCandidate.career[0].years_of_experience_post_degree || ""
+        singleCandidate.career[0]?.years_of_experience_post_degree || ""
       );
     }
   }, [singleCandidate]);
 
-  if (singleCandidateLoading) {
-    return <div>Loading...</div>;
-  }
+  const { data } = useQuery({
+    queryKey: ["candidateData", id],
+    queryFn: () => getEditedCandidate(id),
+    staleTime: 5 * 1000 * 60,
+    enabled: Boolean(id),
+  });
 
-  if (singleCandidateError) {
-    return <div>Error fetching data</div>;
-  }
+  useEffect(() => {
+    if (data?.course_description) {
+      setManualDescription((desc) => desc || data.course_description);
+    }
+  }, [data]);
+
+  const handleReview = async () => {
+    const response = await postEditedCandidate(id, {
+      course_description: manualDescription,
+    });
+    console.log(response);
+  };
+
+  if (singleCandidateLoading) return <div>Loading...</div>;
+  if (singleCandidateError) return <div>Error fetching data</div>;
 
   return (
     <>
@@ -69,7 +83,7 @@ const Step2 = ({
                 Program Type
               </label>
               <Select value={programType} onValueChange={setProgramType}>
-                <SelectTrigger className="w-full p-0 h-full rounded-none bg-transparent outline-none border-none focus:outline-none focus-visible:outline-none active:border-none focus:border-none">
+                <SelectTrigger className="w-full p-0 h-full rounded-none bg-transparent outline-none border-none">
                   <SelectValue placeholder="MBA" />
                 </SelectTrigger>
                 <SelectContent>
@@ -86,7 +100,10 @@ const Step2 = ({
               </label>
               <input
                 type="text"
+                id="assignedUniversity"
+                name="assignedUniversity"
                 value={assignedUniversity}
+                onChange={(e) => setAssignedUniversity(e.target.value)}
                 className="bg-transparent outline-none"
               />
             </div>
@@ -99,19 +116,24 @@ const Step2 = ({
               </label>
               <input
                 type="text"
+                id="assignedCourse"
+                name="assignedCourse"
                 value={assignedCourse}
+                onChange={(e) => setAssignedCourse(e.target.value)}
                 className="bg-transparent outline-none"
               />
             </div>
             <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
-              <label htmlFor="email" className="text-sm">
+              <label htmlFor="yearsOfExperience" className="text-sm">
                 Number of Years of Professional Work Experience
               </label>
               <input
-                className="border-none w-full focus:outline-none bg-transparent"
+                type="text"
                 id="yearsOfExperience"
-                placeholder="1"
+                name="yearsOfExperience"
                 value={yearsOfExperience}
+                onChange={(e) => setYearsOfExperience(e.target.value)}
+                className="bg-transparent outline-none"
               />
             </div>
           </div>
@@ -121,17 +143,23 @@ const Step2 = ({
               Manually Add Course Description
             </label>
             <textarea
-              className="border-none w-full focus:outline-none bg-transparent"
               id="courseDescription"
-              placeholder="A brief course description"
+              name="courseDescription"
               value={manualDescription}
               onChange={(e) => setManualDescription(e.target.value)}
+              className="bg-transparent outline-none"
+              placeholder="A brief course description"
             />
           </div>
         </div>
       </div>
       <div className="flex items-center mt-10 justify-end w-full">
-        <Button className="bg-red text-white w-32 h-12">Review</Button>
+        <Button
+          className="bg-red text-white w-32 h-12"
+          onClick={handleReview}
+        >
+          Review
+        </Button>
       </div>
     </>
   );
