@@ -92,8 +92,6 @@ const MultiStepForm = () => {
         };
         await updatePersonalDetails(personalData);
       } else if (currentStep === 1) {
-        console.log(currentFormData);
-
         // Step 2: EDUCATION DETAILS
         const educationData = {
           current_status: currentFormData.currentStatus,
