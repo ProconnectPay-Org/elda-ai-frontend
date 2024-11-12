@@ -401,6 +401,7 @@ export type ComplaintType = {
   complaint: string;
   complaint_status: string;
   complaint_date: string;
+  complaint_body?: string;
 };
 
 // ResumevalidationSchemas.ts

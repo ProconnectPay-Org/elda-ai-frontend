@@ -144,26 +144,26 @@ export const statusProps = [
     title: "Statement of purpose 1",
     status: "In Progress",
   },
-  {
-    title: "Statement of purpose 2",
-    status: "Not Started",
-  },
+  // {
+  //   title: "Statement of purpose 2",
+  //   status: "Not Started",
+  // },
   {
     title: "School application submission 1",
     status: "Not Started",
   },
-  {
-    title: "School application submission 2",
-    status: "Not Started",
-  },
-  {
-    title: "Extra Statement of Purpose",
-    status: "Not Started",
-  },
-  {
-    title: "Extra School Application Submission",
-    status: "Not Started",
-  },
+  // {
+  //   title: "School application submission 2",
+  //   status: "Not Started",
+  // },
+  // {
+  //   title: "Extra Statement of Purpose",
+  //   status: "Not Started",
+  // },
+  // {
+  //   title: "Extra School Application Submission",
+  //   status: "Not Started",
+  // },
 ];
 
 export const degreeOptions = [

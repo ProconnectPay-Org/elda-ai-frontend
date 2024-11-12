@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import CandidateLayout from "@/layouts/CandidateLayout";
 import { ComplaintType } from "@/types";
 import { postComplaints } from "@/lib/actions/candidate.actions";
+import { toast } from "@/components/ui/use-toast";
 
 const Complaints = () => {
   const getDate = () => {
@@ -16,6 +17,7 @@ const Complaints = () => {
   const [formData, setFormData] = useState<ComplaintType>({
     complaint: "",
     complaint_status: "",
+    complaint_body: "",
     complaint_date: getDate(),
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,15 +40,31 @@ const Complaints = () => {
     console.log(formData);
 
     try {
+      const concatenatedComplaint = `${formData.complaint} - ${formData.complaint_body}`;
+
       await postComplaints({
-        complaint: formData.complaint,
+        complaint: concatenatedComplaint, // Concatenated complaint
         complaint_status: formData.complaint_status,
         complaint_date: formData.complaint_date,
       });
-
+      toast({
+        title: "Success",
+        description: "Complaint submitted successfully.",
+        variant: "success",
+      });
       setSubmissionMessage("Complaint submitted successfully.");
-      setFormData({ complaint: "", complaint_status: "", complaint_date: "" }); // Reset form
+      setFormData({
+        complaint: "",
+        complaint_body: "",
+        complaint_status: "",
+        complaint_date: "",
+      }); // Reset form
     } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to submit complaint. Please try again.",
+        variant: "destructive",
+      });
       setSubmissionMessage("Failed to submit complaint. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -95,13 +113,32 @@ const Complaints = () => {
           </div>
 
           <div className="flex flex-col w-full gap-1.5">
+            <label htmlFor="complaint" className="text-[#666666]">
+              Complaint Status
+            </label>
+            <select
+              name="complaint_status"
+              id="complaint_status"
+              value={formData.complaint_status}
+              onChange={handleChange}
+              className="border px-4 rounded-lg py-3"
+            >
+              <option value="">--Select a status--</option>
+              <option value="pending">Pending</option>
+              <option value="in_progress">In Progress</option>
+              <option value="resolved">Resolved</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col w-full gap-1.5">
             <label htmlFor="complaint_status" className="text-[#666666]">
               Describe your issue here
             </label>
             <textarea
-              id="complaint_status"
-              name="complaint_status"
-              value={formData.complaint_status}
+              id="complaint_body"
+              name="complaint_body"
+              value={formData.complaint_body}
               onChange={handleChange}
               className="w-full border rounded-lg px-4 py-3"
               maxLength={255}

@@ -36,6 +36,10 @@ const navbarLinks = [
     route: "/complaints",
     label: "General Complaints",
   },
+  {
+    route: "/register",
+    label: "Registeration Form"
+  },
 ];
 
 const CandidateLayout = ({ children }: AuthLayoutProps) => {

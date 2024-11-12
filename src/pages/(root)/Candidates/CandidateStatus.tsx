@@ -4,11 +4,26 @@ import IconCheck from "@/assets/icon-check.svg";
 import ExclamationRed from "@/assets/exclamation-red.svg";
 import ExclamationWhite from "@/assets/exclamation-white.svg";
 import IconProgress from "@/assets/icon-progress.svg";
-import { statusProps } from "@/constants";
+// import { statusProps } from "@/constants";
 import useAuth from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { fetchVerificationDocument } from "@/lib/actions/candidate.actions";
 import { useState } from "react";
+import { useCandidates } from "@/hooks/useCandidiates";
+import Cookies from "js-cookie";
+
+const SkeletonStatusBox = () => {
+  return (
+    <div className="w-full h-[60px] rounded-2xl bg-[#e0e0e0] flex justify-between items-center p-5 animate-pulse">
+      <div className="flex items-center gap-4">
+        <div className="w-32 h-6 bg-[#c0c0c0] rounded-md"></div>
+        <div className="border border-[#c0c0c0] px-2 h-6 flex items-center gap-2 rounded-md">
+          <div className="w-16 h-4 bg-[#c0c0c0] rounded-md"></div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const StatusBox = ({
   text,
@@ -36,6 +51,9 @@ const StatusBox = ({
 const CandidateStatus = () => {
   const { loggedInUser } = useAuth();
   const [isExpanded, setIsExpanded] = useState(false);
+  const candidate_id = Cookies.get("candidate_id");
+  const { singleCandidate, singleCandidateLoading } =
+    useCandidates(candidate_id);
 
   const { data } = useQuery({
     queryKey: ["documents"],
@@ -55,6 +73,15 @@ const CandidateStatus = () => {
     utility_bill: "Utility Bill",
   };
 
+  const statusProps = [
+    { title: "Resume Status", status: singleCandidate?.resume_status },
+    { title: "SOP Status", status: singleCandidate?.sop_status },
+    {
+      title: "School Application Status",
+      status: singleCandidate?.school_application_status,
+    },
+  ];
+
   return (
     <CandidateLayout>
       <section className="md:max-w-[880px] mx-auto space-y-10">
@@ -68,22 +95,26 @@ const CandidateStatus = () => {
         </div>
 
         <div className="flex flex-col gap-5">
-          {statusProps.map((item, index) => (
-            <StatusBox
-              key={index}
-              icon={
-                item.status === "Completed" ? (
-                  <img src={IconCheck} alt="Check Icon" />
-                ) : item.status === "In Progress" ? (
-                  <img src={IconProgress} alt="Progress Icon" />
-                ) : (
-                  <img src={ExclamationRed} alt="Exclamation Icon" />
-                )
-              }
-              text={item.title}
-              status={item.status}
-            />
-          ))}
+          {singleCandidateLoading
+            ? Array(3)
+                .fill(null)
+                .map((_, index) => <SkeletonStatusBox key={index} />)
+            : statusProps.map((item, index) => (
+                <StatusBox
+                  key={index}
+                  icon={
+                    item.status === "Completed" ? (
+                      <img src={IconCheck} alt="Check Icon" />
+                    ) : item.status === "pending" ? (
+                      <img src={IconProgress} alt="Progress Icon" />
+                    ) : (
+                      <img src={ExclamationRed} alt="Exclamation Icon" />
+                    )
+                  }
+                  text={item.title}
+                  status={item.status}
+                />
+              ))}
           <div
             className="w-full h-[60px] rounded-2xl bg-[#F5F7F9] flex justify-between items-center p-5 cursor-pointer"
             onClick={() => setIsExpanded(!isExpanded)}
