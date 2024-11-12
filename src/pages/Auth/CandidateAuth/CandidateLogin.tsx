@@ -57,8 +57,28 @@ const CandidateLogin = () => {
           { expires: 7 }
         );
         Cookies.set(
-          "work_experience_id",
+          "work_experience_id1",
           response.candidate.job_experience[0],
+          { expires: 7 }
+        );
+        Cookies.set(
+          "work_experience_id2",
+          response.candidate.job_experience[1],
+          { expires: 7 }
+        );
+        Cookies.set(
+          "work_experience_id3",
+          response.candidate.job_experience[2],
+          { expires: 7 }
+        );
+        Cookies.set(
+          "work_experience_id4",
+          response.candidate.job_experience[3],
+          { expires: 7 }
+        );
+        Cookies.set(
+          "work_experience_id5",
+          response.candidate.job_experience[4],
           { expires: 7 }
         );
         Cookies.set("advanced_education1_id", response.advanced_education[0], {

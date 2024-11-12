@@ -12,7 +12,11 @@ import { fetchJobExperienceData } from "@/lib/actions/candidate.actions";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 
-const ReuseableJobs = () => {
+interface ReuseableJobsProps {
+  index: number; // New prop for the job experience index
+}
+
+const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
   const {
     register,
     getValues,
@@ -24,54 +28,106 @@ const ReuseableJobs = () => {
   const outerDivClass =
     "flex flex-col md:flex-row justify-between gap-4 md:gap-8";
 
-  const jobExperienceId = Cookies.get("work_experience_id");
-
   const [refineLoading, setRefineLoading] = useState(false);
   const [jobStatus, setJobStatus] = useState("");
+
+  const jobExperienceIds = [
+    Cookies.get("work_experience_id1"),
+    Cookies.get("work_experience_id2"),
+    Cookies.get("work_experience_id3"),
+    Cookies.get("work_experience_id4"),
+    Cookies.get("work_experience_id5"),
+  ].filter((id) => id !== undefined);
 
   const handleJobChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     setJobStatus(value);
-    setValue("jobStatus", value); // Update form state
+    setValue(`jobExperiences.${index}.jobStatus`, value); // Update form state with index
   };
 
-  const { isLoading: isJobExpLoading, data: jobExperienceData } = useQuery({
-    queryKey: ["jobExperienceData", jobExperienceId],
-    queryFn: fetchJobExperienceData,
-    enabled: !!jobExperienceId,
-    staleTime: 5 * 1000 * 60,
+  const jobExperienceQueries = jobExperienceIds.map((id) => {
+    return useQuery({
+      queryKey: ["jobExperienceData", id],
+      queryFn: () => fetchJobExperienceData(id),
+      enabled: !!id,
+      staleTime: 5 * 1000 * 60,
+    });
   });
 
+  const isJobExpLoading = jobExperienceQueries.some((query) => query.isLoading);
+  const jobExperienceData = jobExperienceQueries.map((query) => query.data);
+
+  console.log(jobExperienceData);
   useEffect(() => {
     if (jobExperienceData) {
-      setValue("workPlaceName", jobExperienceData.business_name || "");
-      setValue(
-        "currentProfessionalStatus",
-        jobExperienceData.professional_status || ""
+      const filteredJobExperienceData = jobExperienceData.filter(
+        (experience) => experience?.business_name
       );
-      setValue("currentJobTitle", jobExperienceData.job_title || "");
-      setValue("employmentType", jobExperienceData.employment_type || "");
-      setValue("stateLocation", jobExperienceData.state || "");
-      setValue("countryLocation", jobExperienceData.country || "");
-      setValue("jobStatus", jobExperienceData.job_status || "");
-      setValue("endedDate", jobExperienceData.year_ended || "");
-      setValue("startedDate", jobExperienceData.year_started || "");
-      setValue(
-        "companyDescription",
-        jobExperienceData.company_description || ""
-      );
-      setValue("jobSummary", jobExperienceData.job_summary || "");
+
+      // Only set the data for the current index
+      if (filteredJobExperienceData[index]) {
+        setValue(
+          `jobExperiences.${index}.workPlaceName`,
+          filteredJobExperienceData[index].business_name || ""
+        );
+        setValue(
+          `jobExperiences.${index}.currentProfessionalStatus`,
+          filteredJobExperienceData[index].professional_status || ""
+        );
+        setValue(
+          `jobExperiences.${index}.currentJobTitle`,
+          filteredJobExperienceData[index].job_title || ""
+        );
+        setValue(
+          `jobExperiences.${index}.employmentType`,
+          filteredJobExperienceData[index].employment_type || ""
+        );
+        setValue(
+          `jobExperiences.${index}.stateLocation`,
+          filteredJobExperienceData[index].state || ""
+        );
+        setValue(
+          `jobExperiences.${index}.countryLocation`,
+          filteredJobExperienceData[index].country || ""
+        );
+        setValue(
+          `jobExperiences.${index}.jobStatus`,
+          filteredJobExperienceData[index].job_status || ""
+        );
+        setValue(
+          `jobExperiences.${index}.endedDate`,
+          filteredJobExperienceData[index].year_ended || ""
+        );
+        setValue(
+          `jobExperiences.${index}.startedDate`,
+          filteredJobExperienceData[index].year_started || ""
+        );
+        setValue(
+          `jobExperiences.${index}.companyDescription`,
+          filteredJobExperienceData[index].company_description || ""
+        );
+        setValue(
+          `jobExperiences.${index}.jobSummary`,
+          filteredJobExperienceData[index].job_summary || ""
+        );
+      }
     }
-  }, [jobExperienceData, setValue]);
+  }, [jobExperienceData, setValue, index]);
 
   const handleRefine = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setRefineLoading(true);
     try {
-      const jobSummary = getValues("jobSummary");
+      const jobSummary = getValues(`jobExperiences.${index}.jobSummary`);
       if (jobSummary) {
-        const refinedContent = await refinePrompt({ prompt: jobSummary });
-        setValue("jobSummary", refinedContent.refined_content);
+        const refinedContent = await refinePrompt({
+          prompt: `Refine this job summary: ${jobSummary}`,
+        });
+        setValue(
+          `jobExperiences.${index}.jobSummary`,
+          refinedContent.refined_content
+        );
+        console.log(refinedContent.refined_content);
       } else {
         console.log("Please provide a job summary.");
       }
@@ -81,6 +137,7 @@ const ReuseableJobs = () => {
       setRefineLoading(false);
     }
   };
+
   return (
     <div className="border border-pale-bg mb-5 py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
       {isJobExpLoading && (
@@ -90,12 +147,17 @@ const ReuseableJobs = () => {
           </div>
         </div>
       )}
-      <h3 className="text-2xl font-medium mb-5">{jobStatus === "current" ? "Current Job" : "Former Job"}</h3>
+      <h3 className="text-2xl font-medium mb-5">
+        {jobStatus === "current" ? "Current Job" : "Former Job"}
+      </h3>
 
       <div className="flex flex-col gap-8">
         <div className={outerDivClass}>
           <div className={divClass}>
-            <label htmlFor="jobStatus" className="form-label">
+            <label
+              htmlFor={`jobExperiences.${index}.jobStatus`}
+              className="form-label"
+            >
               Job Status
               <span className="text-red">*</span>
             </label>
@@ -103,7 +165,7 @@ const ReuseableJobs = () => {
               <select
                 className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
                 id="jobStatus"
-                {...register("jobStatus")}
+                {...register(`jobExperiences.${index}.jobStatus`)}
                 onChange={handleJobChange}
               >
                 <option value="">Select job status</option>
@@ -127,25 +189,28 @@ const ReuseableJobs = () => {
                 </svg>
               </span>
             </div>
-            {errors.jobStatus && (
+            {errors.jobExperiences?.[index]?.jobStatus && (
               <p className="text-red text-sm">
-                {getErrorMessage(errors.jobStatus)}
+                {getErrorMessage(errors.jobExperiences[index].jobStatus)}
               </p>
             )}
           </div>
           <div className={divClass}>
-            <label htmlFor="workPlaceName" className="form-label">
+            <label
+              htmlFor={`jobExperiences.${index}.workPlaceName`}
+              className="form-label"
+            >
               Name of Work or Business Place <span className="text-red">*</span>
             </label>
             <input
-              id="workPlaceName"
+              id={`jobExperiences.${index}.workPlaceName`}
               type="text"
-              {...register("workPlaceName")}
+              {...register(`jobExperiences.${index}.workPlaceName`)}
               className="border border-gray-border rounded-md py-2 px-4"
             />
-            {errors.workPlaceName && (
+            {errors.jobExperiences?.[index]?.workPlaceName && (
               <p className="text-red text-sm">
-                {getErrorMessage(errors.workPlaceName)}
+                {getErrorMessage(errors.jobExperiences[index].workPlaceName)}
               </p>
             )}
           </div>
@@ -153,34 +218,42 @@ const ReuseableJobs = () => {
 
         <div className={outerDivClass}>
           <div className={divClass}>
-            <label htmlFor="currentProfessionalStatus" className="form-label">
+            <label
+              htmlFor={`jobExperiences.${index}.currentProfessionalStatus`}
+              className="form-label"
+            >
               Current Professional Status <span className="text-red">*</span>
             </label>
             <input
-              id="currentProfessionalStatus"
+              id={`jobExperiences.${index}.currentProfessionalStatus`}
               type="text"
-              {...register("currentProfessionalStatus")}
+              {...register(`jobExperiences.${index}.currentProfessionalStatus`)}
               className="border border-gray-border rounded-md py-2 px-4"
             />
-            {errors.currentProfessionalStatus && (
+            {errors.jobExperiences?.[index]?.currentProfessionalStatus && (
               <p className="text-red text-sm">
-                {getErrorMessage(errors.currentProfessionalStatus)}
+                {getErrorMessage(
+                  errors.jobExperiences[index].currentProfessionalStatus
+                )}
               </p>
             )}
           </div>
           <div className={divClass}>
-            <label htmlFor="currentJobTitle" className="form-label">
+            <label
+              htmlFor={`jobExperiences.${index}.currentJobTitle`}
+              className="form-label"
+            >
               Current Job Title <span className="text-red">*</span>
             </label>
             <input
-              id="currentJobTitle"
+              id={`jobExperiences.${index}.currentJobTitle`}
               type="text"
-              {...register("currentJobTitle")}
+              {...register(`jobExperiences.${index}.currentJobTitle`)}
               className="border border-gray-border rounded-md py-2 px-4"
             />
-            {errors.currentJobTitle && (
+            {errors.jobExperiences?.[index]?.currentJobTitle && (
               <p className="text-red text-sm">
-                {getErrorMessage(errors.currentJobTitle)}
+                {getErrorMessage(errors.jobExperiences[index].currentJobTitle)}
               </p>
             )}
           </div>
@@ -188,14 +261,17 @@ const ReuseableJobs = () => {
 
         <div className={outerDivClass}>
           <div className={divClass}>
-            <label htmlFor="employmentType" className="form-label">
+            <label
+              htmlFor={`jobExperiences.${index}.employmentType`}
+              className="form-label"
+            >
               Employment Type <span className="text-red">*</span>
             </label>
             <div className="relative">
               <select
+                id={`jobExperiences.${index}.employmentType`}
+                {...register(`jobExperiences.${index}.employmentType`)}
                 className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
-                id="employmentType"
-                {...register("employmentType")}
               >
                 <option value="">Select status</option>
                 <option value="full-time">Full Time</option>
@@ -207,37 +283,39 @@ const ReuseableJobs = () => {
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
                     d="M19 9l-7 7-7-7"
-                  ></path>
+                  />
                 </svg>
               </span>
             </div>
-            {errors.employmentType && (
+            {errors.jobExperiences?.[index]?.employmentType && (
               <p className="text-red text-sm">
-                {getErrorMessage(errors.employmentType)}
+                {getErrorMessage(errors.jobExperiences[index].employmentType)}
               </p>
             )}
           </div>
           <div className={divClass}>
-            <label htmlFor="stateLocation" className="form-label">
+            <label
+              htmlFor={`jobExperiences.${index}.stateLocation`}
+              className="form-label"
+            >
               State/Province Location of Current Job{" "}
               <span className="text-red">*</span>
             </label>
             <input
-              id="stateLocation"
+              id={`jobExperiences.${index}.stateLocation`}
               type="text"
-              {...register("stateLocation")}
+              {...register(`jobExperiences.${index}.stateLocation`)}
               className="border border-gray-border rounded-md py-2 px-4"
             />
-            {errors.stateLocation && (
+            {errors.jobExperiences?.[index]?.stateLocation && (
               <p className="text-red text-sm">
-                {getErrorMessage(errors.stateLocation)}
+                {getErrorMessage(errors.jobExperiences[index].stateLocation)}
               </p>
             )}
           </div>
@@ -246,23 +324,26 @@ const ReuseableJobs = () => {
         <div className={outerDivClass}>
           <CountrySelect
             label="Country Location of Current Job"
-            name="countryLocation"
+            name={`jobExperiences.${index}.countryLocation`}
           />
 
           <div className="w-full md:w-1/2 gap-8 flex flex-col">
             <div className={divClass}>
-              <label htmlFor="startedDate" className="form-label">
+              <label
+                htmlFor={`jobExperiences.${index}.startedDate`}
+                className="form-label"
+              >
                 Date Started <span className="text-red">*</span>
               </label>
               <input
-                id="startedDate"
+                id={`jobExperiences.${index}.startedDate`}
                 type="date"
-                {...register("startedDate")}
+                {...register(`jobExperiences.${index}.startedDate`)}
                 className="border border-gray-border rounded-md py-2 px-4"
               />
-              {errors.startedDate && (
+              {errors.jobExperiences?.[index]?.startedDate && (
                 <p className="text-red text-sm">
-                  {getErrorMessage(errors.startedDate)}
+                  {getErrorMessage(errors.jobExperiences[index].startedDate)}
                 </p>
               )}
             </div>
@@ -273,54 +354,65 @@ const ReuseableJobs = () => {
           <div className="w-full md:w-1/2 gap-8 flex flex-col">
             {jobStatus === "former" && (
               <div className={divClass}>
-                <label htmlFor="endedDate" className="form-label">
+                <label
+                  htmlFor={`jobExperiences.${index}.endedDate`}
+                  className="form-label"
+                >
                   Date Ended <span className="text-red">*</span>
                 </label>
                 <input
-                  id="endedDate"
+                  id={`jobExperiences.${index}.endedDate`}
                   type="date"
-                  {...register("endedDate")}
+                  {...register(`jobExperiences.${index}.endedDate`)}
                   className="border border-gray-border rounded-md py-2 px-4"
                 />
-                {errors.endedDate && (
+                {errors.jobExperiences?.[index]?.endedDate && (
                   <p className="text-red text-sm">
-                    {getErrorMessage(errors.endedDate)}
+                    {getErrorMessage(errors.jobExperiences[index].endedDate)}
                   </p>
                 )}
               </div>
             )}
             <div className={divClass}>
-              <label htmlFor="companyDescription" className="form-label">
+              <label
+                htmlFor={`jobExperiences.${index}.companyDescription`}
+                className="form-label"
+              >
                 Provide Company Description with Vision and Mission Statement{" "}
                 <span className="text-red">*</span>
               </label>
               <textarea
-                id="companyDescription"
-                {...register("companyDescription")}
+                id={`jobExperiences.${index}.companyDescription`}
+                {...register(`jobExperiences.${index}.companyDescription`)}
                 className="border border-gray-border rounded-md py-2 px-4"
               />
               <p className="text-xs text-gray-text">
                 Please describe in third person with the name of the company
                 prominently stated.
               </p>
-              {errors.companyDescription && (
+              {errors.jobExperiences?.[index]?.companyDescription && (
                 <p className="text-red text-sm">
-                  {getErrorMessage(errors.companyDescription)}
+                  {getErrorMessage(
+                    errors.jobExperiences[index].companyDescription
+                  )}
                 </p>
               )}
             </div>
           </div>
 
           <div className={divClass}>
-            <label htmlFor="jobSummary" className="form-label">
+            <label
+              htmlFor={`jobExperiences.${index}.jobSummary`}
+              className="form-label"
+            >
               Provide Job Summary and Key Achievements on this Current JOB{" "}
               <span className="text-red">*</span>
             </label>
             <div className="flex items-start gap-4 border border-gray-border rounded-md py-2 px-4 h-full">
               <img src={promptImage} alt="prompt image" />
               <textarea
-                id="jobSummary"
-                {...register("jobSummary")}
+                id={`jobExperiences.${index}.jobSummary`}
+                {...register(`jobExperiences.${index}.jobSummary`)}
                 className="w-full outline-none h-full"
               />
             </div>
@@ -328,13 +420,14 @@ const ReuseableJobs = () => {
               Give us more than 3 sentences stating your Job Role and your Key
               Achievements
             </i>
-            {errors.jobSummary && (
+            {errors.jobExperiences?.[index]?.jobSummary && (
               <p className="text-red text-sm">
-                {getErrorMessage(errors.jobSummary)}
+                {getErrorMessage(errors.jobExperiences[index].jobSummary)}
               </p>
             )}
           </div>
         </div>
+
         <div className="flex items-end w-full flex-col md:flex-row justify-between gap-4 md:gap-8">
           <div className="w-full md:w-1/2 hidden md:flex"></div>
           <Button

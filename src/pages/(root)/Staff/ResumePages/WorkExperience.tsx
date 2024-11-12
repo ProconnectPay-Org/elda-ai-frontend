@@ -51,7 +51,7 @@ const WorkExperience = () => {
         <label htmlFor="" className="text-[#344054]">
           How many jobs are you showcasing?
         </label>
-        <Input type="text" defaultValue={1} className="rounded-full" />
+        <Input type="text" defaultValue={1} value={singleCandidate?.career[0]?.jobs_to_show} className="rounded-full" />
       </div>
       <div className="bg-gray py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl">
         <h3 className="font-bold mb-4 text-lg">Present Job</h3>

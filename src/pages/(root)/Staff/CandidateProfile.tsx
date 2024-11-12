@@ -24,6 +24,7 @@ const CandidateProfile = () => {
     queryFn: () => getSingleCandidate(id),
     staleTime: 5 * 1000 * 60,
   });
+  console.log(candidate);
 
   if (isLoading || !candidate) {
     return (
@@ -233,7 +234,9 @@ const CandidateProfile = () => {
       <div>
         <h3 className="font-semibold text-lg mb-4">JOB SUMMARY</h3>
         <div className="text-[#5E6366]">
-          {candidate?.job_experience?.map((job) => job.job_summary) || (
+          {candidate?.job_experience?.map((job) => (
+            <p>{job.job_summary}</p>
+          )) || (
             <span className="flex gap-4 items-center">
               <p>No job summary provided</p>
             </span>

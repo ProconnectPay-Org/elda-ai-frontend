@@ -56,6 +56,8 @@ const AuthForm = () => {
           Cookies.set("staff_access_token", response.access, { expires: 7 });
           navigate("/assigned-candidates");
         } else if (userRole === "candidate") {
+          console.log(response);
+          
           Cookies.set("candidate_access_token", response.access, {
             expires: 7,
           });
@@ -72,8 +74,28 @@ const AuthForm = () => {
             { expires: 7 }
           );
           Cookies.set(
-            "work_experience_id",
+            "work_experience_id1",
             response.candidate.job_experience[0],
+            { expires: 7 }
+          );
+          Cookies.set(
+            "work_experience_id2",
+            response.candidate.job_experience[1],
+            { expires: 7 }
+          );
+          Cookies.set(
+            "work_experience_id3",
+            response.candidate.job_experience[2],
+            { expires: 7 }
+          );
+          Cookies.set(
+            "work_experience_id4",
+            response.candidate.job_experience[3],
+            { expires: 7 }
+          );
+          Cookies.set(
+            "work_experience_id5",
+            response.candidate.job_experience[4],
             { expires: 7 }
           );
           Cookies.set(

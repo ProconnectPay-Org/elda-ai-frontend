@@ -37,7 +37,11 @@ export const logoutAccount = async (role: "candidate" | "staff" | "admin") => {
       Cookies.remove("education_id");
       Cookies.remove("career_id");
       Cookies.remove("verification_document_id");
-      Cookies.remove("work_experience_id");
+      Cookies.remove("work_experience_id1");
+      Cookies.remove("work_experience_id2");
+      Cookies.remove("work_experience_id3");
+      Cookies.remove("work_experience_id4");
+      Cookies.remove("work_experience_id5");
       Cookies.remove("advanced_education1_id");
       Cookies.remove("advanced_education2_id");
       Cookies.remove("referee1_id");

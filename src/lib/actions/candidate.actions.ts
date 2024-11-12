@@ -123,10 +123,13 @@ export const submitWorkExperience = async (workData: any) => {
   ]);
 };
 
-export const postJobExperience = async (experienceData: any) => {
+export const postJobExperience = async (
+  experienceData: any,
+  job_experience_id: any
+) => {
   const token = Cookies.get("candidate_access_token");
-  return await axios.post(
-    `${API_URL}register/job-experience/`,
+  return await axios.patch(
+    `${API_URL}register/job-experience/${job_experience_id}/`,
     experienceData,
     {
       headers: {
@@ -150,19 +153,15 @@ export const fetchCareerData = async () => {
   return data;
 };
 
-export const fetchJobExperienceData = async () => {
+export const fetchJobExperienceData = async (work_experience_id: any) => {
   const token = Cookies.get("candidate_access_token");
 
-  const work_experience_id = Cookies.get("work_experience_id");
-  const { data } = await axios.get(
-    `${API_URL}register/job-experience/${work_experience_id}/`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const { data } = await axios.get(`${API_URL}register/job-experience/${work_experience_id}/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
   return data;
 };
 

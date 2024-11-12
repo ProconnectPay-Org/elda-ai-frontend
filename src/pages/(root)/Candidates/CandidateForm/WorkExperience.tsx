@@ -295,9 +295,7 @@ const WorkExperience = () => {
       {/* Reuseable Job Container */}
       <div>
         {[...Array(jobsCount)].map((_, index) => (
-          <ReuseableJobs
-            key={index}
-          />
+          <ReuseableJobs key={index} index={index} />
         ))}
       </div>
     </div>

@@ -39,12 +39,33 @@ const MultiStepForm = () => {
   const [formData, setFormData] = useState<FormData>({} as FormData);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [jobsCount, setJobsCount] = useState(1); // Initialize with a default count if needed
 
   const navigate = useNavigate();
 
+  const initialJobExperiences = Array.from({ length: jobsCount }).map(() => ({
+    workPlaceName: "",
+    currentProfessionalStatus: "",
+    currentJobTitle: "",
+    employmentType: "",
+    stateLocation: "",
+    countryLocation: "",
+    startedDate: "",
+    endedDate: "",
+    jobStatus: "",
+    companyDescription: "",
+    jobSummary: "",
+  }));
+
+  const defaultValues = {
+    ...formData,
+    jobExperiences:
+      currentStep === 2 ? initialJobExperiences : formData.jobExperiences,
+  };
+
   const methods = useForm({
     resolver: zodResolver(steps[currentStep].schema),
-    defaultValues: formData,
+    defaultValues,
     mode: "onBlur",
   });
 
@@ -124,6 +145,8 @@ const MultiStepForm = () => {
           await updateAdvancedDegree(advancedDegreeData);
         }
       } else if (currentStep === 2) {
+        console.log(currentFormData);
+
         // Step 3: WORK EXPERIENCE
         const workData = {
           profession: currentFormData.profession,
@@ -139,34 +162,41 @@ const MultiStepForm = () => {
 
         await submitWorkExperience(workData);
 
-        const jobCount = parseInt(currentFormData.jobsToShowcase, 10);
-        
-        if (jobCount > 0) {
+        const jobCountFromData = parseInt(currentFormData.jobsToShowcase, 10);
+        setJobsCount(jobCountFromData);
+
+        if (jobsCount > 0) {
           const jobExperiences = [];
-          for (let i = 0; i < jobCount; i++) {
+          for (let i = 0; i < jobsCount; i++) {
             const experienceData = {
-              business_name: currentFormData[`workPlaceName${i}`],
+              business_name: currentFormData.jobExperiences[i].workPlaceName,
               professional_status:
-                currentFormData[`currentProfessionalStatus${i}`],
-              job_title: currentFormData[`currentJobTitle${i}`],
-              employment_type: currentFormData[`employmentType${i}`],
-              state: currentFormData[`stateLocation${i}`],
-              country: currentFormData[`countryLocation${i}`],
-              year_started: currentFormData[`startedDate${i}`],
-              company_description: currentFormData[`companyDescription${i}`],
-              job_summary: currentFormData[`jobSummary${i}`],
-              year_ended: currentFormData[`endedDate${i}`],
-              job_status: currentFormData[`jobStatus${i}`],
+                currentFormData.jobExperiences[i].currentProfessionalStatus,
+              job_title: currentFormData.jobExperiences[i].currentJobTitle,
+              employment_type: currentFormData.jobExperiences[i].employmentType,
+              state: currentFormData.jobExperiences[i].stateLocation,
+              country: currentFormData.jobExperiences[i].countryLocation,
+              year_started: currentFormData.jobExperiences[i].startedDate,
+              company_description:
+                currentFormData.jobExperiences[i].companyDescription,
+              job_summary: currentFormData.jobExperiences[i].jobSummary,
+              year_ended: currentFormData.jobExperiences[i].endedDate,
+              job_status: currentFormData.jobExperiences[i].jobStatus,
               candidate: id,
             };
-            jobExperiences.push(postJobExperience(experienceData));
-            console.log("Job Experience Data:", experienceData);
+            const jobExperienceId = Cookies.get(`work_experience_id${i + 1}`);
+
+            if (jobExperienceId) {
+              jobExperiences.push(
+                postJobExperience(experienceData, jobExperienceId)
+              );
+            } else {
+              console.log(`No ID found for job experience ${i + 1}`);
+            }
           }
-          console.log("Job Experience Requests:", jobExperiences);
-          
-          
+
           await Promise.all(jobExperiences);
-         }
+        }
       } else if (currentStep === 3) {
         // Step 4: REFEREE DETAILS
         const referee1Data = {
