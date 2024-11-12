@@ -1,4 +1,3 @@
-import { getErrorMessage } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { useFormContext } from "react-hook-form";
 import { useEffect, useState } from "react";
@@ -17,13 +16,8 @@ interface ReuseableJobsProps {
 }
 
 const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
-  const {
-    register,
-    getValues,
-    setValue,
-    formState: { errors },
-  } = useFormContext<Step3FormData>();
-
+  const { register, getValues, setValue } = useFormContext<Step3FormData>();
+  
   const divClass = "flex flex-col w-full md:w-1/2";
   const outerDivClass =
     "flex flex-col md:flex-row justify-between gap-4 md:gap-8";
@@ -189,11 +183,6 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
                 </svg>
               </span>
             </div>
-            {errors.jobExperiences?.[index]?.jobStatus && (
-              <p className="text-red text-sm">
-                {getErrorMessage(errors.jobExperiences[index].jobStatus)}
-              </p>
-            )}
           </div>
           <div className={divClass}>
             <label
@@ -208,11 +197,6 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
               {...register(`jobExperiences.${index}.workPlaceName`)}
               className="border border-gray-border rounded-md py-2 px-4"
             />
-            {errors.jobExperiences?.[index]?.workPlaceName && (
-              <p className="text-red text-sm">
-                {getErrorMessage(errors.jobExperiences[index].workPlaceName)}
-              </p>
-            )}
           </div>
         </div>
 
@@ -230,13 +214,6 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
               {...register(`jobExperiences.${index}.currentProfessionalStatus`)}
               className="border border-gray-border rounded-md py-2 px-4"
             />
-            {errors.jobExperiences?.[index]?.currentProfessionalStatus && (
-              <p className="text-red text-sm">
-                {getErrorMessage(
-                  errors.jobExperiences[index].currentProfessionalStatus
-                )}
-              </p>
-            )}
           </div>
           <div className={divClass}>
             <label
@@ -251,11 +228,6 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
               {...register(`jobExperiences.${index}.currentJobTitle`)}
               className="border border-gray-border rounded-md py-2 px-4"
             />
-            {errors.jobExperiences?.[index]?.currentJobTitle && (
-              <p className="text-red text-sm">
-                {getErrorMessage(errors.jobExperiences[index].currentJobTitle)}
-              </p>
-            )}
           </div>
         </div>
 
@@ -293,11 +265,6 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
                 </svg>
               </span>
             </div>
-            {errors.jobExperiences?.[index]?.employmentType && (
-              <p className="text-red text-sm">
-                {getErrorMessage(errors.jobExperiences[index].employmentType)}
-              </p>
-            )}
           </div>
           <div className={divClass}>
             <label
@@ -313,11 +280,6 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
               {...register(`jobExperiences.${index}.stateLocation`)}
               className="border border-gray-border rounded-md py-2 px-4"
             />
-            {errors.jobExperiences?.[index]?.stateLocation && (
-              <p className="text-red text-sm">
-                {getErrorMessage(errors.jobExperiences[index].stateLocation)}
-              </p>
-            )}
           </div>
         </div>
 
@@ -341,11 +303,6 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
                 {...register(`jobExperiences.${index}.startedDate`)}
                 className="border border-gray-border rounded-md py-2 px-4"
               />
-              {errors.jobExperiences?.[index]?.startedDate && (
-                <p className="text-red text-sm">
-                  {getErrorMessage(errors.jobExperiences[index].startedDate)}
-                </p>
-              )}
             </div>
           </div>
         </div>
@@ -366,11 +323,6 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
                   {...register(`jobExperiences.${index}.endedDate`)}
                   className="border border-gray-border rounded-md py-2 px-4"
                 />
-                {errors.jobExperiences?.[index]?.endedDate && (
-                  <p className="text-red text-sm">
-                    {getErrorMessage(errors.jobExperiences[index].endedDate)}
-                  </p>
-                )}
               </div>
             )}
             <div className={divClass}>
@@ -390,13 +342,6 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
                 Please describe in third person with the name of the company
                 prominently stated.
               </p>
-              {errors.jobExperiences?.[index]?.companyDescription && (
-                <p className="text-red text-sm">
-                  {getErrorMessage(
-                    errors.jobExperiences[index].companyDescription
-                  )}
-                </p>
-              )}
             </div>
           </div>
 
@@ -420,11 +365,6 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
               Give us more than 3 sentences stating your Job Role and your Key
               Achievements
             </i>
-            {errors.jobExperiences?.[index]?.jobSummary && (
-              <p className="text-red text-sm">
-                {getErrorMessage(errors.jobExperiences[index].jobSummary)}
-              </p>
-            )}
           </div>
         </div>
 
