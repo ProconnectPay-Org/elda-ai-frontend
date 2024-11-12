@@ -17,6 +17,7 @@ import {
   CreateCandidateProfile,
   InviteEmployee,
   Staff,
+  ViewComplaints,
 } from "./pages/(root)/SuperAdmin";
 import {
   CandidateStatus,
@@ -49,6 +50,7 @@ function App() {
         <Route element={<Candidates />} path="/candidates" />
         <Route element={<AdminSettings />} path="settings/account" />
         <Route element={<AdminSecurity />} path="settings/security" />
+        <Route element={<ViewComplaints />} path="/view/complaints" />
         {/* STAFF */}
         <Route element={<AssignedCandidates />} path="/assigned-candidates" />
         <Route element={<CandidateProfile />} path="/assigned-candidates/:id" />

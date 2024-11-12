@@ -39,6 +39,10 @@ const sidebarLinks = [
     route: "/settings/account",
     label: "Settings",
   },
+  {
+    route: "/view/complaints",
+    label: "View Complaints",
+  },
 ];
 
 const AdminLayout = ({ children }: AuthLayoutProps) => {
@@ -109,6 +113,14 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
             }
           >
             Settings
+          </NavLink>
+          <NavLink
+            to="/view/complaints"
+            className={({ isActive }) =>
+              `px-4 py-2 rounded ${isActive ? "bg-red text-white" : ""}`
+            }
+          >
+            Complaints
           </NavLink>
         </div>
         <Button

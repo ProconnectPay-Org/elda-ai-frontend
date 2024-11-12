@@ -385,3 +385,24 @@ export const refinePrompt = async ({ prompt }: { prompt: string }) => {
     return null;
   }
 };
+
+export const getComplaints = async () => {
+  try {
+    const token =
+      Cookies.get("access_token") ||
+      Cookies.get("staff_access_token") ||
+      Cookies.get("candidate_access_token");
+    if (!token) return null;
+
+    const response = await axios.get(`${API_URL}complaints/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};

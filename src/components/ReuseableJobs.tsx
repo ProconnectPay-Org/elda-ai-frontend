@@ -17,13 +17,13 @@ interface ReuseableJobsProps {
 
 const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
   const { register, getValues, setValue } = useFormContext<Step3FormData>();
-  
+
   const divClass = "flex flex-col w-full md:w-1/2";
   const outerDivClass =
     "flex flex-col md:flex-row justify-between gap-4 md:gap-8";
 
   const [refineLoading, setRefineLoading] = useState(false);
-  const [jobStatus, setJobStatus] = useState("");
+  const [jobStatus, setJobStatus] = useState("current");
 
   const jobExperienceIds = [
     Cookies.get("work_experience_id1"),
