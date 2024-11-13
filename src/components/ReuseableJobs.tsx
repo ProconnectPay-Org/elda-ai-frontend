@@ -33,10 +33,20 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
     Cookies.get("work_experience_id5"),
   ].filter((id) => id !== undefined);
 
-  const handleJobChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleJobStatusChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const value = event.target.value;
     setJobStatus(value);
-    setValue(`jobExperiences.${index}.jobStatus`, value); // Update form state with index
+    setValue(`jobExperiences.${index}.jobStatus`, value);
+  };
+
+  // Handler for current professional status
+  const handleProfessionalStatusChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const value = event.target.value;
+    setValue(`jobExperiences.${index}.currentProfessionalStatus`, value);
   };
 
   const jobExperienceQueries = jobExperienceIds.map((id) => {
@@ -49,9 +59,8 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
   });
 
   const isJobExpLoading = jobExperienceQueries.some((query) => query.isLoading);
-  const jobExperienceData = jobExperienceQueries.map((query) => query.data);
+  const jobExperienceData = jobExperienceQueries.map((query) => query.data);  
 
-  console.log(jobExperienceData);
   useEffect(() => {
     if (jobExperienceData) {
       const filteredJobExperienceData = jobExperienceData.filter(
@@ -158,7 +167,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
                 className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
                 id="jobStatus"
                 {...register(`jobExperiences.${index}.jobStatus`)}
-                onChange={handleJobChange}
+                onChange={handleJobStatusChange}
               >
                 <option value="">Select job status</option>
                 <option value="current">Current</option>
@@ -213,14 +222,18 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
                 {...register(
                   `jobExperiences.${index}.currentProfessionalStatus`
                 )}
-                onChange={handleJobChange}
+                onChange={handleProfessionalStatusChange}
               >
                 <option value="">Select Professional status</option>
-                <option value="Employer/Start-Up Founder">Employer/Start-Up Founder</option>
+                <option value="Employer/Start-Up Founder">
+                  Employer/Start-Up Founder
+                </option>
                 <option value="Employee">Employee</option>
                 <option value="Self Employed">Self Employed</option>
                 <option value="Freelancer">Freelancer</option>
-                <option value="Small Business Owner">Small Business Owner</option>
+                <option value="Small Business Owner">
+                  Small Business Owner
+                </option>
               </select>
               <span className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                 <svg

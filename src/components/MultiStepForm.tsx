@@ -9,7 +9,7 @@ import {
   step5Schema,
 } from "@/lib/utils";
 import { Step1, Step2, Step3, Step4, Step5 } from "@/pages/(root)/Candidates";
-import { FormData } from "@/types";
+import { AdvancedEducation, EducationHistory, FormData, LoanReferee, updateCandidateProfile, VerificationDocument } from "@/types";
 import RegisterSuccessModal from "./RegisterSuccessModal";
 import {
   postJobExperience,
@@ -93,7 +93,7 @@ const MultiStepForm = () => {
     try {
       if (currentStep === 0) {
         // Step 1: PERSONAL DETAILS
-        const personalData = {
+        const personalData : updateCandidateProfile = {
           first_name: currentFormData.firstName,
           middle_name: currentFormData.middleName,
           last_name: currentFormData.surname,
@@ -114,7 +114,7 @@ const MultiStepForm = () => {
         await updatePersonalDetails(personalData);
       } else if (currentStep === 1) {
         // Step 2: EDUCATION DETAILS
-        const educationData = {
+        const educationData: EducationHistory = {
           current_status: currentFormData.currentStatus,
           degree_type: currentFormData.degreeType,
           country: currentFormData.countryOfEducation,
@@ -130,7 +130,7 @@ const MultiStepForm = () => {
         await submitEducationDetails(educationData);
 
         if (currentFormData.advancedDegree) {
-          const advancedDegreeData = {
+          const advancedDegreeData : AdvancedEducation = {
             advanced_degree_type: currentFormData.advancedDegreeType,
             graduate_type: currentFormData.graduateType,
             country: currentFormData.advancedCountry,
@@ -199,7 +199,7 @@ const MultiStepForm = () => {
         }
       } else if (currentStep === 3) {
         // Step 4: REFEREE DETAILS
-        const referee1Data = {
+        const referee1Data: LoanReferee = {
           name: currentFormData.referee1fullname,
           email: currentFormData.referee1email,
           phone_number: currentFormData.referee1phoneNumber,
@@ -207,7 +207,7 @@ const MultiStepForm = () => {
           candidate: id,
         };
 
-        const referee2Data = {
+        const referee2Data : LoanReferee = {
           name: currentFormData.referee2fullname,
           email: currentFormData.referee2email,
           phone_number: currentFormData.referee2phoneNumber,
@@ -218,7 +218,7 @@ const MultiStepForm = () => {
         await submitRefereeDetails(referee1Data, referee2Data);
       } else if (currentStep === steps.length - 1) {
         // UPLOAD DOCUMENTS
-        const documentsData = {
+        const documentsData : VerificationDocument = {
           bsc_hnd_certificate: currentFormData.document1,
           bank_statement: currentFormData.document2,
           intl_passport: currentFormData.document3,

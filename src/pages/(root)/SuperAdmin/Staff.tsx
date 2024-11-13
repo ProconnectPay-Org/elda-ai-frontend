@@ -11,7 +11,7 @@ const Staff = () => {
   const { data, isLoading, error } = useQuery<AllStaffResponse, Error>({
     queryKey: ["allStaff"],
     queryFn: getAllStaff,
-    staleTime: 1 * 60 * 1000,
+    staleTime: 1 * 30 * 1000,
   });
 
   const tableData: AllStaff[] =

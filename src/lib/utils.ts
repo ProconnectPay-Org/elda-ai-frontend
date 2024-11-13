@@ -98,7 +98,6 @@ export const step1Schema = z.object({
   houseAddress: z.string().nonempty("House address is required"),
 });
 
-// Existing Step 2 Schema
 export const step2Schema = z.object({
   currentStatus: z.string().min(1, { message: "Current status is required" }),
   degreeType: z.string().min(1, { message: "Degree type is required" }),
@@ -165,7 +164,6 @@ export const step3Schema = z.object({
   ),
 });
 
-// Define the allowed values for relationships
 const relationshipOptions = [
   "father",
   "mother",
@@ -176,10 +174,8 @@ const relationshipOptions = [
   "cousin",
 ] as const;
 
-// Create an enum schema for relationship fields
 const relationshipEnum = z.enum(relationshipOptions);
 
-// Define the step4 schema with the enum validation for relationship fields
 export const step4Schema = z.object({
   referee1fullname: z.string().min(1, "Referee 1 full name is required"),
   referee1email: z.string().email("Invalid email address"),

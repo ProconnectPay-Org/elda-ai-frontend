@@ -32,21 +32,7 @@ export const staffGetAllCandidates = async (id: string) => {
   return response.data;
 };
 
-export const fetchEducationData = async (educationId: any) => {
-  const staffToken = Cookies.get("staff_access_token");
-  const { data } = await axios.get(
-    `${API_URL}register/education/${educationId}/`,
-    {
-      headers: {
-        Authorization: `Bearer ${staffToken}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  return data;
-};
-
-export const fetchCareerData = async (careerId: any) => {
+export const fetchCareerData = async (careerId: string) => {
   const staffToken = Cookies.get("staff_access_token");
   const { data } = await axios.get(`${API_URL}register/career/${careerId}/`, {
     headers: {
@@ -57,7 +43,7 @@ export const fetchCareerData = async (careerId: any) => {
   return data;
 };
 
-export const fetchJobExperienceData = async (work_experience_id: any) => {
+export const fetchJobExperienceData = async (work_experience_id: string) => {
   const staffToken = Cookies.get("staff_access_token");
   const { data } = await axios.get(
     `${API_URL}register/job-experience/${work_experience_id}/`,
@@ -71,7 +57,7 @@ export const fetchJobExperienceData = async (work_experience_id: any) => {
   return data;
 };
 
-export const getAdvancedDegree = async (advancedId: any) => {
+export const getAdvancedDegree = async (advancedId: string) => {
   const staffToken = Cookies.get("staff_access_token");
   const { data } = await axios.get(
     `${API_URL}register/advanced-education/${advancedId}/`,
@@ -85,7 +71,7 @@ export const getAdvancedDegree = async (advancedId: any) => {
   return data;
 };
 
-export const craftCandidateResume = async (id: any) => {
+export const craftCandidateResume = async (id: string | undefined) => {
   const staffToken = Cookies.get("staff_access_token");
   const { data } = await axios.get(
     `${API_URL}staff-dashboard/craft-candidate-resume/${id}/`,
@@ -99,7 +85,7 @@ export const craftCandidateResume = async (id: any) => {
   return data;
 };
 
-export const careerStrategyPurpose = async (id: any) => {
+export const careerStrategyPurpose = async (id: string) => {
   const staffToken = Cookies.get("staff_access_token");
   const { data } = await axios.get(
     `${API_URL}staff-dashboard/generate-career-strategy-purpose/${id}/`,
@@ -113,7 +99,7 @@ export const careerStrategyPurpose = async (id: any) => {
   return data;
 };
 
-export const generateSop = async (id: any) => {
+export const generateSop = async (id: string) => {
   const staffToken = Cookies.get("staff_access_token");
   const { data } = await axios.get(
     `${API_URL}staff-dashboard/generate-sop/${id}/`,
@@ -127,7 +113,7 @@ export const generateSop = async (id: any) => {
   return data;
 };
 
-export const postEditedCandidate = async (id: any, data: any) => {
+export const postEditedCandidate = async (id: string, data: any) => {
   const staffToken = Cookies.get("staff_access_token");
   const { data: response } = await axios.patch(
     `${API_URL}staff-dashboard/edit-candidate/${id}/`,
@@ -142,7 +128,7 @@ export const postEditedCandidate = async (id: any, data: any) => {
   return response;
 };
 
-export const getEditedCandidate = async (id: any) => {
+export const getEditedCandidate = async (id: string) => {
   const staffToken = Cookies.get("staff_access_token");
   const { data } = await axios.get(
     `${API_URL}staff-dashboard/edit-candidate/${id}/`,

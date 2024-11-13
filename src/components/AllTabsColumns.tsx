@@ -56,7 +56,11 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
     cell: ({ row }) => (
       <div className="flex justify-center">
         <Button
-          className="py-1 h-5 rounded-xl bg-[#D5F4EA] text-[#2A6350] px-5 hover:bg-green-200"
+          className={`py-1 h-5 rounded-xl ${
+            row.original.school_application_status === "Pending"
+              ? "bg-orange text-white"
+              : "bg-[#D5F4EA] text-[#2A6350]"
+          } px-5 hover:bg-green-200`}
           onClick={() =>
             alert(`Status: ${row.original.school_application_status || "none"}`)
           }
@@ -72,7 +76,11 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
     cell: ({ row }) => (
       <div className="flex justify-center">
         <Button
-          className="py-1 h-5 rounded-xl bg-[#D5F4EA] text-[#2A6350] px-5 hover:bg-green-200"
+          className={`py-1 h-5 rounded-xl ${
+            row.original.resume_status === "Pending"
+              ? "bg-orange text-white"
+              : "bg-[#D5F4EA] text-[#2A6350]"
+          } px-5 hover:bg-green-200`}
           onClick={() =>
             alert(`Resume Status: ${row.original.resume_status || "none"}`)
           }
@@ -88,7 +96,11 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
     cell: ({ row }) => (
       <div className="flex justify-center">
         <Button
-          className="py-1 h-5 rounded-xl bg-[#D5F4EA] w-full text-[#2A6350] px-5 hover:bg-green-200"
+          className={`py-1 h-5 rounded-xl ${
+            row.original.sop_status === "Pending"
+              ? "bg-orange text-white"
+              : "bg-[#D5F4EA] text-[#2A6350]"
+          } bg-[#D5F4EA] w-full text-[#2A6350] px-5 hover:bg-green-200`}
           onClick={() =>
             alert(`SOP Status: ${row.original.sop_status || "none"}`)
           }

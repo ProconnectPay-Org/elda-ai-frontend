@@ -99,8 +99,6 @@ const AssignCandidate: React.FC = () => {
       }));
       setStaffOptions(options);
       setError("");
-    } else {
-      setError("Failed to fetch staff.");
     }
   }, [staffResponse]);
 

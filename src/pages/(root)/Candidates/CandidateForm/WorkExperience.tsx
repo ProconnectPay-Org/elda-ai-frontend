@@ -1,10 +1,7 @@
 // components/Step3.tsx
-
-import { careerOptions } from "@/constants";
 import { getErrorMessage } from "@/lib/utils";
-import { Step3FormData } from "@/types";
+import { CareerInterest, Step3FormData } from "@/types";
 import { Controller, useFormContext } from "react-hook-form";
-import ReactSelect from "react-select";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -25,7 +22,8 @@ const WorkExperience = () => {
     setValue,
     formState: { errors },
   } = useFormContext<Step3FormData>();
-  const [jobsCount, setJobsCount] = useState(1);
+  const [jobsCount, setJobsCount] = useState(0);
+  const [inputValue, setInputValue] = useState("");
 
   const divClass = "flex flex-col w-full md:w-1/2";
   const outerDivClass =
@@ -43,7 +41,7 @@ const WorkExperience = () => {
   useEffect(() => {
     if (careerData) {
       console.log(careerData);
-      
+
       setValue("workPlaceName", careerData.business_name || "");
       setValue("profession", careerData.profession || "");
       setValue("sectorOfProfession", careerData.sector || "");
@@ -133,30 +131,10 @@ const WorkExperience = () => {
             </div>
           </div>
 
-          <div className={outerDivClass}>
-            {/* <div className={divClass}>
-              <label htmlFor="technicalSkill" className="form-label">
-                Name one SPECIFIC Technical Skill you apply to this Profession{" "}
-                <span className="text-red">*</span>
-              </label>
-              <input
-                id="technicalSkill"
-                type="text"
-                {...register("technicalSkill")}
-                className="border border-gray-border rounded-md py-2 px-4"
-              />
-              <p className="text-xs text-gray-text">
-                E.g Banker, Teacher, Software Engineer
-              </p>
-              {errors.technicalSkill && (
-                <p className="text-red text-sm">
-                  {getErrorMessage(errors.technicalSkill)}
-                </p>
-              )}
-            </div> */}
-            <div className={`${divClass} w-full`}>
+          <div className="flex flex-col md:flex-row justify-between gap-4">
+            <div className="flex flex-col w-full">
               <label htmlFor="careerInterest" className="form-label">
-                Select Career Interests <span className="text-red">*</span>
+                Career Interests <span className="text-red">*</span>
               </label>
               <Controller
                 name="careerInterest"
@@ -165,40 +143,73 @@ const WorkExperience = () => {
                   required: "Please select at least one career interest.",
                 }}
                 render={({ field }) => (
-                  <ReactSelect
-                    {...field}
-                    isMulti
-                    options={careerOptions}
-                    classNamePrefix="select"
-                    placeholder="Select Career Interests"
-                    styles={{
-                      control: (base) => ({
-                        ...base,
-                        border: "1px solid #ccc",
-                        borderRadius: "0.35rem",
-                        padding: "1px 0px",
-                      }),
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      alignItems: "center",
+                      border: "1px solid #ccc",
+                      borderRadius: "0.35rem",
+                      padding: "8px",
                     }}
-                    // Convert selected values to the format ReactSelect expects
-                    value={
-                      field.value
-                        ? careerOptions.filter((option) =>
-                            field.value
-                              .map((item: any) => item.name)
-                              .includes(option.value)
-                          )
-                        : []
-                    }
-                    onChange={(selectedOptions) => {
-                      field.onChange(
-                        selectedOptions
-                          ? selectedOptions.map((option) => ({
-                              name: option.value,
-                            }))
-                          : []
-                      );
-                    }}
-                  />
+                  >
+                    {field.value?.map(
+                      (interest: CareerInterest, index: number) => (
+                        <span
+                          key={index}
+                          style={{
+                            backgroundColor: "#e0e7ff",
+                            padding: "2px 6px",
+                            borderRadius: "4px",
+                            marginRight: "5px",
+                            marginBottom: "5px",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          {interest.name}
+                          <button
+                            onClick={() => {
+                              const updatedInterests = field.value.filter(
+                                (_: any, i: number) => i !== index
+                              );
+                              field.onChange(updatedInterests);
+                            }}
+                            style={{
+                              marginLeft: "5px",
+                              background: "transparent",
+                              border: "none",
+                              cursor: "pointer",
+                              color: "#ff4d4f",
+                              fontSize: "12px",
+                            }}
+                          >
+                            &times;
+                          </button>
+                        </span>
+                      )
+                    )}
+                    <input
+                      type="text"
+                      placeholder="Type and press comma to add"
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "," && inputValue.trim()) {
+                          const newInterest = { name: inputValue.trim() };
+                          field.onChange([...(field.value || []), newInterest]);
+                          setInputValue("");
+                          e.preventDefault(); // Prevents comma from being added
+                        }
+                      }}
+                      style={{
+                        border: "none",
+                        outline: "none",
+                        minWidth: "100px",
+                        flexGrow: 1,
+                      }}
+                    />
+                  </div>
                 )}
               />
               <p className="text-xs text-gray-text">

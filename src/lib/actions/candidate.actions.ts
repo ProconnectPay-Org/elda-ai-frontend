@@ -1,10 +1,19 @@
-import { ComplaintType } from "@/types";
+import {
+  AdvancedEducation,
+  CandidateCareer,
+  ComplaintType,  
+  EducationHistory,
+  JobExperience,
+  LoanReferee,
+  updateCandidateProfile,
+  VerificationDocument,
+} from "@/types";
 import axios from "axios";
 import Cookies from "js-cookie";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export const updatePersonalDetails = async (personalDetails: any) => {
+export const updatePersonalDetails = async (personalDetails: updateCandidateProfile) => {
   const token = Cookies.get("candidate_access_token");
   const canId = Cookies.get("candidate_id");
   return await axios.patch(
@@ -30,7 +39,9 @@ export const getPersonalDetails = async () => {
   });
 };
 
-export const submitEducationDetails = async (educationDetails: any) => {
+export const submitEducationDetails = async (
+  educationDetails: EducationHistory
+) => {
   const educationId = Cookies.get("education_id");
   const token = Cookies.get("candidate_access_token");
 
@@ -62,7 +73,7 @@ export const fetchEducationData = async () => {
   return data;
 };
 
-export const hasAdvancedDegree = async (degreeDetails: any) => {
+export const postAdvancedDegree = async (degreeDetails: AdvancedEducation) => {
   const token = Cookies.get("candidate_access_token");
 
   return await axios.post(
@@ -77,7 +88,9 @@ export const hasAdvancedDegree = async (degreeDetails: any) => {
   );
 };
 
-export const updateAdvancedDegree = async (degreeDetails: any) => {
+export const updateAdvancedDegree = async (
+  degreeDetails: AdvancedEducation
+) => {
   const token = Cookies.get("candidate_access_token");
   const advancedId = Cookies.get("advanced_education1_id");
 
@@ -109,7 +122,7 @@ export const getAdvancedDegree = async () => {
   return data;
 };
 
-export const submitWorkExperience = async (workData: any) => {
+export const submitWorkExperience = async (workData: CandidateCareer) => {
   const token = Cookies.get("candidate_access_token");
 
   const careerId = Cookies.get("career_id");
@@ -124,8 +137,8 @@ export const submitWorkExperience = async (workData: any) => {
 };
 
 export const postJobExperience = async (
-  experienceData: any,
-  job_experience_id: any
+  experienceData: JobExperience,
+  job_experience_id: string
 ) => {
   const token = Cookies.get("candidate_access_token");
   return await axios.patch(
@@ -153,21 +166,24 @@ export const fetchCareerData = async () => {
   return data;
 };
 
-export const fetchJobExperienceData = async (work_experience_id: any) => {
+export const fetchJobExperienceData = async (work_experience_id: string | undefined) => {
   const token = Cookies.get("candidate_access_token");
 
-  const { data } = await axios.get(`${API_URL}register/job-experience/${work_experience_id}/`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
+  const { data } = await axios.get(
+    `${API_URL}register/job-experience/${work_experience_id}/`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
   return data;
 };
 
 export const submitRefereeDetails = async (
-  referee1Data: any,
-  referee2Data: any
+  referee1Data: LoanReferee,
+  referee2Data: LoanReferee
 ) => {
   const token = Cookies.get("candidate_access_token");
 
@@ -234,7 +250,7 @@ export const fetchReferee2 = async () => {
   return data;
 };
 
-export const submitDocuments = async (documentsData: any) => {
+export const submitDocuments = async (documentsData: VerificationDocument) => {
   const token = Cookies.get("candidate_access_token");
 
   const verificationDocumentsId = Cookies.get("verification_document_id");

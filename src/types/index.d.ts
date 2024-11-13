@@ -97,7 +97,7 @@ declare type OptionType = {
 };
 
 interface User {
-  id?: number | string;
+  id: number | string;
   token?: string;
   email: string;
   full_name: string;
@@ -207,7 +207,7 @@ declare type Resume = {
 };
 
 export type EducationHistory = {
-  id: number;
+  id?: number;
   current_status: string;
   degree_type: string;
   country: string;
@@ -218,7 +218,7 @@ export type EducationHistory = {
   year_graduated: number | null;
   year_admitted: number | null;
   has_advanced_degree: boolean;
-  candidate: number;
+  candidate: string | undefined;
 };
 
 export type WorkHistory = {
@@ -240,7 +240,7 @@ export type CareerInterest = {
 };
 
 export type CandidateCareer = {
-  id: number;
+  id?: number;
   profession: string;
   sector: string;
   technical_skill: string;
@@ -251,7 +251,7 @@ export type CandidateCareer = {
 };
 
 export type JobExperience = {
-  id: number;
+  id?: number;
   business_name: string;
   professional_status: string;
   job_title: string;
@@ -263,20 +263,20 @@ export type JobExperience = {
   job_summary: string;
   year_ended: string;
   job_status: string;
-  candidate: number;
+  candidate: string | undefined;
 };
 
 export type LoanReferee = {
-  id: number;
+  id?: number;
   name: string;
   email: string;
   phone_number: string;
   relationship: string;
-  candidate: number;
+  candidate: string | undefined;
 };
 
 export type VerificationDocument = {
-  id: number;
+  id?: number;
   bsc_hnd_certificate: string;
   bank_statement: string;
   first_degree_transcript: string | null;
@@ -286,11 +286,11 @@ export type VerificationDocument = {
   utility_bill: string | null;
   post_graduate_certificate: string | null;
   post_graduate_transcript: string | null;
-  candidate: number;
+  candidate: string | undefined;
 };
 
 export type AdvancedEducation = {
-  id: number;
+  id?: number;
   advanced_degree_type: string;
   graduate_type: string;
   country: string;
@@ -299,11 +299,30 @@ export type AdvancedEducation = {
   specific_cgpa: string | null;
   year_graduated: number | null;
   year_admitted: number | null;
-  candidate: number;
+  candidate: string | undefined;
+};
+
+export type updateCandidateProfile = {
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  preferred_call_name: string;
+  gender: string;
+  birth_date: string;
+  country_of_birth: string;
+  city_of_birth: string;
+  state_of_birth: string;
+  phone_number: string;
+  email_address: string;
+  country_current_reside: string;
+  state_current_reside: string;
+  city_current_reside: string;
+  current_house_address: string;
+  postal_code: string;
 };
 
 export type CandidateData = {
-  id: string;
+  id?: string;
   user?: User;
   assigned: boolean;
   assigned_course: string;
@@ -318,20 +337,26 @@ export type CandidateData = {
   city_of_birth: string;
   country_current_reside: string;
   country_of_birth: string;
+  current_house_address?: string;
   date_of_birth: string;
   duplicate?: string;
   email_address: string;
+  first_name?: string;
+  last_name?: string;
+  middle_name?: string;
   name: string;
   preferred_call_name: string;
   recommended_school: string;
   recommended_course: string;
   resume: string;
   resume_status?: string;
-  gender?: string;
   sop_status?: string;
+  gender?: string;
+  postal_code?: string;
   serial_number: number;
   school_application_status: "Pending" | "Complete" | "Started";
   state_of_birth: string;
+  state_current_reside?: string;
   status: string;
   phone_number: string;
   profession?: string;
@@ -360,7 +385,7 @@ declare interface AllStaff {
   assigned_candidates?: number | string;
   permission?: string;
   serialNumber?: number;
-  user?: User;
+  user: User;
 }
 
 declare interface AllStaffResponse {

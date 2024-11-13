@@ -25,9 +25,6 @@ const TabsComponent = () => {
       duplicate: candidate.duplicate || "none",
     })) || [];
 
-    console.log(tableData)
-    
-
   const assignedData = tableData.filter((candidate) => candidate.assigned);
   const unassignedData = tableData.filter((candidate) => !candidate.assigned);
 

@@ -2,8 +2,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import { deleteStaff } from "@/lib/actions/user.actions";
+import { AllStaff } from "@/types";
 
-export const StaffColumns: ColumnDef<any>[] = [
+export const StaffColumns: ColumnDef<AllStaff>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -64,7 +65,7 @@ export const StaffColumns: ColumnDef<any>[] = [
 
             if (confirmed) {
               try {
-                await deleteStaff(row.original.id);
+                await deleteStaff(row.original.user.id);
                 alert(`Staff ${row.original.full_name} deleted successfully.`);
               } catch (error) {
                 alert("Failed to delete staff. Please try again.");
