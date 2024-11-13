@@ -7,7 +7,6 @@ export const ResumeStep1Schema = z.object({
   city: z.string().nonempty("City is required"),
   state: z.string().nonempty("State is required"),
   // country: z.string().nonempty("Country is required"),
-  coreSkills: z.string().nonempty("Core skills are required"),
   profession: z.string().nonempty("Profession is required"),
 });
 
@@ -65,36 +64,41 @@ export const ResumeStep3Schema = z.object({
 });
 
 export const ResumeStep4Schema = z.object({
-  nameOfCompany: z.string().nonempty("Name of company is required"),
-  typeOfCompany: z.string().nonempty("Type of company is required"),
-  jobTitle: z.string().nonempty("Job title is required"),
-  companyDescription: z.string().nonempty("Company description is required"),
-  mode: z.string().nonempty("Mode is required"),
-  location: z.string().nonempty("Location is required"),
-  startDate: z
-    .string()
-    .nonempty("Start date is required")
-    .refine(
-      (date) => {
-        const parsedDate = Date.parse(date);
-        return !isNaN(parsedDate);
-      },
-      {
-        message: "Invalid date format",
-      }
-    ),
-  endDate: z
-    .string()
-    .nonempty("End date is required")
-    .refine(
-      (date) => {
-        const parsedDate = Date.parse(date);
-        return !isNaN(parsedDate);
-      },
-      {
-        message: "Invalid date format",
-      }
-    ),
+  jobExperiences: z.array(
+    z.object({
+      nameOfCompany: z.string().nonempty("Name of company is required"),
+      jobTitle: z.string().nonempty("Job title is required"),
+      companyDescription: z
+        .string()
+        .nonempty("Company description is required"),
+      mode: z.string().nonempty("Mode is required"),
+      location: z.string().nonempty("Location is required"),
+      startDate: z
+        .string()
+        .nonempty("Start date is required")
+        .refine(
+          (date) => {
+            const parsedDate = Date.parse(date);
+            return !isNaN(parsedDate);
+          },
+          {
+            message: "Invalid date format",
+          }
+        ),
+      endDate: z
+        .string()
+        .refine(
+          (date) => {
+            const parsedDate = Date.parse(date);
+            return !isNaN(parsedDate);
+          },
+          {
+            message: "Invalid date format",
+          }
+        )
+        .optional(),
+    })
+  ),
 });
 
 export const ResumeStep5Schema = z.object({

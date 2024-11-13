@@ -141,9 +141,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
           </div>
         </div>
       )}
-      <h3 className="text-2xl font-medium mb-5">
-        {jobStatus === "current" ? "Current Job" : "Former Job"}
-      </h3>
+      <h3 className="text-2xl font-medium mb-5">Job History</h3>
 
       <div className="flex flex-col gap-8">
         <div className={outerDivClass}>
@@ -208,12 +206,39 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
             >
               Current Professional Status <span className="text-red">*</span>
             </label>
-            <input
-              id={`jobExperiences.${index}.currentProfessionalStatus`}
-              type="text"
-              {...register(`jobExperiences.${index}.currentProfessionalStatus`)}
-              className="border border-gray-border rounded-md py-2 px-4"
-            />
+            <div className="relative inline-block">
+              <select
+                className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
+                id={`jobExperiences.${index}.currentProfessionalStatus`}
+                {...register(
+                  `jobExperiences.${index}.currentProfessionalStatus`
+                )}
+                onChange={handleJobChange}
+              >
+                <option value="">Select Professional status</option>
+                <option value="Employer/Start-Up Founder">Employer/Start-Up Founder</option>
+                <option value="Employee">Employee</option>
+                <option value="Self Employed">Self Employed</option>
+                <option value="Freelancer">Freelancer</option>
+                <option value="Small Business Owner">Small Business Owner</option>
+              </select>
+              <span className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </span>
+            </div>
           </div>
           <div className={divClass}>
             <label

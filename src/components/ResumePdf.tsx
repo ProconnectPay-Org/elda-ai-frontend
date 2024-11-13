@@ -9,6 +9,7 @@ import {
   JobExperience,
 } from "@/types";
 import { getCountryNameFromISO } from "@/lib/utils";
+import "../index.css";
 const ResumePdf = () => {
   const { id } = useParams<{ id: string }>();
 
@@ -23,8 +24,6 @@ const ResumePdf = () => {
     singleCandidateError,
   } = useCandidates(id);
 
-  console.log(formData);
-
   if (singleCandidateLoading) {
     return <FinalResumeSkeleton />;
   }
@@ -32,17 +31,36 @@ const ResumePdf = () => {
   if (singleCandidateError) {
     return <div>Error fetching data</div>;
   }
+  const jobExperiences = formData?.job_experience as
+    | JobExperience[]
+    | undefined;
+
+  const jobTitles =
+    jobExperiences &&
+    jobExperiences
+      .filter((experience: JobExperience) => experience.job_title)
+      .map((experience: JobExperience) => experience.job_title);
+
+  const uniqueJobTitles = Array.from(new Set(jobTitles));
+
+  const renderedJobTitles: string =
+    uniqueJobTitles.length === 1
+      ? uniqueJobTitles[0]
+      : uniqueJobTitles.join(" | ");
+
   return (
-    <div className="border md:min-w-[484px] space-y-4 pb-5 max-w-[800px] mx-auto min-h-svh rounded-lg overflow-hidden">
-      <div className="bg-[#F1F8F9] p-5 w-full flex flex-col items-center gap-3">
-        <h1 className="font-bold text-4xl uppercase">
-          {formData?.first_name} {formData?.middle_name} {formData?.last_name}
+    <div className="resume-class">
+      <div className="resume-flex-container">
+        <h1 className="resume-username">
+          <span>{formData?.first_name}</span>
+          <span>{formData?.middle_name}</span>
+          <span>{formData?.last_name}</span>
         </h1>
-        <div className="flex items-center flex-wrap justify-center gap-3">
-          <p className="text-sm text-blue-900">{formData?.email_address}</p>
-          <hr className="h-4 w-[2px] bg-black" />
+        <div className="flex-items-center-gap-3 flex-wrap justify-center">
+          <p className="text-sm text-blue">{formData?.email_address}</p>
+          <hr className="horizontal-line" />
           <p className="text-sm">{formData?.phone_number}</p>
-          <hr className="h-4 w-[2px] bg-black" />
+          <hr className="horizontal-line" />
           <div>
             <p className="text-sm">
               {formData?.city_of_birth}, {formData?.state_of_birth} State,{" "}
@@ -51,25 +69,19 @@ const ResumePdf = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <p className="text-sm font-semibold">{formData?.career[0].sector}</p>
-          <hr className="h-4 w-[2px] bg-black" />
-          <p className="text-sm font-semibold">
-            {formData?.career[0].profession}
-          </p>
-          <hr className="h-4 w-[2px] bg-black" />
-          <p className="text-sm font-semibold">Global Citizen</p>
-          <hr className="h-4 w-[2px] bg-black" />
-          <p className="text-sm font-semibold">
-            {formData?.job_experience[0].job_title}
-          </p>
+        <div className="flex-items-center-gap-3">
+          <p className="small-bold">{formData?.career[0].sector}</p>
+          <hr className="horizontal-line" />
+          <p className="small-bold">{formData?.career[0].profession}</p>
+          <hr className="horizontal-line" />
+          <p className="small-bold">Global Citizen</p>
+          <hr className="horizontal-line" />
+          <div className="small-bold">{renderedJobTitles}</div>
         </div>
       </div>
 
-      <div className="px-5 w-full">
-        <h2 className="text-[#102694] font-bold text-base">
-          CAREER STRATEGIC PURPOSE
-        </h2>
+      <div className="resume-inner-container">
+        <h2 className="resume-title-text">CAREER STRATEGIC PURPOSE</h2>
         <p className="text-sm">
           {formData?.career_strategic_purpose ||
             formData?.sop?.[0]?.text ||
@@ -77,25 +89,25 @@ const ResumePdf = () => {
         </p>
       </div>
 
-      <div className="px-5 w-full">
-        <h2 className="text-[#102694] font-bold text-base">PERSONAL BIODATA</h2>
+      <div className="resume-inner-container">
+        <h2 className="resume-title-text">PERSONAL BIODATA</h2>
         <div>
           <div className="flex">
-            <p className="font-bold w-[200px] text-sm">Date of Birth:</p>
-            <p className="w-[200px] text-sm">{formData?.birth_date}</p>
+            <p className="font-bold width-200-text-sm">Date of Birth:</p>
+            <p className="width-200-text-sm">{formData?.birth_date}</p>
           </div>
           <div className="flex">
-            <p className="font-bold w-[200px] text-sm">Gender:</p>
-            <p className="w-[200px] text-sm">{formData?.gender}</p>
+            <p className="font-bold width-200-text-sm">Gender:</p>
+            <p className="width-200-text-sm">{formData?.gender}</p>
           </div>
           <div className="flex">
-            <p className="font-bold w-[200px] text-sm">Nationality:</p>
-            <p className="w-[200px] text-sm">
+            <p className="font-bold width-200-text-sm">Nationality:</p>
+            <p className="width-200-text-sm">
               {getCountryNameFromISO(formData?.country_of_birth)}
             </p>
           </div>
           <div className="flex">
-            <p className="font-bold w-[200px] text-sm">Interests:</p>
+            <p className="font-bold width-200-text-sm">Interests:</p>
             <p className="text-sm">
               {formData?.career
                 ?.flatMap((item: CandidateCareer) =>
@@ -108,28 +120,28 @@ const ResumePdf = () => {
           </div>
 
           <div className="flex">
-            <p className="font-bold w-[200px] text-sm">Preferred Call Name:</p>
-            <p className="w-[200px] text-sm capitalize">
+            <p className="font-bold width-200-text-sm">Preferred Call Name:</p>
+            <p className="width-200-text-sm capitalize">
               {formData?.preferred_call_name || "Not Provided"}
             </p>
           </div>
         </div>
       </div>
 
-      <div className="px-5 w-full">
-        <h2 className="text-[#102694] font-bold text-base">WORK EXPERIENCE</h2>
+      <div className="resume-inner-container">
+        <h2 className="resume-title-text">WORK EXPERIENCE</h2>
         {formData?.job_experience?.map((experience: JobExperience) =>
           experience.business_name ? (
-            <div key={experience.id}>
+            <div key={experience.id} className="my-2">
               <div>
                 <p className="font-bold text-sm">
                   {experience.business_name}: {experience.job_title}
                 </p>
-                <div className="flex gap-3 items-center">
+                <div className="flex-items-center-gap-3">
                   <p className="font-medium text-sm">
                     Location: {experience.state}, {experience.country}
                   </p>
-                  <hr className="h-4 w-[2px] bg-black" />
+                  <hr className="horizontal-line" />
                   <p className="font-medium text-sm">
                     Duration: {experience.year_started} -{" "}
                     {experience.year_ended}
@@ -147,20 +159,18 @@ const ResumePdf = () => {
         )}
       </div>
 
-      <div className="px-5 w-full">
-        <h2 className="text-[#102694] font-bold text-base">
-          EDUCATION AND TRAINING
-        </h2>
+      <div className="resume-inner-container">
+        <h2 className="resume-title-text">EDUCATION AND TRAINING</h2>
         {formData?.education?.map((item: EducationHistory) => (
-          <div key={item.id}>
-            <p className="font-semibold capitalize text-sm">
+          <div key={item.id} className="my-1">
+            <p className="capitalize small-bold">
               {item.degree_type} ({item.specific_course_of_study}){" "}
             </p>
-            <p className="text-sm flex gap-2 items-center">
+            <div className="text-sm flex-items-center-gap-3">
               {item.school_name}, {getCountryNameFromISO(item.country)}{" "}
-              <hr className="h-4 w-[2px] bg-black" />
+              <hr className="horizontal-line" />
               Graduated {item.year_graduated}
-            </p>
+            </div>
           </div>
         ))}
         {formData?.advanced_education?.map((item: AdvancedEducation) =>
@@ -168,9 +178,9 @@ const ResumePdf = () => {
             ""
           ) : (
             <div key={item.id}>
-              <p className="font-semibold flex gap-2 text-sm capitalize">
+              <p className="font-semibold flex-items-center-gap-3 text-sm capitalize">
                 {item.advanced_degree_type} ({item.graduate_type}){" "}
-                <hr className="h-4 w-[2px] bg-black" />
+                <hr className="horizontal-line" />
                 Graduated {item.year_graduated}
               </p>
               <p className="text-sm">
@@ -181,8 +191,8 @@ const ResumePdf = () => {
         )}
       </div>
 
-      <div className="px-5 w-full">
-        <h2 className="text-[#102694] font-bold text-base">REFERENCES</h2>
+      <div className="resume-inner-container">
+        <h2 className="resume-title-text">REFERENCES</h2>
         <p className="text-sm">Available on request</p>
       </div>
     </div>

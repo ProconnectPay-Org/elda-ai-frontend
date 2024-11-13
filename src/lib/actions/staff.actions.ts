@@ -3,15 +3,6 @@ import Cookies from "js-cookie";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const staffToken = Cookies.get("staff_access_token");
-
-const config = {
-  headers: {
-    Authorization: `Bearer ${staffToken}`,
-    "Content-Type": "application/json",
-  },
-};
-
 export const getStaffDetails = async () => {
   const staffToken = Cookies.get("staff_access_token");
 
@@ -31,79 +22,136 @@ export const getStaffDetails = async () => {
 };
 
 export const staffGetAllCandidates = async (id: string) => {
-  const response = await axios.get(`${API_URL}all-candidates/${id}`, config);
+  const staffToken = Cookies.get("staff_access_token");
+  const response = await axios.get(`${API_URL}all-candidates/${id}`, {
+    headers: {
+      Authorization: `Bearer ${staffToken}`,
+      "Content-Type": "application/json",
+    },
+  });
   return response.data;
 };
 
 export const fetchEducationData = async (educationId: any) => {
+  const staffToken = Cookies.get("staff_access_token");
   const { data } = await axios.get(
     `${API_URL}register/education/${educationId}/`,
-    config
+    {
+      headers: {
+        Authorization: `Bearer ${staffToken}`,
+        "Content-Type": "application/json",
+      },
+    }
   );
   return data;
 };
 
 export const fetchCareerData = async (careerId: any) => {
-  const { data } = await axios.get(
-    `${API_URL}register/career/${careerId}/`,
-    config
-  );
+  const staffToken = Cookies.get("staff_access_token");
+  const { data } = await axios.get(`${API_URL}register/career/${careerId}/`, {
+    headers: {
+      Authorization: `Bearer ${staffToken}`,
+      "Content-Type": "application/json",
+    },
+  });
   return data;
 };
 
 export const fetchJobExperienceData = async (work_experience_id: any) => {
+  const staffToken = Cookies.get("staff_access_token");
   const { data } = await axios.get(
     `${API_URL}register/job-experience/${work_experience_id}/`,
-    config
+    {
+      headers: {
+        Authorization: `Bearer ${staffToken}`,
+        "Content-Type": "application/json",
+      },
+    }
   );
   return data;
 };
 
 export const getAdvancedDegree = async (advancedId: any) => {
+  const staffToken = Cookies.get("staff_access_token");
   const { data } = await axios.get(
     `${API_URL}register/advanced-education/${advancedId}/`,
-    config
+    {
+      headers: {
+        Authorization: `Bearer ${staffToken}`,
+        "Content-Type": "application/json",
+      },
+    }
   );
   return data;
 };
 
 export const craftCandidateResume = async (id: any) => {
+  const staffToken = Cookies.get("staff_access_token");
   const { data } = await axios.get(
     `${API_URL}staff-dashboard/craft-candidate-resume/${id}/`,
-    config
+    {
+      headers: {
+        Authorization: `Bearer ${staffToken}`,
+        "Content-Type": "application/json",
+      },
+    }
   );
   return data;
 };
 
 export const careerStrategyPurpose = async (id: any) => {
+  const staffToken = Cookies.get("staff_access_token");
   const { data } = await axios.get(
     `${API_URL}staff-dashboard/generate-career-strategy-purpose/${id}/`,
-    config
+    {
+      headers: {
+        Authorization: `Bearer ${staffToken}`,
+        "Content-Type": "application/json",
+      },
+    }
   );
   return data;
 };
 
 export const generateSop = async (id: any) => {
+  const staffToken = Cookies.get("staff_access_token");
   const { data } = await axios.get(
     `${API_URL}staff-dashboard/generate-sop/${id}/`,
-    config
+    {
+      headers: {
+        Authorization: `Bearer ${staffToken}`,
+        "Content-Type": "application/json",
+      },
+    }
   );
   return data;
 };
 
 export const postEditedCandidate = async (id: any, data: any) => {
+  const staffToken = Cookies.get("staff_access_token");
   const { data: response } = await axios.patch(
     `${API_URL}staff-dashboard/edit-candidate/${id}/`,
     data,
-    config
+    {
+      headers: {
+        Authorization: `Bearer ${staffToken}`,
+        "Content-Type": "application/json",
+      },
+    }
   );
   return response;
 };
 
 export const getEditedCandidate = async (id: any) => {
+  const staffToken = Cookies.get("staff_access_token");
   const { data } = await axios.get(
     `${API_URL}staff-dashboard/edit-candidate/${id}/`,
-    config
+    {
+      headers: {
+        Authorization: `Bearer ${staffToken}`,
+        "Content-Type": "application/json",
+      },
+    }
   );
   return data;
 };

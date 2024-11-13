@@ -3,8 +3,18 @@ import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
+import { useParams } from "react-router-dom";
+import { useCandidates } from "@/hooks/useCandidiates";
 const DownloadResume = () => {
+  const { id } = useParams<{ id: string }>();
   const resumeRef = useRef<HTMLDivElement>(null);
+
+  if (!id) {
+    console.error("No ID provided");
+    return;
+  }
+
+  const { singleCandidate } = useCandidates(id);
 
   const downloadPDF = async () => {
     if (resumeRef.current) {
@@ -18,7 +28,11 @@ const DownloadResume = () => {
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
       pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save("Resume.pdf");
+      const fileName = singleCandidate?.user?.full_name
+        ? `${singleCandidate.user.full_name} Resume.pdf`
+        : "Resume.pdf";
+
+      pdf.save(fileName);
     }
   };
   return (

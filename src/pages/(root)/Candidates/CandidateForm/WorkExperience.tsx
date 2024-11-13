@@ -42,11 +42,11 @@ const WorkExperience = () => {
 
   useEffect(() => {
     if (careerData) {
+      console.log(careerData);
+      
       setValue("workPlaceName", careerData.business_name || "");
       setValue("profession", careerData.profession || "");
       setValue("sectorOfProfession", careerData.sector || "");
-      setValue("technicalSkill", careerData.technical_skill || "");
-
       setValue(
         "careerInterest",
         careerData.career_interests.map((interest: CareerInterestOption) => ({
@@ -134,7 +134,7 @@ const WorkExperience = () => {
           </div>
 
           <div className={outerDivClass}>
-            <div className={divClass}>
+            {/* <div className={divClass}>
               <label htmlFor="technicalSkill" className="form-label">
                 Name one SPECIFIC Technical Skill you apply to this Profession{" "}
                 <span className="text-red">*</span>
@@ -153,8 +153,8 @@ const WorkExperience = () => {
                   {getErrorMessage(errors.technicalSkill)}
                 </p>
               )}
-            </div>
-            <div className={divClass}>
+            </div> */}
+            <div className={`${divClass} w-full`}>
               <label htmlFor="careerInterest" className="form-label">
                 Select Career Interests <span className="text-red">*</span>
               </label>

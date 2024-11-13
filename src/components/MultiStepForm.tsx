@@ -51,7 +51,7 @@ const MultiStepForm = () => {
     stateLocation: "",
     countryLocation: "",
     startedDate: "",
-    endedDate: "",
+    endedDate: "00/00/0000",
     jobStatus: "",
     companyDescription: "",
     jobSummary: "",

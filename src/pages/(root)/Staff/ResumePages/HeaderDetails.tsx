@@ -29,15 +29,16 @@ const HeaderDetails = () => {
 
   useEffect(() => {
     if (singleCandidate) {
+      console.log(singleCandidate);
+
       const foundCandidate = singleCandidate;
-      setValue("fullName", foundCandidate.user.full_name || "");
+      setValue("fullName", foundCandidate.user?.full_name || "");
       setValue("phoneNumber", foundCandidate.phone_number || "");
-      setValue("email", foundCandidate.user.email || "");
-      setValue("city", foundCandidate.city_current_reside || "");
+      setValue("email", foundCandidate.user?.email || "");
+      setValue("city", foundCandidate.city_of_birth || "");
       setValue("state", foundCandidate.state_of_birth || "");
       setValue("country", foundCandidate.country_of_birth || "");
-      setValue("profession", foundCandidate.career[0].profession || "");
-      setValue("coreSkills", foundCandidate.career[0].technical_skill || "");
+      setValue("profession", foundCandidate.career[0]?.profession || "");
     }
   }, [singleCandidate, id, setValue]);
 
@@ -157,24 +158,8 @@ const HeaderDetails = () => {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
-            <div className="flex flex-col sm:w-1/2">
-              <label htmlFor="coreSkills" className="text-[#344054]">
-                Core Skills <span className="text-red">*</span>
-              </label>
-              <input
-                className="border border-gray-border rounded-full py-2 px-4"
-                id="coreSkills"
-                {...register("coreSkills")}
-                placeholder="Enter your core skills"
-              />
-              {errors.coreSkills && (
-                <span className="text-red text-sm">
-                  {getErrorMessage(errors.coreSkills)}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col sm:w-1/2">
+          <div className="flex w-full">
+            <div className="flex flex-col w-full">
               <label htmlFor="profession" className="text-[#344054]">
                 Profession <span className="text-red">*</span>
               </label>

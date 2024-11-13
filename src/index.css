@@ -81,6 +81,108 @@
   width: 100vw;
 }
 
+.resume-class {
+  border: 1px solid #000;
+  min-width: 484px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 800px;
+  padding-bottom: 20px;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+.resume-flex-container {
+  background-color: #f1f8f9; /* Sets the background color */
+  padding: 20px; /* Equivalent to p-5 (padding) */
+  width: 100%; /* Equivalent to w-full */
+  display: flex; /* Sets the element as a flex container */
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.flex-items-center-gap-3{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.horizontal-line {
+  width: 2px;
+  height: 1rem;
+  background-color: black;
+}
+
+.resume-inner-container {
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+}
+
+.resume-username {
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 40px;
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  justify-items: center;
+}
+
+.resume-flex-container .text-blue {
+  color: #1e3a8a;
+}
+
+.resume-flex-container .text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.small-bold {
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.resume-title-text {
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: #102694;
+}
+
+.resume-inner-container .text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.width-200-text-sm {
+  width: 200px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+/* Media query for medium screens and up */
+@media (min-width: 768px) {
+  .resume-class {
+    min-width: 484px;
+  }
+}
+
+/* Space between child elements, equivalent to space-y-4 */
+.resume-class > * {
+  margin-bottom: 1rem; /* Adjust as needed for 4 units space (using rem or px) */
+}
+
+.resume-class > *:last-child {
+  margin-bottom: 0; /* Remove margin-bottom from the last child */
+}
+
 .sidebar {
   @apply sticky left-0 top-0 flex h-screen w-fit flex-col justify-between border-r bg-gray pt-8 text-white max-md:hidden sm:p-4 xl:p-6 2xl:w-[355px];
 }

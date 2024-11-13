@@ -1,5 +1,5 @@
 import { useCandidates } from "@/hooks/useCandidiates";
-import { getErrorMessage } from "@/lib/utils";
+import { getCountryNameFromISO, getErrorMessage } from "@/lib/utils";
 import { ResumeStep3FormData } from "@/types";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
@@ -26,7 +26,7 @@ const EducationHistory = () => {
       const foundCandidate = singleCandidate;
       setValue("city", foundCandidate.city_current_reside || "");
       setValue("state", foundCandidate.state_of_birth || "");
-      setValue("country", foundCandidate.country_of_birth || "");
+      setValue("country", getCountryNameFromISO(foundCandidate.country_of_birth) || "");
       setValue("degree", foundCandidate.education[0].degree_type || "");
       setValue("kindOfDegree", foundCandidate.education[0].degree_type || "");
       setValue("tertiaryInstitutionAttended", foundCandidate.education[0].school_name || "");

@@ -59,7 +59,7 @@ const GenericStrategicPurpose = () => {
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="font-bold mb-4">CAREER STRATEGIC PURPOSE AI PROMPT</h2>
+        <h2 className="font-bold mb-4">CAREER STRATEGIC PURPOSE</h2>
         {/* <div className="space-y-2">
           <label htmlFor="">Type of program</label>
           <div className="w-full flex items-center gap-4 border border-[#667085] px-3 rounded-full overflow-hidden">
@@ -84,7 +84,7 @@ const GenericStrategicPurpose = () => {
           <div className="flex items-start border border-gray-border rounded-2xl gap-2 py-2 px-4 bg-white">
             <img src={aiSpark} alt="ai spark" className="cursor-pointer" />
             <Textarea
-              className="border-0 focus:ring-0 focus:outline-none focus-visible:ring-0"
+              className="border-0 focus:ring-0 focus:outline-0 focus-visible:ring-0 outline-0 ring-0 shadow-none"
               id="prompt"
               {...register("prompt")}
               placeholder="Enter your prompt"

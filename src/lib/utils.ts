@@ -129,7 +129,6 @@ export const step2Schema = z.object({
 export const step3Schema = z.object({
   profession: z.string().min(2, "Profession is required"),
   sectorOfProfession: z.string().min(2, "Sector of profession is required"),
-  technicalSkill: z.string().min(2, "Technical skill is required"),
   careerInterest: z
     .array(
       z.object({

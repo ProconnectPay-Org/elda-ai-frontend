@@ -4,7 +4,6 @@ import IconCheck from "@/assets/icon-check.svg";
 import ExclamationRed from "@/assets/exclamation-red.svg";
 import ExclamationWhite from "@/assets/exclamation-white.svg";
 import IconProgress from "@/assets/icon-progress.svg";
-// import { statusProps } from "@/constants";
 import useAuth from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { fetchVerificationDocument } from "@/lib/actions/candidate.actions";

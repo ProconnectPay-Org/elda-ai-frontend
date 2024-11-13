@@ -1,5 +1,5 @@
-import PcpLogo from "@/assets/pcplogo.svg";
-import EldaLogo from "@/assets/elda-ai-logo-no-bg.png";
+import PcpLogo from "@/assets/proconnect-logo-new-no-bg.png";
+import EldaLogo from "@/assets/elda-new-logo.png";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -39,7 +39,7 @@ const CandidateLogin = () => {
       const response = await adminSignIn({
         email: data.email,
         password: data.password,
-      });      
+      });
 
       if (response) {
         const userRole = response.user.role;
@@ -128,9 +128,13 @@ const CandidateLogin = () => {
   return (
     <section className="relative min-h-screen w-full form-bg">
       <div className="flex items-center justify-center flex-col pt-8">
-        <div className="flex items-center justify-center gap-4 max-w-full h-[200px]">
-          <img src={PcpLogo} alt="pcp-logo" />
-          <img src={EldaLogo} alt="elda-logo" className="w-[30%] md:w-[15%]" />
+        <div className="flex items-center justify-center md:gap-4 max-w-[500px] h-[200px]">
+          <img src={PcpLogo} alt="pcp-logo" className="w-[50%] md:scale-150" />
+          <img
+            src={EldaLogo}
+            alt="elda-logo"
+            className="w-[50%] md:scale-150"
+          />
         </div>
       </div>
       <section className="border border-red bg-white w-[80%] p-4 md:p-12 min-h-[400px] flex flex-col justify-evenly md:w-[32rem] rounded-2xl mx-auto">

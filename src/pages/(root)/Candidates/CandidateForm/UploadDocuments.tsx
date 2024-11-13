@@ -167,6 +167,7 @@ const UploadDocuments: React.FC = () => {
               />
             </div>
           )}
+          <i className="text-sm text-blue-500 float-end">Max 5mb</i>
         </div>
       ))}
     </div>

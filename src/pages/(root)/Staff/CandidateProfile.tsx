@@ -85,19 +85,13 @@ const CandidateProfile = () => {
             </p>
             <p className="capitalize">
               Profession:{" "}
-              {candidate?.career[0].profession || "No profession provided"}
+              {candidate?.career[0]?.profession || "No profession provided"}
             </p>
             <p className="capitalize">
-              Course:{" "}
-              {candidate?.education?.map(
-                (edu) => edu.specific_course_of_study || "No course provided"
-              )}
+              Course: {candidate?.assigned_course1 || "No course provided"}
             </p>
             <p className="capitalize">
-              School:{" "}
-              {candidate?.education?.map(
-                (edu) => edu.school_name || "No school provided"
-              )}
+              School: {candidate?.assigned_university1 || "No school provided"}
             </p>
             <div className="flex items-center gap-4">
               <div className="bg-pale-bg text-red rounded-xl px-2 text-xs flex items-center gap-1 py-1">
@@ -235,7 +229,7 @@ const CandidateProfile = () => {
         <h3 className="font-semibold text-lg mb-4">JOB SUMMARY</h3>
         <div className="text-[#5E6366]">
           {candidate?.job_experience?.map((job) => (
-            <p>{job.job_summary}</p>
+            <p key={job.id}>{job.job_summary}</p>
           )) || (
             <span className="flex gap-4 items-center">
               <p>No job summary provided</p>

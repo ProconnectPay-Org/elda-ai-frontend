@@ -33,6 +33,8 @@ const Step2 = ({
 
   useEffect(() => {
     if (singleCandidate) {
+      // console.log(singleCandidate);
+      
       setProgramType(singleCandidate.education[0]?.degree_type || "");
       setAssignedUniversity(singleCandidate.assigned_university1 || "");
       setAssignedCourse(singleCandidate.assigned_course1 || "");
@@ -42,7 +44,7 @@ const Step2 = ({
     }
   }, [singleCandidate]);
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["candidateData", id],
     queryFn: () => getEditedCandidate(id),
     staleTime: 5 * 1000 * 60,
@@ -51,6 +53,8 @@ const Step2 = ({
 
   useEffect(() => {
     if (data?.course_description) {
+      console.log(data)
+      
       setManualDescription((desc) => desc || data.course_description);
     }
   }, [data]);
@@ -147,8 +151,9 @@ const Step2 = ({
               name="courseDescription"
               value={manualDescription}
               onChange={(e) => setManualDescription(e.target.value)}
-              className="bg-transparent outline-none"
-              placeholder="A brief course description"
+              className="bg-transparent outline-none min-h-20 md:min-h-40"
+              placeholder={isLoading ? "Loading description..." : "A brief course description"}
+              disabled={isLoading}
             />
           </div>
         </div>
