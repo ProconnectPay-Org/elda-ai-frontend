@@ -1,17 +1,14 @@
 import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { getErrorMessage } from "@/lib/utils";
 import { ResumeStep5FormData } from "@/types";
 import { useFormContext } from "react-hook-form";
 import "react-phone-input-2/lib/style.css";
-// import helpIcon from "@/assets/help-icon.svg";
 import aiSpark from "@/assets/ai-prompt-spark.svg";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { careerStrategyPurpose } from "@/lib/actions/staff.actions";
 import { useEffect, useState } from "react";
-import { refinePrompt } from "@/lib/actions/user.actions";
 
 const GenericStrategicPurpose = () => {
   const {
@@ -43,8 +40,8 @@ const GenericStrategicPurpose = () => {
     e.preventDefault();
     setRefineLoading(true);
     try {
-      const refinedContent = await refinePrompt({ prompt: id });
-      setValue("prompt", refinedContent.refined_content);
+      const refinedContent = await careerStrategyPurpose(id);
+      setValue("prompt", refinedContent);
     } catch (error) {
       console.error("Error refining prompt:", error);
     } finally {
