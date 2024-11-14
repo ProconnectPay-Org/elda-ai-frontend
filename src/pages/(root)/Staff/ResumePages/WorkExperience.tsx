@@ -50,10 +50,9 @@ const WorkExperience = () => {
             `jobExperiences.${index}.startDate`,
             experience.year_started || ""
           );
-          setValue(
-            `jobExperiences.${index}.endDate`,
-            experience.year_ended || ""
-          );
+          if (experience.year_ended) {
+            setValue(`jobExperiences.${index}.endDate`, experience.year_ended);
+          }
         }
       );
     }
@@ -230,25 +229,27 @@ const WorkExperience = () => {
                     </span>
                   )}
                 </div>
-                <div className="flex flex-col sm:w-1/2">
-                  <label
-                    htmlFor={`endDate-${index}`}
-                    className="text-[#344054]"
-                  >
-                    End Date
-                  </label>
-                  <input
-                    type="date"
-                    className="border border-gray-border h-[42px] rounded-full py-2 px-4"
-                    id={`endDate-${index}`}
-                    {...register(`jobExperiences.${index}.endDate`)}
-                  />
-                  {errors.endDate && (
-                    <span className="text-red text-sm">
-                      {getErrorMessage(errors.endDate)}
-                    </span>
-                  )}
-                </div>
+                {experience.year_ended && (
+                  <div className="flex flex-col sm:w-1/2">
+                    <label
+                      htmlFor={`endDate-${index}`}
+                      className="text-[#344054]"
+                    >
+                      End Date
+                    </label>
+                    <input
+                      type="date"
+                      className="border border-gray-border h-[42px] rounded-full py-2 px-4"
+                      id={`endDate-${index}`}
+                      {...register(`jobExperiences.${index}.endDate`)}
+                    />
+                    {errors.endDate && (
+                      <span className="text-red text-sm">
+                        {getErrorMessage(errors.endDate)}
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>

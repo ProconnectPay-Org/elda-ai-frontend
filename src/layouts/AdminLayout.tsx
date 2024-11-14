@@ -75,7 +75,7 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
           <NavLink
             to="/admin-dashboard"
             className={() =>
-              `px-4 py-2 rounded ${
+              `px-4 py-2 rounded font-semibold ${
                 isDashboardActive ? "bg-red text-white" : ""
               }`
             }
@@ -85,7 +85,7 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
           <NavLink
             to="/candidates"
             className={({ isActive }) =>
-              `px-4 py-2 rounded ${isActive ? "bg-red text-white" : ""}`
+              `px-4 py-2 rounded font-semibold ${isActive ? "bg-red text-white" : ""}`
             }
           >
             Candidates
@@ -93,7 +93,7 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
           <NavLink
             to="/staff"
             className={({ isActive }) =>
-              `px-4 py-2 rounded ${isActive ? "bg-red text-white" : ""}`
+              `px-4 py-2 rounded font-semibold ${isActive ? "bg-red text-white" : ""}`
             }
           >
             Staff
@@ -101,7 +101,7 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
           <NavLink
             to="/assign-candidate"
             className={({ isActive }) =>
-              `px-4 py-2 rounded ${isActive ? "bg-red text-white" : ""}`
+              `px-4 py-2 rounded font-semibold ${isActive ? "bg-red text-white" : ""}`
             }
           >
             Assign Candidate
@@ -109,7 +109,7 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
           <NavLink
             to="/settings/account"
             className={() =>
-              `px-4 py-2 rounded ${isSettingsActive ? "bg-red text-white" : ""}`
+              `px-4 py-2 rounded font-semibold ${isSettingsActive ? "bg-red text-white" : ""}`
             }
           >
             Settings
@@ -117,7 +117,7 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
           <NavLink
             to="/view/complaints"
             className={({ isActive }) =>
-              `px-4 py-2 rounded ${isActive ? "bg-red text-white" : ""}`
+              `px-4 py-2 rounded font-semibold ${isActive ? "bg-red text-white" : ""}`
             }
           >
             Complaints

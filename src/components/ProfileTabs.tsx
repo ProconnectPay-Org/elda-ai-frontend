@@ -1,18 +1,27 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "./ui/button";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TwoFactorDialog from "./TwoFactorDialog";
+import useStaffDetails from "@/hooks/useStaffDetails";
+import useAuth from "@/hooks/useAuth";
+import { updatePassword } from "@/lib/actions/user.actions";
+import { PasswordProps } from "@/types";
+import { useToast } from "./ui/use-toast";
 
 const ProfileTabs = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { loggedInUser } = useAuth();
+  const { loggedInStaff } = useStaffDetails();
+  const { toast } = useToast();
 
   // Form for "My Details"
   const {
     register: registerDetails,
     handleSubmit: handleSubmitDetails,
     formState: { errors: errorsDetails },
+    setValue,
   } = useForm({
     defaultValues: {
       fullName: "",
@@ -33,6 +42,19 @@ const ProfileTabs = () => {
     numberOfJobs: string;
   }
 
+  useEffect(() => {
+    if (loggedInStaff) {
+      setValue(
+        "numberOfJobs",
+        String(loggedInStaff.number_of_assigned_candidates) || ""
+      );
+    }
+    if (loggedInUser) {
+      setValue("fullName", loggedInUser.full_name || "");
+      setValue("email", loggedInUser.email || "");
+    }
+  });
+
   const onSubmitDetails = async (data: DetailsFormType) => {
     try {
       console.log("Details Submitted: ", data);
@@ -49,24 +71,30 @@ const ProfileTabs = () => {
     formState: { errors: errorsPassword },
   } = useForm({
     defaultValues: {
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
+      old_password: "",
+      new_password: "",
+      re_new_password: "",
     },
   });
 
-  interface PasswordFormType {
-    currentPassword: string;
-    newPassword: string;
-    confirmPassword: string;
-  }
-
-  const onSubmitPassword = async (data: PasswordFormType) => {
+  const onSubmitPassword = async (data: PasswordProps) => {
     try {
-      console.log("Password Submitted: ", data);
-      return data;
-    } catch (error) {
-      console.log(error);
+      const response = await updatePassword(data);
+      console.log("Password updated successfully:", response);
+      return response;
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        console.error(
+          "Failed to update password:",
+          error.response.data.non_field_errors[0]
+        );
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: error.message,
+        });
+      }
     }
   };
 
@@ -239,17 +267,17 @@ const ProfileTabs = () => {
                 <div className="w-full md:w-1/2">
                   <label>Current Password</label>
                   <input
-                    {...registerPassword("currentPassword", {
+                    {...registerPassword("old_password", {
                       required:
                         activeTab === "assigned" &&
                         "Current Password is required",
                     })}
-                    type="password"
+                    type="text"
                     className="w-full p-2 rounded-md"
                   />
-                  {errorsPassword.currentPassword && (
+                  {errorsPassword.old_password && (
                     <p className="text-red text-sm">
-                      {errorsPassword.currentPassword.message}
+                      {errorsPassword.old_password.message}
                     </p>
                   )}
                 </div>
@@ -259,16 +287,16 @@ const ProfileTabs = () => {
                 <div className="w-full">
                   <label>New Password</label>
                   <input
-                    {...registerPassword("newPassword", {
+                    {...registerPassword("new_password", {
                       required:
                         activeTab === "assigned" && "New Password is required",
                     })}
-                    type="password"
+                    type="text"
                     className="w-full p-2 rounded-md"
                   />
-                  {errorsPassword.newPassword && (
+                  {errorsPassword.new_password && (
                     <p className="text-red text-sm">
-                      {errorsPassword.newPassword.message}
+                      {errorsPassword.new_password.message}
                     </p>
                   )}
                 </div>
@@ -276,17 +304,17 @@ const ProfileTabs = () => {
                 <div className="w-full">
                   <label>Confirm Password</label>
                   <input
-                    {...registerPassword("confirmPassword", {
+                    {...registerPassword("re_new_password", {
                       required:
                         activeTab === "assigned" &&
                         "Confirm Password is required",
                     })}
-                    type="password"
+                    type="text"
                     className="w-full p-2 rounded-md"
                   />
-                  {errorsPassword.confirmPassword && (
+                  {errorsPassword.re_new_password && (
                     <p className="text-red text-sm">
-                      {errorsPassword.confirmPassword.message}
+                      {errorsPassword.re_new_password.message}
                     </p>
                   )}
                 </div>

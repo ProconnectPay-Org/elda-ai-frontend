@@ -144,7 +144,7 @@ const ResumePdf = () => {
                   <hr className="horizontal-line" />
                   <p className="font-medium text-sm">
                     Duration: {experience.year_started} -{" "}
-                    {experience.year_ended}
+                    {experience.year_ended || "Present"}
                   </p>
                 </div>
               </div>

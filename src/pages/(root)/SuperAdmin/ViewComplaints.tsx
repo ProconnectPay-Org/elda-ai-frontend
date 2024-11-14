@@ -67,7 +67,7 @@ const ViewComplaints = () => {
 
       <div>
         {data?.results?.map((complaint: complaintProps, index: number) => (
-          <div key={index} className="mt-8 space-y-2">
+          <div key={index} className="mt-8 space-y-2 border-b border-black pb-5">
             <div className="flex gap-2 items-center">
               <div className="rounded-full w-12 h-12 flex items-center justify-center bg-pale-bg text-red font-semibold">
                 {getInitials(complaint.user.full_name)}
@@ -98,7 +98,7 @@ const ViewComplaints = () => {
               </p>
             </div>
             <div
-              className="flex items-center gap-2 cursor-pointer"
+              className="flex items-center gap-2 cursor-pointer w-fit"
               onClick={() => setSelectedComplaint(index)}
             >
               <ChatBubbleIcon />
@@ -113,7 +113,7 @@ const ViewComplaints = () => {
                   placeholder="Type your reply..."
                   className="w-full md:w-[360px] border p-2 rounded"
                 />
-                <button className="mt-2 w-fit bg-blue-500 text-white py-1 px-4 rounded">
+                <button className="mt-2 w-fit bg-red text-white py-1 px-4 rounded">
                   Send Reply
                 </button>
               </div>

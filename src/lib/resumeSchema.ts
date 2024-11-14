@@ -85,18 +85,7 @@ export const ResumeStep4Schema = z.object({
             message: "Invalid date format",
           }
         ),
-      endDate: z
-        .string()
-        .refine(
-          (date) => {
-            const parsedDate = Date.parse(date);
-            return !isNaN(parsedDate);
-          },
-          {
-            message: "Invalid date format",
-          }
-        )
-        .optional(),
+      endDate: z.string().optional(),
     })
   ),
 });

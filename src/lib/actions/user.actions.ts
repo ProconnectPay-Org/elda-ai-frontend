@@ -275,13 +275,49 @@ export const getLoggedInUser = async (
   }
 };
 
+export const updateLoggedUser = async ({
+  email,
+  full_name,
+  role,
+}: {
+  email: string;
+  full_name: string;
+  role: string;
+}) => {
+  try {
+    const token = Cookies.get("access_token"); // Fetch from cookies
+    if (!token) return null;
+
+    const response = await axios.patch(
+      `${API_URL}auth/update-user/`,
+      {
+        email,
+        full_name,
+        role,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 export const updatePassword = async ({
   old_password,
   new_password,
   re_new_password,
 }: PasswordProps) => {
   try {
-    const token = Cookies.get("access_token"); // Fetch from cookies
+    const token =
+      Cookies.get("staff_access_token") ||
+      Cookies.get("candidate_access_token");
     if (!token) return null;
 
     const response = await axios.patch(
@@ -300,8 +336,8 @@ export const updatePassword = async ({
 
     return response.data;
   } catch (error) {
-    console.error("Failed to get logged-in user", error);
-    return null;
+    console.error("Failed to update password", error);
+    return error;
   }
 };
 
