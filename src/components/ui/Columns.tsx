@@ -12,6 +12,8 @@ import {
 } from "./dropdown-menu";
 import { CandidateData } from "@/types";
 import { Link } from "react-router-dom";
+import SchoolApplicationModal from "../SchoolApplicationModal";
+import { useState } from "react";
 
 export const columns: ColumnDef<CandidateData>[] = [
   {
@@ -91,43 +93,60 @@ export const columns: ColumnDef<CandidateData>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const { id, resume_status, sop_status } = row.original;
+      const [isModalOpen, setIsModalOpen] = useState(false);
 
+      const openModal = () => {
+        setIsModalOpen(true);
+      };
+
+      const closeModal = () => {
+        setIsModalOpen(false);
+      };
+
+      const { id, resume_status, sop_status } = row.original;
       const isResumeDisabled = resume_status !== "Completed";
       const isSopDisabled = sop_status !== "Completed";
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Other Actions</DropdownMenuLabel>
-            <DropdownMenuItem>
-              <Link
-                to={
-                  isResumeDisabled
-                    ? `/refine-resume/${id}`
-                    : `/download-resume/${id}`
-                }
-              >
-                {isResumeDisabled ? "Refine Resume" : "View Resume"}
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link to={isSopDisabled ? `/craft-sop/${id}` : `/sop/${id}`}>
-                {isSopDisabled ? "Craft SOP" : "View Crafted SOP"}
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link to={`/assigned-candidates/${id}`}>Candidate Profile</Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <DotsHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Other Actions</DropdownMenuLabel>
+              <DropdownMenuItem>
+                <Link
+                  to={
+                    isResumeDisabled
+                      ? `/refine-resume/${id}`
+                      : `/download-resume/${id}`
+                  }
+                >
+                  {isResumeDisabled ? "Refine Resume" : "View Resume"}
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link to={isSopDisabled ? `/craft-sop/${id}` : `/sop/${id}`}>
+                  {isSopDisabled ? "Craft SOP" : "View Crafted SOP"}
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link to={`/assigned-candidates/${id}`}>Candidate Profile</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={openModal}>
+                School Application Status
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          {isModalOpen && (
+            <SchoolApplicationModal onClose={closeModal} id={row.original.id} />
+          )}
+        </>
       );
     },
   },

@@ -11,6 +11,8 @@ import {
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Link } from "react-router-dom";
 import { getCountryNameFromISO } from "@/lib/utils";
+import SchoolApplicationModal from "./SchoolApplicationModal";
+import { useState } from "react";
 
 export const allTabsColumns: ColumnDef<CandidateData>[] = [
   {
@@ -114,51 +116,69 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
+      const [isModalOpen, setIsModalOpen] = useState(false);
+
+      const openModal = () => {
+        setIsModalOpen(true);
+      };
+
+      const closeModal = () => {
+        setIsModalOpen(false);
+      };
+
       const { id, resume_status, sop_status } = row.original;
 
       const isResumeDisabled = resume_status !== "Completed";
       const isSopDisabled = sop_status !== "Completed";
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>
-              <Link
-                to={`/download-resume/${id}`}
-                target="_blank"
-                className={
-                  isResumeDisabled
-                    ? "text-gray-400 cursor-not-allowed pointer-events-none"
-                    : ""
-                }
-                aria-disabled={isResumeDisabled}
-              >
-                View Resume
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link
-                to={`/sop/${id}`}
-                target="_blank"
-                className={
-                  isSopDisabled
-                    ? "text-gray-400 cursor-not-allowed pointer-events-none"
-                    : ""
-                }
-                aria-disabled={isSopDisabled}
-              >
-                View Crafted SOP
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <DotsHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem>
+                <Link
+                  to={`/download-resume/${id}`}
+                  target="_blank"
+                  className={
+                    isResumeDisabled
+                      ? "text-gray-400 cursor-not-allowed pointer-events-none"
+                      : ""
+                  }
+                  aria-disabled={isResumeDisabled}
+                >
+                  View Resume
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link
+                  to={`/sop/${id}`}
+                  target="_blank"
+                  className={
+                    isSopDisabled
+                      ? "text-gray-400 cursor-not-allowed pointer-events-none"
+                      : ""
+                  }
+                  aria-disabled={isSopDisabled}
+                >
+                  View Crafted SOP
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={openModal}>
+                School Application Status
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          {isModalOpen && (
+            <SchoolApplicationModal onClose={closeModal} id={row.original.id} />
+          )}
+        </>
       );
     },
   },
