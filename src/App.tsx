@@ -29,6 +29,7 @@ import {
 import CraftSOP from "./pages/(root)/Staff/CraftSOP";
 import CandidateSelection from "./pages/(root)/Staff/CandidateSelection";
 import DownloadResume from "./pages/(root)/DownloadResume";
+import SopTemplate from "./components/SopTemplate";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <Route element={<Home />} path="/" />
         {/* <Route element={<SignUp />} path="/sign-up" /> */}
         <Route element={<DownloadResume />} path="/download-resume/:id" />
+        <Route element={<SopTemplate />} path="/sop/:id" />
         {/* SUPER ADMIN */}
         <Route element={<AdminSignIn />} path="/sign-in" />
         <Route element={<AdminDashboard />} path="/admin-dashboard" />

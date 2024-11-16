@@ -16,7 +16,7 @@ const Step1 = ({ candidateId }: { candidateId: string }) => {
     useCandidates(candidateId);
 
   useEffect(() => {
-    if (singleCandidate) {
+    if (singleCandidate) {      
       const foundCandidate = singleCandidate;
       setEmail(foundCandidate.user.email || "");
     }

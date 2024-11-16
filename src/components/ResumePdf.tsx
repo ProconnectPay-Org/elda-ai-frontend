@@ -10,6 +10,7 @@ import {
 } from "@/types";
 import { getCountryNameFromISO } from "@/lib/utils";
 import "../index.css";
+
 const ResumePdf = () => {
   const { id } = useParams<{ id: string }>();
 
@@ -57,11 +58,18 @@ const ResumePdf = () => {
           <span>{formData?.last_name}</span>
         </h1>
         <div className="flex-items-center-gap-3 flex-wrap justify-center">
-          <p className="text-sm text-blue">{formData?.email_address}</p>
-          <hr className="horizontal-line" />
-          <p className="text-sm">{formData?.phone_number}</p>
-          <hr className="horizontal-line" />
-          <div>
+          <div className="flex items-center justify-center gap-1">
+            ✉️
+            <p className="text-sm text-blue">{formData?.email_address}</p>
+          </div>
+          <p className="font-semibold">|</p>
+          <div className="flex items-center justify-center gap-1">
+            📞
+            <p className="text-sm">{formData?.phone_number}</p>
+          </div>
+          <p className="font-semibold">|</p>
+          <div className="flex items-center justify-center gap-1">
+            🌎
             <p className="text-sm">
               {formData?.city_of_birth}, {formData?.state_of_birth} State,{" "}
               {getCountryNameFromISO(formData?.country_of_birth)}
@@ -71,11 +79,11 @@ const ResumePdf = () => {
 
         <div className="flex-items-center-gap-3">
           <p className="small-bold">{formData?.career[0].sector}</p>
-          <hr className="horizontal-line" />
+          <p className="font-semibold">|</p>
           <p className="small-bold">{formData?.career[0].profession}</p>
-          <hr className="horizontal-line" />
+          <p className="font-semibold">|</p>
           <p className="small-bold">Global Citizen</p>
-          <hr className="horizontal-line" />
+          <p className="font-semibold">|</p>
           <div className="small-bold">{renderedJobTitles}</div>
         </div>
       </div>
@@ -132,19 +140,19 @@ const ResumePdf = () => {
         <h2 className="resume-title-text">WORK EXPERIENCE</h2>
         {formData?.job_experience?.map((experience: JobExperience) =>
           experience.business_name ? (
-            <div key={experience.id} className="my-2">
+            <div key={experience.id} className="mb-2">
               <div>
                 <p className="font-bold text-sm">
                   {experience.business_name}: {experience.job_title}
                 </p>
                 <div className="flex-items-center-gap-3">
                   <p className="font-medium text-sm">
-                    Location: {experience.state}, {experience.country}
+                    📍 Location: {experience.state}, {experience.country}
                   </p>
-                  <hr className="horizontal-line" />
+                  <p className="font-semibold">|</p>
                   <p className="font-medium text-sm">
-                    Duration: {experience.year_started} -{" "}
-                    {experience.year_ended || "Present"}
+                    📅 Duration: {experience.year_started} -{" "}
+                    {experience.year_ended || "Till Date"}
                   </p>
                 </div>
               </div>
@@ -168,8 +176,8 @@ const ResumePdf = () => {
             </p>
             <div className="text-sm flex-items-center-gap-3">
               {item.school_name}, {getCountryNameFromISO(item.country)}{" "}
-              <hr className="horizontal-line" />
-              Graduated {item.year_graduated}
+              <p className="font-semibold">|</p>
+              <p className="font-semibold">Graduated {item.year_graduated}</p>
             </div>
           </div>
         ))}
@@ -178,11 +186,11 @@ const ResumePdf = () => {
             ""
           ) : (
             <div key={item.id}>
-              <p className="font-semibold flex-items-center-gap-3 text-sm capitalize">
+              <div className="font-semibold flex-items-center-gap-3 text-sm capitalize">
                 {item.advanced_degree_type} ({item.graduate_type}){" "}
-                <hr className="horizontal-line" />
+                <p className="font-semibold">|</p>
                 Graduated {item.year_graduated}
-              </p>
+              </div>
               <p className="text-sm">
                 {item.school_name}, {getCountryNameFromISO(item.country)}
               </p>

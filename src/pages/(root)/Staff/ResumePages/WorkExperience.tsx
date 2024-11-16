@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { useCandidates } from "@/hooks/useCandidiates";
 import { getErrorMessage } from "@/lib/utils";
 import { JobExperience, ResumeStep4FormData } from "@/types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import "react-phone-input-2/lib/style.css";
 import { useParams } from "react-router-dom";
@@ -20,12 +20,15 @@ const WorkExperience = () => {
   }
   const { singleCandidate, singleCandidateLoading, singleCandidateError } =
     useCandidates(id);
+  const [jobsToShow, setJobsToShow] = useState("0");
 
   useEffect(() => {
     if (singleCandidate) {
       const filteredJobExperiences = singleCandidate.job_experience.filter(
         (experience: JobExperience) => experience.business_name
       );
+
+      setJobsToShow(String(filteredJobExperiences.length));
 
       filteredJobExperiences.forEach(
         (experience: JobExperience, index: number) => {
@@ -79,8 +82,8 @@ const WorkExperience = () => {
         </label>
         <Input
           type="text"
-          defaultValue={filteredJobExperiences.length}
-          value={filteredJobExperiences.length}
+          value={jobsToShow}
+          onChange={(e) => setJobsToShow(e.target.value)}
           className="rounded-full"
         />
       </div>

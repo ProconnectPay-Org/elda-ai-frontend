@@ -113,6 +113,30 @@ export const generateSop = async (id: string) => {
   return data;
 };
 
+export const updateSop = async (
+  id: string,
+  candidateId: string,
+  text?: string,
+  file?: File,
+) => {
+  const staffToken = Cookies.get("staff_access_token");
+  const { data } = await axios.patch(
+    `${API_URL}staff-dashboard/update-sop/${id}/`,
+    {
+      text,
+      file,
+      candidateId,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${staffToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return data;
+};
+
 export const postEditedCandidate = async (id: string, data: any) => {
   const staffToken = Cookies.get("staff_access_token");
   const { data: response } = await axios.patch(

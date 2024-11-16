@@ -11,13 +11,20 @@ import {
 } from "@/components/ui/dialog";
 import SuccessImage from "@/assets/sop-successful.svg";
 import { useQuery } from "@tanstack/react-query";
-import { generateSop } from "@/lib/actions/staff.actions";
+import { generateSop, updateSop } from "@/lib/actions/staff.actions";
 
-const Step4 = ({ prevStep, candidateId }: { prevStep: () => void, candidateId: string }) => {
+const Step4 = ({
+  prevStep,
+  candidateId,
+}: {
+  prevStep: () => void;
+  candidateId: string;
+}) => {
   const [showModal, setshowModal] = useState(false);
   const [candidateSop, setCandidateSop] = useState("");
-  const [candidatePdf, setCandidatePdf] = useState("");
+  const [sopId, setSopId] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  const [sopLoading, setSopLoading] = useState(false);
 
   const handleShowModal = () => {
     setshowModal((prev) => !prev);
@@ -32,9 +39,24 @@ const Step4 = ({ prevStep, candidateId }: { prevStep: () => void, candidateId: s
   useEffect(() => {
     if (data) {
       setCandidateSop(data.SOP?.text);
-      setCandidatePdf(data.SOP?.file);
+      setSopId(data.SOP?.id);
     }
   }, [data]);
+
+  const handleUpdateSop = async () => {
+    setSopLoading(true);
+    try {
+      const response = await updateSop(sopId, candidateId, candidateSop);
+      console.log(response);
+      if (response) {
+        handleShowModal();
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSopLoading(false);
+    }
+  };
 
   return (
     <>
@@ -53,9 +75,11 @@ const Step4 = ({ prevStep, candidateId }: { prevStep: () => void, candidateId: s
               placeholder={
                 isLoading ? "Generating your SOP..." : "Type your message here."
               }
-              defaultValue={candidateSop}
+              // defaultValue={candidateSop}
+              value={candidateSop}
               disabled={!isEditing}
               className="text-lg p-4 leading-[32px] min-h-80 text-black"
+              onChange={(e) => setCandidateSop(e.target.value)}
             />
           </div>
         </div>
@@ -71,9 +95,10 @@ const Step4 = ({ prevStep, candidateId }: { prevStep: () => void, candidateId: s
 
         <Button
           className="bg-red text-white w-32 h-12"
-          onClick={handleShowModal}
+          onClick={handleUpdateSop}
+          disabled={sopLoading}
         >
-          Complete
+          {sopLoading ? "Completing..." : "Complete"}
         </Button>
       </div>
 
@@ -87,7 +112,7 @@ const Step4 = ({ prevStep, candidateId }: { prevStep: () => void, candidateId: s
             </DialogHeader>
             <img src={SuccessImage} alt="" />
             <div className="flex items-center flex-col justify-center gap-6">
-              <a href={candidatePdf} target="_blank">
+              <a href={`/sop/${candidateId}`}>
                 <Button className="bg-red">Download SOP</Button>
               </a>
               <Link to="/assigned-candidates">

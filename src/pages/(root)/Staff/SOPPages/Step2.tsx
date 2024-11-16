@@ -9,11 +9,7 @@ import {
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
 import { useCandidates } from "@/hooks/useCandidiates";
-import {
-  getEditedCandidate,
-  postEditedCandidate,
-} from "@/lib/actions/staff.actions";
-import { useQuery } from "@tanstack/react-query";
+import { postEditedCandidate } from "@/lib/actions/staff.actions";
 
 const Step2 = ({
   prevStep,
@@ -33,31 +29,15 @@ const Step2 = ({
 
   useEffect(() => {
     if (singleCandidate) {
-      // console.log(singleCandidate);
-      
       setProgramType(singleCandidate.education[0]?.degree_type || "");
       setAssignedUniversity(singleCandidate.assigned_university1 || "");
       setAssignedCourse(singleCandidate.assigned_course1 || "");
       setYearsOfExperience(
         singleCandidate.career[0]?.years_of_experience_post_degree || ""
       );
+      setManualDescription(singleCandidate.course_description);
     }
   }, [singleCandidate]);
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["candidateData", id],
-    queryFn: () => getEditedCandidate(id),
-    staleTime: 5 * 1000 * 60,
-    enabled: Boolean(id),
-  });
-
-  useEffect(() => {
-    if (data?.course_description) {
-      console.log(data)
-      
-      setManualDescription((desc) => desc || data.course_description);
-    }
-  }, [data]);
 
   const handleReview = async () => {
     const response = await postEditedCandidate(id, {
@@ -152,17 +132,13 @@ const Step2 = ({
               value={manualDescription}
               onChange={(e) => setManualDescription(e.target.value)}
               className="bg-transparent outline-none min-h-20 md:min-h-40"
-              placeholder={isLoading ? "Loading description..." : "A brief course description"}
-              disabled={isLoading}
+              placeholder="A brief course description about the course"
             />
           </div>
         </div>
       </div>
       <div className="flex items-center mt-10 justify-end w-full">
-        <Button
-          className="bg-red text-white w-32 h-12"
-          onClick={handleReview}
-        >
+        <Button className="bg-red text-white w-32 h-12" onClick={handleReview}>
           Review
         </Button>
       </div>

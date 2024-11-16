@@ -114,7 +114,7 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const { id, resume_status, sop_status, sop } = row.original;
+      const { id, resume_status, sop_status } = row.original;
 
       const isResumeDisabled = resume_status !== "Completed";
       const isSopDisabled = sop_status !== "Completed";
@@ -145,7 +145,7 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Link
-                to={`${sop[0]?.file}`}
+                to={`/sop/${id}`}
                 target="_blank"
                 className={
                   isSopDisabled

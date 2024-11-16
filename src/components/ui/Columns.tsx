@@ -91,7 +91,7 @@ export const columns: ColumnDef<CandidateData>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const { id, resume_status, sop_status, sop } = row.original;      
+      const { id, resume_status, sop_status } = row.original;
 
       const isResumeDisabled = resume_status !== "Completed";
       const isSopDisabled = sop_status !== "Completed";
@@ -113,16 +113,12 @@ export const columns: ColumnDef<CandidateData>[] = [
                     ? `/refine-resume/${id}`
                     : `/download-resume/${id}`
                 }
-                target="_blank"
               >
                 {isResumeDisabled ? "Refine Resume" : "View Resume"}
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link
-                to={isSopDisabled ? `/craft-sop/${id}` : `${sop[0]?.file}`}
-                target="_blank"
-              >
+              <Link to={isSopDisabled ? `/craft-sop/${id}` : `/sop/${id}`}>
                 {isSopDisabled ? "Craft SOP" : "View Crafted SOP"}
               </Link>
             </DropdownMenuItem>

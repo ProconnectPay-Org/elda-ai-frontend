@@ -20,7 +20,7 @@ import {
 import RootLayout from "@/layouts/RootLayout";
 import { useQuery } from "@tanstack/react-query";
 import { craftCandidateResume } from "@/lib/actions/staff.actions";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const steps = [
   {
@@ -56,6 +56,7 @@ const RefineResume = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<any>({});
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate()
 
 
   const { data: resumeData } = useQuery({
@@ -87,7 +88,7 @@ const RefineResume = () => {
 
     if (currentStep === steps.length - 1) {
       if (resumeData && resumeData.resume) {
-        window.open(`/refine-resume/final-resume/${id}`, "_blank");
+        navigate(`/refine-resume/final-resume/${id}`);
       } else {
         console.error("Resume URL not found.");
       }
