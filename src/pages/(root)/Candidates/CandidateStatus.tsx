@@ -10,6 +10,7 @@ import { fetchVerificationDocument } from "@/lib/actions/candidate.actions";
 import { useState } from "react";
 import { useCandidates } from "@/hooks/useCandidiates";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const SkeletonStatusBox = () => {
   return (
@@ -28,13 +29,26 @@ const StatusBox = ({
   text,
   status,
   icon,
+  route,
 }: {
   text: string;
   status: string;
   icon: JSX.Element;
+  route?: string;
 }) => {
+  const router = useNavigate();
+
+  const handleClick = () => {
+    if (route) {
+      router(route);
+    }
+  };
+
   return (
-    <div className="w-full h-[60px] rounded-2xl bg-[#F5F7F9] flex justify-between items-center p-5 cursor-pointer">
+    <div
+      onClick={handleClick}
+      className="w-full h-[60px] rounded-2xl bg-[#F5F7F9] flex justify-between items-center p-5 cursor-pointer"
+    >
       <div className="flex items-center gap-4">
         <p className="font-semibold text-2xl text-red">{text}</p>
         <div className="border border-red px-2 h-6 flex items-center gap-2 rounded-md">
@@ -43,6 +57,9 @@ const StatusBox = ({
         </div>
       </div>
       {/* <ChevronRight color="red" size={20} /> */}
+      <button className="bg-red text-white py-2 px-5 rounded-xl">
+        {status === "Completed" && "View"}
+      </button>
     </div>
   );
 };
@@ -73,8 +90,16 @@ const CandidateStatus = () => {
   };
 
   const statusProps = [
-    { title: "Resume Status", status: singleCandidate?.resume_status },
-    { title: "SOP Status", status: singleCandidate?.sop_status },
+    {
+      title: "Resume Status",
+      status: singleCandidate?.resume_status,
+      route: `/download-resume/${candidate_id}`,
+    },
+    {
+      title: "SOP Status",
+      status: singleCandidate?.sop_status,
+      route: `/sop/${candidate_id}`,
+    },
     {
       title: "School Application Status",
       status: singleCandidate?.school_application_status,
@@ -111,7 +136,8 @@ const CandidateStatus = () => {
                     )
                   }
                   text={item.title}
-                  status={item.status}
+                  status={item.status || "In Progress"}
+                  route={item.route}
                 />
               ))}
           <div

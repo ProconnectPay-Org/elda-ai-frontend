@@ -71,7 +71,7 @@ const InviteEmployee = () => {
         } else {
           toast({
             title: "Error",
-            description: errorData.password[0] || "An error occurred.",
+            description: errorData?.password[0] || "An error occurred.",
             variant: "destructive",
           });
         }
