@@ -328,6 +328,7 @@ export type CandidateData = {
   assigned_course: string;
   assigned_course1: string;
   assigned_course2: string;
+  assigned_manager: AllStaff[];
   assigned_university: string;
   assigned_university1: string;
   assigned_university2: string;
@@ -337,6 +338,7 @@ export type CandidateData = {
   city_of_birth: string;
   country_current_reside: string;
   country_of_birth: string;
+  course_description: string;
   current_house_address?: string;
   date_of_birth: string;
   duplicate?: string;
@@ -346,6 +348,8 @@ export type CandidateData = {
   middle_name?: string;
   name: string;
   preferred_call_name: string;
+  program_type1: string;
+  program_type2: string;
   recommended_school: string;
   recommended_course: string;
   resume: string;
@@ -354,7 +358,7 @@ export type CandidateData = {
   gender?: string;
   postal_code?: string;
   serial_number: number;
-  school_application_status: "Pending" | "Complete" | "Started";
+  school_application_status: "Pending" | "Complete" | "Started" | "True";
   state_of_birth: string;
   state_current_reside?: string;
   status: string;
@@ -368,7 +372,7 @@ export type CandidateData = {
   job_experience: JobExperience[];
   loan_referees: LoanReferee[];
   work_history: WorkHistory[];
-  verification_documents: VerificationDocument;
+  verification_documents: VerificationDocument[];
   advanced_education: AdvancedEducation[];
 };
 

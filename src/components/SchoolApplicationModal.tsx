@@ -1,4 +1,5 @@
 import { useCandidates } from "@/hooks/useCandidiates";
+import { toggleSchoolApplicationStatus } from "@/lib/actions/user.actions";
 import { useState, useEffect } from "react";
 
 interface ModalProps {
@@ -11,16 +12,7 @@ const SchoolApplicationModal = ({ onClose, id }: ModalProps) => {
   const [schoolAppliedTo, setSchoolAppliedTo] = useState("");
   const [appliedCourse, setAppliedCourse] = useState("");
   const [applicationCompleted, setApplicationCompleted] = useState(false);
-
-  if (singleCandidateLoading) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-        <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-          <h2 className="text-2xl font-bold">Loading...</h2>
-        </div>
-      </div>
-    );
-  }
+  const [applicationLoading, setApplicationLoading] = useState(false);
 
   useEffect(() => {
     const handleBackgroundScroll = (e: Event) => e.preventDefault();
@@ -31,15 +23,27 @@ const SchoolApplicationModal = ({ onClose, id }: ModalProps) => {
     };
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const formData = {
-      schoolAppliedTo,
-      appliedCourse,
-      applicationCompleted,
-    };
-    console.log("Submitted form data:", formData);
+    setApplicationLoading(true);
+    if (applicationCompleted) {
+      try {
+        const response = await toggleSchoolApplicationStatus(id);
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
+    }
     onClose();
+  };
+
+  const handleOutsideClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onClose();
+  };
+
+  const handleContentClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
   };
 
   return (
@@ -47,19 +51,19 @@ const SchoolApplicationModal = ({ onClose, id }: ModalProps) => {
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
       aria-modal="true"
       role="dialog"
+      onClick={handleOutsideClick}
     >
       <div
         className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md"
         tabIndex={-1}
+        onClick={handleContentClick}
       >
         <form onSubmit={handleSubmit}>
           <div className="space-y-4">
             <h2 className="text-2xl font-bold">School Application Status</h2>
 
             <div className="relative w-full">
-              <label htmlFor="schoolAppliedTo" className="sr-only">
-                School Applied To
-              </label>
+              <label htmlFor="schoolAppliedTo">School Applied To</label>
               <select
                 className="border border-gray-border w-full h-[42px] shadow-none bg-white rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500"
                 name="schoolAppliedTo"
@@ -67,20 +71,30 @@ const SchoolApplicationModal = ({ onClose, id }: ModalProps) => {
                 value={schoolAppliedTo}
                 onChange={(e) => setSchoolAppliedTo(e.target.value)}
                 required
+                disabled={singleCandidateLoading}
               >
-                <option value="">Select School</option>
-                {singleCandidate?.assigned_university1 && (
-                  <option value={singleCandidate.assigned_university1}>
-                    {singleCandidate.assigned_university1}
-                  </option>
-                )}
-                {singleCandidate?.assigned_university2 && (
-                  <option value={singleCandidate.assigned_university2}>
-                    {singleCandidate.assigned_university2}
-                  </option>
-                )}
+                <option value="">
+                  {singleCandidateLoading ? (
+                    <>Loading Schools...</>
+                  ) : (
+                    "Select School Applied To"
+                  )}
+                </option>
+                {!singleCandidateLoading &&
+                  singleCandidate?.assigned_university1 && (
+                    <option value={singleCandidate.assigned_university1}>
+                      {singleCandidate.assigned_university1}
+                    </option>
+                  )}
+
+                {!singleCandidateLoading &&
+                  singleCandidate?.assigned_university2 && (
+                    <option value={singleCandidate.assigned_university2}>
+                      {singleCandidate.assigned_university2}
+                    </option>
+                  )}
               </select>
-              <span className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+              <span className="absolute inset-y-0 top-4 right-0 flex items-center px-2 pointer-events-none">
                 <svg
                   className="w-4 h-4"
                   fill="none"
@@ -99,9 +113,7 @@ const SchoolApplicationModal = ({ onClose, id }: ModalProps) => {
             </div>
 
             <div className="relative w-full">
-              <label htmlFor="appliedCourse" className="sr-only">
-                Applied Course
-              </label>
+              <label htmlFor="appliedCourse">Applied Course</label>
               <select
                 className="border border-gray-border w-full h-[42px] shadow-none bg-white rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500"
                 name="appliedCourse"
@@ -109,20 +121,29 @@ const SchoolApplicationModal = ({ onClose, id }: ModalProps) => {
                 value={appliedCourse}
                 onChange={(e) => setAppliedCourse(e.target.value)}
                 required
+                disabled={singleCandidateLoading}
               >
-                <option value="">Select Course</option>
-                {singleCandidate?.assigned_course1 && (
-                  <option value={singleCandidate.assigned_course1}>
-                    {singleCandidate.assigned_course1}
-                  </option>
-                )}
-                {singleCandidate?.assigned_course2 && (
-                  <option value={singleCandidate.assigned_course2}>
-                    {singleCandidate.assigned_course2}
-                  </option>
-                )}
+                <option value="">
+                  {singleCandidateLoading ? (
+                    <>Loading Courses...</>
+                  ) : (
+                    "Select Course"
+                  )}
+                </option>
+                {!singleCandidateLoading &&
+                  singleCandidate?.assigned_course1 && (
+                    <option value={singleCandidate.assigned_course1}>
+                      {singleCandidate.assigned_course1}
+                    </option>
+                  )}
+                {!singleCandidateLoading &&
+                  singleCandidate?.assigned_course2 && (
+                    <option value={singleCandidate.assigned_course2}>
+                      {singleCandidate.assigned_course2}
+                    </option>
+                  )}
               </select>
-              <span className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+              <span className="absolute inset-y-0 right-0 top-4 flex items-center px-2 pointer-events-none">
                 <svg
                   className="w-4 h-4"
                   fill="none"
@@ -156,9 +177,10 @@ const SchoolApplicationModal = ({ onClose, id }: ModalProps) => {
           <div className="flex items-center justify-center gap-4 mt-4">
             <button
               type="submit"
+              disabled={applicationLoading}
               className="w-full bg-red text-white py-2 rounded-lg hover:bg-red-600"
             >
-              Submit
+              {applicationLoading ? "Loading..." : "Submit"}
             </button>
             <button
               type="button"

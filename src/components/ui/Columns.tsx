@@ -14,6 +14,7 @@ import { CandidateData } from "@/types";
 import { Link } from "react-router-dom";
 import SchoolApplicationModal from "../SchoolApplicationModal";
 import { useState } from "react";
+import SelectedCandidateModal from "../SelectedCandidateModal";
 
 export const columns: ColumnDef<CandidateData>[] = [
   {
@@ -58,9 +59,17 @@ export const columns: ColumnDef<CandidateData>[] = [
     accessorKey: "resume",
     header: "Resume",
     cell: ({ row }) => (
-      <p className="capitalize text-center">
-        {row.original.resume || "No name"}
-      </p>
+      <div className="flex justify-center">
+        <Button
+          className={`py-1 h-5 rounded-xl ${
+            row.original.resume_status === "Pending"
+              ? "bg-orange text-white"
+              : "bg-[#D5F4EA] text-[#2A6350]"
+          } px-5 hover:bg-green-200`}
+        >
+          {row.original.resume_status || "none"}
+        </Button>
+      </div>
     ),
   },
   {
@@ -71,9 +80,17 @@ export const columns: ColumnDef<CandidateData>[] = [
       </div>
     ),
     cell: ({ row }) => (
-      <p className="capitalize text-center">
-        {row.original.sop_status || "No name"}
-      </p>
+      <div className="flex justify-center">
+        <Button
+          className={`py-1 h-5 rounded-xl ${
+            row.original.sop_status === "Pending"
+              ? "bg-orange text-white"
+              : "bg-[#D5F4EA] text-[#2A6350]"
+          } px-5 hover:bg-green-200`}
+        >
+          {row.original.sop_status || "none"}
+        </Button>
+      </div>
     ),
   },
   {
@@ -84,23 +101,45 @@ export const columns: ColumnDef<CandidateData>[] = [
       </div>
     ),
     cell: ({ row }) => (
-      <p className="capitalize text-center">
-        {row.original.school_application_status || "No name"}
-      </p>
+      <div className="flex justify-center">
+        <Button
+          className={`py-1 h-5 rounded-xl ${
+            row.original.school_application_status === "Pending"
+              ? "bg-orange text-white"
+              : "bg-[#D5F4EA] text-[#2A6350]"
+          } px-5 hover:bg-green-200`}
+        >
+          {row.original.school_application_status === "True" ? (
+            "Completed"
+          ) : (
+            <>{row.original.school_application_status || "none"}</>
+          )}
+        </Button>
+      </div>
     ),
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const [isModalOpen, setIsModalOpen] = useState(false);
+      const [isSchoolModalOpen, setIsSchoolModalOpen] = useState(false); // Separate modal state
+      const [isCandidateDataModalOpen, setIsCandidateDataModalOpen] =
+        useState(false); 
 
-      const openModal = () => {
-        setIsModalOpen(true);
+      const openCandidateModal = () => {
+        setIsCandidateDataModalOpen(true);
       };
 
-      const closeModal = () => {
-        setIsModalOpen(false);
+      const closeCandidateModal = () => {
+        setIsCandidateDataModalOpen(false);
+      };
+
+      const openSchoolModal = () => {
+        setIsSchoolModalOpen(true);
+      };
+
+      const closeSchoolModal = () => {
+        setIsSchoolModalOpen(false);
       };
 
       const { id, resume_status, sop_status } = row.original;
@@ -118,6 +157,9 @@ export const columns: ColumnDef<CandidateData>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Other Actions</DropdownMenuLabel>
+              <DropdownMenuItem onClick={openCandidateModal}>
+                View Candidate Data
+              </DropdownMenuItem>
               <DropdownMenuItem>
                 <Link
                   to={
@@ -138,13 +180,16 @@ export const columns: ColumnDef<CandidateData>[] = [
               <DropdownMenuItem>
                 <Link to={`/assigned-candidates/${id}`}>Candidate Profile</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={openModal}>
+              <DropdownMenuItem onClick={openSchoolModal}>
                 School Application Status
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {isModalOpen && (
-            <SchoolApplicationModal onClose={closeModal} id={row.original.id} />
+          {isSchoolModalOpen && (
+            <SchoolApplicationModal onClose={closeSchoolModal} id={id} />
+          )}
+          {isCandidateDataModalOpen && (
+            <SelectedCandidateModal onClose={closeCandidateModal} id={id} />
           )}
         </>
       );

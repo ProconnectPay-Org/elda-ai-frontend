@@ -58,7 +58,7 @@ const StatusBox = ({
       </div>
       {/* <ChevronRight color="red" size={20} /> */}
       <button className="bg-red text-white py-2 px-5 rounded-xl">
-        {status === "Completed" && "View"}
+        {status === "Completed"  && "View" || "True" && "Completed"}
       </button>
     </div>
   );
@@ -70,7 +70,6 @@ const CandidateStatus = () => {
   const candidate_id = Cookies.get("candidate_id");
   const { singleCandidate, singleCandidateLoading } =
     useCandidates(candidate_id);
-
   const { data } = useQuery({
     queryKey: ["documents"],
     queryFn: fetchVerificationDocument,
@@ -128,6 +127,8 @@ const CandidateStatus = () => {
                   key={index}
                   icon={
                     item.status === "Completed" ? (
+                      <img src={IconCheck} alt="Check Icon" />
+                    ) : item.status === "True" ? (
                       <img src={IconCheck} alt="Check Icon" />
                     ) : item.status === "pending" ? (
                       <img src={IconProgress} alt="Progress Icon" />

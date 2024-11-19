@@ -1,18 +1,35 @@
 import { Link, useParams } from "react-router-dom";
 import RootLayout from "@/layouts/RootLayout";
-import { CandidateData } from "@/types";
-import { MailIcon, PhoneCallIcon } from "lucide-react";
+import {
+  AdvancedEducation,
+  CandidateData,
+  VerificationDocument,
+} from "@/types";
+import { ChevronDown, CopyIcon, MailIcon, PhoneCallIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getInitials } from "@/lib/utils";
+import {
+  copyToClipboard,
+  getCountryNameFromISO,
+  getInitials,
+} from "@/lib/utils";
 import useAuth from "@/hooks/useAuth";
 
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getSingleCandidate } from "@/lib/actions/user.actions";
+import { useToast } from "@/components/ui/use-toast";
+import CopyText from "@/components/CopyText";
+import { useState } from "react";
 
 const CandidateProfile = () => {
   const { id } = useParams<{ id: string }>();
   const { loggedInUser } = useAuth();
+  const { toast } = useToast();
+  const [isAccordionOpen, setIsAccordionOpen] = useState(false);
+
+  const toggleAccordion = () => {
+    setIsAccordionOpen((prev) => !prev);
+  };
 
   if (!id) {
     console.error("No ID provided");
@@ -24,7 +41,6 @@ const CandidateProfile = () => {
     queryFn: () => getSingleCandidate(id),
     staleTime: 5 * 1000 * 60,
   });
-  console.log(candidate);
 
   if (isLoading || !candidate) {
     return (
@@ -62,6 +78,23 @@ const CandidateProfile = () => {
       </RootLayout>
     );
   }
+
+  console.log(candidate);
+
+  const documents: Record<
+    keyof Omit<VerificationDocument, "id" | "candidate">,
+    string
+  > = {
+    bsc_hnd_certificate: "BSC/HND Certificate",
+    bank_statement: "Bank Statement",
+    first_degree_transcript: "First Degree Transcript",
+    current_cv: "Current CV",
+    intl_passport: "International Passport",
+    nin_slip: "NIN Slip",
+    utility_bill: "Utility Bill",
+    post_graduate_certificate: "Post Graduate Certificate",
+    post_graduate_transcript: "Post Graduate Transcript",
+  };
 
   return (
     <RootLayout title="Candidate Profile">
@@ -125,7 +158,7 @@ const CandidateProfile = () => {
                   to={
                     candidate.sop_status === "Completed"
                       ? `${candidate.sop[0].file}`
-                      : `/craft-sop/${id}`
+                      : `/sop/${id}`
                   }
                 >
                   {candidate.sop_status === "Completed"
@@ -138,7 +171,11 @@ const CandidateProfile = () => {
         </div>
         <div>
           <h3 className="font-semibold">Assigned Manager</h3>
-          <p>{loggedInUser?.full_name || "Manager not found"}</p>
+          <p>
+            {candidate.assigned_manager[0]?.user?.full_name ||
+              loggedInUser?.full_name ||
+              "Manager not found"}
+          </p>
         </div>
       </div>
       <hr className="w-full h-2 my-8" />
@@ -215,7 +252,7 @@ const CandidateProfile = () => {
             <span key={index} className="flex gap-5 items-center">
               <p className="text-[#5E6366] font-semibold md:w-60">
                 {jobExperienceData?.year_started || "No start year"} -{" "}
-                {jobExperienceData?.year_ended || "No end year"}
+                {jobExperienceData?.year_ended || "Till Date"}
               </p>
               <p className="font-semibold capitalize">{`${
                 jobExperienceData?.job_title || "No job title"
@@ -224,17 +261,269 @@ const CandidateProfile = () => {
           ) : null
         )}
       </div>
+
       <hr className="w-full h-2 my-8" />
+
+      {/* JOB SUMMARY */}
       <div>
         <h3 className="font-semibold text-lg mb-4">JOB SUMMARY</h3>
         <div className="text-[#5E6366]">
-          {candidate?.job_experience?.map((job) => (
-            <p key={job.id}>{job.job_summary}</p>
-          )) || (
+          {candidate?.job_experience?.length ? (
+            candidate.job_experience.map((job) =>
+              job.job_summary ? (
+                <div key={job.id}>
+                  <p className="mb-3">{job.job_summary}</p>
+                  <CopyIcon
+                    size={16}
+                    cursor="pointer"
+                    onClick={() => copyToClipboard(job.job_summary, toast)}
+                  />
+                </div>
+              ) : null
+            )
+          ) : (
             <span className="flex gap-4 items-center">
               <p>No job summary provided</p>
             </span>
           )}
+        </div>
+      </div>
+
+      <hr className="w-full h-2 my-8" />
+
+      {/* OTHER INFO */}
+      <div>
+        <div
+          onClick={toggleAccordion}
+          className="flex justify-between cursor-pointer"
+        >
+          <h3 className="font-semibold text-lg mb-4">OTHER INFO</h3>
+          <ChevronDown
+            className={`transition-transform transform ${
+              isAccordionOpen ? "rotate-180" : ""
+            }`}
+          />
+        </div>
+        
+        <div
+          className={`space-y-4 overflow-hidden transition-all duration-500 ${
+            isAccordionOpen ? "max-h-full opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+          {/* Personal Details */}
+          <div>
+            <h3 className="font-semibold text-base mb-4">Personal Details</h3>
+            <div className="flex flex-col gap-2">
+              <CopyText label="First Name" text={candidate?.first_name} />
+              <CopyText label="Middle Name" text={candidate?.middle_name} />
+              <CopyText label="Last Name" text={candidate?.last_name} />
+              <CopyText label="Gender" text={candidate?.gender} />
+              <CopyText label="Birth Date" text={candidate?.birth_date} />
+              <CopyText
+                label="City of Residence"
+                text={candidate?.city_current_reside}
+              />
+              <CopyText
+                label="State of Residence"
+                text={candidate?.state_current_reside}
+              />
+              <CopyText
+                label="Country of Residence"
+                text={getCountryNameFromISO(candidate?.country_current_reside)}
+              />
+              <CopyText label="City Of Birth" text={candidate?.city_of_birth} />
+              <CopyText
+                label="State Of Birth"
+                text={candidate?.state_of_birth}
+              />
+              <CopyText
+                label="Country of Birth"
+                text={getCountryNameFromISO(candidate?.country_of_birth)}
+              />
+              <CopyText
+                label="Current House Address"
+                text={candidate?.current_house_address}
+              />
+              <CopyText label="Postal Code" text={candidate?.postal_code} />
+            </div>
+          </div>
+
+          {/* Education Details */}
+          <div>
+            <h3 className="font-semibold text-base mb-4">Education Details</h3>
+            {candidate?.education.map((edu) => (
+              <div className="flex flex-col gap-2" key={edu?.id}>
+                <CopyText label="Current Status" text={edu.current_status} />
+                <CopyText label="Degree Type" text={edu.degree_type} />
+                <CopyText label="Country" text={edu.country} />
+                <CopyText
+                  label="Course Of Study"
+                  text={edu.specific_course_of_study}
+                />
+                <CopyText
+                  label="Tertiary Institution Attended"
+                  text={edu.school_name}
+                />
+                <CopyText label="Class of Degree" text={edu.class_of_degree} />
+                <CopyText label="Specific CGPA" text={edu.specific_cgpa} />
+                <CopyText
+                  label="Year Admitted"
+                  text={String(edu.year_admitted)}
+                />
+                <CopyText
+                  label="Year Graduated"
+                  text={String(edu.year_graduated)}
+                />
+
+                {/* ADVANCED DEGREE */}
+                {edu.has_advanced_degree &&
+                  candidate?.advanced_education?.map(
+                    (advanced_edu: AdvancedEducation) => (
+                      <div key={advanced_edu?.id}>
+                        <h3 className="font-semibold text-base mb-2">
+                          Advanced Degree
+                        </h3>
+                        <CopyText
+                          label="Advanced Degree Type"
+                          text={advanced_edu?.advanced_degree_type || "N/A"}
+                        />
+                        <CopyText
+                          label="Class of Degree"
+                          text={advanced_edu?.class_of_degree || "N/A"}
+                        />
+                        <CopyText
+                          label="Country"
+                          text={advanced_edu?.country || "N/A"}
+                        />
+                        <CopyText
+                          label="Graduate Type"
+                          text={advanced_edu?.graduate_type || "N/A"}
+                        />
+                        <CopyText
+                          label="School Name"
+                          text={advanced_edu?.school_name || "N/A"}
+                        />
+                        <CopyText
+                          label="Specific CGPA"
+                          text={advanced_edu?.specific_cgpa || "N/A"}
+                        />
+                        <CopyText
+                          label="Year Admitted"
+                          text={String(advanced_edu?.year_admitted) || "N/A"}
+                        />
+                        <CopyText
+                          label="Year Graduated"
+                          text={String(advanced_edu?.year_graduated) || "N/A"}
+                        />
+                      </div>
+                    )
+                  )}
+              </div>
+            ))}
+          </div>
+
+          {/* Work Experience Details */}
+          <div>
+            <h3 className="font-semibold text-base mb-4">
+              Work Experience Details
+            </h3>
+            {/* Career */}
+            {candidate?.career.map((car) => (
+              <div key={car?.id} className="flex flex-col gap-2">
+                <CopyText label="Profession" text={car?.profession} />
+                <CopyText label="Sector" text={car?.sector} />
+                <CopyText label="Technical Skill" text={car?.technical_skill} />
+                <CopyText
+                  label="Year of Experience Post Degree"
+                  text={String(car?.years_of_experience_post_degree)}
+                />
+                <CopyText
+                  label="Year of Experience Pre Graduation"
+                  text={String(car?.years_of_experience_pre_graduation)}
+                />
+              </div>
+            ))}
+
+            {/* Job Experience */}
+            {candidate?.job_experience.map((job) => {
+              if (job?.business_name === "") return null;
+
+              return (
+                <div key={job?.id} className="flex my-5 flex-col gap-2">
+                  <CopyText label="Business Name" text={job?.business_name} />
+                  <CopyText
+                    label="Company Description"
+                    text={job?.company_description}
+                  />
+                  <CopyText label="Country" text={job?.country} />
+                  <CopyText
+                    label="Employment Type"
+                    text={job?.employment_type}
+                  />
+                  <CopyText label="Job Status" text={job?.job_status} />
+                  <CopyText label="Job Summary" text={job?.job_summary} />
+                  <CopyText label="Job Title" text={job?.job_title} />
+                  <CopyText
+                    label="Professional Status"
+                    text={job?.professional_status}
+                  />
+                  <CopyText label="State" text={job?.state} />
+                  <CopyText
+                    label="Year Started"
+                    text={String(job?.year_started)}
+                  />
+                  <CopyText label="Year Ended" text={String(job?.year_ended)} />
+                </div>
+              );
+            })}
+          </div>
+
+          {/* LOAN REFERREES */}
+          <div>
+            <h3 className="font-semibold text-lg mb-4">Loan Referees</h3>
+            <div className="space-y-4 m-4">
+              {candidate?.loan_referees?.map((referee, index) => (
+                <div key={index} className="flex justify-between items-center">
+                  <CopyText label="Referee Name" text={referee.name} />
+                  <CopyText label="Relationship" text={referee.relationship} />
+                  <CopyText label="Email" text={referee.email} />
+                  <CopyText label="Phone Number" text={referee.phone_number} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* VERIFICATION DOCUMENTS */}
+          <div>
+            <h3 className="font-semibold text-lg mb-4">
+              VERIFICATION DOCUMENTS
+            </h3>
+            <div className="space-y-4 m-4">
+              {Object.entries(documents).map(([key, label]) => (
+                <div key={key} className="flex justify-between items-center">
+                  <p className="text-base">{label}</p>
+                  {candidate?.verification_documents[0]?.[
+                    key as keyof VerificationDocument
+                  ] ? (
+                    <a
+                      href={
+                        candidate.verification_documents[0][
+                          key as keyof VerificationDocument
+                        ] as string
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-green-600 underline"
+                    >
+                      Uploaded
+                    </a>
+                  ) : (
+                    <span className="text-red">Not Uploaded</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </RootLayout>

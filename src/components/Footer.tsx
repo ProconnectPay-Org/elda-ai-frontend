@@ -13,7 +13,7 @@ const Footer = () => {
           {getInitials(loggedInUser?.full_name || "")}
         </AvatarFallback>
       </Avatar>
-      <p className="text-black cursor-pointer text-xs">
+      <p className="text-black cursor-pointer text-xs truncate w-32">
         {loggedInUser?.email || ""}
       </p>
       <Button

@@ -1,9 +1,10 @@
 import { CandidateLayoutProps } from "@/types";
 import PcpLogo from "../assets/proconnect-logo-new-no-bg.png";
 import EldaLogo from "../assets/elda-new-logo.png";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
+import { Button } from "@/components/ui/button";
 
 const CandidateFormLayout = ({ children }: CandidateLayoutProps) => {
   const navigate = useNavigate();
@@ -26,6 +27,9 @@ const CandidateFormLayout = ({ children }: CandidateLayoutProps) => {
           <img src={PcpLogo} alt="pcp-logo" className="w-[50%] md:scale-150" />
           <img src={EldaLogo} alt="elda-logo" className="w-[50%] md:scale-150" />
         </div>
+        <Button className="z-40 bg-red">
+          <Link to="/candidate/status">My Portal</Link>
+        </Button>
         <h1 className="font-semibold mt-8 sm:font-bold text-4xl leading-tight">
           Registration Form
         </h1>

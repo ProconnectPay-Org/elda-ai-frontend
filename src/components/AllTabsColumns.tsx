@@ -67,7 +67,11 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
             alert(`Status: ${row.original.school_application_status || "none"}`)
           }
         >
-          {row.original.school_application_status || "none"}
+          {row.original.school_application_status === "True" ? (
+            "Completed"
+          ) : (
+            <>{row.original.school_application_status || "none"}</>
+          )}
         </Button>
       </div>
     ),
@@ -102,7 +106,7 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
             row.original.sop_status === "Pending"
               ? "bg-orange text-white"
               : "bg-[#D5F4EA] text-[#2A6350]"
-          } bg-[#D5F4EA] w-full text-[#2A6350] px-5 hover:bg-green-200`}
+          } px-5 hover:bg-green-200`}
           onClick={() =>
             alert(`SOP Status: ${row.original.sop_status || "none"}`)
           }
@@ -143,6 +147,11 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem>
+                <Link to={`/candidates/${id}`} target="_blank">
+                  Candidate Info
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
                 <Link
                   to={`/download-resume/${id}`}
                   target="_blank"
@@ -176,7 +185,7 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
             </DropdownMenuContent>
           </DropdownMenu>
           {isModalOpen && (
-            <SchoolApplicationModal onClose={closeModal} id={row.original.id} />
+            <SchoolApplicationModal onClose={closeModal} id={id} />
           )}
         </>
       );

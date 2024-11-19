@@ -145,7 +145,11 @@ export const deleteStaff = async (id: number | string) => {
 };
 
 const getToken = () => {
-  return Cookies.get("staff_access_token") || Cookies.get("access_token");
+  return (
+    Cookies.get("staff_access_token") ||
+    Cookies.get("access_token") ||
+    Cookies.get("candidate_access_token")
+  );
 };
 
 export const getAllCandidates = async () => {
@@ -168,7 +172,9 @@ export const getAllCandidates = async () => {
 
 export const getSingleCandidate = async (id: number | string) => {
   const token =
-    Cookies.get("staff_access_token") || Cookies.get("access_token");
+    Cookies.get("staff_access_token") ||
+    Cookies.get("access_token") ||
+    Cookies.get("candidate_access_token");
   if (!token) throw new Error("Access token is missing. Please sign in again.");
 
   const response = await axios.get(`${API_URL}all-candidates/${id}/`, {
@@ -436,6 +442,27 @@ export const getComplaints = async () => {
       },
     });
 
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const toggleSchoolApplicationStatus = async (id?: string) => {
+  try {
+    const token =
+      Cookies.get("access_token") || Cookies.get("staff_access_token");
+    if (!token) return null;
+
+    const response = await axios.get(
+      `${API_URL}staff-dashboard/toggle-school-application-status/${id}/`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error(error);

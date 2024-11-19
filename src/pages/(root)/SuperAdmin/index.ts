@@ -7,3 +7,4 @@ export { default as Staff } from "./Staff";
 export { default as CreateCandidateProfile } from "./CreateCandidateProfile";
 export { default as InviteEmployee } from "./InviteEmployee";
 export { default as ViewComplaints } from "./ViewComplaints";
+export { default as CandidatePage } from "./CandidatePage";

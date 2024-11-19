@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { DataTable } from "@/components/DataTable";
 import SmallBox from "@/components/SmallBox";
 import { columns } from "@/components/ui/Columns";
@@ -7,29 +6,12 @@ import icon1 from "@/assets/Icon1.svg";
 import icon2 from "@/assets/Icon2.svg";
 import icon3 from "@/assets/Icon3.svg";
 import RootLayout from "@/layouts/RootLayout";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import { copyToClipboard } from "@/lib/utils";
-import DottedBox from "@/components/DottedBox";
-import { CopyIcon, MailIcon, PhoneCallIcon } from "lucide-react";
 import { CandidateData } from "@/types";
-import { useToast } from "@/components/ui/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import useAuth from "@/hooks/useAuth";
 import useStaffDetails from "@/hooks/useStaffDetails";
-
 const AssignedCandidates = () => {
-  const [selectedRowData, setSelectedRowData] = useState<CandidateData | null>(
-    null
-  );
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [assignedCandidates, setAssignedCandidates] = useState(0);
-  const { toast } = useToast();
   const { loggedInUser } = useAuth();
   const { loggedInStaff, isStaffLoading } = useStaffDetails();
 
@@ -68,23 +50,13 @@ const AssignedCandidates = () => {
         status: candidate.status || "Inactive",
         recommended_course: candidate.assigned_course1 || "No course assigned",
         recommended_school:
-        candidate.assigned_university1 || "No school assigned",
+          candidate.assigned_university1 || "No school assigned",
         resume: candidate.resume_status || "Not Started",
         sop_status: candidate.sop_status || "Not Started",
         school_application_status:
-        candidate.school_application_status || "Not available",
+          candidate.school_application_status || "Not available",
       })
-    ) || [];    
-
-  const handleRowClick = (row: CandidateData) => {
-    setSelectedRowData(row);
-    setIsDialogOpen(true);
-  };
-
-  // const closeModal = () => {
-  //   setSelectedRowData(null);
-  //   setIsDialogOpen(false);
-  // };
+    ) || [];
 
   return (
     <RootLayout title="Assigned Candidates">
@@ -130,111 +102,9 @@ const AssignedCandidates = () => {
             ))}
           </div>
         ) : (
-          <DataTable
-            columns={columns}
-            data={candidateTableData}
-            onRowClick={handleRowClick}
-          />
+          <DataTable columns={columns} data={candidateTableData} />
         )}
       </div>
-
-      {selectedRowData && (
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="w-[364px] md:w-full">
-            <DialogHeader>
-              <div className="flex w-full justify-between mt-4">
-                <DialogTitle className="text-red">
-                  Candidate Details
-                </DialogTitle>
-                <Link
-                  to={`/assigned-candidates/${selectedRowData.id}`}
-                  className="underline text-sm text-red font-medium"
-                >
-                  View All
-                </Link>
-              </div>
-            </DialogHeader>
-            <DialogDescription className="flex flex-col gap-8">
-              <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
-                <div className="w-1/2">
-                  <label>Full Name</label>
-                  <p className="text-primary font-medium">
-                    {selectedRowData.name}
-                  </p>
-                </div>
-                <div className="w-1/2 flex flex-col items-start">
-                  <label>Status</label>
-                  <p
-                    className={`${
-                      selectedRowData.status === "completed"
-                        ? "bg-green-200 text-green-800"
-                        : "text-red bg-pale-bg"
-                    } text-[10px] p-1 rounded-xl`}
-                  >
-                    {selectedRowData.status}
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
-                <div>
-                  <label>Phone Number</label>
-                  <span
-                    onClick={() =>
-                      copyToClipboard(selectedRowData.phone_number || "", toast)
-                    }
-                    className="text-primary font-medium flex items-center gap-1"
-                  >
-                    <PhoneCallIcon size={16} />
-                    {selectedRowData.phone_number}
-                    <CopyIcon size={16} cursor="pointer" />
-                  </span>
-                </div>
-                <div className="w-1/2">
-                  <label>Recommended School</label>
-                  <p className="text-primary font-medium">
-                    {selectedRowData.recommended_school}
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
-                <div>
-                  <label>Email Address</label>
-                  <span
-                    onClick={() =>
-                      copyToClipboard(selectedRowData.user?.email || "", toast)
-                    }
-                    className="text-primary font-medium flex items-center gap-1"
-                  >
-                    <MailIcon size={16} />
-                    {selectedRowData.user?.email}
-                    <CopyIcon size={16} cursor="pointer" />
-                  </span>
-                </div>
-                <div className="w-1/2">
-                  <label>Recommended Course</label>
-                  <p className="text-primary font-medium">
-                    {selectedRowData.recommended_course}
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col md:flex-row items-center gap-5 md:gap-0 justify-between">
-                <DottedBox
-                  className="border-red rounded-md text-sm font-bold p-2 hover:bg-pale-bg"
-                  href={`/craft-sop/${selectedRowData.id}`}
-                  docType="Draft Statement Of Purpose"
-                  icon=""
-                />
-                <Link
-                  to={`/refine-resume/${selectedRowData.id}`}
-                  className="bg-red w-1/2 hover:bg-pale-bg text-white hover:text-red border hover:border-red text-center py-2 rounded-md"
-                >
-                  Refine Resume
-                </Link>
-              </div>
-            </DialogDescription>
-          </DialogContent>
-        </Dialog>
-      )}
     </RootLayout>
   );
 };

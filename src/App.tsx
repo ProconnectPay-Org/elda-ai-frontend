@@ -13,6 +13,7 @@ import {
   AdminSecurity,
   AdminSettings,
   AssignCandidate,
+  CandidatePage,
   Candidates,
   CreateCandidateProfile,
   InviteEmployee,
@@ -46,6 +47,7 @@ function App() {
           element={<CreateCandidateProfile />}
           path="/admin/create-candidate-profile"
         />
+        <Route element={<CandidatePage />} path="/candidates/:id" />
         <Route element={<InviteEmployee />} path="/admin/invite-employee" />
         <Route element={<AssignCandidate />} path="/assign-candidate" />
         <Route element={<Staff />} path="/staff" />
