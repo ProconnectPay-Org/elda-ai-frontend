@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeftIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Textarea } from "@/components/ui/textarea";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,18 +16,21 @@ import { generateSop, updateSop } from "@/lib/actions/staff.actions";
 const Step4 = ({
   prevStep,
   candidateId,
+  file,
 }: {
   prevStep: () => void;
   candidateId: string;
+  file: File | null;
 }) => {
-  const [showModal, setshowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [candidateSop, setCandidateSop] = useState("");
   const [sopId, setSopId] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [sopLoading, setSopLoading] = useState(false);
+  const sopRef = useRef<HTMLDivElement>(null);
 
   const handleShowModal = () => {
-    setshowModal((prev) => !prev);
+    setShowModal((prev) => !prev);
   };
 
   const { data, isLoading } = useQuery({
@@ -44,9 +47,15 @@ const Step4 = ({
   }, [data]);
 
   const handleUpdateSop = async () => {
+    if (!file) return;
     setSopLoading(true);
     try {
-      const response = await updateSop(sopId, candidateId, candidateSop);
+      const response = await updateSop(
+        sopId,
+        candidateId,
+        candidateSop,
+        file
+      );
       console.log(response);
       if (response) {
         handleShowModal();
@@ -71,11 +80,16 @@ const Step4 = ({
           </h2>
 
           <div className="flex flex-col gap-5 w-full mx-auto md:w-[760px]">
+            <div ref={sopRef} className="hidden">
+              <h1 className="text-red font-bold text-center mb-4 text-xl uppercase">
+                Statement of Purpose
+              </h1>
+              <p>{candidateSop}</p>
+            </div>
             <Textarea
               placeholder={
                 isLoading ? "Generating your SOP..." : "Type your message here."
               }
-              // defaultValue={candidateSop}
               value={candidateSop}
               disabled={!isEditing}
               className="text-lg p-4 leading-[32px] min-h-80 text-black"
@@ -96,14 +110,14 @@ const Step4 = ({
         <Button
           className="bg-red text-white w-32 h-12"
           onClick={handleUpdateSop}
-          disabled={sopLoading}
+          disabled={sopLoading || !file}
         >
           {sopLoading ? "Completing..." : "Complete"}
         </Button>
       </div>
 
       {showModal && (
-        <Dialog open={showModal} onOpenChange={setshowModal}>
+        <Dialog open={showModal} onOpenChange={setShowModal}>
           <DialogContent className="w-[90%] rounded-md sm:max-w-md flex flex-col items-center justify-center md:py-8">
             <DialogHeader>
               <DialogTitle className="text-red text-2xl">

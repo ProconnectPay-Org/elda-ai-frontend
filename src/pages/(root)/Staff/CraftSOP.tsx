@@ -2,6 +2,10 @@ import { useState } from "react";
 import RootLayout from "@/layouts/RootLayout";
 import { SopStep1, SopStep2, SopStep4 } from ".";
 import { useParams } from "react-router-dom";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import { generateSop } from "@/lib/actions/staff.actions";
+import { Loader2 } from "lucide-react";
 
 const steps = [
   {
@@ -23,11 +27,25 @@ const totalSteps = steps.length;
 const CraftSOP = () => {
   const { id = "" } = useParams<{ id: string }>();
   const [currentStep, setCurrentStep] = useState(0);
+  const [file, setFile] = useState<File | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const StepComponent = steps[currentStep].component;
 
-  const nextStep = () => {
+  const nextStep = async () => {
     if (currentStep < totalSteps - 1) {
+      if (currentStep === 1) {
+        setIsGenerating(true);
+        try {
+          const sopData = await generateSop(id);
+          const generatedFile = await generateSopFile(sopData.SOP?.text, id);
+          setFile(generatedFile);
+        } catch (error) {
+          console.error("Error generating SOP file:", error);
+        } finally {
+          setIsGenerating(false);
+        }
+      }
       setCurrentStep((prev) => prev + 1);
     }
   };
@@ -38,9 +56,9 @@ const CraftSOP = () => {
     }
   };
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    nextStep();
+    await nextStep();
   };
 
   const progressBarWidth = ((currentStep + 1) / totalSteps) * 100;
@@ -59,9 +77,15 @@ const CraftSOP = () => {
           ></div>
         </div>
 
-        <StepComponent prevStep={prevStep} candidateId={id} />
+        {isGenerating ? (
+          <div>
+            Loading... <Loader2 className="animate-spin" />
+          </div>
+        ) : (
+          <StepComponent prevStep={prevStep} candidateId={id} file={file} />
+        )}
 
-        {currentStep === 0 && (
+        {currentStep < totalSteps - 1 && (
           <div className="flex mt-10 items-center justify-between gap-8">
             {currentStep > 0 && (
               <button
@@ -86,3 +110,29 @@ const CraftSOP = () => {
 };
 
 export default CraftSOP;
+
+const generateSopFile = async (sopText: string, candidateId: string) => {
+  const sopContainer = document.createElement("div");
+
+  sopContainer.style.position = "absolute";
+  sopContainer.style.visibility = "hidden";
+  sopContainer.innerHTML = `
+    <h1 class="text-red font-bold text-center mb-4 text-xl uppercase">Statement of Purpose</h1>
+    <p>${sopText}</p>
+  `;
+  document.body.appendChild(sopContainer);
+
+  const canvas = await html2canvas(sopContainer, { scale: 2, useCORS: true });
+  document.body.removeChild(sopContainer);
+
+  const imgData = canvas.toDataURL("image/png");
+  const pdf = new jsPDF("p", "mm", "a4");
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+  pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+
+  const blob = pdf.output("blob");
+  return new File([blob], `${candidateId}-sop.pdf`, {
+    type: "application/pdf",
+  });
+};

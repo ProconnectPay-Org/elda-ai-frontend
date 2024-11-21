@@ -117,23 +117,26 @@ export const updateSop = async (
   id: string,
   candidateId: string,
   text?: string,
-  file?: File,
+  file?: File
 ) => {
   const staffToken = Cookies.get("staff_access_token");
+
+  const formData = new FormData();
+  if (text) formData.append("text", text);
+  if (file) formData.append("file", file);
+  formData.append("candidateId", candidateId);
+
   const { data } = await axios.patch(
     `${API_URL}staff-dashboard/update-sop/${id}/`,
-    {
-      text,
-      file,
-      candidateId,
-    },
+    formData,
     {
       headers: {
         Authorization: `Bearer ${staffToken}`,
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
       },
     }
   );
+
   return data;
 };
 
