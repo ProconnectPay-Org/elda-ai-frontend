@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { getCountryNameFromISO } from "@/lib/utils";
 import SchoolApplicationModal from "./SchoolApplicationModal";
 import { useState } from "react";
+import { deleteStaff } from "@/lib/actions/user.actions";
 
 export const allTabsColumns: ColumnDef<CandidateData>[] = [
   {
@@ -181,6 +182,39 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
               </DropdownMenuItem>
               <DropdownMenuItem onClick={openModal}>
                 School Application Status
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Button
+                  onClick={async () => {
+                    const fullName =
+                      row.original.user?.full_name || "this candidate";
+                    const userId = row.original.user?.id;
+
+                    if (!userId) {
+                      alert(
+                        `User ID is missing. Unable to delete ${fullName}'s account.`
+                      );
+                      return;
+                    }
+
+                    const confirmed = window.confirm(
+                      `Are you sure you want to delete ${fullName}'s account?`
+                    );
+
+                    if (confirmed) {
+                      try {
+                        await deleteStaff(userId);
+                        alert(`User ${fullName} deleted successfully.`);
+                      } catch (error) {
+                        alert("Failed to delete user. Please try again.");
+                        console.error("Error deleting user:", error);
+                      }
+                    }
+                  }}
+                  className="w-full bg-red"
+                >
+                  Delete Candidate
+                </Button>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -2,11 +2,28 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTable } from "./DataTable";
 import { CandidateData } from "@/types";
 import { allTabsColumns } from "./AllTabsColumns";
-import { useCandidates } from "@/hooks/useCandidiates";
+import { useQuery } from "@tanstack/react-query";
+import Cookies from "js-cookie";
+import { getAllCandidates } from "@/lib/actions/user.actions";
 
 const TabsComponent = () => {
-  const { allCandidates, allCandidatesError, allCandidatesLoading } =
-    useCandidates();
+  const getToken = () => Cookies.get("access_token");
+
+  const {
+    data: allCandidates,
+    error: allCandidatesError,
+    isLoading: allCandidatesLoading,
+  } = useQuery({
+    queryKey: ["allCandidates"],
+    queryFn: async () => {
+      const token = getToken();
+      if (!token)
+        throw new Error("Access token is missing. Please sign in again.");
+      return getAllCandidates();
+    },
+    enabled: !!getToken(),
+    staleTime: 3 * 1000 * 60,
+  });
 
   const tableData: CandidateData[] =
     allCandidates?.results.map((candidate: CandidateData, index: number) => ({
@@ -14,10 +31,8 @@ const TabsComponent = () => {
       serialNumber: index + 1,
       full_name: candidate.user?.full_name || "No name",
       country: candidate.country_of_birth || "No country",
-      assigned_university:
-        candidate.assigned_university1 || "None Assigned",
-      assigned_course:
-        candidate.assigned_course1 || "No course assigned",
+      assigned_university: candidate.assigned_university1 || "None Assigned",
+      assigned_course: candidate.assigned_course1 || "No course assigned",
       school_application_status:
         candidate.school_application_status || "No status",
       resume_status: candidate.resume_status || "No status",
@@ -25,9 +40,19 @@ const TabsComponent = () => {
       duplicate: candidate.duplicate || "none",
     })) || [];
 
-  const assignedData = tableData.filter((candidate) => candidate.assigned);
-  const unassignedData = tableData.filter((candidate) => !candidate.assigned);
+  const assignedData = tableData
+    .filter((candidate) => candidate.assigned)
+    .map((candidate, index) => ({
+      ...candidate,
+      serialNumber: index + 1,
+    }));
 
+  const unassignedData = tableData
+    .filter((candidate) => !candidate.assigned)
+    .map((candidate, index) => ({
+      ...candidate,
+      serialNumber: index + 1,
+    }));
   if (allCandidatesError) return <p>Error: {allCandidatesError.message}</p>;
 
   return (

@@ -28,6 +28,10 @@ export const StaffColumns: ColumnDef<AllStaff>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: "serialNumber",
+    header: "S/N",
+  },
+  {
     accessorKey: "full_name",
     header: "Full Name",
     cell: ({ row }) => (
