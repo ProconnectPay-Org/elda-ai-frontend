@@ -1332,6 +1332,7 @@ const supportedSchools = [
   { id: 298, name: "Worcester Polytechnic Institute" },
   { id: 299, name: "Yale University" },
   { id: 300, name: "Yeshiva University" },
+  { id: 301, name: "Eindhoven University of Technology" },
 ];
 
 const schoolsWithUniqueIds = supportedSchools.map((school, index) => ({
