@@ -5,6 +5,7 @@ import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import { useParams } from "react-router-dom";
 import { useCandidates } from "@/hooks/useCandidiates";
+import Cookies from "js-cookie";
 const DownloadResume = () => {
   const { id } = useParams<{ id: string }>();
   const resumeRef = useRef<HTMLDivElement>(null);
@@ -35,17 +36,22 @@ const DownloadResume = () => {
       pdf.save(fileName);
     }
   };
+
+  const userRole = Cookies.get("user_role");
+
   return (
     <section className="m-10">
       <div ref={resumeRef}>
         <ResumePdf />
       </div>
 
-      <div className="mt-5 md:mt-8 w-full flex items-center justify-end">
-        <Button className="bg-red" onClick={downloadPDF}>
-          Download PDF
-        </Button>
-      </div>
+      {userRole !== "candidate" && (
+        <div className="mt-5 md:mt-8 w-full flex items-center justify-end">
+          <Button className="bg-red" onClick={downloadPDF}>
+            Download PDF
+          </Button>
+        </div>
+      )}
     </section>
   );
 };

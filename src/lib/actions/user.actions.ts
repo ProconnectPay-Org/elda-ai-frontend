@@ -192,8 +192,8 @@ export const getAllStaff = async (page?: number) => {
     throw new Error("Access token is missing. Please sign in again.");
   }
   const url = page
-  ? `${API_URL}all-staffs/?page=${page}`
-  : `${API_URL}all-staffs/`;
+    ? `${API_URL}all-staffs/?page=${page}`
+    : `${API_URL}all-staffs/`;
 
   try {
     const response = await axios.get(`${url}`, {
@@ -352,15 +352,15 @@ export const updatePassword = async ({
   }
 };
 
-export const getAllActivities = async (url?: string) => {
-  const access_token = Cookies.get("access_token"); // Fetch token from cookies
+export const getAllActivities = async (page: number = 1) => {
+  const access_token = Cookies.get("access_token");
 
   if (!access_token) {
     throw new Error("Access token is missing. Please sign in again.");
   }
 
   try {
-    const requestUrl = url ? url : `${API_URL}all-activities/`;
+    const requestUrl = `${API_URL}all-activities/?page=${page}`;
 
     const response = await axios.get(requestUrl, {
       headers: {
@@ -368,7 +368,7 @@ export const getAllActivities = async (url?: string) => {
       },
     });
 
-    return response.data;
+    return response.data; // Ensure your API response includes 'results', 'next', 'previous', and 'count'
   } catch (error) {
     console.error("Error fetching activities:", error);
     throw error;

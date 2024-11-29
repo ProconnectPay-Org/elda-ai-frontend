@@ -58,7 +58,7 @@ const StatusBox = ({
       </div>
       {/* <ChevronRight color="red" size={20} /> */}
       <button className="bg-red text-white py-2 px-2 md:px-5 rounded-xl text-xs md:text-base">
-        {status === "Completed"  && "View" || "True" && "Completed"}
+        {(status === "Completed" && "View") || ("True" && "Completed")}
       </button>
     </div>
   );
@@ -105,6 +105,10 @@ const CandidateStatus = () => {
     },
   ];
 
+  const allStatusesCompleted = () => {
+    return statusProps.every((item) => item.status === "Completed");
+  };
+
   return (
     <CandidateLayout>
       <section className="md:max-w-[880px] mx-auto space-y-10">
@@ -114,7 +118,9 @@ const CandidateStatus = () => {
 
         <div className="h-[80px] rounded-2xl w-full p-5 bg-gradient-to-r from-red to-[#919293] gap-2 flex items-center">
           <img src={ExclamationWhite} alt="exclamation mark" />
-          <p className="text-white font-medium text-2xl">Not Completed</p>
+          <p className="text-white font-medium text-2xl">
+            {allStatusesCompleted() ? "Completed" : "Not Completed"}
+          </p>
         </div>
 
         <div className="flex flex-col gap-5">

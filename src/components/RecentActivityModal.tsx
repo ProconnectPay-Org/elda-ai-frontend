@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +10,7 @@ import { getAllActivities } from "@/lib/actions/user.actions";
 import Notification from "./Notification";
 import messageIcon from "@/assets/message-icon.png";
 import shieldIcon from "@/assets/shield-icon.png";
+import { useQuery } from "@tanstack/react-query";
 
 interface RecentActivityModalProps {
   open: boolean;
@@ -28,32 +29,38 @@ const RecentActivityModal = ({
   open,
   onOpenChange,
 }: RecentActivityModalProps) => {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [activities, setActivities] = useState<Activity[]>([]);
-  const [nextPage, setNextPage] = useState<string | null>(null);
-  const [previousPage, setPreviousPage] = useState<string | null>(null);
+  const [page, setPage] = React.useState(1);
 
-  const fetchActivities = async (url?: string) => {
-    setLoading(true);
-    try {
-      const data = await getAllActivities(url);
-      setActivities(data.results);
-      setNextPage(data.next);
-      setPreviousPage(data.previous);
-    } catch (err) {
-      setError("Error in sending request: " + err);
-      console.error("Error fetching activities:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ["activities", page],
+    queryFn: () => getAllActivities(page),
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const activities = data?.results || [];
+  const nextPage = data?.next;
+  const previousPage = data?.previous;
+  const totalActivities = data?.count || 0;
+  const itemsPerPage = 50;
+  const totalPages = Math.ceil(totalActivities / itemsPerPage);
 
   useEffect(() => {
     if (open) {
-      fetchActivities();
+      refetch();
     }
-  }, [open]);
+  }, [open, refetch]);
+
+  const handleNextPage = () => {
+    if (nextPage) {
+      setPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (previousPage) {
+      setPage((prev) => prev - 1);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -64,13 +71,13 @@ const RecentActivityModal = ({
           </DialogTitle>
         </DialogHeader>
         <DialogDescription className="flex flex-col gap-8 h-full overflow-y-scroll">
-          {loading ? (
+          {isLoading ? (
             <p className="text-center">Loading...</p>
           ) : error ? (
-            <p className="text-center">{error}</p>
+            <p className="text-center">{error.message || "Error fetching activities"}</p>
           ) : (
             <>
-              {activities.map((item) => (
+              {activities.map((item: Activity) => (
                 <Notification
                   key={item.id}
                   activity_type={
@@ -83,18 +90,21 @@ const RecentActivityModal = ({
               ))}
 
               {/* Pagination Controls */}
-              <div className="pagination-buttons flex gap-4 mt-4">
+              <div className="fixed bottom-4 flex gap-4 mt-4 items-center">
                 <button
-                  onClick={() => fetchActivities(previousPage || undefined)}
-                  disabled={!previousPage}
-                  className="btn"
+                  onClick={handlePreviousPage}
+                  className="bg-red text-white px-3 py-2 rounded disabled:opacity-50"
+                  disabled={page === 1}
                 >
                   Previous
                 </button>
+                <span>
+                  Page {page} of {totalPages}
+                </span>
                 <button
-                  onClick={() => fetchActivities(nextPage || undefined)}
-                  disabled={!nextPage}
-                  className="btn"
+                  onClick={handleNextPage}
+                  disabled={page === totalPages}
+                  className="bg-red text-white px-3 py-2 rounded disabled:opacity-50"
                 >
                   Next
                 </button>

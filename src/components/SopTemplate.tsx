@@ -5,6 +5,7 @@ import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import { useRef } from "react";
 import { Loader2Icon } from "lucide-react";
+import Cookies from "js-cookie";
 
 const SopTemplate = () => {
   const { id } = useParams<{ id: string }>();
@@ -55,13 +56,16 @@ const SopTemplate = () => {
     }
   };
 
+  const userRole = Cookies.get("user_role");
+
   return (
     <div className="py-4 px-8">
       <div ref={resumeRef} className="px-8">
         <h1 className="text-red font-bold text-center mb-4 text-xl uppercase">
           STATEMENT OF PURPOSE FOR {singleCandidate?.last_name}{" "}
           {singleCandidate?.first_name} {singleCandidate?.middle_name}: PURSUING
-          AN MSC IN {singleCandidate?.assigned_course1} AT{" "}
+          AN {singleCandidate?.program_type1} IN{" "}
+          {singleCandidate?.assigned_course1} AT{" "}
           {singleCandidate?.assigned_university1}
         </h1>
         <div>
@@ -73,9 +77,11 @@ const SopTemplate = () => {
         </div>
       </div>
 
-      <Button className="my-5 bg-red mx-8" onClick={downloadPDF}>
-        Download SOP
-      </Button>
+      {userRole !== "candidate" && (
+        <Button className="my-5 bg-red mx-8" onClick={downloadPDF}>
+          Download SOP
+        </Button>
+      )}
     </div>
   );
 };

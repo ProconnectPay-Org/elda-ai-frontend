@@ -12,13 +12,13 @@ const TabsComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = parseInt(searchParams.get("page") || "1", 10);
   const pageSize = 50;
-
+  
   const queryClient = useQueryClient();
-
+  
   const getToken = () => Cookies.get("access_token");
-
+  
   const [currentTab, setCurrentTab] = useState("all");
-
+  
   const {
     data: allCandidates,
     error: allCandidatesError,
@@ -34,7 +34,7 @@ const TabsComponent = () => {
     enabled: !!getToken(),
     staleTime: 3 * 1000 * 60,
   });
-
+  
   useEffect(() => {
     const token = getToken();
     if (token && allCandidates?.next) {
@@ -48,6 +48,9 @@ const TabsComponent = () => {
       });
     }
   }, [page, allCandidates, queryClient]);
+  
+  const totalCandidates = allCandidates?.count || 0;
+  const totalPages = Math.ceil(totalCandidates / pageSize);
 
   const handleTabChange = (tabValue: string) => {
     setCurrentTab(tabValue);
@@ -176,6 +179,9 @@ const TabsComponent = () => {
         >
           Previous
         </button>
+        <span>
+          Page {page} of {totalPages}
+        </span>
         <button
           onClick={handleNextPage}
           disabled={!allCandidates?.next}
