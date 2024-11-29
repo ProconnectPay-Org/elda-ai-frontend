@@ -39,7 +39,7 @@ const StatusBox = ({
   const router = useNavigate();
 
   const handleClick = () => {
-    if (route) {
+    if ((status === "Completed" || status === "True") && route) {
       router(route);
     }
   };
@@ -47,7 +47,14 @@ const StatusBox = ({
   return (
     <div
       onClick={handleClick}
-      className="w-full h-[60px] rounded-2xl bg-[#F5F7F9] flex justify-between items-center p-5 cursor-pointer"
+      className={`w-full h-[60px] rounded-2xl p-5 flex justify-between items-center ${
+        status === "Completed"
+          ? "bg-[#F5F7F9] cursor-pointer"
+          : "bg-gray-200 cursor-not-allowed"
+      }`}
+      style={{
+        pointerEvents: status === "Completed" ? "auto" : "none",
+      }}
     >
       <div className="flex items-center gap-2 md:gap-4">
         <p className="font-semibold text-sm md:text-2xl text-red">{text}</p>
@@ -58,7 +65,9 @@ const StatusBox = ({
       </div>
       {/* <ChevronRight color="red" size={20} /> */}
       <button className="bg-red text-white py-2 px-2 md:px-5 rounded-xl text-xs md:text-base">
-        {(status === "Completed" && "View") || ("True" && "Completed")}
+        {status === "Completed" && "View"}
+        {status === "True" && "Completed"}
+        {status !== "Completed" && status !== "True" && "Not Completed"}
       </button>
     </div>
   );

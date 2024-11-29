@@ -32,7 +32,7 @@ const TabsComponent = () => {
       return page ? getAllCandidates(page) : getAllCandidates();
     },
     enabled: !!getToken(),
-    staleTime: 3 * 1000 * 60,
+    staleTime: 5 * 1000 * 60,
   });
   
   useEffect(() => {
