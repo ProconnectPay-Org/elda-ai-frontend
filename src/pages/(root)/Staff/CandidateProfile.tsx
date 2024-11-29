@@ -79,8 +79,6 @@ const CandidateProfile = () => {
     );
   }
 
-  console.log(candidate);
-
   const documents: Record<
     keyof Omit<VerificationDocument, "id" | "candidate">,
     string
@@ -112,20 +110,40 @@ const CandidateProfile = () => {
             <p className="font-semibold text-2xl">
               {candidate.user?.full_name || ""}
             </p>
-            <p className="capitalize">
-              Preferred Call Name:{" "}
-              {candidate?.preferred_call_name || "No name provided"}
-            </p>
-            <p className="capitalize">
-              Profession:{" "}
-              {candidate?.career[0]?.profession || "No profession provided"}
-            </p>
-            <p className="capitalize">
-              Course: {candidate?.assigned_course1 || "No course provided"}
-            </p>
-            <p className="capitalize">
-              School: {candidate?.assigned_university1 || "No school provided"}
-            </p>
+            <CopyText
+              label="Preferred Call Name"
+              text={candidate?.preferred_call_name || "No name provided"}
+            />
+            <CopyText
+              label="Profession"
+              text={
+                candidate?.career[0]?.profession || "No profession provided"
+              }
+            />
+            <CopyText
+              label="Assigned Course 1"
+              text={candidate?.assigned_course1 || "No course provided"}
+            />
+            <CopyText
+              label="Assigned School 1"
+              text={candidate?.assigned_university1}
+            />
+            <CopyText
+              label="Assigned Program Type 1"
+              text={candidate?.program_type1 || "No program provided"}
+            />
+            <CopyText
+              label="Assigned Course 2"
+              text={candidate?.assigned_course2 || "No course provided"}
+            />
+            <CopyText
+              label="Assigned School 2"
+              text={candidate?.assigned_university2 || "No school provided"}
+            />
+            <CopyText
+              label="Assigned Program Type 2"
+              text={candidate?.program_type2 || "No program provided"}
+            />
             <div className="flex items-center gap-4">
               <div className="bg-pale-bg text-red rounded-xl px-2 text-xs flex items-center gap-1 py-1">
                 <PhoneCallIcon size={16} />

@@ -49,15 +49,15 @@ const StatusBox = ({
       onClick={handleClick}
       className="w-full h-[60px] rounded-2xl bg-[#F5F7F9] flex justify-between items-center p-5 cursor-pointer"
     >
-      <div className="flex items-center gap-4">
-        <p className="font-semibold text-2xl text-red">{text}</p>
+      <div className="flex items-center gap-2 md:gap-4">
+        <p className="font-semibold text-sm md:text-2xl text-red">{text}</p>
         <div className="border border-red px-2 h-6 flex items-center gap-2 rounded-md">
           {icon}
           <p className="text-[10px] text-center text-gray-text">{status}</p>
         </div>
       </div>
       {/* <ChevronRight color="red" size={20} /> */}
-      <button className="bg-red text-white py-2 px-5 rounded-xl">
+      <button className="bg-red text-white py-2 px-2 md:px-5 rounded-xl text-xs md:text-base">
         {status === "Completed"  && "View" || "True" && "Completed"}
       </button>
     </div>
@@ -146,7 +146,7 @@ const CandidateStatus = () => {
             onClick={() => setIsExpanded(!isExpanded)}
           >
             <div className="flex items-center gap-4">
-              <p className="font-semibold text-2xl text-red">
+              <p className="font-semibold text-sm md:text-2xl text-red">
                 Verification Documents
               </p>
               <div className="border border-red px-2 h-6 flex items-center gap-2 rounded-md">

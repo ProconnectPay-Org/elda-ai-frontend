@@ -9,7 +9,14 @@ import {
   step5Schema,
 } from "@/lib/utils";
 import { Step1, Step2, Step3, Step4, Step5 } from "@/pages/(root)/Candidates";
-import { AdvancedEducation, EducationHistory, FormData, LoanReferee, updateCandidateProfile, VerificationDocument } from "@/types";
+import {
+  AdvancedEducation,
+  EducationHistory,
+  FormData,
+  LoanReferee,
+  updateCandidateProfile,
+  VerificationDocument,
+} from "@/types";
 import RegisterSuccessModal from "./RegisterSuccessModal";
 import {
   postJobExperience,
@@ -23,6 +30,7 @@ import {
 } from "@/lib/actions/candidate.actions";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "./ui/use-toast";
 
 const steps = [
   { component: Step1, schema: step1Schema, title: "PERSONAL DETAILS" },
@@ -40,6 +48,8 @@ const MultiStepForm = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [jobsCount, setJobsCount] = useState(1); // Initialize with a default count if needed
+
+  const { toast } = useToast();
 
   const navigate = useNavigate();
 
@@ -93,7 +103,7 @@ const MultiStepForm = () => {
     try {
       if (currentStep === 0) {
         // Step 1: PERSONAL DETAILS
-        const personalData : updateCandidateProfile = {
+        const personalData: updateCandidateProfile = {
           first_name: currentFormData.firstName,
           middle_name: currentFormData.middleName,
           last_name: currentFormData.surname,
@@ -130,7 +140,7 @@ const MultiStepForm = () => {
         await submitEducationDetails(educationData);
 
         if (currentFormData.advancedDegree) {
-          const advancedDegreeData : AdvancedEducation = {
+          const advancedDegreeData: AdvancedEducation = {
             advanced_degree_type: currentFormData.advancedDegreeType,
             graduate_type: currentFormData.graduateType,
             country: currentFormData.advancedCountry,
@@ -145,8 +155,6 @@ const MultiStepForm = () => {
           await updateAdvancedDegree(advancedDegreeData);
         }
       } else if (currentStep === 2) {
-        console.log(currentFormData);
-
         // Step 3: WORK EXPERIENCE
         const workData = {
           profession: currentFormData.profession,
@@ -191,7 +199,11 @@ const MultiStepForm = () => {
                 postJobExperience(experienceData, jobExperienceId)
               );
             } else {
-              console.log(`No ID found for job experience ${i + 1}`);
+              toast({
+                title: "Error",
+                description: `No ID found for job experience ${i + 1}`,
+                variant: "destructive",
+              });
             }
           }
 
@@ -207,7 +219,7 @@ const MultiStepForm = () => {
           candidate: id,
         };
 
-        const referee2Data : LoanReferee = {
+        const referee2Data: LoanReferee = {
           name: currentFormData.referee2fullname,
           email: currentFormData.referee2email,
           phone_number: currentFormData.referee2phoneNumber,
@@ -218,7 +230,7 @@ const MultiStepForm = () => {
         await submitRefereeDetails(referee1Data, referee2Data);
       } else if (currentStep === steps.length - 1) {
         // UPLOAD DOCUMENTS
-        const documentsData : VerificationDocument = {
+        const documentsData: VerificationDocument = {
           bsc_hnd_certificate: currentFormData.document1,
           bank_statement: currentFormData.document2,
           intl_passport: currentFormData.document3,

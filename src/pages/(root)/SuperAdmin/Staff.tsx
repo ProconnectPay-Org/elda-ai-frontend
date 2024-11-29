@@ -4,21 +4,58 @@ import { Button } from "@/components/ui/button";
 import AdminLayout from "@/layouts/AdminLayout";
 import { getAllStaff } from "@/lib/actions/user.actions";
 import { AllStaff, AllStaffResponse } from "@/types";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import Cookies from "js-cookie";
 
 const Staff = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = parseInt(searchParams.get("page") || "1", 10);
+  const pageSize = 50;
+
+  const getToken = () => Cookies.get("access_token");
+
   const { data, isLoading, error } = useQuery<AllStaffResponse, Error>({
-    queryKey: ["allStaff"],
-    queryFn: getAllStaff,
+    queryKey: ["allStaff", page],
+    queryFn: async () => {
+      const token = getToken();
+      if (!token)
+        throw new Error("Access token is missing. Please sign in again.");
+      return page ? getAllStaff(page) : getAllStaff();
+    },
+    enabled: !!getToken(),
     staleTime: 1 * 60 * 1000,
   });
+
+  const handleNextPage = () => {
+    if (data?.next) {
+      const nextPage = new URL(data.next).searchParams.get("page");
+      if (nextPage)
+        setSearchParams({
+          page: nextPage,
+        });
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (data?.previous) {
+      const previousUrl = new URL(data.previous);
+      const previousPage = previousUrl.searchParams.get("page") || "1";
+      setSearchParams({
+        page: previousPage,
+      });
+    } else {
+      setSearchParams({ page: "1" });
+    }
+  };
+
+  const startingIndex = (page - 1) * pageSize;
 
   const tableData: AllStaff[] =
     data?.results.map((staff, index) => ({
       ...staff,
       full_name: staff.user?.full_name || "No name",
-      serialNumber: index + 1,
+      serialNumber: startingIndex + index + 1,
       status: staff.status || "Inactive",
       assigned_candidates: Array.isArray(staff.assigned_candidates)
         ? staff.assigned_candidates.length
@@ -56,6 +93,23 @@ const Staff = () => {
           data={tableData}
           isLoading={isLoading}
         />
+
+        <div className="flex justify-center items-center gap-4 mt-4">
+          <button
+            onClick={handlePreviousPage}
+            disabled={!data?.previous}
+            className="px-4 py-2 bg-red text-white rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <button
+            onClick={handleNextPage}
+            disabled={!data?.next}
+            className="px-4 py-2 bg-red text-white rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </AdminLayout>
   );

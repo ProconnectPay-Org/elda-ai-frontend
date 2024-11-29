@@ -29,7 +29,6 @@ const HeaderDetails = () => {
 
   useEffect(() => {
     if (singleCandidate) {
-      console.log(singleCandidate);
 
       const foundCandidate = singleCandidate;
       setValue("fullName", foundCandidate.user?.full_name || "");

@@ -56,7 +56,6 @@ const AuthForm = () => {
           Cookies.set("staff_access_token", response.access, { expires: 7 });
           navigate("/assigned-candidates");
         } else if (userRole === "candidate") {
-          console.log(response);
           
           Cookies.set("candidate_access_token", response.access, {
             expires: 7,

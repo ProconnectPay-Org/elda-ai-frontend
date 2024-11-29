@@ -1,7 +1,7 @@
 import { Button } from "./ui/button";
 import { useFormContext } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { Step3FormData } from "@/types";
+import { CustomAxiosError, Step3FormData } from "@/types";
 import { refinePrompt } from "@/lib/actions/user.actions";
 import Cookies from "js-cookie";
 import CountrySelect from "./CountrySelect";
@@ -10,6 +10,7 @@ import promptWhiteImage from "@/assets/prompt-white.svg";
 import { fetchJobExperienceData } from "@/lib/actions/candidate.actions";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { useToast } from "./ui/use-toast";
 
 interface ReuseableJobsProps {
   index: number; // New prop for the job experience index
@@ -17,6 +18,7 @@ interface ReuseableJobsProps {
 
 const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
   const { register, getValues, setValue } = useFormContext<Step3FormData>();
+  const { toast } = useToast();
 
   const divClass = "flex flex-col w-full md:w-1/2";
   const outerDivClass =
@@ -59,7 +61,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
   });
 
   const isJobExpLoading = jobExperienceQueries.some((query) => query.isLoading);
-  const jobExperienceData = jobExperienceQueries.map((query) => query.data);  
+  const jobExperienceData = jobExperienceQueries.map((query) => query.data);
 
   useEffect(() => {
     if (jobExperienceData) {
@@ -130,12 +132,20 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
           `jobExperiences.${index}.jobSummary`,
           refinedContent.refined_content
         );
-        console.log(refinedContent.refined_content);
       } else {
-        console.log("Please provide a job summary.");
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Please provide a job summary.",
+        });
       }
     } catch (error) {
-      console.error("Error refining prompt:", error);
+      const axiosError = error as CustomAxiosError;
+      toast({
+        variant: "destructive",
+        title: "Error refining prompt:",
+        description: axiosError.response?.data || "Unknown error",
+      });
     } finally {
       setRefineLoading(false);
     }

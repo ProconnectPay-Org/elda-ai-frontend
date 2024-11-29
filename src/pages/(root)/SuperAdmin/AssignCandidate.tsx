@@ -27,7 +27,7 @@ const AssignCandidate: React.FC = () => {
 
   const { data: staffResponse, isLoading: isLoadingStaff } = useQuery({
     queryKey: ["staff"],
-    queryFn: getAllStaff,
+    queryFn: () => getAllStaff(),
     staleTime: 5 * 1000,
   });
 

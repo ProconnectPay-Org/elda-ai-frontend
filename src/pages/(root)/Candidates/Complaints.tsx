@@ -37,8 +37,6 @@ const Complaints = () => {
       return;
     }
 
-    console.log(formData);
-
     try {
       const concatenatedComplaint = `${formData.complaint} - ${formData.complaint_body}`;
 

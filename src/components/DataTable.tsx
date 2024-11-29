@@ -1,7 +1,9 @@
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -13,8 +15,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
+import React from "react";
+import { Input } from "./ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -29,17 +41,33 @@ export function DataTable<TData, TValue>({
   onRowClick,
   isLoading,
 }: DataTableProps<TData, TValue>) {
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
+  const [selectedFilter, setSelectedFilter] = React.useState<string>("full_name");
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      columnFilters,
+    },
     initialState: {
       pagination: {
         pageSize: 50,
       },
     },
   });
+
+  const handleFilterChange = (value: string) => {
+    setSelectedFilter(value);
+    // Reset filter value when filter changes
+    table.getColumn(value)?.setFilterValue("");
+  };
 
   if (isLoading) {
     return (
@@ -76,70 +104,89 @@ export function DataTable<TData, TValue>({
   }
 
   return (
-    <div className="rounded-md border border-gray">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="border-gray">
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-                className="border-gray cursor-pointer"
-                onClick={() => onRowClick && onRowClick(row.original)}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-
-      <div className="flex items-center justify-end space-x-2 p-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
+    <>
+      <div className="flex items-center py-4 gap-4 pl-4">
+        <Select onValueChange={handleFilterChange}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select a filter" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Filters</SelectLabel>
+              <SelectItem value="full_name">Name</SelectItem>
+              <SelectItem value="assigned_course">Assigned Course</SelectItem>
+              <SelectItem value="assigned_school">Assigned School</SelectItem>
+              <SelectItem value="resume_status">Resume Status</SelectItem>
+              <SelectItem value="sop_status">SOP Status</SelectItem>
+              <SelectItem value="school_application_status">
+                School Application Status
+              </SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <Input
+          placeholder={`Filter by ${selectedFilter}...`}
+          value={
+            (table.getColumn(selectedFilter)?.getFilterValue() as string) ?? ""
+          }
+          onChange={(event) =>
+            table.getColumn(selectedFilter)?.setFilterValue(event.target.value)
+          }
+          className="max-w-xs"
+        />
       </div>
-    </div>
+      <div className="rounded-md border border-gray">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id} className="border-gray">
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  className="border-gray cursor-pointer"
+                  onClick={() => onRowClick && onRowClick(row.original)}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   );
 }

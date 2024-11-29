@@ -133,7 +133,7 @@ const UploadDocuments: React.FC = () => {
               <div className="mt-1 w-full p-4 border border-gray-border rounded-md shadow-sm bg-white text-gray-text flex gap-4 items-center">
                 <img src={FileIcon} alt="file icon" />
                 <div className="flex flex-col gap-8 w-full">
-                  <span className="truncate max-w-60">
+                  <span className="truncate max-w-48 lg:max-w-60">
                     {uploadStates[i]?.file?.name ||
                       data[labels[i]].split("/").pop()}
                   </span>

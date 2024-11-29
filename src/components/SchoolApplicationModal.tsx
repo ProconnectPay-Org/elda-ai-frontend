@@ -29,7 +29,7 @@ const SchoolApplicationModal = ({ onClose, id }: ModalProps) => {
     if (applicationCompleted) {
       try {
         const response = await toggleSchoolApplicationStatus(id);
-        console.log(response);
+        return response;
       } catch (error) {
         console.error(error);
       }

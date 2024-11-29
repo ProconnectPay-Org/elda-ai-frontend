@@ -43,7 +43,7 @@ const SelectedCandidateModal = ({ onClose, id }: ModalProps) => {
           <div className="flex w-full justify-between mt-4">
             <h3 className="text-red">Candidate Details</h3>
             <Link
-              to={`/assigned-candidates/${candidateData?.id}`}
+              to={`/assigned-candidates/${id}`}
               className="underline text-sm text-red font-medium"
             >
               View All

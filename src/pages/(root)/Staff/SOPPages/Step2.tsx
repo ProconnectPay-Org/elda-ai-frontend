@@ -43,7 +43,7 @@ const Step2 = ({
     const response = await postEditedCandidate(id, {
       course_description: manualDescription,
     });
-    console.log(response);
+    return response;
   };
 
   if (singleCandidateLoading) return <div>Loading...</div>;

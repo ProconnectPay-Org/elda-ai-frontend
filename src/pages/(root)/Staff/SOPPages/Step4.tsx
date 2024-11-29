@@ -56,7 +56,6 @@ const Step4 = ({
         candidateSop,
         file
       );
-      console.log(response);
       if (response) {
         handleShowModal();
       }

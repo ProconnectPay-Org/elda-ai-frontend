@@ -152,12 +152,14 @@ const getToken = () => {
   );
 };
 
-export const getAllCandidates = async () => {
+export const getAllCandidates = async (page?: number) => {
   const token = getToken();
   if (!token) throw new Error("Access token is missing. Please sign in again.");
-
+  const url = page
+    ? `${API_URL}all-candidates/?page=${page}`
+    : `${API_URL}all-candidates/`;
   try {
-    const response = await axios.get(`${API_URL}all-candidates/`, {
+    const response = await axios.get(`${url}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -183,15 +185,18 @@ export const getSingleCandidate = async (id: number | string) => {
   return response.data;
 };
 
-export const getAllStaff = async () => {
-  const access_token = Cookies.get("access_token"); // Fetch token from cookies
+export const getAllStaff = async (page?: number) => {
+  const access_token = Cookies.get("access_token");
 
   if (!access_token) {
     throw new Error("Access token is missing. Please sign in again.");
   }
+  const url = page
+  ? `${API_URL}all-staffs/?page=${page}`
+  : `${API_URL}all-staffs/`;
 
   try {
-    const response = await axios.get(`${API_URL}all-staffs/`, {
+    const response = await axios.get(`${url}`, {
       headers: {
         Authorization: `Bearer ${access_token}`,
       },

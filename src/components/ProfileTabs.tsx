@@ -57,10 +57,9 @@ const ProfileTabs = () => {
 
   const onSubmitDetails = async (data: DetailsFormType) => {
     try {
-      console.log("Details Submitted: ", data);
       return data;
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -80,7 +79,6 @@ const ProfileTabs = () => {
   const onSubmitPassword = async (data: PasswordProps) => {
     try {
       const response = await updatePassword(data);
-      console.log("Password updated successfully:", response);
       return response;
     } catch (error: any) {
       if (error.response && error.response.data) {

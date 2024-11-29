@@ -40,8 +40,6 @@ const WorkExperience = () => {
 
   useEffect(() => {
     if (careerData) {
-      console.log(careerData);
-
       setValue("workPlaceName", careerData.business_name || "");
       setValue("profession", careerData.profession || "");
       setValue("sectorOfProfession", careerData.sector || "");

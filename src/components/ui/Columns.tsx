@@ -1,5 +1,4 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "./checkbox";
 import { Button } from "./button";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import {
@@ -18,45 +17,23 @@ import SelectedCandidateModal from "../SelectedCandidateModal";
 
 export const columns: ColumnDef<CandidateData>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: "serial_number",
     header: "S/N",
   },
   {
-    accessorKey: "name",
+    accessorKey: "full_name",
     header: "Student Name",
   },
   {
-    accessorKey: "recommended_school",
+    accessorKey: "assigned_school",
     header: "Recommended School",
   },
   {
-    accessorKey: "recommended_course",
+    accessorKey: "assigned_course",
     header: "Recommended Course",
   },
   {
-    accessorKey: "resume",
+    accessorKey: "resume_status",
     header: "Resume",
     cell: ({ row }) => (
       <div className="flex justify-center">
