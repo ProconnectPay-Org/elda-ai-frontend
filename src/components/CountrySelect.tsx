@@ -28,7 +28,7 @@ const CountrySelect: React.FC<CountrySelectProps> = ({
   }, []);
 
   return (
-    <div className="flex flex-col sm:w-1/2">
+    <div className="flex flex-col md:w-1/2">
       <label htmlFor={name}>
         {label} <span className="text-red">*</span>
       </label>

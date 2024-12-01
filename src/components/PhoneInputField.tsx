@@ -10,7 +10,7 @@ const PhoneInputField = ({ name }: { name: string }) => {
   } = useFormContext();
 
   return (
-    <div className="flex flex-col sm:w-1/2">
+    <div className="flex flex-col md:w-1/2">
       <label htmlFor={name}>
         Phone Number <span className="text-red">*</span>
       </label>

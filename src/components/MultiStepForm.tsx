@@ -43,7 +43,10 @@ const steps = [
 const totalSteps = steps.length;
 
 const MultiStepForm = () => {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(() => {
+    const savedStep = localStorage.getItem("currentPage");
+    return savedStep ? Number(savedStep) : 0;
+  });
   const [formData, setFormData] = useState<FormData>({} as FormData);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -81,15 +84,20 @@ const MultiStepForm = () => {
 
   const StepComponent = steps[currentStep].component;
 
+  const saveCurrentStep = (step: number) => {
+    setCurrentStep(step);
+    localStorage.setItem("currentPage", step.toString());
+  };
+
   const nextStep = () => {
     if (currentStep < steps.length - 1) {
-      setCurrentStep((prev) => prev + 1);
+      saveCurrentStep(currentStep + 1);
     }
   };
 
   const prevStep = () => {
     if (currentStep > 0) {
-      setCurrentStep((prev) => prev - 1);
+      saveCurrentStep(currentStep - 1);
     }
   };
 
@@ -193,6 +201,7 @@ const MultiStepForm = () => {
               candidate: id,
             };
             const jobExperienceId = Cookies.get(`work_experience_id${i + 1}`);
+console.log(experienceData);
 
             if (jobExperienceId) {
               jobExperiences.push(

@@ -44,7 +44,7 @@ const EducationHistory = () => {
     return <div>Error fetching data</div>;
   }
 
-  const degreeTypes = ["bachelor", "master", "phd"];
+  // const degreeTypes = ["bachelor", "master", "phd"];
 
   return (
     <div className="space-y-5">
@@ -52,18 +52,19 @@ const EducationHistory = () => {
         <label htmlFor="" className="text-[#344054]">
           What degrees do you have?
         </label>
-        <select
+        <input
           id="degree"
           {...register("degree")}
+          placeholder="Enter a degree type..."
           className="border capitalize border-gray-border rounded-full w-full block h-[42px] py-2 px-4"
         >
-          <option value="">Select your degree type</option>
+          {/* <option value="">Select your degree type</option>
           {degreeTypes.map((option) => (
             <option key={option} value={option}>
               {option}
             </option>
-          ))}
-        </select>
+          ))} */}
+        </input>
         <p className="text-xs text-[#667085]">Choose the correct degree type</p>
       </div>
       <div className="bg-gray py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl">

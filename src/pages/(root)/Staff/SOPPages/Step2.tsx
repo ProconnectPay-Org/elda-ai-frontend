@@ -131,16 +131,19 @@ const Step2 = ({
               name="courseDescription"
               value={manualDescription}
               onChange={(e) => setManualDescription(e.target.value)}
-              className="bg-transparent outline-none min-h-20 md:min-h-40"
+              className="bg-transparent outline-none min-h-20 md:min-h-20"
               placeholder="A brief course description about the course"
             />
+            <div className="flex items-center my-4 justify-end w-full">
+              <Button
+                className="bg-red text-white h-10"
+                onClick={handleReview}
+              >
+                Save Course Description
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="flex items-center mt-10 justify-end w-full">
-        <Button className="bg-red text-white w-32 h-12" onClick={handleReview}>
-          Review
-        </Button>
       </div>
     </>
   );

@@ -50,7 +50,7 @@ const ResumePdf = () => {
       : uniqueJobTitles.join(" | ");
 
   return (
-    <div className="resume-class">
+    <div className="resume-class" contentEditable>
       <div className="resume-flex-container">
         <h1 className="resume-username">
           <span>{formData?.first_name}</span>
@@ -90,7 +90,7 @@ const ResumePdf = () => {
 
       <div className="resume-inner-container">
         <h2 className="resume-title-text">CAREER STRATEGIC PURPOSE</h2>
-        <p className="text-sm">
+        <p className="text-sm" contentEditable>
           {formData?.career_strategic_purpose ||
             formData?.sop?.[0]?.text ||
             "Not Provided"}

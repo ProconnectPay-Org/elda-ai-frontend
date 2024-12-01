@@ -25,7 +25,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
     "flex flex-col md:flex-row justify-between gap-4 md:gap-8";
 
   const [refineLoading, setRefineLoading] = useState(false);
-  const [jobStatus, setJobStatus] = useState("current");
+  const [jobStatus, setJobStatus] = useState("");
 
   const jobExperienceIds = [
     Cookies.get("work_experience_id1"),
@@ -178,6 +178,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
                 id="jobStatus"
                 {...register(`jobExperiences.${index}.jobStatus`)}
                 onChange={handleJobStatusChange}
+                value={jobStatus}
               >
                 <option value="">Select job status</option>
                 <option value="current">Current</option>

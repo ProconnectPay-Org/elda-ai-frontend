@@ -1334,10 +1334,11 @@ const supportedSchools = [
   { id: 300, name: "Yeshiva University" },
   { id: 301, name: "Eindhoven University of Technology" },
   { id: 302, name: "Vrije Universiteit Amsterdam" },
-  { id: 303, name: " University of Edinburgh" },
+  { id: 303, name: "University of Edinburgh" },
   { id: 304, name: "Utrecht University" },
   { id: 305, name: "Queens University" },
   { id: 306, name: "University of Glasgow" },
+  { id: 307, name: "Leiden University" },
 ];
 
 const schoolsWithUniqueIds = supportedSchools.map((school, index) => ({

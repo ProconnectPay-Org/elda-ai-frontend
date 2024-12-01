@@ -45,6 +45,10 @@ const WorkExperience = () => {
             experience.company_description || ""
           );
           setValue(
+            `jobExperiences.${index}.jobDescription`,
+            experience.job_summary || ""
+          );
+          setValue(
             `jobExperiences.${index}.mode`,
             experience.employment_type || ""
           );
@@ -154,28 +158,6 @@ const WorkExperience = () => {
                   )}
                 </div>
                 <div className="flex flex-col sm:w-1/2">
-                  <label
-                    htmlFor={`companyDescription-${index}`}
-                    className="text-[#344054]"
-                  >
-                    Company Description
-                  </label>
-                  <input
-                    className="border border-gray-border rounded-full py-2 px-4"
-                    id={`companyDescription-${index}`}
-                    {...register(`jobExperiences.${index}.companyDescription`)}
-                    placeholder="Enter company description"
-                  />
-                  {errors.companyDescription && (
-                    <span className="text-red text-sm">
-                      {getErrorMessage(errors.companyDescription)}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
-                <div className="flex flex-col sm:w-1/2">
                   <label htmlFor={`mode-${index}`} className="text-[#344054]">
                     Mode
                   </label>
@@ -191,6 +173,51 @@ const WorkExperience = () => {
                     </span>
                   )}
                 </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
+                <div className="flex flex-col sm:w-1/2">
+                  <label
+                    htmlFor={`companyDescription-${index}`}
+                    className="text-[#344054]"
+                  >
+                    Company Description
+                  </label>
+                  <textarea
+                    className="border border-gray-border py-2 px-4"
+                    id={`companyDescription-${index}`}
+                    {...register(`jobExperiences.${index}.companyDescription`)}
+                    placeholder="Enter company description"
+                  />
+                  {errors.companyDescription && (
+                    <span className="text-red text-sm">
+                      {getErrorMessage(errors.companyDescription)}
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex flex-col sm:w-1/2">
+                  <label
+                    htmlFor={`jobDescription-${index}`}
+                    className="text-[#344054]"
+                  >
+                    Job Description
+                  </label>
+                  <textarea
+                    className="border border-gray-border py-2 px-4"
+                    id={`jobDescription-${index}`}
+                    {...register(`jobExperiences.${index}.jobDescription`)}
+                    placeholder="Enter job description"
+                  />
+                  {errors.jobDescription && (
+                    <span className="text-red text-sm">
+                      {getErrorMessage(errors.jobDescription)}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
                 <div className="flex flex-col sm:w-1/2">
                   <label
                     htmlFor={`location-${index}`}
@@ -210,9 +237,7 @@ const WorkExperience = () => {
                     </span>
                   )}
                 </div>
-              </div>
 
-              <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
                 <div className="flex flex-col sm:w-1/2">
                   <label
                     htmlFor={`startDate-${index}`}

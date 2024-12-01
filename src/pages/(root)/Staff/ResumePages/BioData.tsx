@@ -118,8 +118,8 @@ const BioData = () => {
               <label htmlFor="interest" className="text-[#344054]">
                 Interest(s)
               </label>
-              <input
-                className="border border-gray-border rounded-full py-2 px-4"
+              <textarea
+                className="border border-gray-border rounded py-2 px-4"
                 id="interest"
                 {...register("interest")}
               />

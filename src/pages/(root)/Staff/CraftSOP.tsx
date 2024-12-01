@@ -78,7 +78,7 @@ const CraftSOP = () => {
         </div>
 
         {isGenerating ? (
-          <div>
+          <div className="flex items-center ">
             Loading... <Loader2 className="animate-spin" />
           </div>
         ) : (

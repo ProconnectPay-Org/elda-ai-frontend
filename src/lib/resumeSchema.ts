@@ -71,6 +71,9 @@ export const ResumeStep4Schema = z.object({
       companyDescription: z
         .string()
         .nonempty("Company description is required"),
+      jobDescription: z
+        .string()
+        .nonempty("Job description is required"),
       mode: z.string().nonempty("Mode is required"),
       location: z.string().nonempty("Location is required"),
       startDate: z

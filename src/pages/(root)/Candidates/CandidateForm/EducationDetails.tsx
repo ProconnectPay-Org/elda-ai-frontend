@@ -228,7 +228,7 @@ const EducationDetails = () => {
               <input
                 className={`${inputClass} pr-1`}
                 id="yearAdmitted"
-                type="number"
+                type="date"
                 {...register("yearAdmitted")}
                 placeholder="Enter the year you were admitted"
               />
@@ -248,7 +248,7 @@ const EducationDetails = () => {
               <input
                 className={`${inputClass} pr-1`}
                 id="yearGraduated"
-                type="number"
+                type="date"
                 {...register("yearGraduated")}
                 placeholder="Enter the year you graduated"
               />

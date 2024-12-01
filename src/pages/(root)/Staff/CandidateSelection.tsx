@@ -38,14 +38,12 @@ const CandidateSelection = () => {
       (candidate: CandidateData, index: number) => ({
         ...candidate,
         serial_number: index + 1,
-        name: `${candidate.user?.full_name}` || "No name",
+        full_name: `${candidate.user?.full_name}` || "No name",
         status: candidate.status || "Inactive",
-        recommended_course:
-          candidate.education[0].specific_course_of_study ||
-          "No course assigned",
-        recommended_school:
-          candidate.education[0].school_name || "No school assigned",
-        resume: candidate.resume_status || "Not Started",
+        assigned_course: candidate.assigned_course1 || "No course assigned",
+        assigned_school: candidate.assigned_university1 || "No school assigned",
+       
+        resume_status: candidate.resume_status || "Not Started",
         sop_status: candidate.sop_status || "Not Started",
         school_application_status:
           candidate.school_application_status || "Not available",

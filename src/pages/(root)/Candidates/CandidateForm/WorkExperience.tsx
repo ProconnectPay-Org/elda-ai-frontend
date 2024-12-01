@@ -139,6 +139,8 @@ const WorkExperience = () => {
                 control={control}
                 rules={{
                   required: "Please select at least one career interest.",
+                  validate: (value) =>
+                    value.length <= 3 || "You can only select up to 3 career interests.",
                 }}
                 render={({ field }) => (
                   <div
@@ -194,10 +196,15 @@ const WorkExperience = () => {
                       onChange={(e) => setInputValue(e.target.value)}
                       onKeyDown={(e) => {
                         if (e.key === "," && inputValue.trim()) {
+                          if ((field.value || []).length >= 3) {
+                            e.preventDefault();
+                            alert("You can only add up to 3 career interests.");
+                            return;
+                          }
                           const newInterest = { name: inputValue.trim() };
                           field.onChange([...(field.value || []), newInterest]);
                           setInputValue("");
-                          e.preventDefault(); // Prevents comma from being added
+                          e.preventDefault();
                         }
                       }}
                       style={{
