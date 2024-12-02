@@ -227,8 +227,8 @@ const CandidateProfile = () => {
         {candidate?.education?.map((education, index: number) => (
           <span key={index} className="flex gap-5 items-center">
             <p className="text-[#5E6366] font-semibold md:w-60">
-              {`${education.year_admitted || "No year set"} - ${
-                education.year_graduated || "No year set"
+              {`${education.admission_date || "No year set"} - ${
+                education.graduation_date || "No year set"
               }`}
             </p>
             <p className="font-semibold capitalize">
@@ -386,11 +386,11 @@ const CandidateProfile = () => {
                 <CopyText label="Specific CGPA" text={edu.specific_cgpa} />
                 <CopyText
                   label="Year Admitted"
-                  text={String(edu.year_admitted)}
+                  text={String(edu.admission_date)}
                 />
                 <CopyText
                   label="Year Graduated"
-                  text={String(edu.year_graduated)}
+                  text={String(edu.graduation_date)}
                 />
 
                 {/* ADVANCED DEGREE */}

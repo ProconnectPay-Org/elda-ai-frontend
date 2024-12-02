@@ -23,6 +23,8 @@ const EducationHistory = () => {
 
   useEffect(() => {
     if (singleCandidate) {
+      console.log(singleCandidate);
+      
       const foundCandidate = singleCandidate;
       setValue("city", foundCandidate.city_current_reside || "");
       setValue("state", foundCandidate.state_of_birth || "");
@@ -31,8 +33,8 @@ const EducationHistory = () => {
       setValue("kindOfDegree", foundCandidate.education[0].degree_type || "");
       setValue("tertiaryInstitutionAttended", foundCandidate.education[0].school_name || "");
       setValue("course", foundCandidate.education[0].specific_course_of_study || "");
-      setValue("startDate", String(foundCandidate.education[0].year_admitted) || "");
-      setValue("endDate", String(foundCandidate.education[0].year_graduated) || "");
+      setValue("startDate", foundCandidate.education[0].admission_date || "");
+      setValue("endDate", foundCandidate.education[0].graduation_date || "");
     }
   }, [singleCandidate, id, setValue]);
 

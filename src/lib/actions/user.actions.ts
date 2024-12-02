@@ -167,7 +167,7 @@ export const getAllCandidates = async (page?: number) => {
 
     return response.data;
   } catch (error) {
-    console.error("Error fetching admin info:", error);
+    console.error("Error fetching all candidates info:", error);
     throw error;
   }
 };
@@ -204,7 +204,7 @@ export const getAllStaff = async (page?: number) => {
 
     return response.data;
   } catch (error) {
-    console.error("Error fetching admin info:", error);
+    console.error("Error fetching all staff info:", error);
     throw error;
   }
 };
@@ -225,7 +225,7 @@ export const getSingleStaff = async (id: number | string) => {
 
     return response.data;
   } catch (error) {
-    console.error("Error fetching admin info:", error);
+    console.error("Error fetching single staff info:", error);
     throw error;
   }
 };

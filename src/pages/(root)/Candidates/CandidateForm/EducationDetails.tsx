@@ -27,6 +27,8 @@ const EducationDetails = () => {
 
   useEffect(() => {
     if (data) {
+      console.log(data);
+      
       setValue("currentStatus", data.current_status || "");
       setValue("degreeType", data.degree_type || "");
       setValue("countryOfEducation", data.country || "");
@@ -34,8 +36,8 @@ const EducationDetails = () => {
       setValue("institutionName", data.school_name || "");
       setValue("degreeClass", data.class_of_degree || "");
       setValue("currentCGPA", data.specific_cgpa || "");
-      setValue("yearAdmitted", String(data.year_admitted) || "");
-      setValue("yearGraduated", String(data.year_graduated) || "");
+      setValue("yearAdmitted", data.admission_date || "");
+      setValue("yearGraduated", data.graduation_date || "");
       setValue("advancedDegree", data.has_advanced_degree ? "yes" : "no");
     }
   }, [data, setValue]);

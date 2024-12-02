@@ -3,12 +3,14 @@ import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCandidates } from "@/hooks/useCandidiates";
 import Cookies from "js-cookie";
+import { ArrowLeft } from "lucide-react";
 const DownloadResume = () => {
   const { id } = useParams<{ id: string }>();
   const resumeRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   if (!id) {
     console.error("No ID provided");
@@ -41,6 +43,9 @@ const DownloadResume = () => {
 
   return (
     <section className="m-10">
+      <div>
+        <ArrowLeft className="cursor-pointer" onClick={() => navigate(-1)} />
+      </div>
       <div ref={resumeRef}>
         <ResumePdf />
       </div>

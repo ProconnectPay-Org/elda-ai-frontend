@@ -257,7 +257,7 @@ const WorkExperience = () => {
                     </span>
                   )}
                 </div>
-                {experience.year_ended && (
+                {experience.year_ended !== "1960-01-01" && (
                   <div className="flex flex-col sm:w-1/2">
                     <label
                       htmlFor={`endDate-${index}`}

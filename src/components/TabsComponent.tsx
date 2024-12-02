@@ -2,23 +2,53 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTable } from "./DataTable";
 import { CandidateData } from "@/types";
 import { allTabsColumns } from "./AllTabsColumns";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Cookies from "js-cookie";
-import { getAllCandidates } from "@/lib/actions/user.actions";
+import { deleteStaff, getAllCandidates } from "@/lib/actions/user.actions";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { toast } from "./ui/use-toast";
 
 const TabsComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = parseInt(searchParams.get("page") || "1", 10);
   const pageSize = 50;
-  
+
   const queryClient = useQueryClient();
-  
+
+  const deleteCandidateMutation = useMutation({
+    mutationFn: deleteStaff,
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Candidate deleted successfully.",
+        variant: "success",
+      });
+      queryClient.invalidateQueries({ queryKey: ["allCandidates"] });
+    },
+    onError: (error: any) => {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to delete candidate. Please try again.",
+      });
+      console.error("Error deleting candidate:", error);
+    },
+  });
+
+  const handleDeleteCandidate = async (userId: string, fullName: string) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete ${fullName}'s account?`
+    );
+    if (confirmed) {
+      deleteCandidateMutation.mutate(userId);
+    }
+  };
+
   const getToken = () => Cookies.get("access_token");
-  
+
   const [currentTab, setCurrentTab] = useState("all");
-  
+
   const {
     data: allCandidates,
     error: allCandidatesError,
@@ -34,7 +64,7 @@ const TabsComponent = () => {
     enabled: !!getToken(),
     staleTime: 5 * 1000 * 60,
   });
-  
+
   useEffect(() => {
     const token = getToken();
     if (token && allCandidates?.next) {
@@ -48,7 +78,7 @@ const TabsComponent = () => {
       });
     }
   }, [page, allCandidates, queryClient]);
-  
+
   const totalCandidates = allCandidates?.count || 0;
   const totalPages = Math.ceil(totalCandidates / pageSize);
 
@@ -146,7 +176,7 @@ const TabsComponent = () => {
         {/* Display all candidates */}
         <TabsContent value="all">
           <DataTable
-            columns={allTabsColumns}
+            columns={allTabsColumns(handleDeleteCandidate)}
             data={tableData}
             isLoading={allCandidatesLoading}
           />
@@ -155,7 +185,7 @@ const TabsComponent = () => {
         {/* Display only assigned candidates */}
         <TabsContent value="assigned">
           <DataTable
-            columns={allTabsColumns}
+            columns={allTabsColumns(handleDeleteCandidate)}
             data={assignedData}
             isLoading={allCandidatesLoading}
           />
@@ -164,7 +194,7 @@ const TabsComponent = () => {
         {/* Display only unassigned candidates */}
         <TabsContent value="unassigned">
           <DataTable
-            columns={allTabsColumns}
+            columns={allTabsColumns(handleDeleteCandidate)}
             data={unassignedData}
             isLoading={allCandidatesLoading}
           />

@@ -152,7 +152,9 @@ const ResumePdf = () => {
                   <p className="font-semibold">|</p>
                   <p className="font-medium text-sm">
                     📅 Duration: {experience.year_started} -{" "}
-                    {experience.year_ended || "Till Date"}
+                    {experience.year_ended === "1960-01-01"
+                      ? "Till Date"
+                      : experience.year_ended || "Till Date"}
                   </p>
                 </div>
               </div>
@@ -177,14 +179,12 @@ const ResumePdf = () => {
             <div className="text-sm flex-items-center-gap-3">
               {item.school_name}, {getCountryNameFromISO(item.country)}{" "}
               <p className="font-semibold">|</p>
-              <p className="font-semibold">Graduated {item.year_graduated}</p>
+              <p className="font-semibold">Graduated {item.graduation_date}</p>
             </div>
           </div>
         ))}
         {formData?.advanced_education?.map((item: AdvancedEducation) =>
-          item.year_admitted === null ? (
-            ""
-          ) : (
+          item.year_admitted === null || !item.advanced_degree_type ? null : (
             <div key={item.id}>
               <div className="font-semibold flex-items-center-gap-3 text-sm capitalize">
                 {item.advanced_degree_type} ({item.graduate_type}){" "}

@@ -265,8 +265,8 @@ const CandidatePage = () => {
         {candidate?.education?.map((education, index: number) => (
           <span key={index} className="flex gap-5 items-center">
             <p className="text-[#5E6366] font-semibold md:w-60">
-              {`${education.year_admitted || "No year set"} - ${
-                education.year_graduated || "No year set"
+              {`${education.admission_date || "No year set"} - ${
+                education.graduation_date || "No year set"
               }`}
             </p>
             <p className="font-semibold capitalize">

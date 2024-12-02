@@ -15,12 +15,10 @@ import {
   FormData,
   LoanReferee,
   updateCandidateProfile,
-  VerificationDocument,
 } from "@/types";
 import RegisterSuccessModal from "./RegisterSuccessModal";
 import {
   postJobExperience,
-  submitDocuments,
   submitEducationDetails,
   submitRefereeDetails,
   submitWorkExperience,
@@ -64,7 +62,7 @@ const MultiStepForm = () => {
     stateLocation: "",
     countryLocation: "",
     startedDate: "",
-    endedDate: "00/00/0000",
+    endedDate: "1960-01-01",
     jobStatus: "",
     companyDescription: "",
     jobSummary: "",
@@ -140,8 +138,8 @@ const MultiStepForm = () => {
           specific_course_of_study: currentFormData.courseOfStudy,
           class_of_degree: currentFormData.degreeClass,
           specific_cgpa: currentFormData.currentCGPA,
-          year_graduated: currentFormData.yearGraduated,
-          year_admitted: currentFormData.yearAdmitted,
+          graduation_date: currentFormData.yearGraduated,
+          admission_date: currentFormData.yearAdmitted,
           has_advanced_degree: currentFormData.advancedDegree,
           candidate: id,
         };
@@ -201,7 +199,6 @@ const MultiStepForm = () => {
               candidate: id,
             };
             const jobExperienceId = Cookies.get(`work_experience_id${i + 1}`);
-console.log(experienceData);
 
             if (jobExperienceId) {
               jobExperiences.push(
@@ -238,21 +235,6 @@ console.log(experienceData);
 
         await submitRefereeDetails(referee1Data, referee2Data);
       } else if (currentStep === steps.length - 1) {
-        // UPLOAD DOCUMENTS
-        const documentsData: VerificationDocument = {
-          bsc_hnd_certificate: currentFormData.document1,
-          bank_statement: currentFormData.document2,
-          intl_passport: currentFormData.document3,
-          first_degree_transcript: currentFormData.document4,
-          current_cv: currentFormData.document5,
-          nin_slip: currentFormData.document6,
-          utility_bill: currentFormData.document7,
-          post_graduate_transcript: currentFormData.document8,
-          post_graduate_certificate: currentFormData.document9,
-          candidate: id,
-        };
-
-        await submitDocuments(documentsData);
         setIsSubmitted(true);
         await toggleApplicationStatus();
         setTimeout(() => {

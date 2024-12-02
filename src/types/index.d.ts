@@ -215,8 +215,8 @@ export type EducationHistory = {
   specific_course_of_study: string;
   class_of_degree: string;
   specific_cgpa: string | null;
-  year_graduated: number | null;
-  year_admitted: number | null;
+  graduation_date: number | null;
+  admission_date: number | null;
   has_advanced_degree: boolean;
   candidate: string | undefined;
 };

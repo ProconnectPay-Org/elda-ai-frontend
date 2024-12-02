@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import ResumePdf from "@/components/ResumePdf";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useCandidates } from "@/hooks/useCandidiates";
+import { ArrowLeft } from "lucide-react";
 
 const FinalResume = () => {
   const { id } = useParams<{ id: string }>();
@@ -39,6 +40,11 @@ const FinalResume = () => {
 
   return (
     <RootLayout title="Final Resume Refined">
+      <div>
+        <Link to={`/refine-resume/${id}`}>
+          <ArrowLeft className="cursor-pointer" />
+        </Link>
+      </div>
       {/* Wrap the component in a div with ref */}
       <div ref={resumeRef}>
         <ResumePdf />

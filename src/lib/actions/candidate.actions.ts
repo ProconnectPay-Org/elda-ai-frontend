@@ -6,7 +6,6 @@ import {
   JobExperience,
   LoanReferee,
   updateCandidateProfile,
-  VerificationDocument,
 } from "@/types";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -250,13 +249,13 @@ export const fetchReferee2 = async () => {
   return data;
 };
 
-export const submitDocuments = async (documentsData: VerificationDocument) => {
+export const submitDocuments = async (formData: FormData): Promise<void> => {
   const token = Cookies.get("candidate_access_token");
 
   const verificationDocumentsId = Cookies.get("verification_document_id");
   return await axios.patch(
     `${API_URL}register/verification-documents/${verificationDocumentsId}/`,
-    documentsData,
+    formData,
     {
       headers: {
         Authorization: `Bearer ${token}`,

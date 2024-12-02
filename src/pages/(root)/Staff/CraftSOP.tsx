@@ -26,11 +26,19 @@ const totalSteps = steps.length;
 
 const CraftSOP = () => {
   const { id = "" } = useParams<{ id: string }>();
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(() => {
+    const savedStep = localStorage.getItem("sopCurrentPage");
+    return savedStep ? Number(savedStep) : 0;
+  });
   const [file, setFile] = useState<File | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
   const StepComponent = steps[currentStep].component;
+
+  const saveCurrentStep = (step: number) => {
+    setCurrentStep(step);
+    localStorage.setItem("sopCurrentPage", step.toString());
+  };
 
   const nextStep = async () => {
     if (currentStep < totalSteps - 1) {
@@ -46,13 +54,13 @@ const CraftSOP = () => {
           setIsGenerating(false);
         }
       }
-      setCurrentStep((prev) => prev + 1);
+      saveCurrentStep(currentStep + 1);
     }
   };
 
   const prevStep = () => {
     if (currentStep > 0) {
-      setCurrentStep((prev) => prev - 1);
+      saveCurrentStep(currentStep - 1);
     }
   };
 

@@ -23,6 +23,8 @@ const Step2 = ({
   const [assignedUniversity, setAssignedUniversity] = useState("");
   const [assignedCourse, setAssignedCourse] = useState("");
   const [yearsOfExperience, setYearsOfExperience] = useState("");
+  const [courseDescriptionLoading, setCourseDescriptionLoading] =
+    useState(false);
 
   const { singleCandidate, singleCandidateLoading, singleCandidateError } =
     useCandidates(id);
@@ -39,11 +41,19 @@ const Step2 = ({
     }
   }, [singleCandidate]);
 
-  const handleReview = async () => {
-    const response = await postEditedCandidate(id, {
-      course_description: manualDescription,
-    });
-    return response;
+  const handleReview = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    setCourseDescriptionLoading(true);
+    try {
+      const response = await postEditedCandidate(id, {
+        course_description: manualDescription,
+      });
+      return response;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setCourseDescriptionLoading(false);
+    }
   };
 
   if (singleCandidateLoading) return <div>Loading...</div>;
@@ -136,10 +146,13 @@ const Step2 = ({
             />
             <div className="flex items-center my-4 justify-end w-full">
               <Button
-                className="bg-red text-white h-10"
+                className="bg-red hover:bg-red hover:bg-opacity-40 text-white h-10"
                 onClick={handleReview}
+                disabled={courseDescriptionLoading}
               >
-                Save Course Description
+                {courseDescriptionLoading
+                  ? "Saving..."
+                  : "Save Course Description"}
               </Button>
             </div>
           </div>

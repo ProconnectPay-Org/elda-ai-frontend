@@ -13,9 +13,10 @@ import { Link } from "react-router-dom";
 import { getCountryNameFromISO } from "@/lib/utils";
 import SchoolApplicationModal from "./SchoolApplicationModal";
 import { useState } from "react";
-import { deleteStaff } from "@/lib/actions/user.actions";
 
-export const allTabsColumns: ColumnDef<CandidateData>[] = [
+export const allTabsColumns = (
+  handleDeleteCandidate: (userId: string, fullName: string) => void
+): ColumnDef<CandidateData>[] => [
   {
     accessorKey: "serialNumber",
     header: "S/N",
@@ -131,7 +132,7 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
         setIsModalOpen(false);
       };
 
-      const { id, resume_status, sop_status } = row.original;
+      const { id, resume_status, sop_status, user } = row.original;
 
       const isResumeDisabled = resume_status !== "Completed";
       const isSopDisabled = sop_status !== "Completed";
@@ -185,30 +186,14 @@ export const allTabsColumns: ColumnDef<CandidateData>[] = [
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Button
-                  onClick={async () => {
-                    const fullName =
-                      row.original.user?.full_name || "this candidate";
-                    const userId = row.original.user?.id;
-
-                    if (!userId) {
-                      alert(
-                        `User ID is missing. Unable to delete ${fullName}'s account.`
+                  onClick={() => {
+                    if (user?.id) {
+                      handleDeleteCandidate(
+                        String(user.id),
+                        user.full_name || "Unknown User"
                       );
-                      return;
-                    }
-
-                    const confirmed = window.confirm(
-                      `Are you sure you want to delete ${fullName}'s account?`
-                    );
-
-                    if (confirmed) {
-                      try {
-                        await deleteStaff(userId);
-                        alert(`User ${fullName} deleted successfully.`);
-                      } catch (error) {
-                        alert("Failed to delete user. Please try again.");
-                        console.error("Error deleting user:", error);
-                      }
+                    } else {
+                      console.error("User ID is undefined");
                     }
                   }}
                   className="w-full bg-red"

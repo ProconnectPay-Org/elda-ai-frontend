@@ -5,9 +5,14 @@ import { getErrorMessage } from "@/lib/utils";
 import UploadCloud from "@/assets/upload-cloud.png";
 import FileIcon from "@/assets/icon-file.png";
 import { useQuery } from "@tanstack/react-query";
-import { fetchVerificationDocument } from "@/lib/actions/candidate.actions";
+import {
+  fetchVerificationDocument,
+  submitDocuments,
+} from "@/lib/actions/candidate.actions";
 import { Loader2 } from "lucide-react";
 import Cookies from "js-cookie";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/use-toast";
 
 type UploadState = {
   progress: number;
@@ -28,6 +33,8 @@ const UploadDocuments: React.FC = () => {
   }>({});
   const [isUploaded, setIsUploaded] = useState<boolean[]>(Array(9).fill(false));
   const verificationDocumentsId = Cookies.get("verification_document_id");
+  const candidate_id = Cookies.get("candidate_id");
+  const [isDocLoading, setIsDocLoading] = useState(false);
 
   const labels = [
     "bsc_hnd_certificate",
@@ -113,6 +120,44 @@ const UploadDocuments: React.FC = () => {
     cancelUpload(index);
   };
 
+  const uploadDocuments = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!candidate_id) {
+      console.error("Candidate ID is missing.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("candidate", candidate_id);
+
+    labels.forEach((label, index) => {
+      const file = uploadStates[index]?.file;
+      if (file) {
+        formData.append(label, file);
+      }
+    });
+
+    try {
+      setIsDocLoading(true);
+      await submitDocuments(formData);
+      toast({
+        title: "Success",
+        description: "Documents uploaded successfully.",
+        variant: "success",
+      });
+      setIsUploaded(Array(labels.length).fill(true)); // Mark all files as uploaded
+    } catch (error) {
+      console.error("Error uploading documents:", error);
+      toast({
+        title: "Error",
+        description: "Failed to upload documents. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDocLoading(false);
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
       {isLoading && (
@@ -135,7 +180,7 @@ const UploadDocuments: React.FC = () => {
                 <div className="flex flex-col gap-8 w-full">
                   <span className="truncate max-w-48 lg:max-w-60">
                     {uploadStates[i]?.file?.name ||
-                      data[labels[i]].split("/").pop()}
+                      data[labels[i]]?.split("/").pop()}
                   </span>
                   <div className="bg-red h-2.5 rounded-full"></div>
                 </div>
@@ -170,6 +215,15 @@ const UploadDocuments: React.FC = () => {
           <i className="text-sm text-blue-500 float-end">Max 5mb</i>
         </div>
       ))}
+      <div>
+        <Button
+          className="bg-red"
+          onClick={uploadDocuments}
+          disabled={isDocLoading}
+        >
+          {isDocLoading ? "Saving..." : " Save Documents"}
+        </Button>
+      </div>
     </div>
   );
 };
