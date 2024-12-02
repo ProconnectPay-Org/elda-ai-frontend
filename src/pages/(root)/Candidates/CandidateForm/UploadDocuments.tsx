@@ -11,8 +11,8 @@ import {
 } from "@/lib/actions/candidate.actions";
 import { Loader2 } from "lucide-react";
 import Cookies from "js-cookie";
-import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
+import { AxiosProgressEvent } from "axios";
 
 type UploadState = {
   progress: number;
@@ -53,11 +53,11 @@ const UploadDocuments: React.FC = () => {
     "Bank statement",
     "Intl passport",
     "First degree transcript",
-    "current cv",
-    "nin slip",
-    "post graduate certificate",
-    "post graduate transcript",
-    "utility bill",
+    "Current CV",
+    "NIN slip",
+    "Post graduate certificate",
+    "Post graduate transcript",
+    "Utility bill",
   ];
 
   const { data, isLoading } = useQuery({
@@ -74,26 +74,101 @@ const UploadDocuments: React.FC = () => {
     }
   }, [data]);
 
-  const handleFileChange = (
+  const handleFileChange = async (
     index: number,
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (file instanceof File) {
+      setIsDocLoading(true);
+      // Reset upload state for this file
       setUploadStates((prev) => ({
         ...prev,
         [index]: {
           progress: 0,
-          uploaded: true,
+          uploaded: false,
           error: null,
-          uploading: false,
+          uploading: true, // Set uploading to true immediately
           file,
         },
       }));
+
+      // Set the value in form state
       setValue(`document${index + 1}` as `document${number}`, file);
+
+      // Upload the document
+      await uploadDocument(file, index);
     } else {
       console.error("Input not instance of File");
     }
+  };
+
+  const uploadDocument = (file: File, index: number) => {
+    if (!candidate_id) {
+      console.error("Candidate ID is missing.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("candidate", candidate_id);
+    formData.append(labels[index], file); // Append the specific document label
+
+    // Use the submitDocuments function with progress tracking
+    submitDocuments(formData, (progressEvent: AxiosProgressEvent) => {
+      if (progressEvent.lengthComputable && progressEvent.total !== undefined) {
+        const progress = Math.round(
+          (progressEvent.loaded / progressEvent.total) * 100
+        );
+        setUploadStates((prev) => ({
+          ...prev,
+          [index]: {
+            ...prev[index],
+            progress, // Update progress state
+            uploading: true, // Mark as uploading
+          },
+        }));
+      }
+    })
+      .then(() => {
+        // Success handling
+        setUploadStates((prev) => ({
+          ...prev,
+          [index]: {
+            ...prev[index],
+            uploaded: true, // Mark this file as uploaded
+            uploading: false, // Mark uploading as false
+          },
+        }));
+        setIsUploaded((prev) => {
+          const newState = [...prev];
+          newState[index] = true; // Mark this file as uploaded
+          return newState;
+        });
+        toast({
+          title: "Success",
+          description: `${labels[index]} uploaded successfully.`,
+          variant: "success",
+        });
+      })
+      .catch((error) => {
+        console.error("Error uploading document:", error);
+        setUploadStates((prev) => ({
+          ...prev,
+          [index]: {
+            ...prev[index],
+            error: "Failed to upload document.", // Set error message
+            uploading: false, // Mark uploading as false
+          },
+        }));
+        toast({
+          title: "Error",
+          description: "Failed to upload document. Please try again.",
+          variant: "destructive",
+        });
+      })
+      .finally(() => {
+        setIsDocLoading(false);
+      });
   };
 
   const cancelUpload = (index: number) => {
@@ -104,6 +179,7 @@ const UploadDocuments: React.FC = () => {
         uploading: false,
         file: undefined,
         uploaded: false,
+        error: null,
       } as UploadState,
     }));
 
@@ -118,44 +194,6 @@ const UploadDocuments: React.FC = () => {
 
   const useAnotherFile = (index: number) => {
     cancelUpload(index);
-  };
-
-  const uploadDocuments = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!candidate_id) {
-      console.error("Candidate ID is missing.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("candidate", candidate_id);
-
-    labels.forEach((label, index) => {
-      const file = uploadStates[index]?.file;
-      if (file) {
-        formData.append(label, file);
-      }
-    });
-
-    try {
-      setIsDocLoading(true);
-      await submitDocuments(formData);
-      toast({
-        title: "Success",
-        description: "Documents uploaded successfully.",
-        variant: "success",
-      });
-      setIsUploaded(Array(labels.length).fill(true)); // Mark all files as uploaded
-    } catch (error) {
-      console.error("Error uploading documents:", error);
-      toast({
-        title: "Error",
-        description: "Failed to upload documents. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsDocLoading(false);
-    }
   };
 
   return (
@@ -177,12 +215,17 @@ const UploadDocuments: React.FC = () => {
             <>
               <div className="mt-1 w-full p-4 border border-gray-border rounded-md shadow-sm bg-white text-gray-text flex gap-4 items-center">
                 <img src={FileIcon} alt="file icon" />
-                <div className="flex flex-col gap-8 w-full">
+                <div className="flex flex-col gap-2 w-full">
                   <span className="truncate max-w-48 lg:max-w-60">
                     {uploadStates[i]?.file?.name ||
                       data[labels[i]]?.split("/").pop()}
                   </span>
-                  <div className="bg-red h-2.5 rounded-full"></div>
+                  <div className="bg-red h-2.5 rounded-full">
+                    <div
+                      className="bg-red h-2.5 rounded-full"
+                      style={{ width: `${uploadStates[i]?.progress || 0}%` }} // Set width based on progress
+                    />
+                  </div>
                 </div>
               </div>
               <button
@@ -202,8 +245,11 @@ const UploadDocuments: React.FC = () => {
             </>
           ) : (
             <div className="flex items-center relative gap-x-10 h-11 justify-end border border-gray-border bg-white rounded-md py-2 px-4 mt-1 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-              <div className="absolute w-[full] h-[full] opacity-0">
+              <div className="absolute w-full h-full opacity-0">
                 <input type="file" onChange={(e) => handleFileChange(i, e)} />
+              </div>
+              <div className="flex items-center justify-center w-full">
+                {isDocLoading && <Loader2 className="animate-spin" />}
               </div>
               <img
                 src={UploadCloud}
@@ -215,15 +261,6 @@ const UploadDocuments: React.FC = () => {
           <i className="text-sm text-blue-500 float-end">Max 5mb</i>
         </div>
       ))}
-      <div>
-        <Button
-          className="bg-red"
-          onClick={uploadDocuments}
-          disabled={isDocLoading}
-        >
-          {isDocLoading ? "Saving..." : " Save Documents"}
-        </Button>
-      </div>
     </div>
   );
 };

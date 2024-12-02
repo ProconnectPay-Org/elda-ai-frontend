@@ -7,7 +7,7 @@ import {
   LoanReferee,
   updateCandidateProfile,
 } from "@/types";
-import axios from "axios";
+import axios, { AxiosProgressEvent } from "axios";
 import Cookies from "js-cookie";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -249,10 +249,13 @@ export const fetchReferee2 = async () => {
   return data;
 };
 
-export const submitDocuments = async (formData: FormData): Promise<void> => {
+export const submitDocuments = async (
+  formData: FormData,
+  onUploadProgress: (progressEvent: AxiosProgressEvent) => void // Use the correct type here
+): Promise<void> => {
   const token = Cookies.get("candidate_access_token");
-
   const verificationDocumentsId = Cookies.get("verification_document_id");
+
   return await axios.patch(
     `${API_URL}register/verification-documents/${verificationDocumentsId}/`,
     formData,
@@ -261,9 +264,12 @@ export const submitDocuments = async (formData: FormData): Promise<void> => {
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
       },
+      onUploadProgress, // Pass the progress event callback here
     }
   );
 };
+
+
 
 export const fetchVerificationDocument = async () => {
   const token = Cookies.get("candidate_access_token");

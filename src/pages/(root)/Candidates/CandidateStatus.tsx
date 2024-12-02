@@ -118,6 +118,10 @@ const CandidateStatus = () => {
     return statusProps.every((item) => item.status === "Completed");
   };
 
+  const areAllDocumentsUploaded = Object.keys(documents).every(
+    (key) => data?.[key]
+  );
+
   return (
     <CandidateLayout>
       <section className="md:max-w-[880px] mx-auto space-y-10">
@@ -167,7 +171,7 @@ const CandidateStatus = () => {
               <div className="border border-red px-2 h-6 flex items-center gap-2 rounded-md">
                 <img src={IconProgress} alt="Progress Icon" />
                 <p className="text-[10px] text-center text-gray-text">
-                  In Progress
+                  {areAllDocumentsUploaded ? "Completed" : "In Progress"}
                 </p>
               </div>
             </div>
