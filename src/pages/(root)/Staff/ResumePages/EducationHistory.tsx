@@ -22,9 +22,7 @@ const EducationHistory = () => {
     useCandidates(id);
 
   useEffect(() => {
-    if (singleCandidate) {
-      console.log(singleCandidate);
-      
+    if (singleCandidate) {      
       const foundCandidate = singleCandidate;
       setValue("city", foundCandidate.city_current_reside || "");
       setValue("state", foundCandidate.state_of_birth || "");

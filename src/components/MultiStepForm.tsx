@@ -153,8 +153,8 @@ const MultiStepForm = () => {
             school_name: currentFormData.advancedInstitutionName,
             class_of_degree: currentFormData.advancedDegreeClass,
             specific_cgpa: currentFormData.advancedCurrentCGPA,
-            year_graduated: currentFormData.advancedYearGraduated,
-            year_admitted: currentFormData.advancedYearAdmitted,
+            graduation_date: currentFormData.advancedYearGraduated,
+            admission_date: currentFormData.advancedYearAdmitted,
             candidate: id,
           };
 

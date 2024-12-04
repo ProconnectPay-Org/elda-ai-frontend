@@ -241,13 +241,13 @@ const CandidateProfile = () => {
 
         {/* Advanced Education */}
         {candidate?.advanced_education?.map((education, index: number) =>
-          education.year_admitted === null ? (
+          education.admission_date === null ? (
             ""
           ) : (
             <span key={index} className="flex gap-5 items-center">
               <p className="text-[#5E6366] font-semibold md:w-60">
-                {`${education.year_admitted || "No year set"} - ${
-                  education.year_graduated || "No year set"
+                {`${education.admission_date || "No year set"} - ${
+                  education.graduation_date || "No year set"
                 }`}
               </p>
               <p className="font-semibold capitalize">
@@ -396,7 +396,10 @@ const CandidateProfile = () => {
                 {/* ADVANCED DEGREE */}
                 {edu.has_advanced_degree &&
                   candidate?.advanced_education?.map(
-                    (advanced_edu: AdvancedEducation) => (
+                    (advanced_edu: AdvancedEducation) => 
+                      advanced_edu.admission_date === null ? (
+                        ""
+                      ) : (
                       <div key={advanced_edu?.id}>
                         <h3 className="font-semibold text-base mb-2">
                           Advanced Degree
@@ -427,11 +430,11 @@ const CandidateProfile = () => {
                         />
                         <CopyText
                           label="Year Admitted"
-                          text={String(advanced_edu?.year_admitted) || "N/A"}
+                          text={String(advanced_edu?.admission_date) || "N/A"}
                         />
                         <CopyText
                           label="Year Graduated"
-                          text={String(advanced_edu?.year_graduated) || "N/A"}
+                          text={String(advanced_edu?.graduation_date) || "N/A"}
                         />
                       </div>
                     )

@@ -35,13 +35,10 @@ const AdvancedDegree = () => {
       setValue("advancedDegreeClass", advancedDegreeData.class_of_degree || "");
       setValue("advancedInstitutionName", advancedDegreeData.school_name || "");
       setValue("advancedCurrentCGPA", advancedDegreeData.specific_cgpa || "");
-      setValue(
-        "advancedYearAdmitted",
-        String(advancedDegreeData.year_admitted) || ""
-      );
+      setValue("advancedYearAdmitted", advancedDegreeData.admission_date || "");
       setValue(
         "advancedYearGraduated",
-        String(advancedDegreeData.year_graduated) || ""
+        advancedDegreeData.graduation_date || ""
       );
     }
   }, [advancedDegreeData, setValue]);
@@ -206,7 +203,7 @@ const AdvancedDegree = () => {
             <input
               className={`${inputClass} pr-1`}
               id="advancedYearAdmitted"
-              type="number"
+              type="date"
               {...register("advancedYearAdmitted")}
               placeholder="Enter the year you were admitted"
             />
@@ -223,7 +220,7 @@ const AdvancedDegree = () => {
             <input
               className={`${inputClass} pr-1`}
               id="advancedYearGraduated"
-              type="number"
+              type="date"
               {...register("advancedYearGraduated")}
               placeholder="Enter the year you graduated"
             />

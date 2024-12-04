@@ -32,22 +32,19 @@ const ResumePdf = () => {
   if (singleCandidateError) {
     return <div>Error fetching data</div>;
   }
-  const jobExperiences = formData?.job_experience as
-    | JobExperience[]
-    | undefined;
+  // const jobExperiences = formData?.job_experience as
+  //   | JobExperience[]
+  //   | undefined;
 
-  const jobTitles =
-    jobExperiences &&
-    jobExperiences
-      .filter((experience: JobExperience) => experience.job_title)
-      .map((experience: JobExperience) => experience.job_title);
+  // const jobTitles =
+  //   jobExperiences &&
+  //   jobExperiences
+  //     .filter((experience: JobExperience) => experience.job_title)
+  //     .map((experience: JobExperience) => experience.job_title);
 
-  const uniqueJobTitles = Array.from(new Set(jobTitles));
+  // const uniqueJobTitles = Array.from(new Set(jobTitles));
 
-  const renderedJobTitles: string =
-    uniqueJobTitles.length === 1
-      ? uniqueJobTitles[0]
-      : uniqueJobTitles.join(" | ");
+  // const renderedJobTitles: string = uniqueJobTitles[0];
 
   return (
     <div className="resume-class" contentEditable>
@@ -83,14 +80,14 @@ const ResumePdf = () => {
           <p className="small-bold">{formData?.career[0].profession}</p>
           <p className="font-semibold">|</p>
           <p className="small-bold">Global Citizen</p>
-          <p className="font-semibold">|</p>
-          <div className="small-bold">{renderedJobTitles}</div>
+          {/* <p className="font-semibold">|</p>
+          <div className="small-bold">{renderedJobTitles}</div> */}
         </div>
       </div>
 
       <div className="resume-inner-container">
         <h2 className="resume-title-text">CAREER STRATEGIC PURPOSE</h2>
-        <p className="text-sm" contentEditable>
+        <p className="text-sm">
           {formData?.career_strategic_purpose ||
             formData?.sop?.[0]?.text ||
             "Not Provided"}
@@ -138,7 +135,7 @@ const ResumePdf = () => {
 
       <div className="resume-inner-container">
         <h2 className="resume-title-text">WORK EXPERIENCE</h2>
-        {formData?.job_experience?.map((experience: JobExperience) =>
+        {formData?.job_experience?.slice(0, 3).map((experience: JobExperience) =>
           experience.business_name ? (
             <div key={experience.id} className="mb-2">
               <div>
@@ -184,12 +181,12 @@ const ResumePdf = () => {
           </div>
         ))}
         {formData?.advanced_education?.map((item: AdvancedEducation) =>
-          item.year_admitted === null || !item.advanced_degree_type ? null : (
+          item.admission_date === null || !item.advanced_degree_type ? null : (
             <div key={item.id}>
               <div className="font-semibold flex-items-center-gap-3 text-sm capitalize">
                 {item.advanced_degree_type} ({item.graduate_type}){" "}
                 <p className="font-semibold">|</p>
-                Graduated {item.year_graduated}
+                Graduated {item.graduation_date}
               </div>
               <p className="text-sm">
                 {item.school_name}, {getCountryNameFromISO(item.country)}

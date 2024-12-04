@@ -88,16 +88,6 @@ const AuthForm = () => {
             { expires: 7 }
           );
           Cookies.set(
-            "work_experience_id4",
-            response.candidate.job_experience[3],
-            { expires: 7 }
-          );
-          Cookies.set(
-            "work_experience_id5",
-            response.candidate.job_experience[4],
-            { expires: 7 }
-          );
-          Cookies.set(
             "advanced_education1_id",
             response.advanced_education[0],
             {

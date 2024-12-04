@@ -140,7 +140,8 @@ const WorkExperience = () => {
                 rules={{
                   required: "Please select at least one career interest.",
                   validate: (value) =>
-                    value.length <= 3 || "You can only select up to 3 career interests.",
+                    value.length <= 3 ||
+                    "You can only select up to 3 career interests.",
                 }}
                 render={({ field }) => (
                   <div
@@ -244,7 +245,7 @@ const WorkExperience = () => {
                 {...register("yearsOfProfessionalExperiencePostFirstDegree")}
                 className="border border-gray-border rounded-md py-2 px-4"
               />
-              <p className="text-xs text-gray-text">select number of years</p>
+              <p className="text-xs text-gray-text">input number of years</p>
               {errors.yearsOfProfessionalExperiencePostFirstDegree && (
                 <p className="text-red text-sm">
                   {getErrorMessage(
@@ -266,9 +267,7 @@ const WorkExperience = () => {
                 {...register("yearsOfProfessionalExperiencePriorToGraduation")}
                 className="border border-gray-border rounded-md py-2 px-4"
               />
-              <p className="text-xs text-gray-text">
-                select number of work experience
-              </p>
+              <p className="text-xs text-gray-text">input number of years</p>
               {errors.yearsOfProfessionalExperiencePriorToGraduation && (
                 <p className="text-red text-sm">
                   {getErrorMessage(

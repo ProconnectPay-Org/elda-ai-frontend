@@ -1,4 +1,3 @@
-import { Input } from "@/components/ui/input";
 import { useCandidates } from "@/hooks/useCandidiates";
 import { getErrorMessage } from "@/lib/utils";
 import { JobExperience, ResumeStep4FormData } from "@/types";
@@ -84,12 +83,9 @@ const WorkExperience = () => {
         <label htmlFor="" className="text-[#344054]">
           How many jobs are you showcasing?
         </label>
-        <Input
-          type="text"
-          value={jobsToShow}
-          onChange={(e) => setJobsToShow(e.target.value)}
-          className="rounded-full"
-        />
+        <div className="rounded-full w-full border py-2 pl-4 border-gray-border">
+          {jobsToShow}
+        </div>
       </div>
 
       {filteredJobExperiences.map(

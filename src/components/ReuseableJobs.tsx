@@ -64,7 +64,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
   const jobExperienceData = jobExperienceQueries.map((query) => query.data);
 
   useEffect(() => {
-    if (jobExperienceData) {
+    if (jobExperienceData) {      
       const filteredJobExperienceData = jobExperienceData.filter(
         (experience) => experience?.business_name
       );
@@ -339,7 +339,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
           />
 
           <div className="w-full md:w-1/2 gap-8 flex flex-col">
-            <div className={divClass}>
+            <div className="flex flex-col w-full">
               <label
                 htmlFor={`jobExperiences.${index}.startedDate`}
                 className="form-label"
@@ -359,7 +359,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
         <div className={outerDivClass}>
           <div className="w-full md:w-1/2 gap-8 flex flex-col">
             {jobStatus === "former" && (
-              <div className={divClass}>
+              <div className="flex flex-col w-full">
                 <label
                   htmlFor={`jobExperiences.${index}.endedDate`}
                   className="form-label"
@@ -374,7 +374,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
                 />
               </div>
             )}
-            <div className={divClass}>
+            <div className="flex flex-col w-full">
               <label
                 htmlFor={`jobExperiences.${index}.companyDescription`}
                 className="form-label"
@@ -422,7 +422,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
           <Button
             onClick={handleRefine}
             disabled={refineLoading}
-            className="w-full text-xs md:w-1/2 bg-red flex gap-2 md:text-base"
+            className="w-full text-[8px] md:w-1/2 bg-red flex gap-2 lg:text-sm"
           >
             <img src={promptWhiteImage} alt="prompt" />
             {refineLoading
