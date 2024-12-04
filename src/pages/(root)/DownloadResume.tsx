@@ -23,14 +23,60 @@ const DownloadResume = () => {
     if (resumeRef.current) {
       const canvas = await html2canvas(resumeRef.current, {
         scale: 2,
+        backgroundColor: "#ffffff",
       });
-      const imgData = canvas.toDataURL("image/png");
 
-      const pdf = new jsPDF("p", "mm", "a4", true);
+      const pdf = new jsPDF("p", "mm", "a4");
       const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      const pdfHeight = pdf.internal.pageSize.getHeight();
 
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      const topMargin = 10;
+      const bottomMargin = 8;
+
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+      // Calculate the height of content to fit per page (excluding margins)
+      const contentHeightPerPage = pdfHeight - topMargin - bottomMargin;
+      const totalPDFPages = Math.ceil(
+        (canvasHeight * (pdfWidth / canvasWidth)) / contentHeightPerPage
+      );
+
+      for (let page = 0; page < totalPDFPages; page++) {
+        const sourceY = page * contentHeightPerPage * (canvasWidth / pdfWidth);
+        const pageCanvas = document.createElement("canvas");
+        pageCanvas.width = canvasWidth;
+        pageCanvas.height = contentHeightPerPage * (canvasWidth / pdfWidth);
+
+        const context = pageCanvas.getContext("2d");
+        if (context) {
+          context.fillStyle = "#ffffff"; // White background
+          context.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+
+          context.drawImage(
+            canvas,
+            0,
+            sourceY,
+            canvasWidth,
+            pageCanvas.height,
+            0,
+            0,
+            canvasWidth,
+            pageCanvas.height
+          );
+
+          const pageImgData = pageCanvas.toDataURL("image/jpeg", 1.0);
+          if (page > 0) pdf.addPage(); // Add new page for each additional slice
+          pdf.addImage(
+            pageImgData,
+            "JPEG",
+            0,
+            topMargin,
+            pdfWidth,
+            contentHeightPerPage
+          );
+        }
+      }
+
       const fileName = singleCandidate?.user?.full_name
         ? `${singleCandidate.user.full_name} Resume.pdf`
         : "Resume.pdf";
@@ -53,7 +99,7 @@ const DownloadResume = () => {
       {userRole !== "candidate" && (
         <div className="mt-5 md:mt-8 w-full flex items-center justify-end">
           <Button className="bg-red" onClick={downloadPDF}>
-            Download PDF
+            Download Resume
           </Button>
         </div>
       )}

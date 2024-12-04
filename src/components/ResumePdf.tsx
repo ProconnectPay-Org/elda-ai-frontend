@@ -47,11 +47,13 @@ const ResumePdf = () => {
   // const renderedJobTitles: string = uniqueJobTitles[0];
 
   return (
-    <div className="resume-class" contentEditable>
+    <div className="resume-class">
       <div className="resume-flex-container">
         <h1 className="resume-username">
           <span>{formData?.first_name}</span>
+          <span>&nbsp;</span> {/* Explicit space */}
           <span>{formData?.middle_name}</span>
+          <span>&nbsp;</span> {/* Explicit space */}
           <span>{formData?.last_name}</span>
         </h1>
         <div className="flex-items-center-gap-3 flex-wrap justify-center">
@@ -116,9 +118,9 @@ const ResumePdf = () => {
             <p className="text-sm">
               {formData?.career
                 ?.flatMap((item: CandidateCareer) =>
-                  item.career_interests.map(
-                    (interest: CareerInterest) => interest.name
-                  )
+                  item.career_interests
+                    .slice(0, 3)
+                    .map((interest: CareerInterest) => interest.name)
                 )
                 .join(", ") || "Not Provided"}
             </p>
@@ -135,35 +137,37 @@ const ResumePdf = () => {
 
       <div className="resume-inner-container">
         <h2 className="resume-title-text">WORK EXPERIENCE</h2>
-        {formData?.job_experience?.slice(0, 3).map((experience: JobExperience) =>
-          experience.business_name ? (
-            <div key={experience.id} className="mb-2">
-              <div>
-                <p className="font-bold text-sm">
-                  {experience.business_name}: {experience.job_title}
-                </p>
-                <div className="flex-items-center-gap-3">
-                  <p className="font-medium text-sm">
-                    📍 Location: {experience.state}, {experience.country}
+        {formData?.job_experience
+          ?.slice(0, 3)
+          .map((experience: JobExperience) =>
+            experience.business_name ? (
+              <div key={experience.id} className="mb-2">
+                <div>
+                  <p className="font-bold text-sm">
+                    {experience.business_name}: {experience.job_title}
                   </p>
-                  <p className="font-semibold">|</p>
-                  <p className="font-medium text-sm">
-                    📅 Duration: {experience.year_started} -{" "}
-                    {experience.year_ended === "1960-01-01"
-                      ? "Till Date"
-                      : experience.year_ended || "Till Date"}
+                  <div className="flex-items-center-gap-3">
+                    <p className="font-medium text-sm">
+                      📍 Location: {experience.state}, {experience.country}
+                    </p>
+                    <p className="font-semibold">|</p>
+                    <p className="font-medium text-sm">
+                      📅 Duration: {experience.year_started} -{" "}
+                      {experience.year_ended === "1960-01-01"
+                        ? "Till Date"
+                        : experience.year_ended || "Till Date"}
+                    </p>
+                  </div>
+                </div>
+                <div className="">
+                  <p className="text-red font-bold text-sm">
+                    Job Description and Key Achievements
                   </p>
+                  <p className="text-sm">{experience.job_summary}</p>
                 </div>
               </div>
-              <div className="">
-                <p className="text-red font-bold text-sm">
-                  Job Description and Key Achievements
-                </p>
-                <p className="text-sm">{experience.job_summary}</p>
-              </div>
-            </div>
-          ) : null
-        )}
+            ) : null
+          )}
       </div>
 
       <div className="resume-inner-container">
