@@ -25,15 +25,16 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
     "flex flex-col md:flex-row justify-between gap-4 md:gap-8";
 
   const [refineLoading, setRefineLoading] = useState(false);
-  const [jobStatus, setJobStatus] = useState("");
+  const [jobStatus, setJobStatus] = useState("former");
 
   const jobExperienceIds = [
     Cookies.get("work_experience_id1"),
     Cookies.get("work_experience_id2"),
     Cookies.get("work_experience_id3"),
-    Cookies.get("work_experience_id4"),
-    Cookies.get("work_experience_id5"),
   ].filter((id) => id !== undefined);
+
+  const currentJobStatus =
+    getValues(`jobExperiences.${index}.jobStatus`) || "former";
 
   const handleJobStatusChange = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -41,6 +42,13 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
     const value = event.target.value;
     setJobStatus(value);
     setValue(`jobExperiences.${index}.jobStatus`, value);
+
+    // Set the endedDate based on job status
+    if (value === "current") {
+      setValue(`jobExperiences.${index}.endedDate`, "1960-01-01");
+    } else {
+      setValue(`jobExperiences.${index}.endedDate`, "");
+    }
   };
 
   // Handler for current professional status
@@ -64,7 +72,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
   const jobExperienceData = jobExperienceQueries.map((query) => query.data);
 
   useEffect(() => {
-    if (jobExperienceData) {      
+    if (jobExperienceData) {
       const filteredJobExperienceData = jobExperienceData.filter(
         (experience) => experience?.business_name
       );
@@ -95,14 +103,21 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
           `jobExperiences.${index}.countryLocation`,
           filteredJobExperienceData[index].country || ""
         );
-        setValue(
-          `jobExperiences.${index}.jobStatus`,
-          filteredJobExperienceData[index].job_status || ""
-        );
-        setValue(
-          `jobExperiences.${index}.endedDate`,
-          filteredJobExperienceData[index].year_ended || "1960-01-01"
-        );
+
+        const jobStatusFromData =
+          filteredJobExperienceData[index].job_status || "former"; // Fallback to "former"
+        setValue(`jobExperiences.${index}.jobStatus`, jobStatusFromData);
+        setJobStatus(jobStatusFromData);
+
+        if (jobStatusFromData === "current") {
+          setValue(`jobExperiences.${index}.endedDate`, "1960-01-01"); // Or set to empty if that's your logic
+        } else {
+          setValue(
+            `jobExperiences.${index}.endedDate`,
+            filteredJobExperienceData[index].year_ended || ""
+          );
+        }
+        
         setValue(
           `jobExperiences.${index}.startedDate`,
           filteredJobExperienceData[index].year_started || ""
@@ -178,7 +193,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
                 id="jobStatus"
                 {...register(`jobExperiences.${index}.jobStatus`)}
                 onChange={handleJobStatusChange}
-                value={jobStatus}
+                value={currentJobStatus}
               >
                 <option value="">Select job status</option>
                 <option value="current">Current</option>
@@ -224,7 +239,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
               htmlFor={`jobExperiences.${index}.currentProfessionalStatus`}
               className="form-label"
             >
-              Current Professional Status <span className="text-red">*</span>
+              Professional Status <span className="text-red">*</span>
             </label>
             <div className="relative inline-block">
               <select
@@ -269,7 +284,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
               htmlFor={`jobExperiences.${index}.currentJobTitle`}
               className="form-label"
             >
-              Current Job Title <span className="text-red">*</span>
+              Job Title <span className="text-red">*</span>
             </label>
             <input
               id={`jobExperiences.${index}.currentJobTitle`}
@@ -320,8 +335,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
               htmlFor={`jobExperiences.${index}.stateLocation`}
               className="form-label"
             >
-              State/Province Location of Current Job{" "}
-              <span className="text-red">*</span>
+              State/Province Location of Job <span className="text-red">*</span>
             </label>
             <input
               id={`jobExperiences.${index}.stateLocation`}
@@ -399,7 +413,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
               htmlFor={`jobExperiences.${index}.jobSummary`}
               className="form-label"
             >
-              Provide Job Summary and Key Achievements on this Current JOB{" "}
+              Provide Job Summary and Key Achievements on this JOB{" "}
               <span className="text-red">*</span>
             </label>
             <div className="flex items-start gap-4 border border-gray-border rounded-md py-2 px-4 h-full">
@@ -422,7 +436,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
           <Button
             onClick={handleRefine}
             disabled={refineLoading}
-            className="w-full text-[8px] md:w-1/2 bg-red flex gap-2 lg:text-sm"
+            className="w-full text-[8px] md:w-1/2 bg-red flex gap-2 md:text-xs xl:text-sm"
           >
             <img src={promptWhiteImage} alt="prompt" />
             {refineLoading

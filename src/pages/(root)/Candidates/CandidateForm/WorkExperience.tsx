@@ -134,6 +134,9 @@ const WorkExperience = () => {
               <label htmlFor="careerInterest" className="form-label">
                 Career Interests <span className="text-red">*</span>
               </label>
+              <p className="text-xs text-blue-600">
+                Type and press comma to add interest*
+              </p>
               <Controller
                 name="careerInterest"
                 control={control}
@@ -309,9 +312,9 @@ const WorkExperience = () => {
 
       {/* Reuseable Job Container */}
       <div>
-        {[...Array(jobsCount)].map((_, index) => (
-          <ReuseableJobs key={index} index={index} />
-        ))}
+        {jobsCount >= 1 && <ReuseableJobs index={0} />}
+        {jobsCount >= 2 && <ReuseableJobs index={1} />}
+        {jobsCount === 3 && <ReuseableJobs index={2} />}
       </div>
     </div>
   );
