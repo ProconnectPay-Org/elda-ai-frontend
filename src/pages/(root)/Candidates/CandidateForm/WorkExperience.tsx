@@ -135,7 +135,7 @@ const WorkExperience = () => {
                 Career Interests <span className="text-red">*</span>
               </label>
               <p className="text-xs text-blue-600">
-                Type and press comma to add interest*
+                Type and press comma, full stop or click outside to add*
               </p>
               <Controller
                 name="careerInterest"
@@ -195,7 +195,7 @@ const WorkExperience = () => {
                     )}
                     <input
                       type="text"
-                      placeholder="Type and press comma to add"
+                      placeholder="Type and press comma, full stop or click outside to add"
                       value={inputValue}
                       onChange={(e) => setInputValue(e.target.value)}
                       onKeyDown={(e) => {
