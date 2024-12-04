@@ -199,7 +199,8 @@ const WorkExperience = () => {
                       value={inputValue}
                       onChange={(e) => setInputValue(e.target.value)}
                       onKeyDown={(e) => {
-                        if (e.key === "," && inputValue.trim()) {
+                        const isDelimiter = e.key === "," || e.key === ".";
+                        if (isDelimiter && inputValue.trim()) {
                           if ((field.value || []).length >= 3) {
                             e.preventDefault();
                             alert("You can only add up to 3 career interests.");
@@ -209,6 +210,17 @@ const WorkExperience = () => {
                           field.onChange([...(field.value || []), newInterest]);
                           setInputValue("");
                           e.preventDefault();
+                        }
+                      }}
+                      onBlur={() => {
+                        if (inputValue.trim()) {
+                          if ((field.value || []).length >= 3) {
+                            alert("You can only add up to 3 career interests.");
+                            return;
+                          }
+                          const newInterest = { name: inputValue.trim() };
+                          field.onChange([...(field.value || []), newInterest]);
+                          setInputValue("");
                         }
                       }}
                       style={{
