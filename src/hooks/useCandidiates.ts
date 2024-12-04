@@ -9,7 +9,7 @@ import Cookies from "js-cookie";
 const getToken = () =>
   Cookies.get("staff_access_token") || Cookies.get("access_token");
 
-export const useCandidates = (candidateId?: string) => {
+export const useCandidates = (candidateId?: string, count: number = 50) => {
   const {
     data: allCandidates,
     error: allCandidatesError,
@@ -21,7 +21,7 @@ export const useCandidates = (candidateId?: string) => {
       const token = getToken();
       if (!token)
         throw new Error("Access token is missing. Please sign in again.");
-      return getAllCandidates();
+      return getAllCandidates(token, undefined, count);
     },
     enabled: !!getToken(),
   });

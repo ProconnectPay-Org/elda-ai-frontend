@@ -101,7 +101,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
         );
         setValue(
           `jobExperiences.${index}.endedDate`,
-          filteredJobExperienceData[index].year_ended || ""
+          filteredJobExperienceData[index].year_ended || "1960-01-01"
         );
         setValue(
           `jobExperiences.${index}.startedDate`,

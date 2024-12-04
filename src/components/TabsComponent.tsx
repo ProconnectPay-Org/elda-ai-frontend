@@ -45,7 +45,7 @@ const TabsComponent = () => {
     }
   };
 
-  const getToken = () => Cookies.get("access_token");
+  const token = Cookies.get("access_token");
 
   const [currentTab, setCurrentTab] = useState("all");
 
@@ -56,17 +56,15 @@ const TabsComponent = () => {
   } = useQuery({
     queryKey: ["allCandidates", page],
     queryFn: async () => {
-      const token = getToken();
       if (!token)
         throw new Error("Access token is missing. Please sign in again.");
-      return page ? getAllCandidates(page) : getAllCandidates();
+      return page ? getAllCandidates(token, page) : getAllCandidates(token);
     },
-    enabled: !!getToken(),
+    enabled: !!token,
     staleTime: 5 * 1000 * 60,
   });
 
   useEffect(() => {
-    const token = getToken();
     if (token && allCandidates?.next) {
       const nextPage = parseInt(
         new URL(allCandidates.next).searchParams.get("page") || "1",
@@ -74,7 +72,7 @@ const TabsComponent = () => {
       );
       queryClient.prefetchQuery({
         queryKey: ["allCandidates", nextPage],
-        queryFn: () => getAllCandidates(nextPage),
+        queryFn: () => getAllCandidates(token, nextPage),
       });
     }
   }, [page, allCandidates, queryClient]);

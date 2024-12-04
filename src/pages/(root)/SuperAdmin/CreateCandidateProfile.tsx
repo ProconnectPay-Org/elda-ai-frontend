@@ -218,7 +218,7 @@ const CreateCandidateProfile = () => {
               <div className="flex border border-gray-border w-full justify-between gap-2 items-center py-2 px-4 rounded-lg">
                 <img src={Mail} alt="mail icon" />
                 <input
-                  className="border-none w-full focus:outline-none"
+                  className="border-none w-full lowercase focus:outline-none"
                   id="email"
                   placeholder="Enter your email address"
                   value={email}

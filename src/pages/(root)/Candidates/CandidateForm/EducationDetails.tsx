@@ -27,8 +27,6 @@ const EducationDetails = () => {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
-      
       setValue("currentStatus", data.current_status || "");
       setValue("degreeType", data.degree_type || "");
       setValue("countryOfEducation", data.country || "");

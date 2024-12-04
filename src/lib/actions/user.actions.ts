@@ -144,20 +144,15 @@ export const deleteStaff = async (id: number | string) => {
   }
 };
 
-const getToken = () => {
-  return (
-    Cookies.get("staff_access_token") ||
-    Cookies.get("access_token") ||
-    Cookies.get("candidate_access_token")
-  );
-};
-
-export const getAllCandidates = async (page?: number) => {
-  const token = getToken();
+export const getAllCandidates = async (
+  token: string,
+  page?: number,
+  count: number = 50
+) => {
   if (!token) throw new Error("Access token is missing. Please sign in again.");
-  const url = page
-    ? `${API_URL}all-candidates/?page=${page}`
-    : `${API_URL}all-candidates/`;
+  const url = !page
+    ? `${API_URL}all-candidates/?count=${count}`
+    : `${API_URL}all-candidates/?page=${page}&count=${count}`;
   try {
     const response = await axios.get(`${url}`, {
       headers: {
