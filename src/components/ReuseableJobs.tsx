@@ -117,7 +117,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
             filteredJobExperienceData[index].year_ended || ""
           );
         }
-        
+
         setValue(
           `jobExperiences.${index}.startedDate`,
           filteredJobExperienceData[index].year_started || ""
@@ -364,7 +364,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
                 id={`jobExperiences.${index}.startedDate`}
                 type="date"
                 {...register(`jobExperiences.${index}.startedDate`)}
-                className="border border-gray-border rounded-md py-2 px-4"
+                className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none bg-white focus:outline-none focus:ring-2 pr-8"
               />
             </div>
           </div>
@@ -384,8 +384,8 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
                   id={`jobExperiences.${index}.endedDate`}
                   type="date"
                   {...register(`jobExperiences.${index}.endedDate`)}
-                  className="border border-gray-border rounded-md py-2 px-4"
-                />
+                  className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none bg-white focus:outline-none focus:ring-2 pr-8"
+                  />
               </div>
             )}
             <div className="flex flex-col w-full">

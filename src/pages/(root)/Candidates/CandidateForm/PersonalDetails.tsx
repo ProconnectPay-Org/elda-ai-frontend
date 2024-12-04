@@ -136,13 +136,13 @@ const PersonalDetails = () => {
         </div>
 
         <div className="flex flex-col-reverse sm:flex-row-reverse sm:justify-between gap-4 md:gap-8">
-          <div className="flex flex-col sm:w-1/2">
+          <div className="flex flex-col w-full sm:w-1/2">
             <label htmlFor="dateOfBirth">
               Date of Birth <span className="text-red">*</span>
             </label>
             <input
               type="date"
-              className="border border-gray-border bg-white min-w-[240px] md:w-full h-[42px] rounded-md py-2 px-4"
+              className="border border-gray-border bg-white min-w-[240px] w-full h-[42px] rounded-md py-2 px-4"
               id="dateOfBirth"
               {...register("dateOfBirth")}
               placeholder="Enter your date of birth"
@@ -161,7 +161,7 @@ const PersonalDetails = () => {
               <select
                 id="gender"
                 {...register("gender")}
-                className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
+                className="border w-full border-gray-border bg-white h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 pr-8"
               >
                 <option value="">Select your gender</option>
                 {genderOptions.map((option) => (

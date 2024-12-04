@@ -32,7 +32,7 @@ const StateSelect = () => {
           <div className="relative">
             <select
               {...field}
-              className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
+              className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none bg-white focus:outline-none focus:ring-2 pr-8"
             >
               <option value="">Select your state</option>
               {states.map((state) => (

@@ -44,7 +44,7 @@ const AdvancedDegree = () => {
   }, [advancedDegreeData, setValue]);
 
   const inputClass =
-    "border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8";
+    "border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none bg-white focus:outline-none focus:ring-2 pr-8";
   const divClass = "flex flex-col w-full md:w-1/2";
   const outerDivClass =
     "flex flex-col md:flex-row justify-between gap-4 md:gap-8";
