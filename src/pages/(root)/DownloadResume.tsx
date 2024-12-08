@@ -1,4 +1,3 @@
-import ResumePdf from "@/components/ResumePdf";
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import html2canvas from "html2canvas";
@@ -7,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useCandidates } from "@/hooks/useCandidiates";
 import Cookies from "js-cookie";
 import { ArrowLeft } from "lucide-react";
+import NewResumePdf from "@/components/NewReumePdf";
 const DownloadResume = () => {
   const { id } = useParams<{ id: string }>();
   const resumeRef = useRef<HTMLDivElement>(null);
@@ -31,27 +31,29 @@ const DownloadResume = () => {
       const pdfHeight = pdf.internal.pageSize.getHeight();
 
       const topMargin = 10;
-      const bottomMargin = 8;
+      const bottomMargin = 12;
 
       const canvasWidth = canvas.width;
       const canvasHeight = canvas.height;
       // Calculate the height of content to fit per page (excluding margins)
-      const contentHeightPerPage = pdfHeight - topMargin - bottomMargin;
+      const contentHeightPerPage = pdfHeight - bottomMargin;
+
       const totalPDFPages = Math.ceil(
         (canvasHeight * (pdfWidth / canvasWidth)) / contentHeightPerPage
       );
 
       for (let page = 0; page < totalPDFPages; page++) {
+        if (page > 0) pdf.addPage();
         const sourceY = page * contentHeightPerPage * (canvasWidth / pdfWidth);
         const pageCanvas = document.createElement("canvas");
         pageCanvas.width = canvasWidth;
         pageCanvas.height = contentHeightPerPage * (canvasWidth / pdfWidth);
-
+        
         const context = pageCanvas.getContext("2d");
         if (context) {
           context.fillStyle = "#ffffff"; // White background
           context.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
-
+          
           context.drawImage(
             canvas,
             0,
@@ -63,14 +65,17 @@ const DownloadResume = () => {
             canvasWidth,
             pageCanvas.height
           );
-
+          
           const pageImgData = pageCanvas.toDataURL("image/jpeg", 1.0);
-          if (page > 0) pdf.addPage(); // Add new page for each additional slice
+
+          // Apply top margin only for subsequent pages
+          const yPosition = page > 0 ? topMargin : 0;
+          
           pdf.addImage(
             pageImgData,
             "JPEG",
             0,
-            topMargin,
+            yPosition,
             pdfWidth,
             contentHeightPerPage
           );
@@ -92,8 +97,10 @@ const DownloadResume = () => {
       <div>
         <ArrowLeft className="cursor-pointer" onClick={() => navigate(-1)} />
       </div>
-      <div ref={resumeRef}>
-        <ResumePdf />
+      <div className="max-w-4xl m-auto">
+        <div ref={resumeRef}>
+          <NewResumePdf />
+        </div>
       </div>
 
       {userRole !== "candidate" && (

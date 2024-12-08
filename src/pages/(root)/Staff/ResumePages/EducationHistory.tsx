@@ -1,5 +1,5 @@
 import { useCandidates } from "@/hooks/useCandidiates";
-import { getCountryNameFromISO, getErrorMessage } from "@/lib/utils";
+import { formatDate, getCountryNameFromISO, getErrorMessage } from "@/lib/utils";
 import { ResumeStep3FormData } from "@/types";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
@@ -31,8 +31,8 @@ const EducationHistory = () => {
       setValue("kindOfDegree", foundCandidate.education[0].degree_type || "");
       setValue("tertiaryInstitutionAttended", foundCandidate.education[0].school_name || "");
       setValue("course", foundCandidate.education[0].specific_course_of_study || "");
-      setValue("startDate", foundCandidate.education[0].admission_date || "");
-      setValue("endDate", foundCandidate.education[0].graduation_date || "");
+      setValue("startDate", formatDate(foundCandidate.education[0].admission_date) || "");
+      setValue("endDate", formatDate(foundCandidate.education[0].graduation_date) || "");
     }
   }, [singleCandidate, id, setValue]);
 

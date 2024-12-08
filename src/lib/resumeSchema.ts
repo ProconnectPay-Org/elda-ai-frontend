@@ -37,30 +37,8 @@ export const ResumeStep3Schema = z.object({
   state: z.string().nonempty("State is required"),
   course: z.string().nonempty("Course is required"),
   country: z.string().nonempty("Country is required"),
-  startDate: z
-    .string()
-    .nonempty("Start date is required")
-    .refine(
-      (date) => {
-        const parsedDate = Date.parse(date);
-        return !isNaN(parsedDate);
-      },
-      {
-        message: "Invalid date format",
-      }
-    ),
-  endDate: z
-    .string()
-    .nonempty("End date is required")
-    .refine(
-      (date) => {
-        const parsedDate = Date.parse(date);
-        return !isNaN(parsedDate);
-      },
-      {
-        message: "Invalid date format",
-      }
-    ),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
 });
 
 export const ResumeStep4Schema = z.object({
@@ -68,26 +46,11 @@ export const ResumeStep4Schema = z.object({
     z.object({
       nameOfCompany: z.string().nonempty("Name of company is required"),
       jobTitle: z.string().nonempty("Job title is required"),
-      companyDescription: z
-        .string()
-        .nonempty("Company description is required"),
-      jobDescription: z
-        .string()
-        .nonempty("Job description is required"),
+      companyDescription: z.string().optional(),
+      jobDescription: z.string().nonempty("Job description is required"),
       mode: z.string().nonempty("Mode is required"),
       location: z.string().nonempty("Location is required"),
-      startDate: z
-        .string()
-        .nonempty("Start date is required")
-        .refine(
-          (date) => {
-            const parsedDate = Date.parse(date);
-            return !isNaN(parsedDate);
-          },
-          {
-            message: "Invalid date format",
-          }
-        ),
+      startDate: z.string().optional(),
       endDate: z.string().optional(),
     })
   ),

@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
+import Recommendation from "./Recommendation";
 
 const relationshipOptions = [
   "father",
@@ -75,170 +76,175 @@ const ReferreeDetails = () => {
           </div>
         </div>
       )}
-      <div className="border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
-        <div className="flex flex-col gap-8">
-          <h2 className="text-2xl">Loan Referee Details 1</h2>
-          <div className={outerDivClass}>
-            <div className={divClass}>
-              <label htmlFor="referee1fullname">
-                Full Name <span className="text-red">*</span>
-              </label>
-              <input
-                className="border border-gray-border rounded-md py-2 px-4"
-                id="referee1fullname"
-                {...register("referee1fullname")}
-                placeholder="Enter your full name"
-              />
-              {errors.referee1fullname && (
-                <span className="text-red text-sm">
-                  {getErrorMessage(errors.referee1fullname)}
-                </span>
-              )}
-            </div>
-            <div className={divClass}>
-              <label htmlFor="referee1email">
-                Email Address <span className="text-red">*</span>
-              </label>
-              <input
-                className="border border-gray-border rounded-md py-2 px-4"
-                id="referee1email"
-                {...register("referee1email")}
-                placeholder="Enter your email address"
-              />
-              {errors.referee1email && (
-                <span className="text-red text-sm">
-                  {getErrorMessage(errors.referee1email)}
-                </span>
-              )}
-            </div>
-          </div>
+      <div className="flex flex-col gap-8">
+        <Recommendation />
 
-          <div className={outerDivClass}>
-            <PhoneInputField name="referee1phoneNumber" />
-            <div className={divClass}>
-              <label htmlFor="referee1relationship">
-                Relationship <span className="text-red">*</span>
-              </label>
-              <div className="relative">
-                <select
-                  className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
-                  id="referee1relationship"
-                  {...register("referee1relationship")}
-                >
-                  <option value="">Select relationship</option>
-                  {relationshipOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option.charAt(0).toUpperCase() + option.slice(1)}
-                    </option>
-                  ))}
-                </select>
-                <span className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M19 9l-7 7-7-7"
-                    ></path>
-                  </svg>
-                </span>
+        <div className="border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
+          <div className="flex flex-col gap-8">
+            <h2 className="text-2xl">Loan Referee Details 1</h2>
+            <div className={outerDivClass}>
+              <div className={divClass}>
+                <label htmlFor="referee1fullname">
+                  Full Name <span className="text-red">*</span>
+                </label>
+                <input
+                  className="border border-gray-border rounded-md py-2 px-4"
+                  id="referee1fullname"
+                  {...register("referee1fullname")}
+                  placeholder="Enter your full name"
+                />
+                {errors.referee1fullname && (
+                  <span className="text-red text-sm">
+                    {getErrorMessage(errors.referee1fullname)}
+                  </span>
+                )}
               </div>
-              {errors.referee1relationship && (
-                <span className="text-red text-sm">
-                  {getErrorMessage(errors.referee1relationship)}
-                </span>
-              )}
-            </div>
-          </div>
-
-          <h2 className="text-2xl">Loan Referee Details 2</h2>
-
-          <div className={outerDivClass}>
-            <div className={divClass}>
-              <label htmlFor="referee2fullname">
-                Full Name <span className="text-red">*</span>
-              </label>
-              <input
-                className="border border-gray-border rounded-md py-2 px-4"
-                id="referee2fullname"
-                {...register("referee2fullname")}
-                placeholder="Enter referee's full name"
-              />
-              {errors.referee2fullname && (
-                <span className="text-red text-sm">
-                  {getErrorMessage(errors.referee2fullname)}
-                </span>
-              )}
-            </div>
-            <div className={divClass}>
-              <label htmlFor="referee2email">
-                Email Address <span className="text-red">*</span>
-              </label>
-              <input
-                className="border border-gray-border rounded-md py-2 px-4"
-                id="referee2email"
-                {...register("referee2email")}
-                placeholder="Enter referee's email address"
-              />
-              {errors.referee2email && (
-                <span className="text-red text-sm">
-                  {getErrorMessage(errors.referee2email)}
-                </span>
-              )}
-            </div>
-          </div>
-
-          <div className={outerDivClass}>
-            <PhoneInputField name="referee2phoneNumber" />
-            <div className={divClass}>
-              <label htmlFor="referee2relationship">
-                Relationship <span className="text-red">*</span>
-              </label>
-              <div className="relative">
-                <select
-                  className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
-                  id="referee2relationship"
-                  {...register("referee2relationship")}
-                >
-                  <option value="">Select relationship</option>
-                  {relationshipOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option.charAt(0).toUpperCase() + option.slice(1)}
-                    </option>
-                  ))}
-                </select>
-                <span className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M19 9l-7 7-7-7"
-                    ></path>
-                  </svg>
-                </span>
+              <div className={divClass}>
+                <label htmlFor="referee1email">
+                  Email Address <span className="text-red">*</span>
+                </label>
+                <input
+                  className="border border-gray-border rounded-md py-2 px-4"
+                  id="referee1email"
+                  {...register("referee1email")}
+                  placeholder="Enter your email address"
+                />
+                {errors.referee1email && (
+                  <span className="text-red text-sm">
+                    {getErrorMessage(errors.referee1email)}
+                  </span>
+                )}
               </div>
-              {errors.referee2relationship && (
-                <span className="text-red text-sm">
-                  {getErrorMessage(errors.referee2relationship)}
-                </span>
-              )}
+            </div>
+
+            <div className={outerDivClass}>
+              <PhoneInputField name="referee1phoneNumber" />
+              <div className={divClass}>
+                <label htmlFor="referee1relationship">
+                  Relationship <span className="text-red">*</span>
+                </label>
+                <div className="relative">
+                  <select
+                    className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
+                    id="referee1relationship"
+                    {...register("referee1relationship")}
+                  >
+                    <option value="">Select relationship</option>
+                    {relationshipOptions.map((option) => (
+                      <option key={option} value={option}>
+                        {option.charAt(0).toUpperCase() + option.slice(1)}
+                      </option>
+                    ))}
+                  </select>
+                  <span className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                      ></path>
+                    </svg>
+                  </span>
+                </div>
+                {errors.referee1relationship && (
+                  <span className="text-red text-sm">
+                    {getErrorMessage(errors.referee1relationship)}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <h2 className="text-2xl">Loan Referee Details 2</h2>
+
+            <div className={outerDivClass}>
+              <div className={divClass}>
+                <label htmlFor="referee2fullname">
+                  Full Name <span className="text-red">*</span>
+                </label>
+                <input
+                  className="border border-gray-border rounded-md py-2 px-4"
+                  id="referee2fullname"
+                  {...register("referee2fullname")}
+                  placeholder="Enter referee's full name"
+                />
+                {errors.referee2fullname && (
+                  <span className="text-red text-sm">
+                    {getErrorMessage(errors.referee2fullname)}
+                  </span>
+                )}
+              </div>
+              <div className={divClass}>
+                <label htmlFor="referee2email">
+                  Email Address <span className="text-red">*</span>
+                </label>
+                <input
+                  className="border border-gray-border rounded-md py-2 px-4"
+                  id="referee2email"
+                  {...register("referee2email")}
+                  placeholder="Enter referee's email address"
+                />
+                {errors.referee2email && (
+                  <span className="text-red text-sm">
+                    {getErrorMessage(errors.referee2email)}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <div className={outerDivClass}>
+              <PhoneInputField name="referee2phoneNumber" />
+              <div className={divClass}>
+                <label htmlFor="referee2relationship">
+                  Relationship <span className="text-red">*</span>
+                </label>
+                <div className="relative">
+                  <select
+                    className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
+                    id="referee2relationship"
+                    {...register("referee2relationship")}
+                  >
+                    <option value="">Select relationship</option>
+                    {relationshipOptions.map((option) => (
+                      <option key={option} value={option}>
+                        {option.charAt(0).toUpperCase() + option.slice(1)}
+                      </option>
+                    ))}
+                  </select>
+                  <span className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                      ></path>
+                    </svg>
+                  </span>
+                </div>
+                {errors.referee2relationship && (
+                  <span className="text-red text-sm">
+                    {getErrorMessage(errors.referee2relationship)}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
+
     </div>
   );
 };

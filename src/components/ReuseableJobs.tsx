@@ -123,10 +123,6 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
           filteredJobExperienceData[index].year_started || ""
         );
         setValue(
-          `jobExperiences.${index}.companyDescription`,
-          filteredJobExperienceData[index].company_description || ""
-        );
-        setValue(
           `jobExperiences.${index}.jobSummary`,
           filteredJobExperienceData[index].job_summary || ""
         );
@@ -140,13 +136,21 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
     try {
       const jobSummary = getValues(`jobExperiences.${index}.jobSummary`);
       if (jobSummary) {
-        const refinedContent = await refinePrompt({
-          prompt: `Refine this job summary: ${jobSummary}`,
-        });
+        const refinedPrompt = `Draft a JOB SUMMARY AND KEY ACHIEVEMENTS for my ${currentJobStatus} workplace. 
+            Share how I leveraged innovation and took new initiatives to perform my job, including data and statistics. 
+            Write in first person and ${
+              currentJobStatus === "current" ? "present" : "past"
+            } tense. Highlight ${currentJobStatus} roles held within the same company. 
+            Here's the existing summary: ${jobSummary}`;
+
+        const refinedContent = await refinePrompt({ prompt: refinedPrompt });
         setValue(
           `jobExperiences.${index}.jobSummary`,
           refinedContent.refined_content
         );
+
+        console.log(refinedContent.refined_content);
+        
       } else {
         toast({
           variant: "destructive",
@@ -385,27 +389,9 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
                   type="date"
                   {...register(`jobExperiences.${index}.endedDate`)}
                   className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none bg-white focus:outline-none focus:ring-2 pr-8"
-                  />
+                />
               </div>
             )}
-            <div className="flex flex-col w-full">
-              <label
-                htmlFor={`jobExperiences.${index}.companyDescription`}
-                className="form-label"
-              >
-                Provide Company Description with Vision and Mission Statement{" "}
-                <span className="text-red">*</span>
-              </label>
-              <textarea
-                id={`jobExperiences.${index}.companyDescription`}
-                {...register(`jobExperiences.${index}.companyDescription`)}
-                className="border border-gray-border rounded-md py-2 px-4"
-              />
-              <p className="text-xs text-gray-text">
-                Please describe in third person with the name of the company
-                prominently stated.
-              </p>
-            </div>
           </div>
 
           <div className={divClass}>

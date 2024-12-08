@@ -65,7 +65,7 @@ const WorkExperience = () => {
   }, [careerData, setValue]);
 
   const handleJobsCountChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const count = parseInt(event.target.value, 10);
     setJobsCount(count > 0 ? count : 1);
@@ -299,13 +299,35 @@ const WorkExperience = () => {
                 How many JOBS do you want to showcase that show consistency?{" "}
                 <span className="text-red">*</span>
               </label>
-              <input
-                id="jobsToShowcase"
-                type="number"
-                {...register("jobsToShowcase")}
-                onChange={handleJobsCountChange}
-                className="border border-gray-border rounded-md py-2 px-4 w-full"
-              />
+
+              <div className="relative">
+                <select
+                  id="jobsToShowcase"
+                  {...register("jobsToShowcase")}
+                  onChange={handleJobsCountChange}
+                  className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
+                >
+                  <option disabled value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                </select>
+                <span className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </span>
+              </div>
               <p className="text-xs text-gray-text">
                 Kindly note that if you have less than 10 years of work
                 experience, you can only showcase a maximum of 2 jobs but if you

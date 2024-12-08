@@ -1,5 +1,5 @@
 import { ResumeStep2FormData } from "@/types";
-import { getCountryNameFromISO, getErrorMessage } from "@/lib/utils";
+import { formatDate, getCountryNameFromISO, getErrorMessage } from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
 import "react-phone-input-2/lib/style.css";
 import { genderOptions } from "@/constants";
@@ -27,7 +27,7 @@ const BioData = () => {
       const foundCandidate = singleCandidate;
 
       setValue("gender", foundCandidate.gender || "");
-      setValue("dateOfBirth", foundCandidate.birth_date || "");
+      setValue("dateOfBirth", formatDate(foundCandidate.birth_date) || "");
       setValue("nationality", getCountryNameFromISO(foundCandidate.country_of_birth) || "");
 
       if (foundCandidate.career && foundCandidate.career.length > 0) {
@@ -83,7 +83,7 @@ const BioData = () => {
                 Date of Birth <span className="text-red">*</span>
               </label>
               <input
-                type="date"
+                type="text"
                 className="border border-gray-border h-[42px] rounded-full py-2 px-4"
                 id="dateOfBirth"
                 {...register("dateOfBirth")}

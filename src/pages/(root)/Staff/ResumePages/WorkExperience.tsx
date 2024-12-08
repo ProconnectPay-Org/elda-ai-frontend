@@ -1,5 +1,5 @@
 import { useCandidates } from "@/hooks/useCandidiates";
-import { getErrorMessage } from "@/lib/utils";
+import { formatDate, getErrorMessage } from "@/lib/utils";
 import { JobExperience, ResumeStep4FormData } from "@/types";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -40,10 +40,6 @@ const WorkExperience = () => {
             experience.job_title || ""
           );
           setValue(
-            `jobExperiences.${index}.companyDescription`,
-            experience.company_description || ""
-          );
-          setValue(
             `jobExperiences.${index}.jobDescription`,
             experience.job_summary || ""
           );
@@ -54,10 +50,13 @@ const WorkExperience = () => {
           setValue(`jobExperiences.${index}.location`, experience.state || "");
           setValue(
             `jobExperiences.${index}.startDate`,
-            experience.year_started || ""
+            formatDate(experience.year_started) || ""
           );
           if (experience.year_ended) {
-            setValue(`jobExperiences.${index}.endDate`, experience.year_ended);
+            setValue(
+              `jobExperiences.${index}.endDate`,
+              formatDate(experience.year_ended) || ""
+            );
           }
         }
       );
@@ -116,21 +115,6 @@ const WorkExperience = () => {
                     </span>
                   )}
                 </div>
-                {/* <div className="flex flex-col sm:w-1/2">
-                  <label htmlFor="typeOfCompany" className="text-[#344054]">
-                    Type of Company
-                  </label>
-                  <input
-                    className="border border-gray-border rounded-full py-2 px-4"
-                    id="typeOfCompany"
-                    {...register("typeOfCompany")}
-                  />
-                  {errors.typeOfCompany && (
-                    <span className="text-red text-sm">
-                      {getErrorMessage(errors.typeOfCompany)}
-                    </span>
-                  )}
-                </div> */}
               </div>
 
               <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
@@ -172,27 +156,7 @@ const WorkExperience = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
-                <div className="flex flex-col sm:w-1/2">
-                  <label
-                    htmlFor={`companyDescription-${index}`}
-                    className="text-[#344054]"
-                  >
-                    Company Description
-                  </label>
-                  <textarea
-                    className="border border-gray-border py-2 px-4"
-                    id={`companyDescription-${index}`}
-                    {...register(`jobExperiences.${index}.companyDescription`)}
-                    placeholder="Enter company description"
-                  />
-                  {errors.companyDescription && (
-                    <span className="text-red text-sm">
-                      {getErrorMessage(errors.companyDescription)}
-                    </span>
-                  )}
-                </div>
-
-                <div className="flex flex-col sm:w-1/2">
+                <div className="flex flex-col w-full">
                   <label
                     htmlFor={`jobDescription-${index}`}
                     className="text-[#344054]"
@@ -200,7 +164,7 @@ const WorkExperience = () => {
                     Job Description
                   </label>
                   <textarea
-                    className="border border-gray-border py-2 px-4"
+                    className="border border-gray-border py-2 px-4 min-h-20"
                     id={`jobDescription-${index}`}
                     {...register(`jobExperiences.${index}.jobDescription`)}
                     placeholder="Enter job description"
@@ -242,7 +206,7 @@ const WorkExperience = () => {
                     Start Date
                   </label>
                   <input
-                    type="date"
+                    type="text"
                     className="border border-gray-border h-[42px] rounded-full py-2 px-4"
                     id={`startDate-${index}`}
                     {...register(`jobExperiences.${index}.startDate`)}
@@ -262,7 +226,7 @@ const WorkExperience = () => {
                       End Date
                     </label>
                     <input
-                      type="date"
+                      type="text"
                       className="border border-gray-border h-[42px] rounded-full py-2 px-4"
                       id={`endDate-${index}`}
                       {...register(`jobExperiences.${index}.endDate`)}

@@ -26,6 +26,17 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const formatDate = (dateString: string): string => {
+  if (!dateString) return "Not Provided";
+
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return "Invalid Date"; // Ensure the date is valid
+
+  return `${date.toLocaleString("en-US", {
+    month: "long",
+  })} ${date.getFullYear()}`;
+};
+
 export const getErrorMessage = (
   error:
     | string
@@ -174,17 +185,97 @@ const relationshipOptions = [
   "cousin",
 ] as const;
 
-const relationshipEnum = z.enum(relationshipOptions);
+const relationshipEnum = z.enum(relationshipOptions).optional();
 
 export const step4Schema = z.object({
-  referee1fullname: z.string().min(1, "Referee 1 full name is required"),
-  referee1email: z.string().email("Invalid email address"),
-  referee1phoneNumber: z.string().min(1, "Phone number is required"),
+  referee1fullname: z.string().optional(),
+  referee1email: z.string().optional(),
+  referee1phoneNumber: z.string().optional(),
   referee1relationship: relationshipEnum, // Use enum for select field validation
-  referee2fullname: z.string().min(1, "Referee 2 full name is required"),
-  referee2email: z.string().email("Invalid email address"),
-  referee2phoneNumber: z.string().min(1, "Phone number is required"),
+  referee2fullname: z.string().optional(),
+  referee2email: z.string().optional(),
+  referee2phoneNumber: z.string().optional(),
   referee2relationship: relationshipEnum, // Use enum for select field validation
+  // RECOMMENDATION SCHEMA
+  recommendation1fullname: z.string().min(1, "Full name is required"),
+  recommendation1email: z
+    .string()
+    .email("Invalid email address")
+    .min(1, "Email is required"),
+  recommendation1phoneNumber: z.string().min(1, "Phone number is required"),
+  recommendation1relationship: z
+    .string()
+    .min(1, "Relationship is required")
+    .refine(
+      (value) =>
+        [
+          "Past employer",
+          "Present employer",
+          "Colleague",
+          "HR",
+          "Manager",
+        ].includes(value),
+      {
+        message: "Invalid relationship option for professional recommender",
+      }
+    ),
+  recommendation1organization: z
+    .string()
+    .min(1, "Organization or company is required"),
+  recommendation1job: z.string().min(1, "Job title is required"),
+
+  recommendation2fullname: z.string().min(1, "Full name is required"),
+  recommendation2email: z
+    .string()
+    .email("Invalid email address")
+    .min(1, "Email is required"),
+  recommendation2phoneNumber: z.string().min(1, "Phone number is required"),
+  recommendation2relationship: z
+    .string()
+    .min(1, "Relationship is required")
+    .refine(
+      (value) =>
+        ["Lecturer", "Academic advisor", "Administrative staff"].includes(
+          value
+        ),
+      {
+        message: "Invalid relationship option for academic recommender",
+      }
+    ),
+  recommendation2organization: z
+    .string()
+    .min(1, "Organization or company is required"),
+  recommendation2job: z.string().min(1, "Job title is required"),
+
+  recommendation3fullname: z.string().min(1, "Full name is required"),
+  recommendation3email: z
+    .string()
+    .email("Invalid email address")
+    .min(1, "Email is required"),
+  recommendation3phoneNumber: z.string().min(1, "Phone number is required"),
+  recommendation3relationship: z
+    .string()
+    .min(1, "Relationship is required")
+    .refine(
+      (value) =>
+        [
+          "Past Employer",
+          "Present Employer",
+          "Colleague",
+          "HR",
+          "Manager",
+          "Lecturer",
+          "Academic advisor",
+          "Administrative staff",
+        ].includes(value),
+      {
+        message: "Invalid relationship option for other recommender",
+      }
+    ),
+  recommendation3organization: z
+    .string()
+    .min(1, "Organization or company is required"),
+  recommendation3job: z.string().min(1, "Job title is required"),
 });
 
 export const step5Schema = z.object({

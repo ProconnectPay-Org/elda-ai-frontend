@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { useCandidates } from "@/hooks/useCandidiates";
 import { postEditedCandidate } from "@/lib/actions/staff.actions";
+import { toast } from "@/components/ui/use-toast";
 
 const Step2 = ({
   prevStep,
@@ -35,7 +36,7 @@ const Step2 = ({
       setAssignedUniversity(singleCandidate.assigned_university1 || "");
       setAssignedCourse(singleCandidate.assigned_course1 || "");
       setYearsOfExperience(
-        singleCandidate.career[0]?.years_of_experience_post_degree || ""
+        singleCandidate.career[0]?.years_of_experience_post_degree || "0"
       );
       setManualDescription(singleCandidate.course_description);
     }
@@ -48,9 +49,19 @@ const Step2 = ({
       const response = await postEditedCandidate(id, {
         course_description: manualDescription,
       });
+      toast({
+        variant: "success",
+        title: "Course Description Updated",
+        description: "Successfully Updated",
+      });
       return response;
     } catch (error) {
       console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Course Description not Updated",
+        description: "Could not update",
+      });
     } finally {
       setCourseDescriptionLoading(false);
     }

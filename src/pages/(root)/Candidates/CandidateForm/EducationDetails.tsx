@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchEducationData } from "@/lib/actions/candidate.actions";
 import Cookies from "js-cookie";
 import AdvancedDegree from "@/components/AdvancedDegree";
+import { degreeOptions } from "@/constants";
 
 const EducationDetails = () => {
   const {
@@ -114,10 +115,14 @@ const EducationDetails = () => {
                   id="degreeType"
                   {...register("degreeType")}
                 >
-                  <option value="">Select degree type</option>
-                  <option value="bachelor">Bachelor</option>
-                  <option value="master">Master</option>
-                  <option value="phd">PHD</option>
+                  {degreeOptions.map((option, index) => (
+                    <option value={option} key={index}>
+                      {option}
+                    </option>
+                  ))}
+                  <option value="Higher National Diploma">
+                    Higher National Diploma
+                  </option>
                 </select>
                 {svgSpan}
               </div>

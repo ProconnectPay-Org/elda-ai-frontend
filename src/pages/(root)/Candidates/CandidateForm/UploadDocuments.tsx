@@ -34,7 +34,7 @@ const UploadDocuments: React.FC = () => {
   const [isUploaded, setIsUploaded] = useState<boolean[]>(Array(9).fill(false));
   const verificationDocumentsId = Cookies.get("verification_document_id");
   const candidate_id = Cookies.get("candidate_id");
-  const [isDocLoading, setIsDocLoading] = useState(false);
+  // const [isDocLoading, setIsDocLoading] = useState(false);
 
   const labels = [
     "bsc_hnd_certificate",
@@ -80,7 +80,6 @@ const UploadDocuments: React.FC = () => {
   ) => {
     const file = event.target.files?.[0];
     if (file instanceof File) {
-      setIsDocLoading(true);
       // Reset upload state for this file
       setUploadStates((prev) => ({
         ...prev,
@@ -165,9 +164,6 @@ const UploadDocuments: React.FC = () => {
           description: "Failed to upload document. Please try again.",
           variant: "destructive",
         });
-      })
-      .finally(() => {
-        setIsDocLoading(false);
       });
   };
 
@@ -218,7 +214,7 @@ const UploadDocuments: React.FC = () => {
                 <div className="flex flex-col gap-2 w-full">
                   <span className="truncate max-w-48 lg:max-w-60">
                     {uploadStates[i]?.file?.name ||
-                      data[labels[i]]?.split("/").pop()}
+                      data[labels[i]]?.split("/").pop()?.split("?")[0]}
                   </span>
                   <div className="bg-red h-2.5 rounded-full">
                     <div
@@ -245,11 +241,17 @@ const UploadDocuments: React.FC = () => {
             </>
           ) : (
             <div className="flex items-center relative gap-x-10 h-11 justify-end border border-gray-border bg-white rounded-md py-2 px-4 mt-1 w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-              <div className="absolute w-full h-full opacity-0">
-                <input type="file" onChange={(e) => handleFileChange(i, e)} />
+              <div className="absolute w-full h-full opacity-0 cursor-pointer">
+                <input
+                  type="file"
+                  onChange={(e) => handleFileChange(i, e)}
+                  className="w-full"
+                />
               </div>
               <div className="flex items-center justify-center w-full">
-                {isDocLoading && <Loader2 className="animate-spin" />}
+                {uploadStates[i]?.uploading && (
+                  <Loader2 className="animate-spin" />
+                )}
               </div>
               <img
                 src={UploadCloud}
