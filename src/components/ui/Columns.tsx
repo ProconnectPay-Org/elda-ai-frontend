@@ -53,7 +53,28 @@ export const columns: ColumnDef<CandidateData>[] = [
     accessorKey: "sop_status",
     header: () => (
       <div>
-        <p className="text-center">SOP</p>
+        <p className="text-center">SOP 1</p>
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="flex justify-center">
+        <Button
+          className={`py-1 h-5 rounded-xl ${
+            row.original.sop_status === "Pending"
+              ? "bg-orange text-white"
+              : "bg-[#D5F4EA] text-[#2A6350]"
+          } px-5 hover:bg-green-200`}
+        >
+          {row.original.sop_status || "none"}
+        </Button>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "sop_status2",
+    header: () => (
+      <div>
+        <p className="text-center">SOP 2</p>
       </div>
     ),
     cell: ({ row }) => (
@@ -101,7 +122,7 @@ export const columns: ColumnDef<CandidateData>[] = [
     cell: ({ row }) => {
       const [isSchoolModalOpen, setIsSchoolModalOpen] = useState(false); // Separate modal state
       const [isCandidateDataModalOpen, setIsCandidateDataModalOpen] =
-        useState(false); 
+        useState(false);
 
       const openCandidateModal = () => {
         setIsCandidateDataModalOpen(true);
@@ -149,8 +170,29 @@ export const columns: ColumnDef<CandidateData>[] = [
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link to={isSopDisabled ? `/craft-sop/${id}` : `/sop/${id}`}>
-                  {isSopDisabled ? "Craft SOP" : "View Crafted SOP"}
+                <Link
+                  to={
+                    isSopDisabled
+                      ? `/craft-sop/${id}?type=school1`
+                      : `/sop/${id}?type=school1`
+                  }
+                >
+                  {isSopDisabled
+                    ? "Craft SOP for school 1"
+                    : "View Crafted SOP 1"}
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link
+                  to={
+                    isSopDisabled
+                      ? `/craft-sop/${id}?type=school2`
+                      : `/sop/${id}?type=school2`
+                  }
+                >
+                  {isSopDisabled
+                    ? "Craft SOP for school 2"
+                    : "View Crafted SOP 2"}
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />

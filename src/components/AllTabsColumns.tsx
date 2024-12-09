@@ -132,7 +132,7 @@ export const allTabsColumns = (
         setIsModalOpen(false);
       };
 
-      const { id, resume_status, sop_status, full_name } = row.original;
+      const { id, resume_status, sop_status, full_name, user_id } = row.original;
 
       const isResumeDisabled = resume_status !== "Completed";
       const isSopDisabled = sop_status !== "Completed";
@@ -187,9 +187,9 @@ export const allTabsColumns = (
               <DropdownMenuItem>
                 <Button
                   onClick={() => {
-                    if (id) {
+                    if (user_id) {
                       handleDeleteCandidate(
-                        String(id),
+                        String(user_id),
                         full_name || "Unknown User"
                       );
                     } else {

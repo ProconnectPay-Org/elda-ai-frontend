@@ -67,7 +67,7 @@ const SelectedCandidateModal = ({ onClose, id }: ModalProps) => {
                     : "text-red bg-pale-bg"
                 } text-[10px] p-1 rounded-xl`}
               >
-                {candidateData?.status || "Inactive"}
+                {candidateData?.status || "Pending"}
               </p>
             </div>
           </div>

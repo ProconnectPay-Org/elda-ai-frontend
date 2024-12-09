@@ -336,6 +336,7 @@ export type updateCandidateProfile = {
 export type CandidateData = {
   id?: string;
   user?: User;
+  user_id?: string;
   assigned: boolean;
   assigned_course: string;
   assigned_course1: string;

@@ -133,11 +133,11 @@ const generateSopFile = async (sopText: string, candidateId: string) => {
   const canvas = await html2canvas(sopContainer, { scale: 2, useCORS: true });
   document.body.removeChild(sopContainer);
 
-  const imgData = canvas.toDataURL("image/png");
+  const imgData = canvas.toDataURL("image/jpeg");
   const pdf = new jsPDF("p", "mm", "a4");
   const pdfWidth = pdf.internal.pageSize.getWidth();
   const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-  pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+  pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
 
   const blob = pdf.output("blob");
   return new File([blob], `${candidateId}-sop.pdf`, {

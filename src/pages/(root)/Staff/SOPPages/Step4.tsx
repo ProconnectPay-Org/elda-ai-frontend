@@ -48,14 +48,10 @@ const Step4 = ({
 
   const handleUpdateSop = async () => {
     if (!file) return;
+    localStorage.setItem("sopCurrentPage", String(0));
     setSopLoading(true);
     try {
-      const response = await updateSop(
-        sopId,
-        candidateId,
-        candidateSop,
-        file
-      );
+      const response = await updateSop(sopId, candidateId, candidateSop, file);
       if (response) {
         handleShowModal();
       }

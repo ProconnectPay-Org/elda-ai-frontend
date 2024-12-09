@@ -125,7 +125,7 @@ const CandidateSelection = () => {
                   </div>
                 </div>
                 <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
-                  <div  className="w-1/2">
+                  <div className="w-1/2">
                     <label>Phone Number</label>
                     <span
                       onClick={() =>
@@ -141,7 +141,7 @@ const CandidateSelection = () => {
                       <CopyIcon size={16} cursor="pointer" />
                     </span>
                   </div>
-                  <div  className="w-1/2">
+                  <div className="w-1/2">
                     <label>Email Address</label>
                     <span
                       onClick={() =>
@@ -160,31 +160,75 @@ const CandidateSelection = () => {
                 </div>
 
                 <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
-                  <div className="w-1/2">
+                  <div className="md:max-w-48">
                     <label>Recommended School 1</label>
                     <p className="text-primary font-medium">
-                      {selectedRowData.assigned_university1}
+                      <span
+                        onClick={() =>
+                          copyToClipboard(
+                            selectedRowData.assigned_university1 || "",
+                            toast
+                          )
+                        }
+                        className="text-primary font-medium flex items-center gap-1"
+                      >
+                        {selectedRowData.assigned_university1}
+                        <CopyIcon size={16} cursor="pointer" />
+                      </span>
                     </p>
                   </div>
-                  <div className="w-1/2">
+                  <div className="md:w-1/2">
                     <label>Recommended Course 1</label>
                     <p className="text-primary font-medium">
-                      {selectedRowData.assigned_course1}
+                      <span
+                        onClick={() =>
+                          copyToClipboard(
+                            selectedRowData.assigned_course1 || "",
+                            toast
+                          )
+                        }
+                        className="text-primary font-medium flex items-center gap-1"
+                      >
+                        {selectedRowData.assigned_course1}
+                        <CopyIcon size={16} cursor="pointer" />
+                      </span>
                     </p>
                   </div>
                 </div>
 
                 <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
-                  <div className="w-1/2">
+                  <div className="md:w-1/2">
                     <label>Recommended School 2</label>
                     <p className="text-primary font-medium">
-                      {selectedRowData.assigned_university2}
+                      <span
+                        onClick={() =>
+                          copyToClipboard(
+                            selectedRowData.assigned_university2 || "",
+                            toast
+                          )
+                        }
+                        className="text-primary font-medium flex items-center gap-1"
+                      >
+                        {selectedRowData.assigned_university2}
+                        <CopyIcon size={16} cursor="pointer" />
+                      </span>
                     </p>
                   </div>
-                  <div className="w-1/2">
+                  <div className="md:w-1/2">
                     <label>Recommended Course 2</label>
                     <p className="text-primary font-medium">
-                      {selectedRowData.assigned_course2}
+                      <span
+                        onClick={() =>
+                          copyToClipboard(
+                            selectedRowData.assigned_course2 || "",
+                            toast
+                          )
+                        }
+                        className="text-primary font-medium flex items-center gap-1"
+                      >
+                        {selectedRowData.assigned_course2}
+                        <CopyIcon size={16} cursor="pointer" />
+                      </span>
                     </p>
                   </div>
                 </div>

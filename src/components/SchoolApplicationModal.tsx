@@ -1,6 +1,7 @@
 import { useCandidates } from "@/hooks/useCandidiates";
 import { toggleSchoolApplicationStatus } from "@/lib/actions/user.actions";
 import { useState, useEffect } from "react";
+import { toast } from "./ui/use-toast";
 
 interface ModalProps {
   onClose: () => void;
@@ -26,15 +27,25 @@ const SchoolApplicationModal = ({ onClose, id }: ModalProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setApplicationLoading(true);
+
     if (applicationCompleted) {
       try {
         const response = await toggleSchoolApplicationStatus(id);
-        return response;
+        console.log("Response:", response);
+        onClose(); // Call onClose only after the function executes successfully
       } catch (error) {
-        console.error(error);
+        console.error("Error:", error);
+      } finally {
+        setApplicationLoading(false);
       }
+    } else {
+      toast({
+        description: "Mark application as completed.",
+        title: "Application is not marked as completed.",
+        variant: "destructive"
+      })
+      setApplicationLoading(false);
     }
-    onClose();
   };
 
   const handleOutsideClick = (e: React.MouseEvent) => {
@@ -178,7 +189,7 @@ const SchoolApplicationModal = ({ onClose, id }: ModalProps) => {
             <button
               type="submit"
               disabled={applicationLoading}
-              className="w-full bg-red text-white py-2 rounded-lg hover:bg-red-600"
+              className="w-full bg-red text-white py-2 z-10 rounded-lg hover:bg-red-600"
             >
               {applicationLoading ? "Loading..." : "Submit"}
             </button>

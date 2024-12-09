@@ -209,7 +209,7 @@ export const getCandidatesToAssign = async (count?: number) => {
 
   if (!token) throw new Error("Access token is missing. Please sign in again.");
 
-  const url = `${API_URL}all-candidates-small/?page_size=${count || 1000}`; // Default count to a high number if not provided
+  const url = `${API_URL}all-candidates-small/?count=${count || 1000}`; // Default count to a high number if not provided
 
   try {
     const response = await axios.get(url, {

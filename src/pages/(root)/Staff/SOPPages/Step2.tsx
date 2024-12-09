@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useCandidates } from "@/hooks/useCandidiates";
 import { postEditedCandidate } from "@/lib/actions/staff.actions";
 import { toast } from "@/components/ui/use-toast";
+import { useSearchParams } from "react-router-dom";
 
 const Step2 = ({
   prevStep,
@@ -12,6 +13,8 @@ const Step2 = ({
   prevStep: () => void;
   candidateId: string;
 }) => {
+  const [searchParams] = useSearchParams();
+  const routeType = searchParams.get("type");
   const [manualDescription, setManualDescription] = useState("");
   const [programType, setProgramType] = useState("");
   const [assignedUniversity, setAssignedUniversity] = useState("");
@@ -24,16 +27,20 @@ const Step2 = ({
     useCandidates(id);
 
   useEffect(() => {
-    if (singleCandidate) {
-      setProgramType(singleCandidate.education[0]?.degree_type || "");
-      setAssignedUniversity(singleCandidate.assigned_university1 || "");
-      setAssignedCourse(singleCandidate.assigned_course1 || "");
+    if (singleCandidate) {      
+      const prefix = routeType === "school2" ? "2" : "1"; // Default to `1` if it's not `craft-sop-2`
+
+      setProgramType(singleCandidate[`program_type${prefix}`] || "");
+      setAssignedUniversity(
+        singleCandidate[`assigned_university${prefix}`] || ""
+      );
+      setAssignedCourse(singleCandidate[`assigned_course${prefix}`] || "");
       setYearsOfExperience(
         singleCandidate.career[0]?.years_of_experience_post_degree || "0"
       );
       setManualDescription(singleCandidate.course_description);
     }
-  }, [singleCandidate]);
+  }, [singleCandidate, routeType]);
 
   const handleReview = async (e: React.MouseEvent) => {
     e.preventDefault();

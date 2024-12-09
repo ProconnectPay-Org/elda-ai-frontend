@@ -6,12 +6,15 @@ import {
   PDFDownloadLink,
 } from "@react-pdf/renderer";
 import { useCandidates } from "@/hooks/useCandidiates";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { Loader2Icon } from "lucide-react";
 import Cookies from "js-cookie";
 
 const SopTemplate = () => {
   const { id } = useParams<{ id: string }>();
+  const [searchParams] = useSearchParams();
+  const type = searchParams.get("type"); // school1 or school2
+  const prefix = type === "school2" ? "2" : "1"; // Determine the prefix
 
   if (!id) {
     console.error("No ID provided");
@@ -43,6 +46,7 @@ const SopTemplate = () => {
     page: {
       padding: 20,
       fontSize: 12,
+      paddingBottom: 16,
       // lineHeight: 1.5,
     },
     title: {
@@ -70,9 +74,9 @@ const SopTemplate = () => {
         <Text style={styles.title}>
           STATEMENT OF PURPOSE FOR {singleCandidate?.last_name}{" "}
           {singleCandidate?.first_name} {singleCandidate?.middle_name}: PURSUING
-          AN {singleCandidate?.program_type1} IN{" "}
-          {singleCandidate?.assigned_course1} AT{" "}
-          {singleCandidate?.assigned_university1}
+          AN {singleCandidate?.[`program_type${prefix}`]} IN{" "}
+          {singleCandidate?.[`assigned_course${prefix}`]} AT{" "}
+          {singleCandidate?.[`assigned_university${prefix}`]}
         </Text>
         {sopText?.split("\n").map((paragraph: string, index: number) => (
           <Text key={index} style={styles.paragraph}>
@@ -87,11 +91,11 @@ const SopTemplate = () => {
     <div className="py-4 px-8">
       <div className="px-8">
         <h1 className="text-red font-bold text-center mb-4 text-xl uppercase">
-          STATEMENT OF PURPOSE FOR {singleCandidate?.last_name}{" "}
+        STATEMENT OF PURPOSE FOR {singleCandidate?.last_name}{" "}
           {singleCandidate?.first_name} {singleCandidate?.middle_name}: PURSUING
-          AN {singleCandidate?.program_type1} IN{" "}
-          {singleCandidate?.assigned_course1} AT{" "}
-          {singleCandidate?.assigned_university1}
+          AN {singleCandidate?.[`program_type${prefix}`]} IN{" "}
+          {singleCandidate?.[`assigned_course${prefix}`]} AT{" "}
+          {singleCandidate?.[`assigned_university${prefix}`]}
         </h1>
         <div>
           {sopText?.split("\n").map((paragraph: string, index: number) => (
@@ -105,10 +109,10 @@ const SopTemplate = () => {
       {userRole !== "candidate" && (
         <PDFDownloadLink
           document={<SOPDocument />}
-          fileName={`${singleCandidate?.first_name || "Candidate"}_SOP.pdf`}
+          fileName={`${singleCandidate?.first_name || "Candidate"}_SOP${prefix}.pdf`}
           className="my-5 bg-red text-white px-4 py-2 rounded"
         >
-          Download SOP
+          Download SOP {prefix}
         </PDFDownloadLink>
       )}
     </div>
