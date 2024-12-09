@@ -83,6 +83,9 @@ const CandidateLogin = () => {
         Cookies.set("referee2_id", response.candidate.loan_referees[1], {
           expires: 7,
         });
+        Cookies.set("ProfessionalRecommender", response.recommenders[0]);
+        Cookies.set("AcademicRecommender", response.recommenders[1]);
+        Cookies.set("otherRecommender", response.recommenders[2]);        
 
         toast({
           title: "Success",

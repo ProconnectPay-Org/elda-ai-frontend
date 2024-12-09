@@ -266,6 +266,18 @@ export type JobExperience = {
   candidate: string | undefined;
 };
 
+export type Recommender = {
+  id?: number;
+  recommender_type: string;
+  full_name: string;
+  email: string;
+  phone_number: string;
+  relationship: string;
+  organization: string;
+  job_title: string;
+  candidate: string | undefined;
+};
+
 export type LoanReferee = {
   id?: number;
   name: string;
@@ -375,6 +387,7 @@ export type CandidateData = {
   work_history: WorkHistory[];
   verification_documents: VerificationDocument[];
   advanced_education: AdvancedEducation[];
+  recommenders: Recommender[];
 };
 
 declare interface AllCandidatesResponse {

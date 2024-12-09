@@ -20,7 +20,7 @@ import RegisterSuccessModal from "./RegisterSuccessModal";
 import {
   postJobExperience,
   submitEducationDetails,
-  submitPostRecommendationDetails,
+  submitRecommenderDetails,
   submitRefereeDetails,
   submitWorkExperience,
   toggleApplicationStatus,
@@ -234,18 +234,46 @@ const MultiStepForm = () => {
           candidate: id,
         };
 
-        const recommenderData: any = {
-          recommender_type: currentFormData.typeOfRecommender,
-          full_name: currentFormData.recommendationfullname,
-          email: currentFormData.recommendationemail,
-          phone_number: currentFormData.recommendationphoneNumber,
-          relationship: currentFormData.recommendationrelationship,
-          organization: currentFormData.recommendationorganization,
-          job_title: currentFormData.recommendationjob,
-          candidate: id,
-        };
+        const recommenderDataList = [
+          {
+            recommender_type: "Professional",
+            full_name: currentFormData.recommendation1fullname,
+            email: currentFormData.recommendation1email,
+            phone_number: currentFormData.recommendation1phoneNumber,
+            relationship: currentFormData.recommendation1relationship,
+            organization: currentFormData.recommendation1organization,
+            job_title: currentFormData.recommendation1job,
+            candidate: id,
+          },
+          {
+            recommender_type: "Academic",
+            full_name: currentFormData.recommendation2fullname,
+            email: currentFormData.recommendation2email,
+            phone_number: currentFormData.recommendation2phoneNumber,
+            relationship: currentFormData.recommendation2relationship,
+            organization: currentFormData.recommendation2organization,
+            job_title: currentFormData.recommendation2job,
+            candidate: id,
+          },
+          {
+            recommender_type: "other",
+            full_name: currentFormData.recommendation3fullname,
+            email: currentFormData.recommendation3email,
+            phone_number: currentFormData.recommendation3phoneNumber,
+            relationship: currentFormData.recommendation3relationship,
+            organization: currentFormData.recommendation3organization,
+            job_title: currentFormData.recommendation3job,
+            candidate: id,
+          },
+        ];
 
-        await submitPostRecommendationDetails(recommenderData); 
+        await submitRecommenderDetails(recommenderDataList)
+          .then((responses) => {
+            console.log("Submission successful!", responses);
+          })
+          .catch((error) => {
+            console.error("Submission failed:", error);
+          });
 
         await submitRefereeDetails(referee1Data, referee2Data);
       } else if (currentStep === steps.length - 1) {

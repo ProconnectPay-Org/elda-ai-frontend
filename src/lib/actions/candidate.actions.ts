@@ -5,6 +5,7 @@ import {
   EducationHistory,
   JobExperience,
   LoanReferee,
+  Recommender,
   updateCandidateProfile,
 } from "@/types";
 import axios, { AxiosProgressEvent } from "axios";
@@ -256,16 +257,116 @@ export const fetchReferee2 = async () => {
 export const submitPostRecommendationDetails = async (recommenderData: any) => {
   const token = Cookies.get("candidate_access_token");
   try {
-    axios.post(`${API_URL}recommenders/`, recommenderData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    // Ensure you're awaiting the axios post call
+    const response = await axios.post(
+      `${API_URL}recommenders/`,
+      recommenderData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
   } catch (error) {
     console.error("Error during recommendation details submission:", error);
     throw error;
   }
+};
+
+export const submitPatchRecommendationDetails = async (
+  recommenderId: string,
+  recommenderData: any
+) => {
+  if (!recommenderId) {
+    throw new Error("Invalid recommender ID");
+  }
+
+  const token = Cookies.get("candidate_access_token");
+  try {
+    const response = await axios.patch(
+      `${API_URL}recommenders/${recommenderId}/`,
+      recommenderData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error during recommendation details update:", error);
+    throw error;
+  }
+};
+
+export const submitRecommenderDetails = async (
+  recommenderDataList: Recommender[]
+) => {
+  const professionalRecommenderId = Cookies.get("ProfessionalRecommender");
+  const academicRecommenderId = Cookies.get("PcademicRecommender");
+  const otherRecommenderId = Cookies.get("otherRecommender");
+
+  const recommenderIds = [
+    professionalRecommenderId,
+    academicRecommenderId,
+    otherRecommenderId,
+  ];
+
+  try {
+    const responses = await Promise.all(
+      recommenderDataList.map(async (recommenderData, index) => {
+        const recommenderId = recommenderIds[index];
+
+        if (
+          typeof recommenderId === "string" &&
+          recommenderId !== "undefined"
+        ) {
+          // PATCH if recommender ID exists
+          return await submitPatchRecommendationDetails(
+            recommenderId,
+            recommenderData
+          );
+        } else {
+          // POST if recommender ID doesn't exist
+          const response = await submitPostRecommendationDetails(
+            recommenderData
+          );
+          Cookies.set(
+            recommenderData.recommender_type + "Recommender",
+            response.id
+          );
+          return response;
+        }
+      })
+    );
+
+    console.log("Recommender Responses:", responses);
+    return responses;
+  } catch (error) {
+    console.error("Error submitting recommender details:", error);
+    throw error;
+  }
+};
+
+export const getRecommenderDetails = async (idKey: string) => {
+  const token = Cookies.get("candidate_access_token");
+  const recommenderId = Cookies.get(idKey);
+
+  if (!recommenderId) {
+    throw new Error("Recommender ID not found");
+  }
+
+  const { data } = await axios.get(`${API_URL}recommenders/${recommenderId}/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  return data;
 };
 
 export const submitDocuments = async (

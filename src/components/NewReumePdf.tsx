@@ -17,8 +17,11 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     paddingLeft: 20,
     paddingBottom: 20,
-    margin: "auto",
-    overflow: "hidden"
+    paddingTop: 0,
+    margin: 0,
+    overflow: "hidden",
+    position: "relative",
+    top: -25,
   },
   section: {
     paddingLeft: 20,
@@ -81,10 +84,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: "10px",
   },
-  flex: {
-    display: "flex",
-  },
+  flex: { display: "flex" },
   smallText: { fontSize: "14px", lineHeight: 1.5, textAlign: "justify" },
+  careerInterestText: { fontSize: "14px", lineHeight: 1.5, textAlign: "justify", textTransform: "capitalize" },
   blueSmallText: {
     color: "#1e3a8a",
     fontSize: "14px",
@@ -266,7 +268,7 @@ const NewResumePdf = () => {
               </View>
               <View style={styles.flex}>
                 <Text style={styles.utilityClass}>Interests:</Text>
-                <Text style={styles.smallText}>
+                <Text style={styles.careerInterestText}>
                   {formData?.career
                     ?.flatMap((item: CandidateCareer) =>
                       item.career_interests

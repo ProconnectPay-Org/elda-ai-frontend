@@ -5,26 +5,20 @@ import {
   CandidateData,
   VerificationDocument,
 } from "@/types";
-import { ChevronDown, CopyIcon, MailIcon, PhoneCallIcon } from "lucide-react";
+import { ChevronDown, MailIcon, PhoneCallIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  copyToClipboard,
-  getCountryNameFromISO,
-  getInitials,
-} from "@/lib/utils";
+import { formatDate, getCountryNameFromISO, getInitials } from "@/lib/utils";
 import useAuth from "@/hooks/useAuth";
 
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getSingleCandidate } from "@/lib/actions/user.actions";
-import { useToast } from "@/components/ui/use-toast";
 import CopyText from "@/components/CopyText";
 import { useState } from "react";
 
 const CandidateProfile = () => {
   const { id } = useParams<{ id: string }>();
   const { loggedInUser } = useAuth();
-  const { toast } = useToast();
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
 
   const toggleAccordion = () => {
@@ -196,8 +190,10 @@ const CandidateProfile = () => {
           </p>
         </div>
       </div>
-      <hr className="w-full h-2 my-8" />
-      <div>
+
+      {/* <hr className="w-full h-2 my-8" /> */}
+
+      {/* <div>
         <h3 className="font-semibold text-lg mb-4">CAREER STRATEGIC PURPOSE</h3>
         <div className="text-[#5E6366]">
           {candidate?.career_strategic_purpose || (
@@ -213,18 +209,20 @@ const CandidateProfile = () => {
             </span>
           )}
         </div>
-      </div>
-      <hr className="w-full h-2 my-8" />
-      <div className="flex flex-col gap-4">
-        <span className="flex gap-5 items-center">
-          <h3 className="font-semibold text-lg">EDUCATION HISTORY</h3>
-          {/* <p className="text-[#5E6366] font-semibold">
+      </div> */}
+
+      {/* <hr className="w-full h-2 my-8" /> */}
+
+      {/* <div className="flex flex-col gap-4"> */}
+      {/* <span className="flex gap-5 items-center"> */}
+      {/* <h3 className="font-semibold text-lg">EDUCATION HISTORY</h3> */}
+      {/* <p className="text-[#5E6366] font-semibold">
             {combinedEducationData.length
               ? `${combinedEducationData.length} degrees`
               : "No education history provided"}
           </p> */}
-        </span>
-        {candidate?.education?.map((education, index: number) => (
+      {/* </span> */}
+      {/* {candidate?.education?.map((education, index: number) => (
           <span key={index} className="flex gap-5 items-center">
             <p className="text-[#5E6366] font-semibold md:w-60">
               {`${education.admission_date || "No year set"} - ${
@@ -237,10 +235,10 @@ const CandidateProfile = () => {
               } at ${education.school_name || "No school"}`}
             </p>
           </span>
-        )) || <p>No education history available</p>}
+        )) || <p>No education history available</p>} */}
 
-        {/* Advanced Education */}
-        {candidate?.advanced_education?.map((education, index: number) =>
+      {/* Advanced Education */}
+      {/* {candidate?.advanced_education?.map((education, index: number) =>
           education.admission_date === null ? (
             ""
           ) : (
@@ -257,10 +255,12 @@ const CandidateProfile = () => {
               </p>
             </span>
           )
-        ) || <p>No education history available</p>}
-      </div>
-      <hr className="w-full h-2 my-8" />
-      <div className="flex flex-col gap-4">
+        ) || <p>No education history available</p>} */}
+      {/* </div> */}
+
+      {/* <hr className="w-full h-2 my-8" /> */}
+
+      {/* <div className="flex flex-col gap-4">
         <span className="flex gap-5 items-center">
           <h3 className="font-semibold text-lg">WORK HISTORY</h3>
           <p className="text-[#5E6366] font-semibold"></p>
@@ -278,12 +278,12 @@ const CandidateProfile = () => {
             </span>
           ) : null
         )}
-      </div>
+      </div> */}
 
-      <hr className="w-full h-2 my-8" />
+      {/* <hr className="w-full h-2 my-8" /> */}
 
       {/* JOB SUMMARY */}
-      <div>
+      {/* <div>
         <h3 className="font-semibold text-lg mb-4">JOB SUMMARY</h3>
         <div className="text-[#5E6366]">
           {candidate?.job_experience?.length ? (
@@ -305,7 +305,7 @@ const CandidateProfile = () => {
             </span>
           )}
         </div>
-      </div>
+      </div> */}
 
       <hr className="w-full h-2 my-8" />
 
@@ -322,7 +322,7 @@ const CandidateProfile = () => {
             }`}
           />
         </div>
-        
+
         <div
           className={`space-y-4 overflow-hidden transition-all duration-500 ${
             isAccordionOpen ? "max-h-full opacity-100" : "max-h-0 opacity-0"
@@ -330,7 +330,9 @@ const CandidateProfile = () => {
         >
           {/* Personal Details */}
           <div>
-            <h3 className="font-semibold text-base mb-4">Personal Details</h3>
+            <h3 className="font-semibold text-base mb-4 text-red">
+              Personal Details
+            </h3>
             <div className="flex flex-col gap-2">
               <CopyText label="First Name" text={candidate?.first_name} />
               <CopyText label="Middle Name" text={candidate?.middle_name} />
@@ -368,12 +370,17 @@ const CandidateProfile = () => {
 
           {/* Education Details */}
           <div>
-            <h3 className="font-semibold text-base mb-4">Education Details</h3>
+            <h3 className="font-semibold text-base mb-4 text-red">
+              Education Details
+            </h3>
             {candidate?.education.map((edu) => (
               <div className="flex flex-col gap-2" key={edu?.id}>
                 <CopyText label="Current Status" text={edu.current_status} />
                 <CopyText label="Degree Type" text={edu.degree_type} />
-                <CopyText label="Country" text={edu.country} />
+                <CopyText
+                  label="Country"
+                  text={getCountryNameFromISO(edu.country)}
+                />
                 <CopyText
                   label="Course Of Study"
                   text={edu.specific_course_of_study}
@@ -386,58 +393,69 @@ const CandidateProfile = () => {
                 <CopyText label="Specific CGPA" text={edu.specific_cgpa} />
                 <CopyText
                   label="Year Admitted"
-                  text={String(edu.admission_date)}
+                  text={formatDate(String(edu.admission_date))}
                 />
                 <CopyText
                   label="Year Graduated"
-                  text={String(edu.graduation_date)}
+                  text={formatDate(String(edu.graduation_date))}
                 />
 
                 {/* ADVANCED DEGREE */}
                 {edu.has_advanced_degree &&
                   candidate?.advanced_education?.map(
-                    (advanced_edu: AdvancedEducation) => 
+                    (advanced_edu: AdvancedEducation) =>
                       advanced_edu.admission_date === null ? (
                         ""
                       ) : (
-                      <div key={advanced_edu?.id}>
-                        <h3 className="font-semibold text-base mb-2">
-                          Advanced Degree
-                        </h3>
-                        <CopyText
-                          label="Advanced Degree Type"
-                          text={advanced_edu?.advanced_degree_type || "N/A"}
-                        />
-                        <CopyText
-                          label="Class of Degree"
-                          text={advanced_edu?.class_of_degree || "N/A"}
-                        />
-                        <CopyText
-                          label="Country"
-                          text={advanced_edu?.country || "N/A"}
-                        />
-                        <CopyText
-                          label="Graduate Type"
-                          text={advanced_edu?.graduate_type || "N/A"}
-                        />
-                        <CopyText
-                          label="School Name"
-                          text={advanced_edu?.school_name || "N/A"}
-                        />
-                        <CopyText
-                          label="Specific CGPA"
-                          text={advanced_edu?.specific_cgpa || "N/A"}
-                        />
-                        <CopyText
-                          label="Year Admitted"
-                          text={String(advanced_edu?.admission_date) || "N/A"}
-                        />
-                        <CopyText
-                          label="Year Graduated"
-                          text={String(advanced_edu?.graduation_date) || "N/A"}
-                        />
-                      </div>
-                    )
+                        <div key={advanced_edu?.id} className="space-y-2">
+                          <h3 className="font-semibold text-base text-blue-500 mb-2">
+                            Advanced Degree
+                          </h3>
+                          <CopyText
+                            label="Advanced Degree Type"
+                            text={advanced_edu?.advanced_degree_type || "N/A"}
+                          />
+                          <CopyText
+                            label="Class of Degree"
+                            text={advanced_edu?.class_of_degree || "N/A"}
+                          />
+                          <CopyText
+                            label="Country"
+                            text={
+                              getCountryNameFromISO(advanced_edu?.country) ||
+                              "N/A"
+                            }
+                          />
+                          <CopyText
+                            label="Graduate Type"
+                            text={advanced_edu?.graduate_type || "N/A"}
+                          />
+                          <CopyText
+                            label="School Name"
+                            text={advanced_edu?.school_name || "N/A"}
+                          />
+                          <CopyText
+                            label="Specific CGPA"
+                            text={advanced_edu?.specific_cgpa || "N/A"}
+                          />
+                          <CopyText
+                            label="Year Admitted"
+                            text={
+                              formatDate(
+                                String(advanced_edu?.admission_date)
+                              ) || "N/A"
+                            }
+                          />
+                          <CopyText
+                            label="Year Graduated"
+                            text={
+                              formatDate(
+                                String(advanced_edu?.graduation_date)
+                              ) || "N/A"
+                            }
+                          />
+                        </div>
+                      )
                   )}
               </div>
             ))}
@@ -445,7 +463,7 @@ const CandidateProfile = () => {
 
           {/* Work Experience Details */}
           <div>
-            <h3 className="font-semibold text-base mb-4">
+            <h3 className="font-semibold text-base mb-4 text-red">
               Work Experience Details
             </h3>
             {/* Career */}
@@ -453,7 +471,7 @@ const CandidateProfile = () => {
               <div key={car?.id} className="flex flex-col gap-2">
                 <CopyText label="Profession" text={car?.profession} />
                 <CopyText label="Sector" text={car?.sector} />
-                <CopyText label="Technical Skill" text={car?.technical_skill} />
+                {/* <CopyText label="Technical Skill" text={car?.technical_skill} /> */}
                 <CopyText
                   label="Year of Experience Post Degree"
                   text={String(car?.years_of_experience_post_degree)}
@@ -472,10 +490,10 @@ const CandidateProfile = () => {
               return (
                 <div key={job?.id} className="flex my-5 flex-col gap-2">
                   <CopyText label="Business Name" text={job?.business_name} />
-                  <CopyText
+                  {/* <CopyText
                     label="Company Description"
                     text={job?.company_description}
-                  />
+                  /> */}
                   <CopyText label="Country" text={job?.country} />
                   <CopyText
                     label="Employment Type"
@@ -491,17 +509,51 @@ const CandidateProfile = () => {
                   <CopyText label="State" text={job?.state} />
                   <CopyText
                     label="Year Started"
-                    text={String(job?.year_started)}
+                    text={formatDate(String(job?.year_started))}
                   />
-                  <CopyText label="Year Ended" text={String(job?.year_ended)} />
+                  <CopyText
+                    label="Year Ended"
+                    text={formatDate(String(job?.year_ended))}
+                  />
                 </div>
               );
             })}
           </div>
 
+          {/* RECOMMENDER DETAILS */}
+          <div>
+            <h3 className="font-semibold text-lg mb-4 text-red">
+              Recommender Details
+            </h3>
+            <div className="space-y-4 m-4">
+              {candidate?.recommenders?.map((referee, index) => (
+                <div>
+                  <CopyText
+                    label="Recommender Type"
+                    text={referee.recommender_type}
+                    className="text-blue-500"
+                  />
+                <div key={index} className="flex justify-between items-center">
+                  <CopyText label="Recommender Name" text={referee.full_name} />
+                  <CopyText
+                    label="Recommender Relationship"
+                    text={referee.relationship}
+                  />
+                  <CopyText label="Email" text={referee.email} />
+                  <CopyText label="Phone Number" text={referee.phone_number} />
+                  <CopyText label="Organization" text={referee.organization} />
+                  <CopyText label="Job Title" text={referee.job_title} />
+                </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* LOAN REFERREES */}
           <div>
-            <h3 className="font-semibold text-lg mb-4">Loan Referees</h3>
+            <h3 className="font-semibold text-lg mb-4 text-red">
+              Loan Referees
+            </h3>
             <div className="space-y-4 m-4">
               {candidate?.loan_referees?.map((referee, index) => (
                 <div key={index} className="flex justify-between items-center">
@@ -516,7 +568,7 @@ const CandidateProfile = () => {
 
           {/* VERIFICATION DOCUMENTS */}
           <div>
-            <h3 className="font-semibold text-lg mb-4">
+            <h3 className="font-semibold text-lg mb-4 text-red">
               VERIFICATION DOCUMENTS
             </h3>
             <div className="space-y-4 m-4">

@@ -85,7 +85,7 @@ const ReferreeDetails = () => {
             <div className={outerDivClass}>
               <div className={divClass}>
                 <label htmlFor="referee1fullname">
-                  Full Name <span className="text-red">*</span>
+                  Full Name
                 </label>
                 <input
                   className="border border-gray-border rounded-md py-2 px-4"
@@ -101,7 +101,7 @@ const ReferreeDetails = () => {
               </div>
               <div className={divClass}>
                 <label htmlFor="referee1email">
-                  Email Address <span className="text-red">*</span>
+                  Email Address
                 </label>
                 <input
                   className="border border-gray-border rounded-md py-2 px-4"
@@ -121,7 +121,7 @@ const ReferreeDetails = () => {
               <PhoneInputField name="referee1phoneNumber" />
               <div className={divClass}>
                 <label htmlFor="referee1relationship">
-                  Relationship <span className="text-red">*</span>
+                  Relationship
                 </label>
                 <div className="relative">
                   <select
@@ -166,7 +166,7 @@ const ReferreeDetails = () => {
             <div className={outerDivClass}>
               <div className={divClass}>
                 <label htmlFor="referee2fullname">
-                  Full Name <span className="text-red">*</span>
+                  Full Name
                 </label>
                 <input
                   className="border border-gray-border rounded-md py-2 px-4"
@@ -182,7 +182,7 @@ const ReferreeDetails = () => {
               </div>
               <div className={divClass}>
                 <label htmlFor="referee2email">
-                  Email Address <span className="text-red">*</span>
+                  Email Address
                 </label>
                 <input
                   className="border border-gray-border rounded-md py-2 px-4"
@@ -202,7 +202,7 @@ const ReferreeDetails = () => {
               <PhoneInputField name="referee2phoneNumber" />
               <div className={divClass}>
                 <label htmlFor="referee2relationship">
-                  Relationship <span className="text-red">*</span>
+                  Relationship
                 </label>
                 <div className="relative">
                   <select

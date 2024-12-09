@@ -46,6 +46,9 @@ export const logoutAccount = async (role: "candidate" | "staff" | "admin") => {
       Cookies.remove("advanced_education2_id");
       Cookies.remove("referee1_id");
       Cookies.remove("referee2_id");
+      Cookies.remove("professionalRecommender");
+      Cookies.remove("academicRecommender");
+      Cookies.remove("otherRecommender");
       break;
     default:
       console.log("Invalid role");

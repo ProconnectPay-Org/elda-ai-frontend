@@ -198,73 +198,41 @@ export const step4Schema = z.object({
   referee2phoneNumber: z.string().optional(),
   referee2relationship: relationshipEnum, // Use enum for select field validation
   // RECOMMENDATION SCHEMA
-  typeOfRecommender: z.enum(["Academic", "Professional", "other"]),
-  recommendationfullname: z.string().min(1, "Full name is required"),
-  recommendationemail: z
+  recommendation1fullname: z.string().min(1, "Full name is required"),
+  recommendation1email: z
     .string()
     .email("Invalid email address")
     .min(1, "Email is required"),
-  recommendationphoneNumber: z.string().min(1, "Phone number is required"),
-  recommendationrelationship: z
-    .string()
-    .min(1, "Relationship is required"),
-  recommendationorganization: z
+  recommendation1phoneNumber: z.string().min(1, "Phone number is required"),
+  recommendation1relationship: z.string().min(1, "Relationship is required"),
+  recommendation1organization: z
     .string()
     .min(1, "Organization or company is required"),
-  recommendationjob: z.string().min(1, "Job title is required"),
+  recommendation1job: z.string().min(1, "Job title is required"),
 
-  // recommendation2fullname: z.string().min(1, "Full name is required"),
-  // recommendation2email: z
-  //   .string()
-  //   .email("Invalid email address")
-  //   .min(1, "Email is required"),
-  // recommendation2phoneNumber: z.string().min(1, "Phone number is required"),
-  // recommendation2relationship: z
-  //   .string()
-  //   .min(1, "Relationship is required")
-  //   .refine(
-  //     (value) =>
-  //       ["Lecturer", "Academic advisor", "Administrative staff"].includes(
-  //         value
-  //       ),
-  //     {
-  //       message: "Invalid relationship option for academic recommender",
-  //     }
-  //   ),
-  // recommendation2organization: z
-  //   .string()
-  //   .min(1, "Organization or company is required"),
-  // recommendation2job: z.string().min(1, "Job title is required"),
+  recommendation2fullname: z.string().min(1, "Full name is required"),
+  recommendation2email: z
+    .string()
+    .email("Invalid email address")
+    .min(1, "Email is required"),
+  recommendation2phoneNumber: z.string().min(1, "Phone number is required"),
+  recommendation2relationship: z.string().min(1, "Relationship is required"),
+  recommendation2organization: z
+    .string()
+    .min(1, "Organization or company is required"),
+  recommendation2job: z.string().min(1, "Job title is required"),
 
-  // recommendation3fullname: z.string().min(1, "Full name is required"),
-  // recommendation3email: z
-  //   .string()
-  //   .email("Invalid email address")
-  //   .min(1, "Email is required"),
-  // recommendation3phoneNumber: z.string().min(1, "Phone number is required"),
-  // recommendation3relationship: z
-  //   .string()
-  //   .min(1, "Relationship is required")
-  //   .refine(
-  //     (value) =>
-  //       [
-  //         "Past Employer",
-  //         "Present Employer",
-  //         "Colleague",
-  //         "HR",
-  //         "Manager",
-  //         "Lecturer",
-  //         "Academic advisor",
-  //         "Administrative staff",
-  //       ].includes(value),
-  //     {
-  //       message: "Invalid relationship option for other recommender",
-  //     }
-  //   ),
-  // recommendation3organization: z
-  //   .string()
-  //   .min(1, "Organization or company is required"),
-  // recommendation3job: z.string().min(1, "Job title is required"),
+  recommendation3fullname: z.string().min(1, "Full name is required"),
+  recommendation3email: z
+    .string()
+    .email("Invalid email address")
+    .min(1, "Email is required"),
+  recommendation3phoneNumber: z.string().min(1, "Phone number is required"),
+  recommendation3relationship: z.string().min(1, "Relationship is required"),
+  recommendation3organization: z
+    .string()
+    .min(1, "Organization or company is required"),
+  recommendation3job: z.string().min(1, "Job title is required"),
 });
 
 export const step5Schema = z.object({

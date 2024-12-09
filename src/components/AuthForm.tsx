@@ -37,7 +37,7 @@ const AuthForm = () => {
       const response = await adminSignIn({
         email: data.email,
         password: data.password,
-      });      
+      });
 
       if (response) {
         toast({
@@ -56,7 +56,6 @@ const AuthForm = () => {
           Cookies.set("staff_access_token", response.access, { expires: 7 });
           navigate("/assigned-candidates");
         } else if (userRole === "candidate") {
-          
           Cookies.set("candidate_access_token", response.access, {
             expires: 7,
           });
@@ -107,6 +106,9 @@ const AuthForm = () => {
           Cookies.set("referee2_id", response.candidate.loan_referees[1], {
             expires: 7,
           });
+          Cookies.set("ProfessionalRecommender", response.recommenders[0]);
+          Cookies.set("AcademicRecommender", response.recommenders[1]);
+          Cookies.set("otherRecommender", response.recommenders[2]);
           if (response.candidate.has_completed_application) {
             navigate("/candidate/status");
           } else {
