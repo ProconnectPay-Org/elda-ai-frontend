@@ -4,7 +4,7 @@ import { CandidateData } from "@/types";
 import { allTabsColumns } from "./AllTabsColumns";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Cookies from "js-cookie";
-import { deleteStaff, getAllCandidates } from "@/lib/actions/user.actions";
+import { deleteStaff, getAllTableCandidates } from "@/lib/actions/user.actions";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "./ui/use-toast";
@@ -56,9 +56,7 @@ const TabsComponent = () => {
   } = useQuery({
     queryKey: ["allCandidates", page],
     queryFn: async () => {
-      if (!token)
-        throw new Error("Access token is missing. Please sign in again.");
-      return page ? getAllCandidates(token, page) : getAllCandidates(token);
+      return page ? getAllTableCandidates(page) : getAllTableCandidates();
     },
     enabled: !!token,
     staleTime: 5 * 1000 * 60,
@@ -72,7 +70,7 @@ const TabsComponent = () => {
       );
       queryClient.prefetchQuery({
         queryKey: ["allCandidates", nextPage],
-        queryFn: () => getAllCandidates(token, nextPage),
+        queryFn: () => getAllTableCandidates(nextPage),
       });
     }
   }, [page, allCandidates, queryClient]);
@@ -118,16 +116,16 @@ const TabsComponent = () => {
     allCandidates?.results.map((candidate: CandidateData, index: number) => ({
       ...candidate,
       serialNumber: startingIndex + index + 1,
-      full_name: candidate.user?.full_name || "No name",
+      full_name: candidate?.full_name || "No name",
       country: candidate.country_of_birth || "No country",
-      assigned_university: candidate.assigned_university1 || "None Assigned",
-      assigned_course: candidate.assigned_course1 || "No course assigned",
+      assigned_university1: candidate.assigned_university1 || "None Assigned",
+      assigned_course1: candidate.assigned_course1 || "No course assigned",
       school_application_status:
         candidate.school_application_status || "No status",
       resume_status: candidate.resume_status || "No status",
       sop_status: candidate.sop_status || "No status",
       duplicate: candidate.duplicate || "none",
-    })) || [];
+    })) || [];    
 
   const assignedData = tableData
     .filter((candidate) => candidate.assigned)

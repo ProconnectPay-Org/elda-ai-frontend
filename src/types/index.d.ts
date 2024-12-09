@@ -344,6 +344,7 @@ export type CandidateData = {
   duplicate?: string;
   email_address: string;
   first_name?: string;
+  full_name?: string;
   last_name?: string;
   middle_name?: string;
   name: string;

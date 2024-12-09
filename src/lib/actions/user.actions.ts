@@ -167,6 +167,27 @@ export const getAllCandidates = async (
   }
 };
 
+export const getAllTableCandidates = async (page?: number) => {
+  const token = Cookies.get("access_token");
+
+  if (!token) throw new Error("Access token is missing. Please sign in again.");
+  const url = !page
+    ? `${API_URL}all-candidates-medium/`
+    : `${API_URL}all-candidates-medium/?page=${page}`;
+  try {
+    const response = await axios.get(`${url}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching all candidates info:", error);
+    throw error;
+  }
+};
+
 export const getSingleCandidate = async (id: number | string) => {
   const token =
     Cookies.get("staff_access_token") ||
@@ -178,6 +199,27 @@ export const getSingleCandidate = async (id: number | string) => {
     headers: { Authorization: `Bearer ${token}` },
   });
   return response.data;
+};
+
+export const getCandidatesToAssign = async (count?: number) => {
+  const token = Cookies.get("access_token");
+
+  if (!token) throw new Error("Access token is missing. Please sign in again.");
+
+  const url = `${API_URL}all-candidates-small/?page_size=${count || 1000}`; // Default count to a high number if not provided
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching all candidates info:", error);
+    throw error;
+  }
 };
 
 export const getAllStaff = async (page?: number) => {

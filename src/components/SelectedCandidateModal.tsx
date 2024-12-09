@@ -72,7 +72,7 @@ const SelectedCandidateModal = ({ onClose, id }: ModalProps) => {
             </div>
           </div>
           <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
-            <div>
+            <div className="w-1/2">
               <label>Phone Number</label>
               <span
                 onClick={() =>
@@ -81,19 +81,11 @@ const SelectedCandidateModal = ({ onClose, id }: ModalProps) => {
                 className="text-primary font-medium flex items-center gap-1"
               >
                 <PhoneCallIcon size={16} />
-                {candidateData?.phone_number || "No Phone Number"}
+                {candidateData?.phone_number}
                 <CopyIcon size={16} cursor="pointer" />
               </span>
             </div>
             <div className="w-1/2">
-              <label>Recommended School</label>
-              <p className="text-primary font-medium">
-                {candidateData?.assigned_university1}
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
-            <div>
               <label>Email Address</label>
               <span
                 onClick={() =>
@@ -102,16 +94,38 @@ const SelectedCandidateModal = ({ onClose, id }: ModalProps) => {
                 className="text-primary font-medium flex items-center gap-1"
               >
                 <MailIcon size={16} />
-                <span className="truncate w-32">
-                  {candidateData?.user?.email || "No Email Address"}
-                </span>
+                {candidateData?.user?.email}
                 <CopyIcon size={16} cursor="pointer" />
               </span>
             </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
             <div className="w-1/2">
-              <label>Recommended Course</label>
+              <label>Recommended School 1</label>
+              <p className="text-primary font-medium">
+                {candidateData?.assigned_university1}
+              </p>
+            </div>
+            <div className="w-1/2">
+              <label>Recommended Course 1</label>
               <p className="text-primary font-medium">
                 {candidateData?.assigned_course1}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
+            <div className="w-1/2">
+              <label>Recommended School 2</label>
+              <p className="text-primary font-medium">
+                {candidateData?.assigned_university2}
+              </p>
+            </div>
+            <div className="w-1/2">
+              <label>Recommended Course 2</label>
+              <p className="text-primary font-medium">
+                {candidateData?.assigned_course2}
               </p>
             </div>
           </div>

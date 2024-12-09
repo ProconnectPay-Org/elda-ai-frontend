@@ -90,9 +90,7 @@ const ResumePdf = () => {
       <div className="resume-inner-container">
         <h2 className="resume-title-text">CAREER STRATEGIC PURPOSE</h2>
         <p className="text-sm">
-          {formData?.career_strategic_purpose ||
-            formData?.sop?.[0]?.text ||
-            "Not Provided"}
+          {formData?.career_strategic_purpose || "Not Provided"}
         </p>
       </div>
 

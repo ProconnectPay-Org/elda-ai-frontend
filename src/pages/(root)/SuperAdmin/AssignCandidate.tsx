@@ -7,14 +7,13 @@ import ReactSelect, { MultiValue, SingleValue } from "react-select";
 import {
   assignCandidateToStaff,
   getAllStaff,
+  getCandidatesToAssign,
 } from "@/lib/actions/user.actions";
 import { CandidateData, OptionType } from "@/types";
 import { toast } from "@/components/ui/use-toast";
-import { useCandidates } from "@/hooks/useCandidiates";
 import { useQuery } from "@tanstack/react-query";
 
 const AssignCandidate: React.FC = () => {
-  const { allCandidates, allCandidatesLoading } = useCandidates();
   const [selectedStaff, setSelectedStaff] =
     useState<SingleValue<OptionType>>(null);
   const [selectedCandidates, setSelectedCandidates] = useState<
@@ -28,6 +27,15 @@ const AssignCandidate: React.FC = () => {
   const { data: staffResponse, isLoading: isLoadingStaff } = useQuery({
     queryKey: ["staff"],
     queryFn: () => getAllStaff(),
+    staleTime: 5 * 1000,
+  });
+
+  const { data: allCandidates, isLoading: allCandidatesLoading } = useQuery({
+    queryKey: ["candidates"],
+    queryFn: async () => {
+      const count = 1000;
+      return getCandidatesToAssign(count);
+    },
     staleTime: 5 * 1000,
   });
 
@@ -85,7 +93,7 @@ const AssignCandidate: React.FC = () => {
       );
       const options = unassignedCandidates.map((candidate: CandidateData) => ({
         value: candidate.id,
-        label: candidate.user?.full_name,
+        label: candidate?.full_name,
       }));
       setCandidateOptions(options);
     }

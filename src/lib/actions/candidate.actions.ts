@@ -1,7 +1,7 @@
 import {
   AdvancedEducation,
   CandidateCareer,
-  ComplaintType,  
+  ComplaintType,
   EducationHistory,
   JobExperience,
   LoanReferee,
@@ -12,7 +12,9 @@ import Cookies from "js-cookie";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export const updatePersonalDetails = async (personalDetails: updateCandidateProfile) => {
+export const updatePersonalDetails = async (
+  personalDetails: updateCandidateProfile
+) => {
   const token = Cookies.get("candidate_access_token");
   const canId = Cookies.get("candidate_id");
   return await axios.patch(
@@ -165,7 +167,9 @@ export const fetchCareerData = async () => {
   return data;
 };
 
-export const fetchJobExperienceData = async (work_experience_id: string | undefined) => {
+export const fetchJobExperienceData = async (
+  work_experience_id: string | undefined
+) => {
   const token = Cookies.get("candidate_access_token");
 
   const { data } = await axios.get(
@@ -249,6 +253,21 @@ export const fetchReferee2 = async () => {
   return data;
 };
 
+export const submitPostRecommendationDetails = async (recommenderData: any) => {
+  const token = Cookies.get("candidate_access_token");
+  try {
+    axios.post(`${API_URL}recommenders/`, recommenderData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error) {
+    console.error("Error during recommendation details submission:", error);
+    throw error;
+  }
+};
+
 export const submitDocuments = async (
   formData: FormData,
   onUploadProgress: (progressEvent: AxiosProgressEvent) => void // Use the correct type here
@@ -268,8 +287,6 @@ export const submitDocuments = async (
     }
   );
 };
-
-
 
 export const fetchVerificationDocument = async () => {
   const token = Cookies.get("candidate_access_token");

@@ -42,7 +42,7 @@ const CandidateSelection = () => {
         status: candidate.status || "Inactive",
         assigned_course: candidate.assigned_course1 || "No course assigned",
         assigned_school: candidate.assigned_university1 || "No school assigned",
-       
+
         resume_status: candidate.resume_status || "Not Started",
         sop_status: candidate.sop_status || "Not Started",
         school_application_status:
@@ -108,7 +108,7 @@ const CandidateSelection = () => {
                   <div className="w-1/2">
                     <label>Full Name</label>
                     <p className="text-primary font-medium">
-                      {selectedRowData.name}
+                      {selectedRowData.user?.full_name}
                     </p>
                   </div>
                   <div className="w-1/2 flex flex-col items-start">
@@ -125,7 +125,7 @@ const CandidateSelection = () => {
                   </div>
                 </div>
                 <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
-                  <div>
+                  <div  className="w-1/2">
                     <label>Phone Number</label>
                     <span
                       onClick={() =>
@@ -141,15 +141,7 @@ const CandidateSelection = () => {
                       <CopyIcon size={16} cursor="pointer" />
                     </span>
                   </div>
-                  <div className="w-1/2">
-                    <label>Recommended School</label>
-                    <p className="text-primary font-medium">
-                      {selectedRowData.recommended_school}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
-                  <div>
+                  <div  className="w-1/2">
                     <label>Email Address</label>
                     <span
                       onClick={() =>
@@ -165,13 +157,38 @@ const CandidateSelection = () => {
                       <CopyIcon size={16} cursor="pointer" />
                     </span>
                   </div>
+                </div>
+
+                <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
                   <div className="w-1/2">
-                    <label>Recommended Course</label>
+                    <label>Recommended School 1</label>
                     <p className="text-primary font-medium">
-                      {selectedRowData.recommended_course}
+                      {selectedRowData.assigned_university1}
+                    </p>
+                  </div>
+                  <div className="w-1/2">
+                    <label>Recommended Course 1</label>
+                    <p className="text-primary font-medium">
+                      {selectedRowData.assigned_course1}
                     </p>
                   </div>
                 </div>
+
+                <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
+                  <div className="w-1/2">
+                    <label>Recommended School 2</label>
+                    <p className="text-primary font-medium">
+                      {selectedRowData.assigned_university2}
+                    </p>
+                  </div>
+                  <div className="w-1/2">
+                    <label>Recommended Course 2</label>
+                    <p className="text-primary font-medium">
+                      {selectedRowData.assigned_course2}
+                    </p>
+                  </div>
+                </div>
+
                 <div className="flex flex-col md:flex-row items-center gap-5 md:gap-0 justify-between">
                   <DottedBox
                     className="border-red rounded-md text-sm font-bold p-2 hover:bg-pale-bg"

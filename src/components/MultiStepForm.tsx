@@ -20,6 +20,7 @@ import RegisterSuccessModal from "./RegisterSuccessModal";
 import {
   postJobExperience,
   submitEducationDetails,
+  submitPostRecommendationDetails,
   submitRefereeDetails,
   submitWorkExperience,
   toggleApplicationStatus,
@@ -232,6 +233,19 @@ const MultiStepForm = () => {
           relationship: currentFormData.referee2relationship,
           candidate: id,
         };
+
+        const recommenderData: any = {
+          recommender_type: currentFormData.typeOfRecommender,
+          full_name: currentFormData.recommendationfullname,
+          email: currentFormData.recommendationemail,
+          phone_number: currentFormData.recommendationphoneNumber,
+          relationship: currentFormData.recommendationrelationship,
+          organization: currentFormData.recommendationorganization,
+          job_title: currentFormData.recommendationjob,
+          candidate: id,
+        };
+
+        await submitPostRecommendationDetails(recommenderData); 
 
         await submitRefereeDetails(referee1Data, referee2Data);
       } else if (currentStep === steps.length - 1) {

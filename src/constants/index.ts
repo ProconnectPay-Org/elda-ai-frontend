@@ -1339,6 +1339,7 @@ const supportedSchools = [
   { id: 305, name: "Queens University" },
   { id: 306, name: "University of Glasgow" },
   { id: 307, name: "Leiden University" },
+  { id: 308, name: "Montclair State University" },
 ];
 
 const schoolsWithUniqueIds = supportedSchools.map((school, index) => ({

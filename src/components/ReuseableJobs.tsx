@@ -71,13 +71,17 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
   const isJobExpLoading = jobExperienceQueries.some((query) => query.isLoading);
   const jobExperienceData = jobExperienceQueries.map((query) => query.data);
 
+  console.log(jobExperienceData);
+
   useEffect(() => {
-    if (jobExperienceData) {
+    if (
+      jobExperienceData &&
+      !getValues(`jobExperiences.${index}.initialized`)
+    ) {
       const filteredJobExperienceData = jobExperienceData.filter(
         (experience) => experience?.business_name
       );
 
-      // Only set the data for the current index
       if (filteredJobExperienceData[index]) {
         setValue(
           `jobExperiences.${index}.workPlaceName`,
@@ -110,7 +114,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
         setJobStatus(jobStatusFromData);
 
         if (jobStatusFromData === "current") {
-          setValue(`jobExperiences.${index}.endedDate`, "1960-01-01"); // Or set to empty if that's your logic
+          setValue(`jobExperiences.${index}.endedDate`, "1960-01-01");
         } else {
           setValue(
             `jobExperiences.${index}.endedDate`,
@@ -126,6 +130,9 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
           `jobExperiences.${index}.jobSummary`,
           filteredJobExperienceData[index].job_summary || ""
         );
+
+        // Mark only the current job experience as initialized
+        setValue(`jobExperiences.${index}.initialized`, true);
       }
     }
   }, [jobExperienceData, setValue, index]);
@@ -148,9 +155,6 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
           `jobExperiences.${index}.jobSummary`,
           refinedContent.refined_content
         );
-
-        console.log(refinedContent.refined_content);
-        
       } else {
         toast({
           variant: "destructive",

@@ -168,3 +168,31 @@ export const getEditedCandidate = async (id: string) => {
   );
   return data;
 };
+
+export const patchEducationDetail = async (id: string) => {
+  const staffToken = Cookies.get("staff_access_token");
+  const { data } = await axios.get(
+    `${API_URL}staff-dashboard/edit-candidate/education-detail/${id}/`,
+    {
+      headers: {
+        Authorization: `Bearer ${staffToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return data;
+};
+
+export const patchJobExperience = async (id: string) => {
+  const staffToken = Cookies.get("staff_access_token");
+  const { data } = await axios.get(
+    `${API_URL}staff-dashboard/edit-candidate/job-experience/${id}/`,
+    {
+      headers: {
+        Authorization: `Bearer ${staffToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return data;
+};

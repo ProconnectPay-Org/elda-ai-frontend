@@ -25,7 +25,7 @@ export const allTabsColumns = (
     accessorKey: "full_name",
     header: "Candidate Name",
     cell: ({ row }) => (
-      <p className="capitalize">{row.original.user?.full_name || "No name"}</p>
+      <p className="capitalize">{row.original?.full_name || "No name"}</p>
     ),
   },
   {
@@ -37,8 +37,8 @@ export const allTabsColumns = (
     },
   },
   {
-    accessorKey: "assigned_course",
-    header: "Assigned Course",
+    accessorKey: "assigned_course1",
+    header: "Assigned Course 1",
     cell: ({ row }) => (
       <p className="capitalize">
         {row.original.assigned_course1 || "No course assigned"}
@@ -46,8 +46,8 @@ export const allTabsColumns = (
     ),
   },
   {
-    accessorKey: "assigned_school",
-    header: "Assigned School",
+    accessorKey: "assigned_university1",
+    header: "Assigned School 1",
     cell: ({ row }) => (
       <p className="capitalize">
         {row.original.assigned_university1 || "No school assigned"}
@@ -132,7 +132,7 @@ export const allTabsColumns = (
         setIsModalOpen(false);
       };
 
-      const { id, resume_status, sop_status, user } = row.original;
+      const { id, resume_status, sop_status, full_name } = row.original;
 
       const isResumeDisabled = resume_status !== "Completed";
       const isSopDisabled = sop_status !== "Completed";
@@ -187,10 +187,10 @@ export const allTabsColumns = (
               <DropdownMenuItem>
                 <Button
                   onClick={() => {
-                    if (user?.id) {
+                    if (id) {
                       handleDeleteCandidate(
-                        String(user.id),
-                        user.full_name || "Unknown User"
+                        String(id),
+                        full_name || "Unknown User"
                       );
                     } else {
                       console.error("User ID is undefined");

@@ -162,7 +162,7 @@ const CandidateProfile = () => {
                 <Link
                   to={
                     candidate.resume_status === "Completed"
-                      ? `/refine-resume/final-resume/${id}`
+                      ? `/download-resume/${id}`
                       : `/refine-resume/${id}`
                   }
                 >
@@ -175,8 +175,8 @@ const CandidateProfile = () => {
                 <Link
                   to={
                     candidate.sop_status === "Completed"
-                      ? `${candidate.sop[0].file}`
-                      : `/sop/${id}`
+                      ? `/sop/${id}`
+                      : `/craft-sop/${id}`
                   }
                 >
                   {candidate.sop_status === "Completed"
@@ -289,7 +289,7 @@ const CandidateProfile = () => {
           {candidate?.job_experience?.length ? (
             candidate.job_experience.map((job) =>
               job.job_summary ? (
-                <div key={job.id}>
+                <div key={job.id} className="mb-5">
                   <p className="mb-3">{job.job_summary}</p>
                   <CopyIcon
                     size={16}

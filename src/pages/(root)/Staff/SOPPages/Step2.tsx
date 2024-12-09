@@ -1,12 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { ChevronLeftIcon } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useEffect, useState } from "react";
 import { useCandidates } from "@/hooks/useCandidiates";
 import { postEditedCandidate } from "@/lib/actions/staff.actions";
@@ -87,17 +80,14 @@ const Step2 = ({
               <label htmlFor="programType" className="text-sm">
                 Program Type
               </label>
-              <Select value={programType} onValueChange={setProgramType}>
-                <SelectTrigger className="w-full p-0 h-full rounded-none bg-transparent outline-none border-none">
-                  <SelectValue placeholder="MBA" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="hnd">HND</SelectItem>
-                  <SelectItem value="master">Masters</SelectItem>
-                  <SelectItem value="bachelor">Bachelor</SelectItem>
-                  <SelectItem value="mba">MBA</SelectItem>
-                </SelectContent>
-              </Select>
+              <input
+                type="text"
+                id="programType"
+                name="programType"
+                value={programType}
+                onChange={(e) => setProgramType(e.target.value)}
+                className="bg-transparent"
+              />
             </div>
             <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
               <label htmlFor="assignedUniversity" className="text-sm">

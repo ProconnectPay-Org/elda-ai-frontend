@@ -22,7 +22,6 @@ const PhoneInputField = ({ name }: { name: string }) => {
             country={"ng"}
             inputProps={{
               name: { name },
-              required: true,
               ref,
             }}
             containerClass="react-tel-input"

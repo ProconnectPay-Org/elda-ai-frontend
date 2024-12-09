@@ -19,7 +19,10 @@ import {
 } from ".";
 import RootLayout from "@/layouts/RootLayout";
 import { useQuery } from "@tanstack/react-query";
-import { craftCandidateResume } from "@/lib/actions/staff.actions";
+import {
+  craftCandidateResume,
+  postEditedCandidate,
+} from "@/lib/actions/staff.actions";
 import { useNavigate, useParams } from "react-router-dom";
 
 const steps = [
@@ -58,9 +61,13 @@ const RefineResume = () => {
     return savedStep ? Number(savedStep) : 0;
   });
   const [formData, setFormData] = useState<any>({});
+  const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate()
-
+  if (!id) {
+    console.error("ID is missing from the URL.");
+    return null;
+  }
+  const navigate = useNavigate();
 
   const { data: resumeData } = useQuery({
     queryKey: ["candidateResume"],
@@ -91,20 +98,46 @@ const RefineResume = () => {
     }
   };
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     const currentFormData = { ...formData, ...data };
+    setIsLoading(true);
 
-    if (currentStep === steps.length - 1) {
-      if (resumeData && resumeData.resume) {
-        navigate(`/refine-resume/final-resume/${id}`);
+    try {
+      if (currentStep === 0) {
+        // Step 1: PERSONAL DETAILS
+        if (!id) {
+          console.error("Candidate ID is missing.");
+          return;
+        }
+        const personalData = {
+          city_of_birth: currentFormData.city,
+          state_of_birth: currentFormData.state,
+          phone_number: currentFormData.phoneNumber,
+        };
+        await postEditedCandidate(id, personalData);
+      } else if (currentStep === steps.length - 1) {
+        // Final Step: Navigate to Final Resume
+        if (resumeData?.resume) {
+          navigate(`/refine-resume/final-resume/${id}`);
+          return; // Prevent further execution
+        } else {
+          console.error("Resume URL not found.");
+        }
       } else {
-        console.error("Resume URL not found.");
+        // Other Steps: Save data and proceed
+        setFormData(currentFormData);
       }
-    } else {
-      setFormData(currentFormData);
-      nextStep();
+
+      if (currentStep < steps.length - 1) {
+        nextStep(); // Move to the next step
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
+
   const progressBarWidth = ((currentStep + 1) / totalSteps) * 100;
 
   return (
@@ -134,9 +167,14 @@ const RefineResume = () => {
             )}
             <button
               type="submit"
+              disabled={isLoading}
               className="form-btn bg-red text-white w-28 px-10 py-2 rounded-md flex items-center justify-center"
             >
-              {currentStep === steps.length - 1 ? "Submit" : "Next"}
+              {isLoading
+                ? "Saving..."
+                : currentStep === steps.length - 1
+                ? "Submit"
+                : "Next"}
             </button>
           </div>
         </form>

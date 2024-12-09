@@ -6,6 +6,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
+  VisibilityState,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -27,6 +28,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "./ui/button";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -44,7 +52,10 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const [selectedFilter, setSelectedFilter] = React.useState<string>("full_name");
+  const [selectedFilter, setSelectedFilter] =
+    React.useState<string>("full_name");
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
 
   const table = useReactTable({
     data,
@@ -53,8 +64,10 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
     state: {
       columnFilters,
+      columnVisibility,
     },
     initialState: {
       pagination: {
@@ -114,6 +127,7 @@ export function DataTable<TData, TValue>({
             <SelectGroup>
               <SelectLabel>Filters</SelectLabel>
               <SelectItem value="full_name">Name</SelectItem>
+              <SelectItem value="email">Email</SelectItem>
               <SelectItem value="assigned_course">Assigned Course</SelectItem>
               <SelectItem value="assigned_school">Assigned School</SelectItem>
               <SelectItem value="resume_status">Resume Status</SelectItem>
@@ -134,6 +148,33 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-xs"
         />
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              Columns
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                );
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div className="rounded-md border border-gray">
         <Table>

@@ -1,6 +1,7 @@
 import PhoneInputField from "@/components/PhoneInputField";
 import { getErrorMessage } from "@/lib/utils";
 import { Step4FormData } from "@/types";
+import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 const professionalRelationshipOptions = [
@@ -31,6 +32,24 @@ const Recommendation = () => {
     register,
     formState: { errors },
   } = useFormContext<Step4FormData>();
+  const [relationshipOptions, setRelationshipOptions] = useState<string[]>([]);
+
+  const handleTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedType = event.target.value;
+    switch (selectedType) {
+      case "Academic":
+        setRelationshipOptions(academicsRelationshipOptions);
+        break;
+      case "Professional":
+        setRelationshipOptions(professionalRelationshipOptions);
+        break;
+      case "other":
+        setRelationshipOptions(otherRelationshipOptions);
+        break;
+      default:
+        setRelationshipOptions([]);
+    }
+  };
 
   const divClass = "flex flex-col w-full md:w-1/2";
   const outerDivClass =
@@ -44,37 +63,77 @@ const Recommendation = () => {
 
           {/* PROFESSIONALS */}
           <div>
-            <p className="font-semibold mb-3 text-lg">Professional</p>
+            <div className={`${divClass} mb-5 w-full`}>
+              <label htmlFor="typeOfRecommender">
+                Type of recommender <span className="text-red">*</span>
+              </label>
+              <div className="relative">
+                <select
+                  className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
+                  id="typeOfRecommender"
+                  {...register("typeOfRecommender")}
+                  onChange={handleTypeChange}
+                >
+                  <option value="">Select type of recommender</option>
+                  <option value="Academic">Academic</option>
+                  <option value="Professional">Professional</option>
+                  <option value="other">Others</option>
+                </select>
+                <span className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    ></path>
+                  </svg>
+                </span>
+              </div>
+              {errors.typeOfRecommender && (
+                <span className="text-red text-sm">
+                  {getErrorMessage(errors.typeOfRecommender)}
+                </span>
+              )}
+            </div>
+            {/* <p className="font-semibold mb-3 text-lg">Professional</p> */}
+
             <div className={outerDivClass}>
               <div className={divClass}>
-                <label htmlFor="recommendation1fullname">
+                <label htmlFor="recommendationfullname">
                   Full Name <span className="text-red">*</span>
                 </label>
                 <input
                   className="border border-gray-border rounded-md py-2 px-4"
-                  id="recommendation1fullname"
-                  {...register("recommendation1fullname")}
+                  id="recommendationfullname"
+                  {...register("recommendationfullname")}
                   placeholder="Enter recommender's full name"
                 />
-                {errors.recommendation1fullname && (
+                {errors.recommendationfullname && (
                   <span className="text-red text-sm">
-                    {getErrorMessage(errors.recommendation1fullname)}
+                    {getErrorMessage(errors.recommendationfullname)}
                   </span>
                 )}
               </div>
               <div className={divClass}>
-                <label htmlFor="recommendation1email">
+                <label htmlFor="recommendationemail">
                   Official Email Address <span className="text-red">*</span>
                 </label>
                 <input
                   className="border border-gray-border rounded-md py-2 px-4"
-                  id="recommendation1email"
-                  {...register("recommendation1email")}
+                  id="recommendationemail"
+                  {...register("recommendationemail")}
                   placeholder="Enter recommender's email address"
                 />
-                {errors.recommendation1email && (
+                {errors.recommendationemail && (
                   <span className="text-red text-sm">
-                    {getErrorMessage(errors.recommendation1email)}
+                    {getErrorMessage(errors.recommendationemail)}
                   </span>
                 )}
               </div>
@@ -82,20 +141,20 @@ const Recommendation = () => {
           </div>
 
           <div className={outerDivClass}>
-            <PhoneInputField name="recommendation1phoneNumber" />
+            <PhoneInputField name="recommendationphoneNumber" />
             <div className={divClass}>
-              <label htmlFor="recommendation1relationship">
-                Relationship with professional recommender{" "}
+              <label htmlFor="recommendationrelationship">
+                Relationship with recommender{" "}
                 <span className="text-red">*</span>
               </label>
               <div className="relative">
                 <select
                   className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
-                  id="recommendation1relationship"
-                  {...register("recommendation1relationship")}
+                  id="recommendationrelationship"
+                  {...register("recommendationrelationship")}
                 >
                   <option value="">Select relationship</option>
-                  {professionalRelationshipOptions.map((option) => (
+                  {relationshipOptions.map((option) => (
                     <option key={option} value={option}>
                       {option.charAt(0).toUpperCase() + option.slice(1)}
                     </option>
@@ -118,9 +177,9 @@ const Recommendation = () => {
                   </svg>
                 </span>
               </div>
-              {errors.recommendation1relationship && (
+              {errors.recommendationrelationship && (
                 <span className="text-red text-sm">
-                  {getErrorMessage(errors.recommendation1relationship)}
+                  {getErrorMessage(errors.recommendationrelationship)}
                 </span>
               )}
             </div>
@@ -128,44 +187,53 @@ const Recommendation = () => {
 
           <div className={outerDivClass}>
             <div className={divClass}>
-              <label htmlFor="recommendation1organization">
-                Organization or Company of professional recommender{" "}
+              <label htmlFor="recommendationorganization">
+                Organization or Company of recommender{" "}
                 <span className="text-red">*</span>
               </label>
               <input
                 className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
-                id="recommendation1organization"
-                {...register("recommendation1organization")}
+                id="recommendationorganization"
+                {...register("recommendationorganization")}
               />
 
-              {errors.recommendation1organization && (
+              {errors.recommendationorganization && (
                 <span className="text-red text-sm">
-                  {getErrorMessage(errors.recommendation1organization)}
+                  {getErrorMessage(errors.recommendationorganization)}
                 </span>
               )}
             </div>
 
             <div className={divClass}>
-              <label htmlFor="recommendation1job">
-                Job Title of professional recommender{" "}
-                <span className="text-red">*</span>
+              <label htmlFor="recommendationjob">
+                Job Title of recommender <span className="text-red">*</span>
               </label>
               <input
                 className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
-                id="recommendation1job"
-                {...register("recommendation1job")}
+                id="recommendationjob"
+                {...register("recommendationjob")}
               />
 
-              {errors.recommendation1job && (
+              {errors.recommendationjob && (
                 <span className="text-red text-sm">
-                  {getErrorMessage(errors.recommendation1job)}
+                  {getErrorMessage(errors.recommendationjob)}
                 </span>
               )}
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-          {/* ACADEMICS */}
-          <div>
+export default Recommendation;
+
+{
+  /* ACADEMICS */
+}
+{
+  /* <div>
             <p className="font-semibold mb-3 text-lg">Academics</p>
 
             <div className={outerDivClass}>
@@ -202,9 +270,11 @@ const Recommendation = () => {
                 )}
               </div>
             </div>
-          </div>
+          </div> */
+}
 
-          <div className={outerDivClass}>
+{
+  /* <div className={outerDivClass}>
             <PhoneInputField name="recommendation2phoneNumber" />
             <div className={divClass}>
               <label htmlFor="recommendation2relationship">
@@ -246,9 +316,11 @@ const Recommendation = () => {
                 </span>
               )}
             </div>
-          </div>
+          </div> */
+}
 
-          <div className={outerDivClass}>
+{
+  /* <div className={outerDivClass}>
             <div className={divClass}>
               <label htmlFor="recommendation1organization">
                 Organization or Company of academic recommender{" "}
@@ -284,10 +356,14 @@ const Recommendation = () => {
                 </span>
               )}
             </div>
-          </div>
+          </div> */
+}
 
-          {/* OTHERS */}
-          <div>
+{
+  /* OTHERS */
+}
+{
+  /* <div>
             <p className="font-semibold mb-3 text-lg">Others</p>
             <div className={outerDivClass}>
               <div className={divClass}>
@@ -323,9 +399,11 @@ const Recommendation = () => {
                 )}
               </div>
             </div>
-          </div>
+          </div> */
+}
 
-          <div className={outerDivClass}>
+{
+  /* <div className={outerDivClass}>
             <PhoneInputField name="recommendation3phoneNumber" />
             <div className={divClass}>
               <label htmlFor="recommendation3relationship">
@@ -367,9 +445,11 @@ const Recommendation = () => {
                 </span>
               )}
             </div>
-          </div>
+          </div> */
+}
 
-          <div className={outerDivClass}>
+{
+  /* <div className={outerDivClass}>
             <div className={divClass}>
               <label htmlFor="recommendation3organization">
                 Organization or Company of recommender{" "}
@@ -404,11 +484,5 @@ const Recommendation = () => {
                 </span>
               )}
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default Recommendation;
+          </div> */
+}
