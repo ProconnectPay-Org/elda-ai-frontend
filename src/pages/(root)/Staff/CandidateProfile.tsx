@@ -527,23 +527,32 @@ const CandidateProfile = () => {
             </h3>
             <div className="space-y-4 m-4">
               {candidate?.recommenders?.map((referee, index) => (
-                <div>
+                <div key={index}>
                   <CopyText
                     label="Recommender Type"
                     text={referee.recommender_type}
                     className="text-blue-500"
                   />
-                <div key={index} className="flex justify-between items-center">
-                  <CopyText label="Recommender Name" text={referee.full_name} />
-                  <CopyText
-                    label="Recommender Relationship"
-                    text={referee.relationship}
-                  />
-                  <CopyText label="Email" text={referee.email} />
-                  <CopyText label="Phone Number" text={referee.phone_number} />
-                  <CopyText label="Organization" text={referee.organization} />
-                  <CopyText label="Job Title" text={referee.job_title} />
-                </div>
+                  <div className="flex justify-between items-center">
+                    <CopyText
+                      label="Recommender Name"
+                      text={referee.full_name}
+                    />
+                    <CopyText
+                      label="Recommender Relationship"
+                      text={referee.relationship}
+                    />
+                    <CopyText label="Email" text={referee.email} />
+                    <CopyText
+                      label="Phone Number"
+                      text={referee.phone_number}
+                    />
+                    <CopyText
+                      label="Organization"
+                      text={referee.organization}
+                    />
+                    <CopyText label="Job Title" text={referee.job_title} />
+                  </div>
                 </div>
               ))}
             </div>
