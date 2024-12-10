@@ -113,6 +113,20 @@ export const generateSop = async (id: string) => {
   return data;
 };
 
+export const generateSop2 = async (id: string) => {
+  const staffToken = Cookies.get("staff_access_token");
+  const { data } = await axios.get(
+    `${API_URL}staff-dashboard/generate-sop-2/${id}/`,
+    {
+      headers: {
+        Authorization: `Bearer ${staffToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return data;
+};
+
 export const updateSop = async (
   id: string,
   candidateId: string,

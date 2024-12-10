@@ -1,10 +1,10 @@
 import { useState } from "react";
 import RootLayout from "@/layouts/RootLayout";
 import { SopStep1, SopStep2, SopStep4 } from ".";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { generateSop } from "@/lib/actions/staff.actions";
+import { generateSop, generateSop2 } from "@/lib/actions/staff.actions";
 import { Loader2 } from "lucide-react";
 
 const steps = [
@@ -26,12 +26,18 @@ const totalSteps = steps.length;
 
 const CraftSOP = () => {
   const { id = "" } = useParams<{ id: string }>();
+
+  const [searchParams] = useSearchParams();
+  const routeType = searchParams.get("type");
+
   const [currentStep, setCurrentStep] = useState(() => {
     const savedStep = localStorage.getItem("sopCurrentPage");
     return savedStep ? Number(savedStep) : 0;
   });
   const [file, setFile] = useState<File | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  const prefix = routeType === "school2" ? "2" : "1"; // Default to `1` if it's not `craft-sop-2`
 
   const StepComponent = steps[currentStep].component;
 
@@ -45,7 +51,9 @@ const CraftSOP = () => {
       if (currentStep === 1) {
         setIsGenerating(true);
         try {
-          const sopData = await generateSop(id);
+          const selectedGenerateFn =
+            prefix === "2" ? generateSop2 : generateSop;
+          const sopData = await selectedGenerateFn(id);
           const generatedFile = await generateSopFile(sopData.SOP?.text, id);
           setFile(generatedFile);
         } catch (error) {

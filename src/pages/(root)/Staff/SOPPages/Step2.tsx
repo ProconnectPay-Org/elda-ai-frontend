@@ -26,10 +26,10 @@ const Step2 = ({
   const { singleCandidate, singleCandidateLoading, singleCandidateError } =
     useCandidates(id);
 
-  useEffect(() => {
-    if (singleCandidate) {      
-      const prefix = routeType === "school2" ? "2" : "1"; // Default to `1` if it's not `craft-sop-2`
+  const prefix = routeType === "school2" ? "2" : "1";
 
+  useEffect(() => {
+    if (singleCandidate) {
       setProgramType(singleCandidate[`program_type${prefix}`] || "");
       setAssignedUniversity(
         singleCandidate[`assigned_university${prefix}`] || ""
@@ -38,7 +38,7 @@ const Step2 = ({
       setYearsOfExperience(
         singleCandidate.career[0]?.years_of_experience_post_degree || "0"
       );
-      setManualDescription(singleCandidate.course_description);
+      setManualDescription(singleCandidate[`course_description${prefix}`]);
     }
   }, [singleCandidate, routeType]);
 
@@ -47,7 +47,7 @@ const Step2 = ({
     setCourseDescriptionLoading(true);
     try {
       const response = await postEditedCandidate(id, {
-        course_description: manualDescription,
+        [`course_description${prefix}`]: manualDescription,
       });
       toast({
         variant: "success",

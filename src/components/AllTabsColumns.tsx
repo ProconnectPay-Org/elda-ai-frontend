@@ -178,7 +178,21 @@ export const allTabsColumns = (
                   }
                   aria-disabled={isSopDisabled}
                 >
-                  View Crafted SOP
+                  View Crafted SOP 1
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link
+                  to={`/sop/${id}?type=school2`}
+                  target="_blank"
+                  className={
+                    isSopDisabled
+                      ? "text-gray-400 cursor-not-allowed pointer-events-none"
+                      : ""
+                  }
+                  aria-disabled={isSopDisabled}
+                >
+                  View Crafted SOP 2
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={openModal}>

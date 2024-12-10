@@ -4,6 +4,7 @@ import {
   Text,
   StyleSheet,
   PDFDownloadLink,
+  View,
 } from "@react-pdf/renderer";
 import { useCandidates } from "@/hooks/useCandidiates";
 import { useParams, useSearchParams } from "react-router-dom";
@@ -53,13 +54,12 @@ const SopTemplate = () => {
       fontSize: 16,
       fontWeight: "bold",
       textAlign: "center",
-      marginBottom: 8, // Reduce the margin here
+      marginBottom: -28,
       textTransform: "uppercase",
       color: "#db251a",
       lineHeight: 1.5,
     },
     paragraph: {
-      marginBottom: 6, // Ensure this isn't excessively large
       textAlign: "justify",
       lineHeight: 1.4,
     },
@@ -71,18 +71,22 @@ const SopTemplate = () => {
   const SOPDocument = () => (
     <Document>
       <Page size="A4" style={styles.page}>
-        <Text style={styles.title}>
-          STATEMENT OF PURPOSE FOR {singleCandidate?.last_name}{" "}
-          {singleCandidate?.first_name} {singleCandidate?.middle_name}: PURSUING
-          AN {singleCandidate?.[`program_type${prefix}`]} IN{" "}
-          {singleCandidate?.[`assigned_course${prefix}`]} AT{" "}
-          {singleCandidate?.[`assigned_university${prefix}`]}
-        </Text>
-        {sopText?.split("\n").map((paragraph: string, index: number) => (
-          <Text key={index} style={styles.paragraph}>
-            {paragraph}
+        <View>
+          <Text style={styles.title}>
+            STATEMENT OF PURPOSE FOR {singleCandidate?.last_name}{" "}
+            {singleCandidate?.first_name} {singleCandidate?.middle_name}:
+            PURSUING AN {singleCandidate?.[`program_type${prefix}`]} IN{" "}
+            {singleCandidate?.[`assigned_course${prefix}`]} AT{" "}
+            {singleCandidate?.[`assigned_university${prefix}`]}
           </Text>
-        ))}
+        </View>
+        <View>
+          {sopText?.split("\n").map((paragraph: string, index: number) => (
+            <Text style={styles.paragraph} key={index}>
+              {paragraph}
+            </Text>
+          ))}
+        </View>
       </Page>
     </Document>
   );
@@ -91,7 +95,7 @@ const SopTemplate = () => {
     <div className="py-4 px-8">
       <div className="px-8">
         <h1 className="text-red font-bold text-center mb-4 text-xl uppercase">
-        STATEMENT OF PURPOSE FOR {singleCandidate?.last_name}{" "}
+          STATEMENT OF PURPOSE FOR {singleCandidate?.last_name}{" "}
           {singleCandidate?.first_name} {singleCandidate?.middle_name}: PURSUING
           AN {singleCandidate?.[`program_type${prefix}`]} IN{" "}
           {singleCandidate?.[`assigned_course${prefix}`]} AT{" "}
@@ -109,7 +113,9 @@ const SopTemplate = () => {
       {userRole !== "candidate" && (
         <PDFDownloadLink
           document={<SOPDocument />}
-          fileName={`${singleCandidate?.first_name || "Candidate"}_SOP${prefix}.pdf`}
+          fileName={`${
+            singleCandidate?.first_name || "Candidate"
+          }_SOP${prefix}.pdf`}
           className="my-5 bg-red text-white px-4 py-2 rounded"
         >
           Download SOP {prefix}

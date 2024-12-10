@@ -180,9 +180,9 @@ const MultiStepForm = () => {
         const jobCountFromData = parseInt(currentFormData.jobsToShowcase, 10);
         setJobsCount(jobCountFromData);
 
-        if (jobsCount > 0) {
+        if (jobCountFromData > 0) {
           const jobExperiences = [];
-          for (let i = 0; i < jobsCount; i++) {
+          for (let i = 0; i < jobCountFromData; i++) {
             const experienceData = {
               business_name: currentFormData.jobExperiences[i].workPlaceName,
               professional_status:
@@ -214,7 +214,9 @@ const MultiStepForm = () => {
             }
           }
 
-          await Promise.all(jobExperiences);
+         const response = await Promise.all(jobExperiences);
+         console.log(response);
+         
         }
       } else if (currentStep === 3) {
         // Step 4: REFEREE DETAILS
@@ -267,13 +269,7 @@ const MultiStepForm = () => {
           },
         ];
 
-        await submitRecommenderDetails(recommenderDataList)
-          .then((responses) => {
-            console.log("Submission successful!", responses);
-          })
-          .catch((error) => {
-            console.error("Submission failed:", error);
-          });
+        await submitRecommenderDetails(recommenderDataList);
 
         await submitRefereeDetails(referee1Data, referee2Data);
       } else if (currentStep === steps.length - 1) {

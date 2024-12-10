@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ChevronLeftIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -11,7 +11,11 @@ import {
 } from "@/components/ui/dialog";
 import SuccessImage from "@/assets/sop-successful.svg";
 import { useQuery } from "@tanstack/react-query";
-import { generateSop, updateSop } from "@/lib/actions/staff.actions";
+import {
+  generateSop,
+  generateSop2,
+  updateSop,
+} from "@/lib/actions/staff.actions";
 
 const Step4 = ({
   prevStep,
@@ -22,6 +26,9 @@ const Step4 = ({
   candidateId: string;
   file: File | null;
 }) => {
+  const [searchParams] = useSearchParams();
+  const routeType = searchParams.get("type");
+
   const [showModal, setShowModal] = useState(false);
   const [candidateSop, setCandidateSop] = useState("");
   const [sopId, setSopId] = useState("");
@@ -29,13 +36,16 @@ const Step4 = ({
   const [sopLoading, setSopLoading] = useState(false);
   const sopRef = useRef<HTMLDivElement>(null);
 
+  const prefix = routeType === "school2" ? "2" : "1"; // Default to `1` if it's not `craft-sop-2`
+
   const handleShowModal = () => {
     setShowModal((prev) => !prev);
   };
 
   const { data, isLoading } = useQuery({
     queryKey: ["sopGenerate"],
-    queryFn: () => generateSop(candidateId),
+    queryFn: () =>
+      prefix === "2" ? generateSop2(candidateId) : generateSop(candidateId),
     staleTime: 5 * 60 * 1000,
   });
 
@@ -121,7 +131,11 @@ const Step4 = ({
             </DialogHeader>
             <img src={SuccessImage} alt="" />
             <div className="flex items-center flex-col justify-center gap-6">
-              <a href={`/sop/${candidateId}`}>
+              <a
+                href={`/sop/${candidateId}?type=${
+                  prefix === "2" ? "school2" : "school1"
+                }`}
+              >
                 <Button className="bg-red">Download SOP</Button>
               </a>
               <Link to="/assigned-candidates">

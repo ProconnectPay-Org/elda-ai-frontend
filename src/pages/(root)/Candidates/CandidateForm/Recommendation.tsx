@@ -59,21 +59,21 @@ const Recommendation = () => {
   const { isLoading: isReferee1Loading, data: recommender1Data } = useQuery({
     queryKey: ["recommender1Data"],
     queryFn: () => getRecommenderDetails(recommenderIds.professional),
-    enabled: !!Cookies.get(recommenderIds.professional),
+    enabled: recommenderIds.professional !== undefined && !!Cookies.get(recommenderIds.professional),
     staleTime: 5 * 1000 * 60,
   });
 
   const { isLoading: isReferee2Loading, data: recommender2Data } = useQuery({
     queryKey: ["recommender2Data"],
     queryFn: () => getRecommenderDetails(recommenderIds.academic),
-    enabled: !!Cookies.get(recommenderIds.academic),
+    enabled: recommenderIds.academic !== undefined && !!Cookies.get(recommenderIds.academic),
     staleTime: 5 * 1000 * 60,
   });
 
   const { isLoading: isReferee3Loading, data: recommender3Data } = useQuery({
     queryKey: ["recommender3Data"],
     queryFn: () => getRecommenderDetails(recommenderIds.other),
-    enabled: !!Cookies.get(recommenderIds.other),
+    enabled: recommenderIds.other !== undefined && !!Cookies.get(recommenderIds.other),
     staleTime: 5 * 1000 * 60,
   });
 

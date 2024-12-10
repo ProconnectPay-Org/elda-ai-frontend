@@ -236,13 +236,19 @@ const CandidateSelection = () => {
                 <div className="flex flex-col md:flex-row items-center gap-5 md:gap-0 justify-between">
                   <DottedBox
                     className="border-red rounded-md text-sm font-bold p-2 hover:bg-pale-bg"
-                    href={`/craft-sop/${selectedRowData.id}`}
-                    docType="Draft Statement Of Purpose"
+                    href={`/craft-sop/${selectedRowData.id}?type=school1`}
+                    docType="Draft SOP 1"
+                    icon=""
+                  />
+                  <DottedBox
+                    className="border-red rounded-md text-sm font-bold p-2 hover:bg-pale-bg"
+                    href={`/craft-sop/${selectedRowData.id}?type=school2`}
+                    docType="Draft SOP 2"
                     icon=""
                   />
                   <Link
                     to={`/refine-resume/${selectedRowData.id}`}
-                    className="bg-red w-1/2 hover:bg-pale-bg text-white hover:text-red border hover:border-red text-center py-2 rounded-md"
+                    className="bg-red w-40 hover:bg-pale-bg text-white hover:text-red border hover:border-red text-center py-2 rounded-md"
                   >
                     Refine Resume
                   </Link>

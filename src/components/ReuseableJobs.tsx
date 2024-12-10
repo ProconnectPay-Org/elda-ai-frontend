@@ -71,8 +71,6 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
   const isJobExpLoading = jobExperienceQueries.some((query) => query.isLoading);
   const jobExperienceData = jobExperienceQueries.map((query) => query.data);
 
-  console.log(jobExperienceData);
-
   useEffect(() => {
     if (
       jobExperienceData &&
