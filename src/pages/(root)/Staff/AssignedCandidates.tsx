@@ -62,8 +62,6 @@ const AssignedCandidates = () => {
       })
     ) || [];
 
-  console.log(candidateTableData);
-
   return (
     <RootLayout title="Assigned Candidates">
       <p className="text-red text-[32px] font-semibold">

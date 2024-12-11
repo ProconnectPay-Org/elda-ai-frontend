@@ -25,6 +25,15 @@ const SkeletonStatusBox = () => {
   );
 };
 
+const SkeletonDocumentBox = () => {
+  return (
+    <div className="w-full h-[40px] flex justify-between items-center animate-pulse">
+      <div className="w-2/3 h-5 bg-[#e0e0e0] rounded-md"></div>
+      <div className="w-1/4 h-5 bg-[#c0c0c0] rounded-md"></div>
+    </div>
+  );
+};
+
 const StatusBox = ({
   text,
   status,
@@ -79,7 +88,7 @@ const CandidateStatus = () => {
   const candidate_id = Cookies.get("candidate_id");
   const { singleCandidate, singleCandidateLoading } =
     useCandidates(candidate_id);
-  const { data } = useQuery({
+  const { data, isLoading: docsLoading } = useQuery({
     queryKey: ["documents"],
     queryFn: fetchVerificationDocument,
     staleTime: 5 * 60 * 1000,
@@ -104,18 +113,27 @@ const CandidateStatus = () => {
       route: `/download-resume/${candidate_id}`,
     },
     {
-      title: "SOP Status",
-      status: singleCandidate?.sop_status,
-      route: `/sop/${candidate_id}`,
+      title: "SOP 1 Status",
+      status: singleCandidate?.sop_status1,
+      route: `/sop/${candidate_id}?type=school1`,
     },
     {
-      title: "School Application Status",
-      status: singleCandidate?.school_application_status,
+      title: "SOP 2 Status",
+      status: singleCandidate?.sop_status2,
+      route: `/sop/${candidate_id}?type=school2`,
+    },
+    {
+      title: "School Application Status 1",
+      status: singleCandidate?.school_application_status1,
+    },
+    {
+      title: "School Application Status 2",
+      status: singleCandidate?.school_application_status2,
     },
   ];
 
   const allStatusesCompleted = () => {
-    return statusProps.every((item) => item.status === "Completed");
+    return statusProps.every((item) => item.status === "Completed" || "True");
   };
 
   const areAllDocumentsUploaded = Object.keys(documents).every(
@@ -129,7 +147,11 @@ const CandidateStatus = () => {
           Welcome, {loggedInUser?.full_name}
         </h1>
 
-        <div className="h-[80px] rounded-2xl w-full p-5 bg-gradient-to-r from-red to-[#919293] gap-2 flex items-center">
+        <div
+          className={`h-[80px] rounded-2xl w-full p-5 bg-gradient-to-r ${
+            allStatusesCompleted() ? "from-green-400" : "from-red"
+          }  to-[#919293] gap-2 flex items-center`}
+        >
           <img src={ExclamationWhite} alt="exclamation mark" />
           <p className="text-white font-medium text-2xl">
             {allStatusesCompleted() ? "Completed" : "Not Completed"}
@@ -183,23 +205,30 @@ const CandidateStatus = () => {
           </div>
           {isExpanded && (
             <div className="space-y-4 m-4">
-              {Object.entries(documents).map(([key, label]) => (
-                <div key={key} className="flex justify-between items-center">
-                  <p className="text-lg font-semibold">{label}</p>
-                  {data?.[key] ? (
-                    <a
-                      href={data[key]}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-green-600 underline"
+              {docsLoading
+                ? Array(5) // Render skeletons for 5 placeholders
+                    .fill(null)
+                    .map((_, index) => <SkeletonDocumentBox key={index} />)
+                : Object.entries(documents).map(([key, label]) => (
+                    <div
+                      key={key}
+                      className="flex justify-between items-center"
                     >
-                      Uploaded
-                    </a>
-                  ) : (
-                    <span className="text-red-600">Not Uploaded</span>
-                  )}
-                </div>
-              ))}
+                      <p className="text-lg font-semibold">{label}</p>
+                      {data?.[key] ? (
+                        <a
+                          href={data[key]}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-green-600 underline"
+                        >
+                          Uploaded
+                        </a>
+                      ) : (
+                        <span className="text-red-600">Not Uploaded</span>
+                      )}
+                    </div>
+                  ))}
             </div>
           )}
         </div>

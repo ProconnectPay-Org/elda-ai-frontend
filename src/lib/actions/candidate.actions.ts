@@ -343,7 +343,6 @@ export const submitRecommenderDetails = async (
       })
     );
 
-    console.log("Recommender Responses:", responses);
     return responses;
   } catch (error) {
     console.error("Error submitting recommender details:", error);

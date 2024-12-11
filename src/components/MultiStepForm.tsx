@@ -214,9 +214,7 @@ const MultiStepForm = () => {
             }
           }
 
-         const response = await Promise.all(jobExperiences);
-         console.log(response);
-         
+          await Promise.all(jobExperiences);
         }
       } else if (currentStep === 3) {
         // Step 4: REFEREE DETAILS

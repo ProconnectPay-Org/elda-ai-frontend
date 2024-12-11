@@ -94,7 +94,7 @@ const DownloadResume = () => {
 
   return (
     <section className="m-10">
-      <div>
+      <div className="mb-2">
         <ArrowLeft className="cursor-pointer" onClick={() => navigate(-1)} />
       </div>
       <div className="max-w-4xl m-auto">

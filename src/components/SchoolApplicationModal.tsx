@@ -36,7 +36,6 @@ const SchoolApplicationModal = ({ onClose, id }: ModalProps) => {
         const response = await (schoolAppliedTo === "School1"
           ? toggleSchoolApplicationStatus(id)
           : toggleSchoolApplicationStatus2(id));
-        console.log("Response:", response);
         if (response) {
           toast({
             description: `${schoolAppliedTo} Application has been completed.`,
@@ -44,7 +43,7 @@ const SchoolApplicationModal = ({ onClose, id }: ModalProps) => {
             variant: "success",
           });
         }
-        onClose(); // Call onClose only after the function executes successfully
+        onClose();
       } catch (error) {
         console.error("Error:", error);
       } finally {

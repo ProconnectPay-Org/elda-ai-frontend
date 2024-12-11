@@ -132,9 +132,6 @@ const TabsComponent = () => {
       duplicate: candidate.duplicate || "none",
     })) || [];    
 
-    console.log(tableData);
-    
-
   const assignedData = tableData
     .filter((candidate) => candidate.assigned)
     .map((candidate, index) => ({
