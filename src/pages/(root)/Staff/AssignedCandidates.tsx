@@ -48,17 +48,21 @@ const AssignedCandidates = () => {
         serial_number: index + 1,
         full_name: `${candidate.user?.full_name}` || "No name",
         status: candidate.status || "Inactive",
-        assigned_course: candidate.assigned_course1 || "No course assigned",
-        assigned_school: candidate.assigned_university1 || "No school assigned",
+        assigned_course1: candidate.assigned_course1 || "No course assigned",
+        assigned_school1: candidate.assigned_university1 || "No school assigned",
         resume_status: candidate.resume_status || "Not Started",
-        sop_status: candidate.sop_status || "Not Started",
-        school_application_status:
-          candidate.school_application_status || "Not available",
+        assigned_course2: candidate.assigned_course2 || "No course assigned",
+        assigned_school2: candidate.assigned_university2 || "No school assigned",
+        sop_status1: candidate.sop_status1 || "Not Started",
+        sop_status2: candidate.sop_status2 || "Not Started",
+        school_application_status1:
+          candidate.school_application_status1 || "Not available",
+        school_application_status2:
+          candidate.school_application_status2 || "Not available",
       })
     ) || [];
 
-    console.log(candidateTableData);
-    
+  console.log(candidateTableData);
 
   return (
     <RootLayout title="Assigned Candidates">

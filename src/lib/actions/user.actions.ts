@@ -514,3 +514,24 @@ export const toggleSchoolApplicationStatus = async (id?: string) => {
     return null;
   }
 };
+
+export const toggleSchoolApplicationStatus2 = async (id?: string) => {
+  try {
+    const token =
+      Cookies.get("access_token") || Cookies.get("staff_access_token");
+    if (!token) return null;
+
+    const response = await axios.get(
+      `${API_URL}staff-dashboard/toggle-school-application-status-2/${id}/`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};

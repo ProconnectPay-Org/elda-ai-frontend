@@ -120,12 +120,20 @@ const TabsComponent = () => {
       country: candidate.country_of_birth || "No country",
       assigned_university1: candidate.assigned_university1 || "None Assigned",
       assigned_course1: candidate.assigned_course1 || "No course assigned",
-      school_application_status:
-        candidate.school_application_status || "No status",
+      assigned_course2: candidate.assigned_course2 || "No course assigned",
+      assigned_school2: candidate.assigned_university2 || "No school assigned",
+      school_application_status1:
+        candidate.school_application_status1 || "No status",
+      school_application_status2:
+        candidate.school_application_status2 || "No status",
       resume_status: candidate.resume_status || "No status",
-      sop_status: candidate.sop_status || "No status",
+      sop_status1: candidate.sop_status1 || "No status",
+      sop_status2: candidate.sop_status2 || "No status",
       duplicate: candidate.duplicate || "none",
     })) || [];    
+
+    console.log(tableData);
+    
 
   const assignedData = tableData
     .filter((candidate) => candidate.assigned)

@@ -1,5 +1,8 @@
 import { useCandidates } from "@/hooks/useCandidiates";
-import { toggleSchoolApplicationStatus } from "@/lib/actions/user.actions";
+import {
+  toggleSchoolApplicationStatus,
+  toggleSchoolApplicationStatus2,
+} from "@/lib/actions/user.actions";
 import { useState, useEffect } from "react";
 import { toast } from "./ui/use-toast";
 
@@ -30,8 +33,17 @@ const SchoolApplicationModal = ({ onClose, id }: ModalProps) => {
 
     if (applicationCompleted) {
       try {
-        const response = await toggleSchoolApplicationStatus(id);
+        const response = await (schoolAppliedTo === "School1"
+          ? toggleSchoolApplicationStatus(id)
+          : toggleSchoolApplicationStatus2(id));
         console.log("Response:", response);
+        if (response) {
+          toast({
+            description: `${schoolAppliedTo} Application has been completed.`,
+            title: "Application marked as completed.",
+            variant: "success",
+          });
+        }
         onClose(); // Call onClose only after the function executes successfully
       } catch (error) {
         console.error("Error:", error);
@@ -42,8 +54,8 @@ const SchoolApplicationModal = ({ onClose, id }: ModalProps) => {
       toast({
         description: "Mark application as completed.",
         title: "Application is not marked as completed.",
-        variant: "destructive"
-      })
+        variant: "destructive",
+      });
       setApplicationLoading(false);
     }
   };
@@ -93,15 +105,15 @@ const SchoolApplicationModal = ({ onClose, id }: ModalProps) => {
                 </option>
                 {!singleCandidateLoading &&
                   singleCandidate?.assigned_university1 && (
-                    <option value={singleCandidate.assigned_university1}>
-                      {singleCandidate.assigned_university1}
+                    <option value="School1">
+                      School 1 - {singleCandidate.assigned_university1}
                     </option>
                   )}
 
                 {!singleCandidateLoading &&
                   singleCandidate?.assigned_university2 && (
-                    <option value={singleCandidate.assigned_university2}>
-                      {singleCandidate.assigned_university2}
+                    <option value="School2">
+                      School 2 - {singleCandidate.assigned_university2}
                     </option>
                   )}
               </select>
@@ -143,14 +155,14 @@ const SchoolApplicationModal = ({ onClose, id }: ModalProps) => {
                 </option>
                 {!singleCandidateLoading &&
                   singleCandidate?.assigned_course1 && (
-                    <option value={singleCandidate.assigned_course1}>
-                      {singleCandidate.assigned_course1}
+                    <option value="course 1">
+                     Course 1 - {singleCandidate.assigned_course1}
                     </option>
                   )}
                 {!singleCandidateLoading &&
                   singleCandidate?.assigned_course2 && (
-                    <option value={singleCandidate.assigned_course2}>
-                      {singleCandidate.assigned_course2}
+                    <option value="course 2">
+                     Course 2 - {singleCandidate.assigned_course2}
                     </option>
                   )}
               </select>

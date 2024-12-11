@@ -25,12 +25,20 @@ export const columns: ColumnDef<CandidateData>[] = [
     header: "Student Name",
   },
   {
-    accessorKey: "assigned_school",
-    header: "Recommended School",
+    accessorKey: "assigned_school1",
+    header: "Recommended School 1",
   },
   {
-    accessorKey: "assigned_course",
-    header: "Recommended Course",
+    accessorKey: "assigned_course1",
+    header: "Recommended Course 1",
+  },
+  {
+    accessorKey: "assigned_school2",
+    header: "Recommended School 2",
+  },
+  {
+    accessorKey: "assigned_course2",
+    header: "Recommended Course 2",
   },
   {
     accessorKey: "resume_status",
@@ -50,7 +58,7 @@ export const columns: ColumnDef<CandidateData>[] = [
     ),
   },
   {
-    accessorKey: "sop_status",
+    accessorKey: "sop_status1",
     header: () => (
       <div>
         <p className="text-center">SOP 1</p>
@@ -60,12 +68,12 @@ export const columns: ColumnDef<CandidateData>[] = [
       <div className="flex justify-center">
         <Button
           className={`py-1 h-5 rounded-xl ${
-            row.original.sop_status === "Pending"
+            row.original.sop_status1 === "Pending"
               ? "bg-orange text-white"
               : "bg-[#D5F4EA] text-[#2A6350]"
           } px-5 hover:bg-green-200`}
         >
-          {row.original.sop_status || "none"}
+          {row.original.sop_status1 || "none"}
         </Button>
       </div>
     ),
@@ -81,36 +89,61 @@ export const columns: ColumnDef<CandidateData>[] = [
       <div className="flex justify-center">
         <Button
           className={`py-1 h-5 rounded-xl ${
-            row.original.sop_status === "Pending"
+            row.original.sop_status2 === "Pending"
               ? "bg-orange text-white"
               : "bg-[#D5F4EA] text-[#2A6350]"
           } px-5 hover:bg-green-200`}
         >
-          {row.original.sop_status || "none"}
+          {row.original.sop_status2 || "none"}
         </Button>
       </div>
     ),
   },
   {
-    accessorKey: "school_application_status",
+    accessorKey: "school_application_status1",
     header: () => (
       <div>
-        <p className="text-center">School Application Status</p>
+        <p className="text-center">School Application Status 1</p>
       </div>
     ),
     cell: ({ row }) => (
       <div className="flex justify-center">
         <Button
           className={`py-1 h-5 rounded-xl ${
-            row.original.school_application_status === "Pending"
+            row.original.school_application_status1 === "Pending"
               ? "bg-orange text-white"
               : "bg-[#D5F4EA] text-[#2A6350]"
           } px-5 hover:bg-green-200`}
         >
-          {row.original.school_application_status === "True" ? (
+          {row.original.school_application_status1 === "True" ? (
             "Completed"
           ) : (
-            <>{row.original.school_application_status || "none"}</>
+            <>{row.original.school_application_status1 || "none"}</>
+          )}
+        </Button>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "school_application_status2",
+    header: () => (
+      <div>
+        <p className="text-center">School Application Status 2</p>
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="flex justify-center">
+        <Button
+          className={`py-1 h-5 rounded-xl ${
+            row.original.school_application_status2 === "Pending"
+              ? "bg-orange text-white"
+              : "bg-[#D5F4EA] text-[#2A6350]"
+          } px-5 hover:bg-green-200`}
+        >
+          {row.original.school_application_status2 === "True" ? (
+            "Completed"
+          ) : (
+            <>{row.original.school_application_status2 || "none"}</>
           )}
         </Button>
       </div>
@@ -140,9 +173,10 @@ export const columns: ColumnDef<CandidateData>[] = [
         setIsSchoolModalOpen(false);
       };
 
-      const { id, resume_status, sop_status } = row.original;
+      const { id, resume_status, sop_status1, sop_status2 } = row.original;
       const isResumeDisabled = resume_status !== "Completed";
-      const isSopDisabled = sop_status !== "Completed";
+      const isSopDisabled1 = sop_status1 !== "Completed";
+      const isSopDisabled2 = sop_status2 !== "Completed";
 
       return (
         <>
@@ -172,12 +206,12 @@ export const columns: ColumnDef<CandidateData>[] = [
               <DropdownMenuItem>
                 <Link
                   to={
-                    isSopDisabled
+                    isSopDisabled1
                       ? `/craft-sop/${id}?type=school1`
                       : `/sop/${id}?type=school1`
                   }
                 >
-                  {isSopDisabled
+                  {isSopDisabled1
                     ? "Craft SOP for school 1"
                     : "View Crafted SOP 1"}
                 </Link>
@@ -185,12 +219,12 @@ export const columns: ColumnDef<CandidateData>[] = [
               <DropdownMenuItem>
                 <Link
                   to={
-                    isSopDisabled
+                    isSopDisabled2
                       ? `/craft-sop/${id}?type=school2`
                       : `/sop/${id}?type=school2`
                   }
                 >
-                  {isSopDisabled
+                  {isSopDisabled2
                     ? "Craft SOP for school 2"
                     : "View Crafted SOP 2"}
                 </Link>

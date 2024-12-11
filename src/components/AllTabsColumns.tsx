@@ -38,7 +38,7 @@ export const allTabsColumns = (
   },
   {
     accessorKey: "assigned_course1",
-    header: "Assigned Course 1",
+    header: "Recommended Course 1",
     cell: ({ row }) => (
       <p className="capitalize">
         {row.original.assigned_course1 || "No course assigned"}
@@ -47,7 +47,7 @@ export const allTabsColumns = (
   },
   {
     accessorKey: "assigned_university1",
-    header: "Assigned School 1",
+    header: "Recommended School 1",
     cell: ({ row }) => (
       <p className="capitalize">
         {row.original.assigned_university1 || "No school assigned"}
@@ -55,24 +55,59 @@ export const allTabsColumns = (
     ),
   },
   {
-    accessorKey: "school_application_status",
-    header: () => <div className="text-center">School Application Status</div>,
+    accessorKey: "assigned_school2",
+    header: "Recommended School 2",
+  },
+  {
+    accessorKey: "assigned_course2",
+    header: "Recommended Course 2",
+  },
+  {
+    accessorKey: "school_application_status1",
+    header: () => (
+      <div className="text-center">School Application Status 1</div>
+    ),
     cell: ({ row }) => (
       <div className="flex justify-center">
         <Button
           className={`py-1 h-5 rounded-xl ${
-            row.original.school_application_status === "Pending"
+            row.original.school_application_status1 === "Pending"
               ? "bg-orange text-white"
               : "bg-[#D5F4EA] text-[#2A6350]"
           } px-5 hover:bg-green-200`}
           onClick={() =>
-            alert(`Status: ${row.original.school_application_status || "none"}`)
+            alert(
+              `Status: ${row.original.school_application_status1 || "none"}`
+            )
           }
         >
-          {row.original.school_application_status === "True" ? (
+          {row.original.school_application_status1 === "True" ? (
             "Completed"
           ) : (
-            <>{row.original.school_application_status || "none"}</>
+            <>{row.original.school_application_status1 || "none"}</>
+          )}
+        </Button>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "school_application_status2",
+    header: () => (
+      <div className="text-center">School Application Status 2</div>
+    ),
+    cell: ({ row }) => (
+      <div className="flex justify-center">
+        <Button
+          className={`py-1 h-5 rounded-xl ${
+            row.original.school_application_status2 === "Pending"
+              ? "bg-orange text-white"
+              : "bg-[#D5F4EA] text-[#2A6350]"
+          } px-5 hover:bg-green-200`}
+        >
+          {row.original.school_application_status2 === "True" ? (
+            "Completed"
+          ) : (
+            <>{row.original.school_application_status2 || "none"}</>
           )}
         </Button>
       </div>
@@ -89,9 +124,6 @@ export const allTabsColumns = (
               ? "bg-orange text-white"
               : "bg-[#D5F4EA] text-[#2A6350]"
           } px-5 hover:bg-green-200`}
-          onClick={() =>
-            alert(`Resume Status: ${row.original.resume_status || "none"}`)
-          }
         >
           {row.original.resume_status || "none"}
         </Button>
@@ -99,21 +131,35 @@ export const allTabsColumns = (
     ),
   },
   {
-    accessorKey: "sop_status",
-    header: () => <div className="text-center">SOP Status</div>,
+    accessorKey: "sop_status1",
+    header: () => <div className="text-center">SOP 1</div>,
     cell: ({ row }) => (
       <div className="flex justify-center">
         <Button
           className={`py-1 h-5 rounded-xl ${
-            row.original.sop_status === "Pending"
+            row.original.sop_status1 === "Pending"
               ? "bg-orange text-white"
               : "bg-[#D5F4EA] text-[#2A6350]"
           } px-5 hover:bg-green-200`}
-          onClick={() =>
-            alert(`SOP Status: ${row.original.sop_status || "none"}`)
-          }
         >
-          {row.original.sop_status || "none"}
+          {row.original.sop_status1 || "none"}
+        </Button>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "sop_status2",
+    header: () => <div className="text-center">SOP 2</div>,
+    cell: ({ row }) => (
+      <div className="flex justify-center">
+        <Button
+          className={`py-1 h-5 rounded-xl ${
+            row.original.sop_status2 === "Pending"
+              ? "bg-orange text-white"
+              : "bg-[#D5F4EA] text-[#2A6350]"
+          } px-5 hover:bg-green-200`}
+        >
+          {row.original.sop_status2 || "none"}
         </Button>
       </div>
     ),
@@ -132,7 +178,8 @@ export const allTabsColumns = (
         setIsModalOpen(false);
       };
 
-      const { id, resume_status, sop_status, full_name, user_id } = row.original;
+      const { id, resume_status, sop_status, full_name, user_id } =
+        row.original;
 
       const isResumeDisabled = resume_status !== "Completed";
       const isSopDisabled = sop_status !== "Completed";
@@ -169,7 +216,7 @@ export const allTabsColumns = (
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Link
-                  to={`/sop/${id}`}
+                  to={`/sop/${id}?type=school1`}
                   target="_blank"
                   className={
                     isSopDisabled

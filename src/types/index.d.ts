@@ -368,11 +368,15 @@ export type CandidateData = {
   recommended_course: string;
   resume: string;
   resume_status?: string;
-  sop_status?: string;
   gender?: string;
   postal_code?: string;
   serial_number: number;
+  sop_status?: string;
+  sop_status1?: string;
+  sop_status2?: string;
   school_application_status: "Pending" | "Complete" | "Started" | "True";
+  school_application_status1: "Pending" | "Complete" | "Started" | "True";
+  school_application_status2: "Pending" | "Complete" | "Started" | "True";
   state_of_birth: string;
   state_current_reside?: string;
   status: string;
