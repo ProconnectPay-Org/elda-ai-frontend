@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon } from "lucide-react";
+import { ChevronLeftIcon, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useCandidates } from "@/hooks/useCandidiates";
 import { postEditedCandidate } from "@/lib/actions/staff.actions";
@@ -94,6 +94,7 @@ const Step2 = ({
                 value={programType}
                 onChange={(e) => setProgramType(e.target.value)}
                 className="bg-transparent"
+                disabled
               />
             </div>
             <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
@@ -107,6 +108,7 @@ const Step2 = ({
                 value={assignedUniversity}
                 onChange={(e) => setAssignedUniversity(e.target.value)}
                 className="bg-transparent outline-none"
+                disabled
               />
             </div>
           </div>
@@ -123,6 +125,7 @@ const Step2 = ({
                 value={assignedCourse}
                 onChange={(e) => setAssignedCourse(e.target.value)}
                 className="bg-transparent outline-none"
+                disabled
               />
             </div>
             <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
@@ -136,6 +139,7 @@ const Step2 = ({
                 value={yearsOfExperience}
                 onChange={(e) => setYearsOfExperience(e.target.value)}
                 className="bg-transparent outline-none"
+                disabled
               />
             </div>
           </div>
@@ -158,9 +162,14 @@ const Step2 = ({
                 onClick={handleReview}
                 disabled={courseDescriptionLoading}
               >
-                {courseDescriptionLoading
-                  ? "Saving..."
-                  : "Save Course Description"}
+                {courseDescriptionLoading ? (
+                  <>
+                    <p>Saving...</p>
+                    <Loader2 className="animate-spin"/>
+                  </>
+                ) : (
+                  "Save Course Description"
+                )}
               </Button>
             </div>
           </div>

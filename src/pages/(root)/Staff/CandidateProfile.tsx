@@ -513,7 +513,11 @@ const CandidateProfile = () => {
                   />
                   <CopyText
                     label="Year Ended"
-                    text={formatDate(String(job?.year_ended))}
+                    text={
+                      job?.year_ended === "1960-01-01"
+                        ? "Present"
+                        : formatDate(String(job?.year_ended)) || "Present"
+                    }
                   />
                 </div>
               );

@@ -1,16 +1,21 @@
+import { Button } from "@/components/ui/button";
 import { useCandidates } from "@/hooks/useCandidiates";
 import { formatDate, getErrorMessage } from "@/lib/utils";
-import { JobExperience, ResumeStep4FormData } from "@/types";
+import { CustomAxiosError, JobExperience, ResumeStep4FormData } from "@/types";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import "react-phone-input-2/lib/style.css";
+import promptWhiteImage from "@/assets/prompt-white.svg";
 import { useParams } from "react-router-dom";
+import { refinePrompt } from "@/lib/actions/user.actions";
+import { toast } from "@/components/ui/use-toast";
 
 const WorkExperience = () => {
   const {
     register,
     setValue,
     formState: { errors },
+    getValues,
   } = useFormContext<ResumeStep4FormData>();
   const { id } = useParams<{ id: string }>();
   if (!id) {
@@ -20,6 +25,7 @@ const WorkExperience = () => {
   const { singleCandidate, singleCandidateLoading, singleCandidateError } =
     useCandidates(id);
   const [jobsToShow, setJobsToShow] = useState("0");
+  const [refineLoading, setRefineLoading] = useState(false);
 
   useEffect(() => {
     if (singleCandidate) {
@@ -63,6 +69,44 @@ const WorkExperience = () => {
     }
   }, [singleCandidate, id, setValue]);
 
+  const handleRefine = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    index: number
+  ) => {
+    e.preventDefault();
+    setRefineLoading(true);
+    try {
+      const jobSummary = getValues(`jobExperiences.${index}.jobDescription`);
+      if (jobSummary) {
+        const refinedPrompt = `Draft a JOB SUMMARY AND KEY ACHIEVEMENTS for my workplace. 
+            Share how I leveraged innovation and took new initiatives to perform my job, including data and statistics. 
+            Write in first person and relative tense. Highlight roles held within the same company. 
+            Here's the existing summary: ${jobSummary}`;
+
+        const refinedContent = await refinePrompt({ prompt: refinedPrompt });
+        setValue(
+          `jobExperiences.${index}.jobDescription`,
+          refinedContent.refined_content
+        );
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Please provide a job summary.",
+        });
+      }
+    } catch (error) {
+      const axiosError = error as CustomAxiosError;
+      toast({
+        variant: "destructive",
+        title: "Error refining prompt:",
+        description: axiosError.response?.data || "Unknown error",
+      });
+    } finally {
+      setRefineLoading(false);
+    }
+  };
+
   if (singleCandidateLoading) {
     return <div>Loading...</div>;
   }
@@ -82,7 +126,7 @@ const WorkExperience = () => {
         <label htmlFor="" className="text-[#344054]">
           How many jobs are you showcasing?
         </label>
-        <div className="rounded-full w-full border py-2 pl-4 border-gray-border">
+        <div className="rounded-md w-full border py-2 pl-4 border-gray-border">
           {jobsToShow}
         </div>
       </div>
@@ -103,7 +147,7 @@ const WorkExperience = () => {
                     Name of Company
                   </label>
                   <input
-                    className="border border-gray-border rounded-full py-2 px-4"
+                    className="border border-gray-border rounded-md py-2 px-4"
                     // id="nameOfCompany"
                     id={`nameOfCompany-${index}`}
                     {...register(`jobExperiences.${index}.nameOfCompany`)}
@@ -126,7 +170,7 @@ const WorkExperience = () => {
                     Job Title
                   </label>
                   <input
-                    className="border border-gray-border rounded-full py-2 px-4"
+                    className="border border-gray-border rounded-md py-2 px-4"
                     id={`jobTitle-${index}`}
                     {...register(`jobExperiences.${index}.jobTitle`)}
                     placeholder="Enter your job title"
@@ -142,7 +186,7 @@ const WorkExperience = () => {
                     Mode
                   </label>
                   <input
-                    className="border capitalize border-gray-border rounded-full py-2 px-4"
+                    className="border capitalize border-gray-border rounded-md py-2 px-4"
                     id={`mode-${index}`}
                     {...register(`jobExperiences.${index}.mode`)}
                     placeholder="Hybrid"
@@ -164,11 +208,24 @@ const WorkExperience = () => {
                     Job Description
                   </label>
                   <textarea
-                    className="border border-gray-border py-2 px-4 min-h-20"
+                    className="border border-gray-border py-2 rounded-md px-4 min-h-20"
                     id={`jobDescription-${index}`}
                     {...register(`jobExperiences.${index}.jobDescription`)}
                     placeholder="Enter job description"
                   />
+                  <div className="flex items-end w-full mt-4 flex-col md:flex-row justify-between gap-4 md:gap-8">
+                    <div className="w-full md:w-fit hidden md:flex"></div>
+                    <Button
+                      onClick={(e) => handleRefine(e, index)}
+                      disabled={refineLoading}
+                      className="w-full text-[8px] md:w-fit bg-red flex gap-2 md:text-xs xl:text-sm"
+                    >
+                      <img src={promptWhiteImage} alt="prompt" />
+                      {refineLoading
+                        ? "Refining your prompt..."
+                        : "Refine Job Summary"}
+                    </Button>
+                  </div>
                   {errors.jobDescription && (
                     <span className="text-red text-sm">
                       {getErrorMessage(errors.jobDescription)}
@@ -186,7 +243,7 @@ const WorkExperience = () => {
                     Location
                   </label>
                   <input
-                    className="border border-gray-border rounded-full py-2 px-4"
+                    className="border border-gray-border rounded-md py-2 px-4"
                     id={`location-${index}`}
                     {...register(`jobExperiences.${index}.location`)}
                     placeholder="Enter location"
@@ -198,7 +255,7 @@ const WorkExperience = () => {
                   )}
                 </div>
 
-                <div className="flex flex-col sm:w-1/2">
+                <div className="flex flex-col sm:w-fit">
                   <label
                     htmlFor={`startDate-${index}`}
                     className="text-[#344054]"
@@ -207,7 +264,7 @@ const WorkExperience = () => {
                   </label>
                   <input
                     type="text"
-                    className="border border-gray-border h-[42px] rounded-full py-2 px-4"
+                    className="border border-gray-border h-[42px] rounded-md py-2 px-4"
                     id={`startDate-${index}`}
                     {...register(`jobExperiences.${index}.startDate`)}
                   />
@@ -218,7 +275,7 @@ const WorkExperience = () => {
                   )}
                 </div>
                 {experience.year_ended !== "1960-01-01" && (
-                  <div className="flex flex-col sm:w-1/2">
+                  <div className="flex flex-col sm:w-fit">
                     <label
                       htmlFor={`endDate-${index}`}
                       className="text-[#344054]"
@@ -227,7 +284,7 @@ const WorkExperience = () => {
                     </label>
                     <input
                       type="text"
-                      className="border border-gray-border h-[42px] rounded-full py-2 px-4"
+                      className="border border-gray-border h-[42px] rounded-md py-2 px-4"
                       id={`endDate-${index}`}
                       {...register(`jobExperiences.${index}.endDate`)}
                     />
@@ -239,6 +296,10 @@ const WorkExperience = () => {
                   </div>
                 )}
               </div>
+              {/* <div className="flex items-center justify-between">
+                <Button className="bg-red">Delete Experience</Button>
+                <Button className="bg-red">Save Changes</Button>
+              </div> */}
             </div>
           </div>
         )

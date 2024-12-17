@@ -92,7 +92,7 @@ const FinalResume = () => {
 
   return (
     <RootLayout title="Final Resume Refined">
-      <div>
+      <div className="mb-5 w-fit">
         <Link to={`/refine-resume/${id}`}>
           <ArrowLeft className="cursor-pointer" />
         </Link>

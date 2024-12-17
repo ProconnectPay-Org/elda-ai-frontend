@@ -66,14 +66,20 @@ const StatusBox = ({
       }}
     >
       <div className="flex items-center gap-2 md:gap-4">
-        <p className="font-semibold text-sm md:text-2xl text-red">{text}</p>
-        <div className="border border-red px-2 h-6 flex items-center gap-2 rounded-md">
+        <p className="font-semibold text-sm w-20 sm:w-fit md:text-2xl text-red">{text}</p>
+        <div className="border border-red px-2 h-6 flex items-center gap-1 rounded-md">
           {icon}
           <p className="text-[10px] text-center text-gray-text">{status}</p>
         </div>
       </div>
       {/* <ChevronRight color="red" size={20} /> */}
-      <button className="bg-red text-white py-2 px-2 md:px-5 rounded-xl text-xs md:text-base">
+      <button
+        className={`py-2 px-2 md:px-5 rounded-xl text-xs md:text-base text-white ${
+          status === "Completed" || status === "True"
+            ? "bg-green-500"
+            : "bg-red"
+        }`}
+      >
         {status === "Completed" && "View"}
         {status === "True" && "Completed"}
         {status !== "Completed" && status !== "True" && "Not Completed"}
@@ -123,18 +129,18 @@ const CandidateStatus = () => {
       route: `/sop/${candidate_id}?type=school2`,
     },
     {
-      title: "School Application Status 1",
+      title: "1st School Application Status",
       status: singleCandidate?.school_application_status1,
     },
     {
-      title: "School Application Status 2",
+      title: "2nd School Application Status",
       status: singleCandidate?.school_application_status2,
     },
   ];
 
-  const allStatusesCompleted = () => {
-    return statusProps.every((item) => item.status === "Completed" || "True");
-  };
+  const isAtLeastOneSchoolApplicationCompleted = () =>
+    singleCandidate?.school_application_status1 === "True" ||
+    singleCandidate?.school_application_status2 === "True";
 
   const areAllDocumentsUploaded = Object.keys(documents).every(
     (key) => data?.[key]
@@ -149,12 +155,16 @@ const CandidateStatus = () => {
 
         <div
           className={`h-[80px] rounded-2xl w-full p-5 bg-gradient-to-r ${
-            allStatusesCompleted() ? "from-green-400" : "from-red"
+            isAtLeastOneSchoolApplicationCompleted()
+              ? "from-green-400"
+              : "from-red"
           }  to-[#919293] gap-2 flex items-center`}
         >
           <img src={ExclamationWhite} alt="exclamation mark" />
           <p className="text-white font-medium text-2xl">
-            {allStatusesCompleted() ? "Completed" : "Not Completed"}
+            {isAtLeastOneSchoolApplicationCompleted()
+              ? "At Least One Application Completed"
+              : "Not Completed"}
           </p>
         </div>
 

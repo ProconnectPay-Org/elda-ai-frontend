@@ -9,7 +9,7 @@ import {
   EducationHistory,
   JobExperience,
 } from "@/types";
-import { formatDate, getCountryNameFromISO } from "@/lib/utils";
+import { formatDate, formatMonthDay, getCountryNameFromISO } from "@/lib/utils";
 
 // Define your styles
 const styles = StyleSheet.create({
@@ -253,7 +253,7 @@ const NewResumePdf = () => {
               <View style={styles.flex}>
                 <Text style={styles.utilityClass}>Date of Birth:</Text>
                 <Text style={styles.width200TextSm}>
-                  {formatDate(formData?.birth_date)}
+                  {formatMonthDay(formData?.birth_date)}
                 </Text>
               </View>
               <View style={styles.flex}>

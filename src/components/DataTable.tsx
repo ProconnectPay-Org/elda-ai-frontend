@@ -118,7 +118,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <div className="flex items-center py-4 gap-4 pl-4">
+      <div className="flex items-center py-4 gap-4 px-4">
         <Select onValueChange={handleFilterChange}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select a filter" />
@@ -127,13 +127,18 @@ export function DataTable<TData, TValue>({
             <SelectGroup>
               <SelectLabel>Filters</SelectLabel>
               <SelectItem value="full_name">Name</SelectItem>
-              <SelectItem value="email">Email</SelectItem>
-              <SelectItem value="assigned_course">Assigned Course</SelectItem>
-              <SelectItem value="assigned_school">Assigned School</SelectItem>
+              <SelectItem value="assigned_course1">Assigned Course 1</SelectItem>
+              <SelectItem value="assigned_course2">Assigned Course 2</SelectItem>
+              <SelectItem value="assigned_school1">Assigned School 1</SelectItem>
+              <SelectItem value="assigned_school2">Assigned School 2</SelectItem>
               <SelectItem value="resume_status">Resume Status</SelectItem>
-              <SelectItem value="sop_status">SOP Status</SelectItem>
-              <SelectItem value="school_application_status">
-                School Application Status
+              <SelectItem value="sop_status1">SOP Status 1</SelectItem>
+              <SelectItem value="sop_status2">SOP Status 2</SelectItem>
+              <SelectItem value="school_application_status1">
+                School Application Status 1
+              </SelectItem>
+              <SelectItem value="school_application_status2">
+                School Application Status 2
               </SelectItem>
             </SelectGroup>
           </SelectContent>

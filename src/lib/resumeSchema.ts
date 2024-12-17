@@ -12,20 +12,17 @@ export const ResumeStep1Schema = z.object({
 
 export const ResumeStep2Schema = z.object({
   gender: z.enum(["Male", "Female", "Other"]),
-  dateOfBirth: z
-    .string()
-    .nonempty("Date of birth is required")
-    .refine(
-      (date) => {
-        const parsedDate = Date.parse(date);
-        return !isNaN(parsedDate);
-      },
-      {
-        message: "Invalid date format",
-      }
-    ),
+  dateOfBirth: z.string(),
   nationality: z.string().nonempty("Nationality is required"),
-  interest: z.string().nonempty("Interest is required"),
+  interest: z
+    .array(
+      z.object({
+        name: z
+          .string()
+          .min(2, "Each career interest must be at least 2 characters long"),
+      })
+    )
+    .min(1, "At least one career interest is required"),
 });
 
 export const ResumeStep3Schema = z.object({
@@ -37,6 +34,7 @@ export const ResumeStep3Schema = z.object({
   state: z.string().nonempty("State is required"),
   course: z.string().nonempty("Course is required"),
   country: z.string().nonempty("Country is required"),
+  classOfDegree: z.string().optional(),
   startDate: z.string().optional(),
   endDate: z.string().optional(),
 });

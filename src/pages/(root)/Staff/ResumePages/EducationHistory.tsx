@@ -1,5 +1,9 @@
 import { useCandidates } from "@/hooks/useCandidiates";
-import { formatDate, getCountryNameFromISO, getErrorMessage } from "@/lib/utils";
+import {
+  formatDate,
+  getCountryNameFromISO,
+  getErrorMessage,
+} from "@/lib/utils";
 import { ResumeStep3FormData } from "@/types";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
@@ -26,13 +30,29 @@ const EducationHistory = () => {
       const foundCandidate = singleCandidate;
       setValue("city", foundCandidate.city_current_reside || "");
       setValue("state", foundCandidate.state_of_birth || "");
-      setValue("country", getCountryNameFromISO(foundCandidate.country_of_birth) || "");
+      setValue(
+        "country",
+        getCountryNameFromISO(foundCandidate.country_of_birth) || ""
+      );
       setValue("degree", foundCandidate.education[0].degree_type || "");
+      setValue("classOfDegree", foundCandidate.education[0].class_of_degree || "");
       setValue("kindOfDegree", foundCandidate.education[0].degree_type || "");
-      setValue("tertiaryInstitutionAttended", foundCandidate.education[0].school_name || "");
-      setValue("course", foundCandidate.education[0].specific_course_of_study || "");
-      setValue("startDate", formatDate(foundCandidate.education[0].admission_date) || "");
-      setValue("endDate", formatDate(foundCandidate.education[0].graduation_date) || "");
+      setValue(
+        "tertiaryInstitutionAttended",
+        foundCandidate.education[0].school_name || ""
+      );
+      setValue(
+        "course",
+        foundCandidate.education[0].specific_course_of_study || ""
+      );
+      setValue(
+        "startDate",
+        formatDate(foundCandidate.education[0].admission_date) || ""
+      );
+      setValue(
+        "endDate",
+        formatDate(foundCandidate.education[0].graduation_date) || ""
+      );
     }
   }, [singleCandidate, id, setValue]);
 
@@ -56,7 +76,8 @@ const EducationHistory = () => {
           id="degree"
           {...register("degree")}
           placeholder="Enter a degree type..."
-          className="border capitalize border-gray-border rounded-full w-full block h-[42px] py-2 px-4"
+          className="border capitalize border-gray-border rounded-md w-full block h-[42px] py-2 px-4"
+          disabled
         >
           {/* <option value="">Select your degree type</option>
           {degreeTypes.map((option) => (
@@ -76,10 +97,11 @@ const EducationHistory = () => {
                 Kind of Degree
               </label>
               <input
-                className="border capitalize border-gray-border rounded-full py-2 px-4"
+                className="border capitalize border-gray-border rounded-md py-2 px-4"
                 id="kindOfDegree"
                 {...register("kindOfDegree")}
                 placeholder="Master of Science"
+                disabled
               />
               {errors.kindOfDegree && (
                 <span className="text-red text-sm">
@@ -95,7 +117,7 @@ const EducationHistory = () => {
                 Tertiary Institution Attended
               </label>
               <input
-                className="border border-gray-border rounded-full py-2 px-4"
+                className="border border-gray-border rounded-md py-2 px-4"
                 id="tertiaryInstitutionAttended"
                 {...register("tertiaryInstitutionAttended")}
               />
@@ -113,7 +135,7 @@ const EducationHistory = () => {
                 City
               </label>
               <input
-                className="border border-gray-border rounded-full py-2 px-4"
+                className="border border-gray-border rounded-md py-2 px-4"
                 id="city"
                 {...register("city")}
                 placeholder="Enter your city"
@@ -131,7 +153,8 @@ const EducationHistory = () => {
               <input
                 type="text"
                 {...register("state")}
-                className="border border-gray-border rounded-full h-[42px] py-2 px-4"
+                className="border border-gray-border bg-white rounded-md h-[42px] py-2 px-4"
+                disabled
               />
               {errors.state && (
                 <span className="text-red text-sm">
@@ -149,7 +172,8 @@ const EducationHistory = () => {
               <input
                 type="text"
                 {...register("country")}
-                className="border border-gray-border rounded-full h-[42px] py-2 px-4"
+                className="border border-gray-border bg-white rounded-md h-[42px] py-2 px-4"
+                disabled
               />
               {errors.country && (
                 <span className="text-red text-sm">
@@ -162,7 +186,7 @@ const EducationHistory = () => {
                 Course Studied
               </label>
               <input
-                className="border border-gray-border rounded-full py-2 px-4"
+                className="border border-gray-border rounded-md py-2 px-4"
                 id="course"
                 {...register("course")}
               />
@@ -181,9 +205,10 @@ const EducationHistory = () => {
               </label>
               <input
                 type="text"
-                className="border border-gray-border h-[42px] rounded-full py-2 px-4"
+                className="border border-gray-border h-[42px] rounded-md py-2 px-4"
                 id="startDate"
                 {...register("startDate")}
+                disabled
               />
               {errors.startDate && (
                 <span className="text-red text-sm">
@@ -197,9 +222,10 @@ const EducationHistory = () => {
               </label>
               <input
                 type="text"
-                className="border border-gray-border h-[42px] rounded-full py-2 px-4"
+                className="border border-gray-border h-[42px] rounded-md py-2 px-4"
                 id="endDate"
                 {...register("endDate")}
+                disabled
               />
               {errors.endDate && (
                 <span className="text-red text-sm">

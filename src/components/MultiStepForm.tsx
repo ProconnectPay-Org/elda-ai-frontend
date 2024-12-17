@@ -273,6 +273,7 @@ const MultiStepForm = () => {
       } else if (currentStep === steps.length - 1) {
         setIsSubmitted(true);
         await toggleApplicationStatus();
+        localStorage.setItem("currentPage", "0");
         setTimeout(() => {
           navigate("/candidate/status");
         }, 3000);

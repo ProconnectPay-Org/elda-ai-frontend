@@ -13,7 +13,6 @@ import { CandidateData } from "@/types";
 import { Link } from "react-router-dom";
 import SchoolApplicationModal from "../SchoolApplicationModal";
 import { useState } from "react";
-import SelectedCandidateModal from "../SelectedCandidateModal";
 
 export const columns: ColumnDef<CandidateData>[] = [
   {
@@ -154,16 +153,6 @@ export const columns: ColumnDef<CandidateData>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const [isSchoolModalOpen, setIsSchoolModalOpen] = useState(false); // Separate modal state
-      const [isCandidateDataModalOpen, setIsCandidateDataModalOpen] =
-        useState(false);
-
-      const openCandidateModal = () => {
-        setIsCandidateDataModalOpen(true);
-      };
-
-      const closeCandidateModal = () => {
-        setIsCandidateDataModalOpen(false);
-      };
 
       const openSchoolModal = () => {
         setIsSchoolModalOpen(true);
@@ -189,9 +178,6 @@ export const columns: ColumnDef<CandidateData>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Other Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={openCandidateModal}>
-                View Candidate Data
-              </DropdownMenuItem>
               <DropdownMenuItem>
                 <Link
                   to={
@@ -233,16 +219,13 @@ export const columns: ColumnDef<CandidateData>[] = [
               <DropdownMenuItem>
                 <Link to={`/assigned-candidates/${id}`}>Candidate Profile</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={openSchoolModal}>
+              <DropdownMenuItem className="z-20" onClick={openSchoolModal}>
                 School Application Status
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           {isSchoolModalOpen && (
             <SchoolApplicationModal onClose={closeSchoolModal} id={id} />
-          )}
-          {isCandidateDataModalOpen && (
-            <SelectedCandidateModal onClose={closeCandidateModal} id={id} />
           )}
         </>
       );

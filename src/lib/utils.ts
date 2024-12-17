@@ -37,6 +37,51 @@ export const formatDate = (dateString: string): string => {
   })} ${date.getFullYear()}`;
 };
 
+export const formatMonthDay = (inputDate: string): string => {
+  // Split the input date string into components
+  const [, month, day] = inputDate.split("-").map(Number);
+
+  // List of month names
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  // Helper function to add ordinal suffix
+  const getOrdinalSuffix = (day: number): string => {
+    if (day > 3 && day < 21) return "th";
+    switch (day % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+
+  // Format the day with the ordinal suffix
+  const dayWithSuffix = `${day}${getOrdinalSuffix(day)}`;
+
+  // Get the month name
+  const monthName = monthNames[month - 1]; // Convert 1-based month to 0-based index
+
+  // Return the formatted date
+  return `${dayWithSuffix} ${monthName}`;
+};
+
 export const getErrorMessage = (
   error:
     | string

@@ -17,6 +17,9 @@ const relationshipOptions = [
   "sister",
   "brother",
   "cousin",
+  "spouse",
+  "colleague",
+  "friend"
 ];
 
 const ReferreeDetails = () => {

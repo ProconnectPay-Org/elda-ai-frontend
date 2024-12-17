@@ -55,7 +55,7 @@ const HeaderDetails = () => {
         <label htmlFor="">
           Email <span className="text-red">*</span>
         </label>
-        <div className="w-full flex items-center gap-4 border border-[#667085] px-3 rounded-full overflow-hidden">
+        <div className="w-full flex items-center gap-0 border border-[#667085] px-3 rounded-md overflow-hidden">
           <img src={mailIcon} alt="mail icon" />
           <Input
             type="email"
@@ -75,7 +75,7 @@ const HeaderDetails = () => {
                 Full Name <span className="text-red">*</span>
               </label>
               <input
-                className="border border-gray-border rounded-full py-2 px-4"
+                className="border border-gray-border rounded-md py-2 px-4"
                 id="fullName"
                 {...register("fullName")}
                 placeholder="Enter your full name"
@@ -102,11 +102,11 @@ const HeaderDetails = () => {
                       ref,
                     }}
                     containerClass="react-tel-input"
-                    inputClass="border border-gray-border rounded-full py-2 px-4"
+                    inputClass="border border-gray-border py-2 px-4"
                     inputStyle={{ width: "100%", height: "42px" }}
                     buttonStyle={{
                       backgroundColor: "white",
-                      borderRadius: "100% 0 0 100%",
+                      // borderRadius: "100% 0 0 100%",
                       borderColor: "#66666",
                     }}
                     value={value}
@@ -129,7 +129,7 @@ const HeaderDetails = () => {
                 City <span className="text-red">*</span>
               </label>
               <input
-                className="border border-gray-border rounded-full py-2 px-4"
+                className="border border-gray-border rounded-md py-2 px-4"
                 id="city"
                 {...register("city")}
                 placeholder="Enter your city"
@@ -147,7 +147,8 @@ const HeaderDetails = () => {
               <input
                 type="text"
                 {...register("state")}
-                className="border border-gray-border h-[42px] rounded-full py-2 px-4"
+                className="border bg-white border-gray-border h-[42px] rounded-md py-2 px-4"
+                disabled
               />
               {errors.state && (
                 <span className="text-red text-sm">
@@ -163,7 +164,7 @@ const HeaderDetails = () => {
                 Profession <span className="text-red">*</span>
               </label>
               <input
-                className="border border-gray-border rounded-full py-2 px-4"
+                className="border border-gray-border rounded-md py-2 px-4"
                 id="profession"
                 {...register("profession")}
                 placeholder="Enter your profession"

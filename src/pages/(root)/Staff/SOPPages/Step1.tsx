@@ -46,11 +46,12 @@ const Step1 = ({ candidateId }: { candidateId: string }) => {
           <label htmlFor="email">
             Email <span className="text-red">*</span>
           </label>
-          <div className="w-full flex items-center gap-4 border border-[#667085] p-3 rounded-full overflow-hidden">
+          <div className="w-full flex items-center gap-4 border border-[#667085] p-3 rounded-md overflow-hidden">
             <img src={mailIcon} alt="mail icon" />
             <input
               type="email"
               defaultValue={email}
+              disabled
               className="bg-transparent w-full focus:ring-0 focus-visible:ring-0 focus:outline-none border-0 focus-within:ring-0 max-h-fit"
             />
             <img src={helpIcon} alt="help icon" />

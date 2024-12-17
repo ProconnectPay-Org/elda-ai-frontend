@@ -21,6 +21,7 @@ import RootLayout from "@/layouts/RootLayout";
 import { useQuery } from "@tanstack/react-query";
 import {
   craftCandidateResume,
+  patchEducationDetail,
   postEditedCandidate,
 } from "@/lib/actions/staff.actions";
 import { useNavigate, useParams } from "react-router-dom";
@@ -101,6 +102,7 @@ const RefineResume = () => {
   const onSubmit = async (data: any) => {
     const currentFormData = { ...formData, ...data };
     setIsLoading(true);
+    localStorage.setItem("resumeCurrentPage", "0");
 
     try {
       if (currentStep === 0) {
@@ -111,10 +113,18 @@ const RefineResume = () => {
         }
         const personalData = {
           city_of_birth: currentFormData.city,
-          state_of_birth: currentFormData.state,
           phone_number: currentFormData.phoneNumber,
         };
         await postEditedCandidate(id, personalData);
+      } else if (currentStep === 2) {
+        const educationData = {
+          school_name: currentFormData.tertiaryInstitutionAttended,
+          specific_course_of_study: currentFormData.course,
+          degree_type: currentFormData.kindOfDegree,
+          class_of_degree: currentFormData.classOfDegree,
+          candidate: id,
+        };
+        await patchEducationDetail(id, educationData);
       } else if (currentStep === steps.length - 1) {
         // Final Step: Navigate to Final Resume
         if (resumeData?.resume) {

@@ -183,10 +183,11 @@ export const getEditedCandidate = async (id: string) => {
   return data;
 };
 
-export const patchEducationDetail = async (id: string) => {
+export const patchEducationDetail = async (id: string, data: any) => {
   const staffToken = Cookies.get("staff_access_token");
-  const { data } = await axios.get(
+  const { data: response } = await axios.patch(
     `${API_URL}staff-dashboard/edit-candidate/education-detail/${id}/`,
+    data,
     {
       headers: {
         Authorization: `Bearer ${staffToken}`,
@@ -194,13 +195,28 @@ export const patchEducationDetail = async (id: string) => {
       },
     }
   );
-  return data;
+  return response;
 };
 
-export const patchJobExperience = async (id: string) => {
+export const patchJobExperience = async (id: string, data: any) => {
+  const staffToken = Cookies.get("staff_access_token");
+  const response = await axios.patch(
+    `${API_URL}staff-dashboard/edit-candidate/job-experience/${id}/`,
+    data,
+    {
+      headers: {
+        Authorization: `Bearer ${staffToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return response;
+};
+
+export const patchCareer = async (id: string) => {
   const staffToken = Cookies.get("staff_access_token");
   const { data } = await axios.get(
-    `${API_URL}staff-dashboard/edit-candidate/job-experience/${id}/`,
+    `${API_URL}staff-dashboard/edit-candidate/career-detail/${id}/`,
     {
       headers: {
         Authorization: `Bearer ${staffToken}`,

@@ -75,6 +75,7 @@ const CraftSOP = () => {
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await nextStep();
+    localStorage.setItem("sopCurrentPage", "0");
   };
 
   const progressBarWidth = ((currentStep + 1) / totalSteps) * 100;

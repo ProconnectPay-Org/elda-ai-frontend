@@ -1,9 +1,12 @@
 import { ResumeStep2FormData } from "@/types";
-import { formatDate, getCountryNameFromISO, getErrorMessage } from "@/lib/utils";
-import { useFormContext } from "react-hook-form";
+import {
+  formatMonthDay,
+  getCountryNameFromISO,
+  getErrorMessage,
+} from "@/lib/utils";
+import { Controller, useFormContext } from "react-hook-form";
 import "react-phone-input-2/lib/style.css";
-import { genderOptions } from "@/constants";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useCandidates } from "@/hooks/useCandidiates";
 
@@ -11,6 +14,7 @@ const BioData = () => {
   const {
     register,
     setValue,
+    control,
     formState: { errors },
   } = useFormContext<ResumeStep2FormData>();
   const { id } = useParams<{ id: string }>();
@@ -22,21 +26,26 @@ const BioData = () => {
   const { singleCandidate, singleCandidateLoading, singleCandidateError } =
     useCandidates(id);
 
+  const [inputValue, setInputValue] = useState("");
+
   useEffect(() => {
     if (singleCandidate) {
       const foundCandidate = singleCandidate;
 
       setValue("gender", foundCandidate.gender || "");
-      setValue("dateOfBirth", formatDate(foundCandidate.birth_date) || "");
-      setValue("nationality", getCountryNameFromISO(foundCandidate.country_of_birth) || "");
+      setValue("dateOfBirth", formatMonthDay(foundCandidate.birth_date) || "");
+      setValue(
+        "nationality",
+        getCountryNameFromISO(foundCandidate.country_of_birth) || ""
+      );
 
-      if (foundCandidate.career && foundCandidate.career.length > 0) {
-        const careerInterestsString =
-          foundCandidate.career[0].career_interests
-            ?.map((interest: { id: string; name: string }) => interest.name)
-            .join(", ") || "";
-        setValue("interest", careerInterestsString);
-      }
+      const careerInterests =
+        foundCandidate.career?.[0]?.career_interests?.map(
+          (interest: { id: string; name: string }) => ({
+            name: interest.name,
+          })
+        ) || [];
+      setValue("interest", careerInterests);
     }
   }, [singleCandidate, id, setValue]);
 
@@ -51,7 +60,12 @@ const BioData = () => {
   return (
     <div className="space-y-10">
       <div className="space-y-2">
-        <p>PREFERRED CALL NAME: {singleCandidate?.preferred_call_name}</p>
+        <p>
+          <span className="font-semibold">PREFERRED CALL NAME: </span>
+          <span className="capitalize">
+            {singleCandidate?.preferred_call_name}
+          </span>
+        </p>
       </div>
       <div className="bg-gray py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl">
         <div className="flex flex-col gap-8">
@@ -60,18 +74,13 @@ const BioData = () => {
               <label htmlFor="gender" className="text-[#344054]">
                 Gender <span className="text-red">*</span>
               </label>
-              <select
+              <input
+                type="text"
+                className="border border-gray-border h-[42px] rounded-md py-2 px-4"
                 id="gender"
                 {...register("gender")}
-                className="border border-gray-border h-[42px] rounded-full py-2 px-4"
-              >
-                <option value="">Select your gender</option>
-                {genderOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                disabled
+              />
               {errors.gender && (
                 <span className="text-red text-sm">
                   {getErrorMessage(errors.gender)}
@@ -84,10 +93,11 @@ const BioData = () => {
               </label>
               <input
                 type="text"
-                className="border border-gray-border h-[42px] rounded-full py-2 px-4"
+                className="border border-gray-border h-[42px] rounded-md py-2 px-4"
                 id="dateOfBirth"
                 {...register("dateOfBirth")}
                 placeholder="Enter your date of birth"
+                disabled
               />
               {errors.dateOfBirth && (
                 <span className="text-red text-sm">
@@ -103,10 +113,11 @@ const BioData = () => {
                 Nationality
               </label>
               <input
-                className="border border-gray-border rounded-full py-2 px-4"
+                className="border border-gray-border rounded-md py-2 px-4"
                 id="nationality"
                 {...register("nationality")}
                 placeholder="Nigerian"
+                disabled
               />
               {errors.nationality && (
                 <span className="text-red text-sm">
@@ -116,17 +127,106 @@ const BioData = () => {
             </div>
             <div className="flex flex-col sm:w-1/2">
               <label htmlFor="interest" className="text-[#344054]">
-                Interest(s)
+                Career Interest(s)
               </label>
-              <textarea
-                className="border border-gray-border rounded py-2 px-4"
-                id="interest"
-                {...register("interest")}
+              <Controller
+                name="interest"
+                control={control}
+                rules={{
+                  required: "Please select at least one career interest.",
+                  validate: (value) =>
+                    value.length <= 3 ||
+                    "You can only select up to 3 career interests.",
+                }}
+                render={({ field }) => (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      alignItems: "center",
+                      border: "1px solid #ccc",
+                      borderRadius: "0.35rem",
+                      padding: "8px",
+                    }}
+                  >
+                    {field.value?.map(
+                      (interest: { name: string }, index: number) => (
+                        <span
+                          key={index}
+                          style={{
+                            backgroundColor: "#e0e7ff",
+                            padding: "2px 6px",
+                            borderRadius: "4px",
+                            marginRight: "5px",
+                            marginBottom: "5px",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          {interest.name}
+                          <button
+                            onClick={() => {
+                              const updatedInterests = field.value.filter(
+                                (_: any, i: number) => i !== index
+                              );
+                              field.onChange(updatedInterests);
+                            }}
+                            style={{
+                              marginLeft: "5px",
+                              background: "transparent",
+                              border: "none",
+                              cursor: "pointer",
+                              color: "#ff4d4f",
+                              fontSize: "12px",
+                            }}
+                          >
+                            &times;
+                          </button>
+                        </span>
+                      )
+                    )}
+                    <input
+                      type="text"
+                      placeholder="Type and press comma, full stop or click outside to add"
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      onKeyDown={(e) => {
+                        const isDelimiter = e.key === "," || e.key === ".";
+                        if (isDelimiter && inputValue.trim()) {
+                          if ((field.value || []).length >= 3) {
+                            e.preventDefault();
+                            alert("You can only add up to 3 career interests.");
+                            return;
+                          }
+                          const newInterest = { name: inputValue.trim() };
+                          field.onChange([...(field.value || []), newInterest]);
+                          setInputValue("");
+                          e.preventDefault();
+                        }
+                      }}
+                      onBlur={() => {
+                        if (inputValue.trim()) {
+                          if ((field.value || []).length >= 3) {
+                            alert("You can only add up to 3 career interests.");
+                            return;
+                          }
+                          const newInterest = { name: inputValue.trim() };
+                          field.onChange([...(field.value || []), newInterest]);
+                          setInputValue("");
+                        }
+                      }}
+                      style={{
+                        border: "none",
+                        outline: "none",
+                        minWidth: "100px",
+                        flexGrow: 1,
+                      }}
+                    />
+                  </div>
+                )}
               />
               {errors.interest && (
-                <span className="text-red text-sm">
-                  {getErrorMessage(errors.interest)}
-                </span>
+                <span className="text-red text-sm">{errors.interest}</span>
               )}
             </div>
           </div>

@@ -24,7 +24,7 @@ const useAuth = () => {
     queryKey: ["loggedInUser", userRole],
     queryFn: () => getLoggedInUser(userRole as "staff" | "admin" | "candidate"),
     enabled: !!userRole,
-    staleTime: 5 * 1000,
+    staleTime: 10 * 1000 * 60,
   });
 
   useEffect(() => {

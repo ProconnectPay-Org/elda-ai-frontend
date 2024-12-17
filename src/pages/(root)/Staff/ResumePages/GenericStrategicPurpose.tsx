@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { careerStrategyPurpose } from "@/lib/actions/staff.actions";
 import { useEffect, useState } from "react";
+import { useCandidates } from "@/hooks/useCandidiates";
 
 const GenericStrategicPurpose = () => {
   const {
@@ -24,11 +25,22 @@ const GenericStrategicPurpose = () => {
     return;
   }
 
-  const { data, isLoading } = useQuery({
+  const { singleCandidate, singleCandidateLoading } = useCandidates(id);
+
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["careerStrategyPurpose", id],
     queryFn: () => careerStrategyPurpose(id),
     staleTime: 5 * 1000 * 60,
+    enabled: false,
   });
+
+  useEffect(() => {
+    if (singleCandidate?.career_strategic_purpose === "") {
+      refetch();
+    } else {
+      setValue("prompt", singleCandidate?.career_strategic_purpose || "");
+    }
+  }, [singleCandidate, refetch, setValue]);
 
   useEffect(() => {
     if (data) {
@@ -48,10 +60,6 @@ const GenericStrategicPurpose = () => {
       setRefineLoading(false);
     }
   };
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="space-y-5">
@@ -84,7 +92,11 @@ const GenericStrategicPurpose = () => {
               className="border-0 focus:ring-0 focus:outline-0 focus-visible:ring-0 outline-0 ring-0 shadow-none"
               id="prompt"
               {...register("prompt")}
-              placeholder="Enter your prompt"
+              placeholder={`${
+                isLoading || singleCandidateLoading
+                  ? "Getting Career Strategic Purpose"
+                  : "Enter your prompt"
+              }`}
               onChange={(e) => {
                 setValue("prompt", e.target.value);
               }}

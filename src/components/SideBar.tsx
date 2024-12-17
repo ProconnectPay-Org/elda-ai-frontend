@@ -7,7 +7,7 @@ import Logo from "../assets/elda-new-logo.png";
 const SideBar = () => {
   const navLocation = useLocation();
   return (
-    <section className="sidebar w-[250px]">
+    <section className="sidebar w-[250px] z-20">
       <nav className="flex flex-col gap-4">
         <Link
           to="/"

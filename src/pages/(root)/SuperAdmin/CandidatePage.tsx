@@ -5,7 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getSingleCandidate } from "@/lib/actions/user.actions";
 import AdminLayout from "@/layouts/AdminLayout";
-import { copyToClipboard, getCountryNameFromISO } from "@/lib/utils";
+import {
+  copyToClipboard,
+  formatDate,
+  getCountryNameFromISO,
+} from "@/lib/utils";
 import CopyText from "@/components/CopyText";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -167,11 +171,28 @@ const CandidatePage = () => {
               </button>
               <button className="text-sm bg-red text-white rounded-lg p-2">
                 <Link
-                  to={candidate.sop_status === "Completed" ? `/sop/${id}` : ``}
+                  to={
+                    candidate.sop_status1 === "Completed"
+                      ? `/sop/${id}?type=school1`
+                      : ``
+                  }
                 >
-                  {candidate.sop_status === "Completed"
-                    ? "View SOP"
-                    : "SOP not created"}
+                  {candidate.sop_status1 === "Completed"
+                    ? "View SOP 1"
+                    : "SOP 1 not created"}
+                </Link>
+              </button>
+              <button className="text-sm bg-red text-white rounded-lg p-2">
+                <Link
+                  to={
+                    candidate.sop_status2 === "Completed"
+                      ? `/sop/${id}?type=school2`
+                      : ``
+                  }
+                >
+                  {candidate.sop_status2 === "Completed"
+                    ? "View SOP 2"
+                    : "SOP 2 not created"}
                 </Link>
               </button>
             </div>
@@ -243,13 +264,6 @@ const CandidatePage = () => {
           ) || (
             <span className="flex gap-4 items-center">
               <p>No career strategic purpose provided</p>
-              <Link
-                to={`/craft-sop/${id}`}
-                target="_blank"
-                className="button bg-red text-white flex items-center justify-center text-center px-4 rounded-lg h-12"
-              >
-                Get Started
-              </Link>
             </span>
           )}
         </div>
@@ -265,8 +279,10 @@ const CandidatePage = () => {
         {candidate?.education?.map((education, index: number) => (
           <span key={index} className="flex gap-5 items-center">
             <p className="text-[#5E6366] font-semibold md:w-60">
-              {`${education.admission_date || "No year set"} - ${
-                education.graduation_date || "No year set"
+              {`${
+                formatDate(String(education.admission_date)) || "No year set"
+              } - ${
+                formatDate(String(education.graduation_date)) || "No year set"
               }`}
             </p>
             <p className="font-semibold capitalize">
@@ -284,8 +300,10 @@ const CandidatePage = () => {
           ) : (
             <span key={index} className="flex gap-5 items-center">
               <p className="text-[#5E6366] font-semibold md:w-60">
-                {`${education.admission_date || "No year set"} - ${
-                  education.graduation_date || "No year set"
+                {`${
+                  formatDate(String(education.admission_date)) || "No year set"
+                } - ${
+                  formatDate(String(education.graduation_date)) || "No year set"
                 }`}
               </p>
               <p className="font-semibold capitalize">
@@ -325,8 +343,13 @@ const CandidatePage = () => {
           jobExperienceData.business_name ? (
             <span key={index} className="flex gap-5 items-center">
               <p className="text-[#5E6366] font-semibold md:w-60">
-                {jobExperienceData?.year_started || "No start year"} -{" "}
-                {jobExperienceData?.year_ended || "Till Date"}
+                {formatDate(String(jobExperienceData?.year_started)) ||
+                  "No start year"}{" "}
+                -{" "}
+                {jobExperienceData?.year_ended === "1960-01-01"
+                  ? "Present"
+                  : formatDate(String(jobExperienceData?.year_ended)) ||
+                    "Present"}
               </p>
               <p className="font-semibold capitalize">{`${
                 jobExperienceData?.job_title || "No job title"
@@ -343,23 +366,55 @@ const CandidatePage = () => {
         <h3 className="font-semibold text-lg mb-4">JOB SUMMARY</h3>
         <div className="text-[#5E6366]">
           {candidate?.job_experience?.length ? (
-            candidate.job_experience.map((job) =>
-              job.job_summary ? (
-                <div key={job.id}>
-                  <p className="mb-3">{job.job_summary}</p>
-                  <CopyIcon
-                    size={16}
-                    cursor="pointer"
-                    onClick={() => copyToClipboard(job.job_summary, toast)}
-                  />
-                </div>
-              ) : null // Don't render anything if job_summary is empty
+            candidate.job_experience.map(
+              (job) =>
+                job.job_summary ? (
+                  <div key={job.id}>
+                    <p className="mb-3">{job.job_summary}</p>
+                    <CopyIcon
+                      size={16}
+                      cursor="pointer"
+                      onClick={() => copyToClipboard(job.job_summary, toast)}
+                    />
+                  </div>
+                ) : null // Don't render anything if job_summary is empty
             )
           ) : (
             <span className="flex gap-4 items-center">
               <p>No job summary provided</p>
             </span>
           )}
+        </div>
+      </div>
+
+      <hr className="w-full h-2 my-8" />
+
+      {/* RECOMMENDER DETAILS */}
+      <div>
+        <h3 className="font-semibold text-lg mb-4 text-red">
+          Recommender Details
+        </h3>
+        <div className="space-y-4 m-4">
+          {candidate?.recommenders?.map((referee, index) => (
+            <div key={index}>
+              <CopyText
+                label="Recommender Type"
+                text={referee.recommender_type}
+                className="text-blue-500"
+              />
+              <div className="flex justify-between items-center">
+                <CopyText label="Recommender Name" text={referee.full_name} />
+                <CopyText
+                  label="Recommender Relationship"
+                  text={referee.relationship}
+                />
+                <CopyText label="Email" text={referee.email} />
+                <CopyText label="Phone Number" text={referee.phone_number} />
+                <CopyText label="Organization" text={referee.organization} />
+                <CopyText label="Job Title" text={referee.job_title} />
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
