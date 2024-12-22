@@ -154,14 +154,13 @@ export const updateSop = async (
   return data;
 };
 
-export const postEditedCandidate = async (id: string, data: any) => {
-  const staffToken = Cookies.get("staff_access_token");
+export const postEditedCandidate = async (id: string, data: any, userToken: string) => {
   const { data: response } = await axios.patch(
     `${API_URL}staff-dashboard/edit-candidate/${id}/`,
     data,
     {
       headers: {
-        Authorization: `Bearer ${staffToken}`,
+        Authorization: `Bearer ${userToken}`,
         "Content-Type": "application/json",
       },
     }

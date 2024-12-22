@@ -48,6 +48,8 @@ const SopTemplate = () => {
       padding: 20,
       fontSize: 12,
       paddingBottom: 16,
+      width: "896px", // Fixed A4 width
+      height: "1124px", // Fixed A4 height
       // lineHeight: 1.5,
     },
     title: {

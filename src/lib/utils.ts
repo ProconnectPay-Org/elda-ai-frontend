@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 import { z } from "zod";
 import { FieldError, Merge, FieldErrorsImpl } from "react-hook-form";
 import { Country } from "country-state-city";
+import { countriesData } from "@/constants";
 
 /**
  * Converts an ISO country code to the full country name.
@@ -14,6 +15,15 @@ export function getCountryNameFromISO(isoCode: string) {
   const country = Country.getCountryByCode(isoCode);
   return country ? country.name : "Unknown";
 }
+
+// Function to get the demonym from ISO code
+export function getDemonymFromISO(isoCode: string) {
+  const country = countriesData.find((c: { country: string; demonym: string }) => 
+    c.country === getCountryNameFromISO(isoCode)
+  );
+  return country ? country.demonym : "Unknown";
+}
+
 interface ToastConfig {
   variant: "success" | "destructive";
   title: string;

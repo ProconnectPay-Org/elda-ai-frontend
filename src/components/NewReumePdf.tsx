@@ -9,11 +9,18 @@ import {
   EducationHistory,
   JobExperience,
 } from "@/types";
-import { formatDate, formatMonthDay, getCountryNameFromISO } from "@/lib/utils";
+import {
+  formatDate,
+  formatMonthDay,
+  getCountryNameFromISO,
+  getDemonymFromISO,
+} from "@/lib/utils";
 
 // Define your styles
 const styles = StyleSheet.create({
   page: {
+    width: "896px", // Fixed A4 width
+    height: "1124px", // Fixed A4 height
     paddingRight: 20,
     paddingLeft: 20,
     paddingBottom: 20,
@@ -86,7 +93,12 @@ const styles = StyleSheet.create({
   },
   flex: { display: "flex" },
   smallText: { fontSize: "14px", lineHeight: 1.5, textAlign: "justify" },
-  careerInterestText: { fontSize: "14px", lineHeight: 1.5, textAlign: "justify", textTransform: "capitalize" },
+  careerInterestText: {
+    fontSize: "14px",
+    lineHeight: 1.5,
+    textAlign: "justify",
+    textTransform: "capitalize",
+  },
   blueSmallText: {
     color: "#1e3a8a",
     fontSize: "14px",
@@ -183,6 +195,9 @@ const NewResumePdf = () => {
     singleCandidateError,
   } = useCandidates(id);
 
+  console.log(formData);
+  
+
   if (singleCandidateLoading) {
     return <FinalResumeSkeleton />;
   }
@@ -227,13 +242,13 @@ const NewResumePdf = () => {
             </View>
 
             <View style={styles.flexItemsCenterGap3}>
-              <Text style={styles.smallBold}>{formData?.career[0].sector}</Text>
-              <Text style={styles.semiBold}>|</Text>
               <Text style={styles.smallBold}>
                 {formData?.career[0].profession}
               </Text>
               <Text style={styles.semiBold}>|</Text>
               <Text style={styles.smallBold}>Global Citizen</Text>
+              <Text style={styles.semiBold}>|</Text>
+              <Text style={styles.smallBold}>{formData?.career[0].sector}</Text>
             </View>
           </View>
 
@@ -263,7 +278,7 @@ const NewResumePdf = () => {
               <View style={styles.flex}>
                 <Text style={styles.utilityClass}>Nationality:</Text>
                 <Text style={styles.width200TextSm}>
-                  {getCountryNameFromISO(formData?.country_of_birth)}
+                  {getDemonymFromISO(formData?.country_of_birth)}
                 </Text>
               </View>
               <View style={styles.flex}>
@@ -292,7 +307,6 @@ const NewResumePdf = () => {
           <View style={styles.section}>
             <Text style={styles.resumeTitleText}>WORK EXPERIENCE</Text>
             {formData?.job_experience
-              ?.slice(0, 3)
               .map((experience: JobExperience) =>
                 experience.business_name ? (
                   <View key={experience.id} style={styles.mb2}>

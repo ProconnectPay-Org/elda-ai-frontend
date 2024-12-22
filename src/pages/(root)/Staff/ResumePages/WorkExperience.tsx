@@ -9,6 +9,9 @@ import promptWhiteImage from "@/assets/prompt-white.svg";
 import { useParams } from "react-router-dom";
 import { refinePrompt } from "@/lib/actions/user.actions";
 import { toast } from "@/components/ui/use-toast";
+import { postJobExperience } from "@/lib/actions/staffresume.actions";
+import Cookies from "js-cookie";
+import { Loader2 } from "lucide-react";
 
 const WorkExperience = () => {
   const {
@@ -25,7 +28,9 @@ const WorkExperience = () => {
   const { singleCandidate, singleCandidateLoading, singleCandidateError } =
     useCandidates(id);
   const [jobsToShow, setJobsToShow] = useState("0");
+  const [jobStatus, setJobStatus] = useState("current");
   const [refineLoading, setRefineLoading] = useState(false);
+  const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (singleCandidate) {
@@ -33,10 +38,14 @@ const WorkExperience = () => {
         (experience: JobExperience) => experience.business_name
       );
 
-      setJobsToShow(String(filteredJobExperiences.length));
+      const jobsToShowCount = singleCandidate.career[0]?.jobs_to_show || 0;
+      setJobsToShow(jobsToShowCount);
 
       filteredJobExperiences.forEach(
         (experience: JobExperience, index: number) => {
+          setJobStatus(experience.job_status || "current");
+          Cookies.set(`studentJobId${index + 1}`, String(experience.id));
+
           setValue(
             `jobExperiences.${index}.nameOfCompany`,
             experience.business_name || ""
@@ -58,7 +67,7 @@ const WorkExperience = () => {
             `jobExperiences.${index}.startDate`,
             formatDate(experience.year_started) || ""
           );
-          if (experience.year_ended) {
+          if (experience.year_ended !== "1960-01-01") {
             setValue(
               `jobExperiences.${index}.endDate`,
               formatDate(experience.year_ended) || ""
@@ -107,6 +116,52 @@ const WorkExperience = () => {
     }
   };
 
+  const handleSaveChanges = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    index: number
+  ) => {
+    e.preventDefault();
+    setLoadingIndex(index);
+
+    try {
+      // const experienceData = getValues(`jobExperiences.${index}`);
+      const job_experience_id = Cookies.get(`studentJobId${index + 1}`);
+
+      if (!job_experience_id) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: `Missing ID for job ${index + 1}.`,
+        });
+        return;
+      }
+
+      const jobExperienceData = {
+        business_name: getValues(`jobExperiences.${index}.nameOfCompany`),
+        job_title: getValues(`jobExperiences.${index}.jobTitle`),
+        job_summary: getValues(`jobExperiences.${index}.jobDescription`),
+        employment_type: getValues(`jobExperiences.${index}.mode`),
+        state: getValues(`jobExperiences.${index}.location`),
+      } as JobExperience;
+
+      await postJobExperience(jobExperienceData, job_experience_id);
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Job experience updated successfully!",
+      });
+    } catch (error) {
+      const axiosError = error as CustomAxiosError;
+      toast({
+        variant: "destructive",
+        title: "Error saving changes:",
+        description: axiosError.response?.data || "Unknown error",
+      });
+    } finally {
+      setLoadingIndex(null); // Reset loading state
+    }
+  };
+
   if (singleCandidateLoading) {
     return <div>Loading...</div>;
   }
@@ -137,9 +192,12 @@ const WorkExperience = () => {
             key={index}
             className="bg-gray py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl"
           >
-            <h3 className="font-bold mb-4 text-lg">
-              Job History: {experience.business_name}
-            </h3>
+            <div className="flex justify-between">
+              <h3 className="font-bold mb-4 text-lg">
+                Job History: {experience.business_name}
+              </h3>
+              <p className="capitalize text-sm font-semibold">{jobStatus}</p>
+            </div>
             <div className="flex flex-col gap-8">
               <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
                 <div className="flex flex-col w-full">
@@ -234,7 +292,7 @@ const WorkExperience = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
+              <div className="flex flex-col sm:flex-row justify-evenly sm:justify-between gap-4 md:gap-8 w-full">
                 <div className="flex flex-col sm:w-1/2">
                   <label
                     htmlFor={`location-${index}`}
@@ -255,7 +313,7 @@ const WorkExperience = () => {
                   )}
                 </div>
 
-                <div className="flex flex-col sm:w-fit">
+                <div className="flex flex-col w-1/3 sm:w-fit">
                   <label
                     htmlFor={`startDate-${index}`}
                     className="text-[#344054]"
@@ -263,6 +321,7 @@ const WorkExperience = () => {
                     Start Date
                   </label>
                   <input
+                    disabled
                     type="text"
                     className="border border-gray-border h-[42px] rounded-md py-2 px-4"
                     id={`startDate-${index}`}
@@ -275,7 +334,7 @@ const WorkExperience = () => {
                   )}
                 </div>
                 {experience.year_ended !== "1960-01-01" && (
-                  <div className="flex flex-col sm:w-fit">
+                  <div className="flex flex-col w-[10] sm:w-fit">
                     <label
                       htmlFor={`endDate-${index}`}
                       className="text-[#344054]"
@@ -283,6 +342,7 @@ const WorkExperience = () => {
                       End Date
                     </label>
                     <input
+                      disabled
                       type="text"
                       className="border border-gray-border h-[42px] rounded-md py-2 px-4"
                       id={`endDate-${index}`}
@@ -296,10 +356,23 @@ const WorkExperience = () => {
                   </div>
                 )}
               </div>
-              {/* <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between">
                 <Button className="bg-red">Delete Experience</Button>
-                <Button className="bg-red">Save Changes</Button>
-              </div> */}
+                <Button
+                  className="bg-red"
+                  onClick={(e) => handleSaveChanges(e, index)}
+                  disabled={loadingIndex === index}
+                >
+                  {loadingIndex === index ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <p>Saving</p>
+                      <Loader2 className="animate-spin" />
+                    </div>
+                  ) : (
+                    "Save Changes"
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
         )

@@ -20,6 +20,7 @@ const FinalResume = () => {
   const { singleCandidate } = useCandidates(id);
 
   const downloadPDF = async () => {
+    localStorage.setItem("resumeCurrentPage", "0");
     if (resumeRef.current) {
       const canvas = await html2canvas(resumeRef.current, {
         scale: 2,
@@ -105,7 +106,7 @@ const FinalResume = () => {
       <div className="mt-5 md:mt-8 w-full flex items-center justify-between">
         <Link to={`/download-resume/${id}`}>
           <Button className="bg-white text-red border border-red">
-           Full Preview Resume
+            Full Preview Resume
           </Button>
         </Link>
 

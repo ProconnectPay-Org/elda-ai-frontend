@@ -19,12 +19,19 @@ import {
 } from ".";
 import RootLayout from "@/layouts/RootLayout";
 import { useQuery } from "@tanstack/react-query";
-import {
-  craftCandidateResume,
-  patchEducationDetail,
-  postEditedCandidate,
-} from "@/lib/actions/staff.actions";
+import { craftCandidateResume } from "@/lib/actions/staff.actions";
 import { useNavigate, useParams } from "react-router-dom";
+import Cookies from "js-cookie";
+import {
+  submitCareer,
+  submitEducationDetails,
+  updatePersonalDetails,
+} from "@/lib/actions/staffresume.actions";
+import {
+  CandidateCareer,
+  EducationHistory,
+  updateCandidateProfile,
+} from "@/types";
 
 const steps = [
   {
@@ -70,6 +77,12 @@ const RefineResume = () => {
   }
   const navigate = useNavigate();
 
+  const staffToken = Cookies.get("staff_access_token");
+  if (!staffToken) {
+    console.error("Staff token is missing. Please log in again.");
+    return null;
+  }
+
   const { data: resumeData } = useQuery({
     queryKey: ["candidateResume"],
     queryFn: () => craftCandidateResume(id),
@@ -96,13 +109,14 @@ const RefineResume = () => {
   const prevStep = () => {
     if (currentStep > 0) {
       saveCurrentStep(currentStep - 1);
+    } else {
+      navigate("/refine-resume");
     }
   };
 
   const onSubmit = async (data: any) => {
     const currentFormData = { ...formData, ...data };
     setIsLoading(true);
-    localStorage.setItem("resumeCurrentPage", "0");
 
     try {
       if (currentStep === 0) {
@@ -114,17 +128,26 @@ const RefineResume = () => {
         const personalData = {
           city_of_birth: currentFormData.city,
           phone_number: currentFormData.phoneNumber,
-        };
-        await postEditedCandidate(id, personalData);
+        } as updateCandidateProfile;
+        await updatePersonalDetails(personalData);
+
+        const workData = {
+          profession: currentFormData.profession,
+          career_interests: currentFormData.careerInterest,
+        } as CandidateCareer;
+
+        await submitCareer(workData);
+      } else if (currentStep === 1) {
+        const careerInterests = {
+          career_interests: currentFormData.careerInterest,
+        } as CandidateCareer;
+        await submitCareer(careerInterests);
       } else if (currentStep === 2) {
         const educationData = {
           school_name: currentFormData.tertiaryInstitutionAttended,
           specific_course_of_study: currentFormData.course,
-          degree_type: currentFormData.kindOfDegree,
-          class_of_degree: currentFormData.classOfDegree,
-          candidate: id,
-        };
-        await patchEducationDetail(id, educationData);
+        } as EducationHistory;
+        await submitEducationDetails(educationData);
       } else if (currentStep === steps.length - 1) {
         // Final Step: Navigate to Final Resume
         if (resumeData?.resume) {

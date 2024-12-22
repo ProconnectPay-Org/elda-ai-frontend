@@ -10,15 +10,22 @@ import { useQuery } from "@tanstack/react-query";
 import { careerStrategyPurpose } from "@/lib/actions/staff.actions";
 import { useEffect, useState } from "react";
 import { useCandidates } from "@/hooks/useCandidiates";
+import { updatePersonalDetails } from "@/lib/actions/staffresume.actions";
+import { toast } from "@/components/ui/use-toast";
+import { Loader2 } from "lucide-react";
 
 const GenericStrategicPurpose = () => {
   const {
     register,
     setValue,
+    getValues,
+    watch,
     formState: { errors },
   } = useFormContext<ResumeStep5FormData>();
   const { id } = useParams<{ id: string }>();
   const [refineLoading, setRefineLoading] = useState(false);
+  const [isSaving, setIsSavinng] = useState(false);
+  const [isUpdated, setIsUpdated] = useState(false);
 
   if (!id) {
     console.error("No ID provided");
@@ -34,6 +41,8 @@ const GenericStrategicPurpose = () => {
     enabled: false,
   });
 
+  const promptValue = watch("prompt");
+
   useEffect(() => {
     if (singleCandidate?.career_strategic_purpose === "") {
       refetch();
@@ -48,6 +57,14 @@ const GenericStrategicPurpose = () => {
     }
   }, [data, setValue]);
 
+  useEffect(() => {
+    if (singleCandidate?.career_strategic_purpose !== promptValue) {
+      setIsUpdated(true);
+    } else {
+      setIsUpdated(false);
+    }
+  }, [promptValue, singleCandidate]);
+
   const handleRefinePrompt = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setRefineLoading(true);
@@ -58,6 +75,34 @@ const GenericStrategicPurpose = () => {
       console.error("Error refining prompt:", error);
     } finally {
       setRefineLoading(false);
+    }
+  };
+
+  const saveCSP = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setIsSavinng(true);
+    try {
+      const promptValue = getValues("prompt");
+
+      const cspData = {
+        career_strategic_purpose: promptValue,
+      } as ResumeStep5FormData;
+
+      await updatePersonalDetails(cspData);
+
+      toast({
+        variant: "success",
+        title: "Saved Successfully",
+        description: "Career Strategic Purpose saved successfully!",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error Saving CSP",
+        description: error instanceof Error ? error.message : "Unknown error",
+      });
+    } finally {
+      setIsSavinng(false);
     }
   };
 
@@ -109,13 +154,26 @@ const GenericStrategicPurpose = () => {
           )}
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-between">
           <Button
             onClick={handleRefinePrompt}
             disabled={refineLoading}
             className="bg-red"
           >
-            {refineLoading ? "Regenerating..." : "Re Generate"}
+            {refineLoading ? "Re-generating..." : "Re-Generate"}
+          </Button>
+          <Button
+            onClick={saveCSP}
+            disabled={!isUpdated || isSaving}
+            className="bg-red"
+          >
+            {isSaving ? (
+              <div className="flex items-center gap-2">
+                <Loader2 className="animate-spin" /> Saving...
+              </div>
+            ) : (
+              "Save CSP"
+            )}
           </Button>
         </div>
       </div>

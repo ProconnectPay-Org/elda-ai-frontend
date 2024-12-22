@@ -20,6 +20,8 @@ const DownloadResume = () => {
   const { singleCandidate } = useCandidates(id);
 
   const downloadPDF = async () => {
+    localStorage.setItem("resumeCurrentPage", "0");
+
     if (resumeRef.current) {
       const canvas = await html2canvas(resumeRef.current, {
         scale: 2,
@@ -48,12 +50,12 @@ const DownloadResume = () => {
         const pageCanvas = document.createElement("canvas");
         pageCanvas.width = canvasWidth;
         pageCanvas.height = contentHeightPerPage * (canvasWidth / pdfWidth);
-        
+
         const context = pageCanvas.getContext("2d");
         if (context) {
           context.fillStyle = "#ffffff"; // White background
           context.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
-          
+
           context.drawImage(
             canvas,
             0,
@@ -65,12 +67,12 @@ const DownloadResume = () => {
             canvasWidth,
             pageCanvas.height
           );
-          
+
           const pageImgData = pageCanvas.toDataURL("image/jpeg", 1.0);
 
           // Apply top margin only for subsequent pages
           const yPosition = page > 0 ? topMargin : 0;
-          
+
           pdf.addImage(
             pageImgData,
             "JPEG",

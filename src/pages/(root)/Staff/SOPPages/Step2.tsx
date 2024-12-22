@@ -5,6 +5,7 @@ import { useCandidates } from "@/hooks/useCandidiates";
 import { postEditedCandidate } from "@/lib/actions/staff.actions";
 import { toast } from "@/components/ui/use-toast";
 import { useSearchParams } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Step2 = ({
   prevStep,
@@ -28,6 +29,12 @@ const Step2 = ({
 
   const prefix = routeType === "school2" ? "2" : "1";
 
+  const staffToken = Cookies.get("staff_access_token");
+  if (!staffToken) {
+    console.error("Staff token is missing. Please log in again.");
+    return null; // Prevent the component from rendering further
+  }
+
   useEffect(() => {
     if (singleCandidate) {
       setProgramType(singleCandidate[`program_type${prefix}`] || "");
@@ -46,9 +53,13 @@ const Step2 = ({
     e.preventDefault();
     setCourseDescriptionLoading(true);
     try {
-      const response = await postEditedCandidate(id, {
-        [`course_description${prefix}`]: manualDescription,
-      });
+      const response = await postEditedCandidate(
+        id,
+        {
+          [`course_description${prefix}`]: manualDescription,
+        },
+        staffToken
+      );
       toast({
         variant: "success",
         title: "Course Description Updated",
@@ -165,7 +176,7 @@ const Step2 = ({
                 {courseDescriptionLoading ? (
                   <>
                     <p>Saving...</p>
-                    <Loader2 className="animate-spin"/>
+                    <Loader2 className="animate-spin" />
                   </>
                 ) : (
                   "Save Course Description"

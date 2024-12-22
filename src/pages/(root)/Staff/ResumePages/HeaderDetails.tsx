@@ -9,6 +9,7 @@ import helpIcon from "@/assets/help-icon.svg";
 import mailIcon from "@/assets/mail.svg";
 import { useParams } from "react-router-dom";
 import { useCandidates } from "@/hooks/useCandidiates";
+import Cookies from "js-cookie";
 
 const HeaderDetails = () => {
   const {
@@ -29,7 +30,11 @@ const HeaderDetails = () => {
 
   useEffect(() => {
     if (singleCandidate) {
-
+      console.log(singleCandidate);
+            
+      Cookies.set("studentId", singleCandidate.id)
+      Cookies.set("studentCareerId", singleCandidate.career[0].id)
+      Cookies.set("studentEducationId", singleCandidate.education[0].id)
       const foundCandidate = singleCandidate;
       setValue("fullName", foundCandidate.user?.full_name || "");
       setValue("phoneNumber", foundCandidate.phone_number || "");

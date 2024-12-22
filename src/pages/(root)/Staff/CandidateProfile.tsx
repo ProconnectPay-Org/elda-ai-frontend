@@ -168,14 +168,27 @@ const CandidateProfile = () => {
               <button className="text-sm bg-red text-white rounded-lg p-2">
                 <Link
                   to={
-                    candidate.sop_status === "Completed"
-                      ? `/sop/${id}`
-                      : `/craft-sop/${id}`
+                    candidate.sop_status1 === "Completed"
+                      ? `/sop/${id}?type=school1`
+                      : `/craft-sop/${id}?type=school1`
                   }
                 >
-                  {candidate.sop_status === "Completed"
-                    ? "View SOP"
-                    : "Craft SOP"}
+                  {candidate.sop_status1 === "Completed"
+                    ? "View SOP 1"
+                    : "Craft SOP 1"}
+                </Link>
+              </button>
+              <button className="text-sm bg-red text-white rounded-lg p-2">
+                <Link
+                  to={
+                    candidate.sop_status2 === "Completed"
+                      ? `/sop/${id}?type=school2`
+                      : `/craft-sop/${id}?type=school2`
+                  }
+                >
+                  {candidate.sop_status2 === "Completed"
+                    ? "View SOP 2"
+                    : "Craft SOP 2"}
                 </Link>
               </button>
             </div>

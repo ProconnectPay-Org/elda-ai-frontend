@@ -100,6 +100,7 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
           </NavLink>
           <NavLink
             to="/assign-candidate"
+            target="_blank"
             className={({ isActive }) =>
               `px-4 py-2 rounded font-semibold ${isActive ? "bg-red text-white" : ""}`
             }

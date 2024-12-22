@@ -13,6 +13,7 @@ import { CandidateData } from "@/types";
 import { Link } from "react-router-dom";
 import SchoolApplicationModal from "../SchoolApplicationModal";
 import { useState } from "react";
+import NewSchoolCourseModal from "../NewSchoolCourseModal";
 
 export const columns: ColumnDef<CandidateData>[] = [
   {
@@ -153,6 +154,7 @@ export const columns: ColumnDef<CandidateData>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const [isSchoolModalOpen, setIsSchoolModalOpen] = useState(false); // Separate modal state
+      const [schoolCourseModalOpen, setSchoolCourseModalOpen] = useState(false);
 
       const openSchoolModal = () => {
         setIsSchoolModalOpen(true);
@@ -160,6 +162,14 @@ export const columns: ColumnDef<CandidateData>[] = [
 
       const closeSchoolModal = () => {
         setIsSchoolModalOpen(false);
+      };
+
+      const openSchoolCourseModal = () => {
+        setSchoolCourseModalOpen(true);
+      };
+
+      const closeSchoolCourseModal = () => {
+        setSchoolCourseModalOpen(false);
       };
 
       const { id, resume_status, sop_status1, sop_status2 } = row.original;
@@ -219,6 +229,9 @@ export const columns: ColumnDef<CandidateData>[] = [
               <DropdownMenuItem>
                 <Link to={`/assigned-candidates/${id}`}>Candidate Profile</Link>
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={openSchoolCourseModal}>
+                Change assigned school or course
+              </DropdownMenuItem>
               <DropdownMenuItem className="z-20" onClick={openSchoolModal}>
                 School Application Status
               </DropdownMenuItem>
@@ -226,6 +239,9 @@ export const columns: ColumnDef<CandidateData>[] = [
           </DropdownMenu>
           {isSchoolModalOpen && (
             <SchoolApplicationModal onClose={closeSchoolModal} id={id} />
+          )}
+          {schoolCourseModalOpen && (
+            <NewSchoolCourseModal onClose={closeSchoolCourseModal} id={id} />
           )}
         </>
       );

@@ -6,6 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
@@ -13,6 +14,8 @@ import { Link } from "react-router-dom";
 import { getCountryNameFromISO } from "@/lib/utils";
 import SchoolApplicationModal from "./SchoolApplicationModal";
 import { useState } from "react";
+import ReAssignModal from "./ReAssignModal";
+import NewSchoolCourseModal from "./NewSchoolCourseModal";
 
 export const allTabsColumns = (
   handleDeleteCandidate: (userId: string, fullName: string) => void
@@ -169,6 +172,8 @@ export const allTabsColumns = (
     enableHiding: false,
     cell: ({ row }) => {
       const [isModalOpen, setIsModalOpen] = useState(false);
+      const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+      const [schoolCourseModalOpen, setSchoolCourseModalOpen] = useState(false);
 
       const openModal = () => {
         setIsModalOpen(true);
@@ -176,6 +181,22 @@ export const allTabsColumns = (
 
       const closeModal = () => {
         setIsModalOpen(false);
+      };
+
+      const openReAssignModal = () => {
+        setIsAssignModalOpen(true);
+      };
+
+      const closeAssignModal = () => {
+        setIsAssignModalOpen(false);
+      };
+
+      const openSchoolCourseModal = () => {
+        setSchoolCourseModalOpen(true);
+      };
+
+      const closeSchoolCourseModal = () => {
+        setSchoolCourseModalOpen(false);
       };
 
       const { id, resume_status, sop_status, full_name, user_id } =
@@ -195,11 +216,16 @@ export const allTabsColumns = (
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <Link to={`/candidates/${id}`} target="_blank">
                   Candidate Info
                 </Link>
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={openReAssignModal}>
+                Reassign Candidate
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <Link
                   to={`/download-resume/${id}`}
@@ -242,6 +268,9 @@ export const allTabsColumns = (
                   View Crafted SOP 2
                 </Link>
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={openSchoolCourseModal}>
+                Change assigned school or course
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={openModal}>
                 School Application Status
               </DropdownMenuItem>
@@ -266,6 +295,12 @@ export const allTabsColumns = (
           </DropdownMenu>
           {isModalOpen && (
             <SchoolApplicationModal onClose={closeModal} id={id} />
+          )}
+          {isAssignModalOpen && (
+            <ReAssignModal onClose={closeAssignModal} id={id} />
+          )}
+          {schoolCourseModalOpen && (
+            <NewSchoolCourseModal onClose={closeSchoolCourseModal} id={id} />
           )}
         </>
       );

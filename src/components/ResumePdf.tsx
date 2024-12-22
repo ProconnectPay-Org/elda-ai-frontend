@@ -8,7 +8,7 @@ import {
   EducationHistory,
   JobExperience,
 } from "@/types";
-import { getCountryNameFromISO } from "@/lib/utils";
+import { getCountryNameFromISO, getDemonymFromISO } from "@/lib/utils";
 import "../index.css";
 
 const ResumePdf = () => {
@@ -79,18 +79,16 @@ const ResumePdf = () => {
         <div className="flex-items-center-gap-3">
           <p className="small-bold">{formData?.career[0].sector}</p>
           <p className="font-semibold">|</p>
-          <p className="small-bold">{formData?.career[0].profession}</p>
-          <p className="font-semibold">|</p>
           <p className="small-bold">Global Citizen</p>
-          {/* <p className="font-semibold">|</p>
-          <div className="small-bold">{renderedJobTitles}</div> */}
+          <p className="font-semibold">|</p>
+          <p className="small-bold">{formData?.career[0].profession}</p>
         </div>
       </div>
 
       <div className="resume-inner-container">
         <h2 className="resume-title-text">CAREER STRATEGIC PURPOSE</h2>
         <p className="text-sm">
-          {formData?.career_strategic_purpose || "Not Provided"}
+          {formData?.career_strategic_purpose || "Not Generated"}
         </p>
       </div>
 
@@ -108,7 +106,7 @@ const ResumePdf = () => {
           <div className="flex">
             <p className="font-bold width-200-text-sm">Nationality:</p>
             <p className="width-200-text-sm">
-              {getCountryNameFromISO(formData?.country_of_birth)}
+              {getDemonymFromISO(formData?.country_of_birth)}
             </p>
           </div>
           <div className="flex">
