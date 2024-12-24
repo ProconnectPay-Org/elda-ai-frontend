@@ -66,14 +66,16 @@ export const submitCareer = async (workData: CandidateCareer) => {
   const token = Cookies.get("staff_access_token");
 
   const careerId = Cookies.get("studentCareerId");
-  return await Promise.all([
-    axios.patch(`${API_URL}register/career/${careerId}/`, workData, {
+  return await axios.patch(
+    `${API_URL}staff-dashboard-edit-candidate-career-detail/${careerId}/`,
+    workData,
+    {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-    }),
-  ]);
+    }
+  );
 };
 
 export const postJobExperience = async (

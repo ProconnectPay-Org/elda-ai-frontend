@@ -133,14 +133,13 @@ const RefineResume = () => {
 
         const workData = {
           profession: currentFormData.profession,
-          career_interests: currentFormData.careerInterest,
         } as CandidateCareer;
 
         await submitCareer(workData);
       } else if (currentStep === 1) {
         const careerInterests = {
-          career_interests: currentFormData.careerInterest,
-        } as CandidateCareer;
+          career_interests: currentFormData.interest,
+        } as CandidateCareer;        
         await submitCareer(careerInterests);
       } else if (currentStep === 2) {
         const educationData = {

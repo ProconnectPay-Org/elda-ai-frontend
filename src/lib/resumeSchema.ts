@@ -14,15 +14,9 @@ export const ResumeStep2Schema = z.object({
   gender: z.enum(["Male", "Female", "Other"]),
   dateOfBirth: z.string(),
   nationality: z.string().nonempty("Nationality is required"),
-  interest: z
-    .array(
-      z.object({
-        name: z
-          .string()
-          .min(2, "Each career interest must be at least 2 characters long"),
-      })
-    )
-    .min(1, "At least one career interest is required"),
+  interest: z.array(
+    z.string().min(2, "Each career interest must be at least 2 characters long")
+  ),
 });
 
 export const ResumeStep3Schema = z.object({

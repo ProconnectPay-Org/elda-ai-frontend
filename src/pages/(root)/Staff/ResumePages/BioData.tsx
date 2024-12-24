@@ -1,7 +1,7 @@
 import { ResumeStep2FormData } from "@/types";
 import {
   formatMonthDay,
-  getCountryNameFromISO,
+  getDemonymFromISO,
   getErrorMessage,
 } from "@/lib/utils";
 import { Controller, useFormContext } from "react-hook-form";
@@ -36,15 +36,19 @@ const BioData = () => {
       setValue("dateOfBirth", formatMonthDay(foundCandidate.birth_date) || "");
       setValue(
         "nationality",
-        getCountryNameFromISO(foundCandidate.country_of_birth) || ""
+        getDemonymFromISO(foundCandidate.country_of_birth) || ""
       );
 
-      const careerInterests =
-        foundCandidate.career?.[0]?.career_interests?.map(
-          (interest: { id: string; name: string }) => ({
-            name: interest.name,
-          })
-        ) || [];
+      const rawCareerInterests = foundCandidate.career?.[0]?.career_interests;
+      let careerInterests: string[] = [];
+
+      if (Array.isArray(rawCareerInterests)) {
+        careerInterests = rawCareerInterests.map(
+          (interest: any) =>
+            typeof interest === "string" ? interest : interest.name || "" // Handle both string and object cases
+        );
+      }
+
       setValue("interest", careerInterests);
     }
   }, [singleCandidate, id, setValue]);
@@ -149,42 +153,40 @@ const BioData = () => {
                       padding: "8px",
                     }}
                   >
-                    {field.value?.map(
-                      (interest: { name: string }, index: number) => (
-                        <span
-                          key={index}
+                    {field.value?.map((interest: string, index: number) => (
+                      <span
+                        key={index}
+                        style={{
+                          backgroundColor: "#e0e7ff",
+                          padding: "2px 6px",
+                          borderRadius: "4px",
+                          marginRight: "5px",
+                          marginBottom: "5px",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        {interest}
+                        <button
+                          onClick={() => {
+                            const updatedInterests = field.value.filter(
+                              (_: string, i: number) => i !== index
+                            );
+                            field.onChange(updatedInterests);
+                          }}
                           style={{
-                            backgroundColor: "#e0e7ff",
-                            padding: "2px 6px",
-                            borderRadius: "4px",
-                            marginRight: "5px",
-                            marginBottom: "5px",
-                            display: "flex",
-                            alignItems: "center",
+                            marginLeft: "5px",
+                            background: "transparent",
+                            border: "none",
+                            cursor: "pointer",
+                            color: "#ff4d4f",
+                            fontSize: "12px",
                           }}
                         >
-                          {interest.name}
-                          <button
-                            onClick={() => {
-                              const updatedInterests = field.value.filter(
-                                (_: any, i: number) => i !== index
-                              );
-                              field.onChange(updatedInterests);
-                            }}
-                            style={{
-                              marginLeft: "5px",
-                              background: "transparent",
-                              border: "none",
-                              cursor: "pointer",
-                              color: "#ff4d4f",
-                              fontSize: "12px",
-                            }}
-                          >
-                            &times;
-                          </button>
-                        </span>
-                      )
-                    )}
+                          &times;
+                        </button>
+                      </span>
+                    ))}
                     <input
                       type="text"
                       placeholder="Type and press comma, full stop or click outside to add"
@@ -198,8 +200,10 @@ const BioData = () => {
                             alert("You can only add up to 3 career interests.");
                             return;
                           }
-                          const newInterest = { name: inputValue.trim() };
-                          field.onChange([...(field.value || []), newInterest]);
+                          field.onChange([
+                            ...(field.value || []),
+                            inputValue.trim(),
+                          ]);
                           setInputValue("");
                           e.preventDefault();
                         }
@@ -210,8 +214,10 @@ const BioData = () => {
                             alert("You can only add up to 3 career interests.");
                             return;
                           }
-                          const newInterest = { name: inputValue.trim() };
-                          field.onChange([...(field.value || []), newInterest]);
+                          field.onChange([
+                            ...(field.value || []),
+                            inputValue.trim(),
+                          ]);
                           setInputValue("");
                         }
                       }}
@@ -225,6 +231,7 @@ const BioData = () => {
                   </div>
                 )}
               />
+
               {errors.interest && (
                 <span className="text-red text-sm">{errors.interest}</span>
               )}

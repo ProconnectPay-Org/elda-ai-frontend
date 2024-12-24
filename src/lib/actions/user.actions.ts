@@ -43,11 +43,10 @@ export const logoutAccount = async (role: "candidate" | "staff" | "admin") => {
       Cookies.remove("work_experience_id4");
       Cookies.remove("work_experience_id5");
       Cookies.remove("advanced_education1_id");
-      Cookies.remove("advanced_education2_id");
       Cookies.remove("referee1_id");
       Cookies.remove("referee2_id");
-      Cookies.remove("professionalRecommender");
-      Cookies.remove("academicRecommender");
+      Cookies.remove("ProfessionalRecommender");
+      Cookies.remove("AcademicRecommender");
       Cookies.remove("otherRecommender");
       break;
     default:

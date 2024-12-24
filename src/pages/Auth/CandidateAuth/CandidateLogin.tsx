@@ -74,9 +74,6 @@ const CandidateLogin = () => {
         Cookies.set("advanced_education1_id", response.advanced_education[0], {
           expires: 7,
         });
-        Cookies.set("advanced_education2_id", response.advanced_education[1], {
-          expires: 7,
-        });
         Cookies.set("referee1_id", response.candidate.loan_referees[0], {
           expires: 7,
         });
@@ -85,7 +82,7 @@ const CandidateLogin = () => {
         });
         Cookies.set("ProfessionalRecommender", response.recommenders[0]);
         Cookies.set("AcademicRecommender", response.recommenders[1]);
-        Cookies.set("otherRecommender", response.recommenders[2]);        
+        Cookies.set("otherRecommender", response.recommenders[2]);
 
         toast({
           title: "Success",

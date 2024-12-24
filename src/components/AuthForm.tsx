@@ -93,13 +93,7 @@ const AuthForm = () => {
               expires: 7,
             }
           );
-          Cookies.set(
-            "advanced_education2_id",
-            response.advanced_education[1],
-            {
-              expires: 7,
-            }
-          );
+          
           Cookies.set("referee1_id", response.candidate.loan_referees[0], {
             expires: 7,
           });

@@ -1,13 +1,16 @@
 import { Button } from "./ui/button";
 import { useFormContext } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { CustomAxiosError, Step3FormData } from "@/types";
+import { CustomAxiosError, JobExperience, Step3FormData } from "@/types";
 import { refinePrompt } from "@/lib/actions/user.actions";
 import Cookies from "js-cookie";
 import CountrySelect from "./CountrySelect";
 import promptImage from "@/assets/prompt.svg";
 import promptWhiteImage from "@/assets/prompt-white.svg";
-import { fetchJobExperienceData } from "@/lib/actions/candidate.actions";
+import {
+  fetchJobExperienceData,
+  postJobExperience,
+} from "@/lib/actions/candidate.actions";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useToast } from "./ui/use-toast";
@@ -26,15 +29,11 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
 
   const [refineLoading, setRefineLoading] = useState(false);
   const [jobStatus, setJobStatus] = useState("");
+  const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
 
-  const jobExperienceIds = [
-    Cookies.get("work_experience_id1"),
-    Cookies.get("work_experience_id2"),
-    Cookies.get("work_experience_id3"),
-  ].filter((id) => id !== undefined);
+  const id = Cookies.get("candidate_id");
 
-  const currentJobStatus =
-    getValues(`jobExperiences.${index}.jobStatus`) || "";
+  const currentJobStatus = getValues(`jobExperiences.${index}.jobStatus`) || "";
 
   const handleJobStatusChange = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -59,81 +58,64 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
     setValue(`jobExperiences.${index}.currentProfessionalStatus`, value);
   };
 
-  const jobExperienceQueries = jobExperienceIds.map((id) => {
-    return useQuery({
-      queryKey: ["jobExperienceData", id],
-      queryFn: () => fetchJobExperienceData(id),
-      enabled: !!id,
-      staleTime: 5 * 1000 * 60,
-    });
+  const jobExperienceId = Cookies.get(`work_experience_id${index + 1}`);
+
+  // Fetch job experience data by ID
+  const { data: jobExperience, isLoading } = useQuery({
+    queryKey: ["jobExperience", jobExperienceId],
+    queryFn: () => fetchJobExperienceData(jobExperienceId!),
+    enabled: !!jobExperienceId,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 
-  const isJobExpLoading = jobExperienceQueries.some((query) => query.isLoading);
-  const jobExperienceData = jobExperienceQueries.map((query) => query.data);
-
   useEffect(() => {
-    if (
-      jobExperienceData &&
-      !getValues(`jobExperiences.${index}.initialized`)
-    ) {
-      const filteredJobExperienceData = jobExperienceData.filter(
-        (experience) => experience?.business_name
+    if (jobExperience) {
+      setValue(
+        `jobExperiences.${index}.workPlaceName`,
+        jobExperience.business_name || ""
       );
-
-      if (filteredJobExperienceData[index]) {
-        setValue(
-          `jobExperiences.${index}.workPlaceName`,
-          filteredJobExperienceData[index].business_name || ""
-        );
-        setValue(
-          `jobExperiences.${index}.currentProfessionalStatus`,
-          filteredJobExperienceData[index].professional_status || ""
-        );
-        setValue(
-          `jobExperiences.${index}.currentJobTitle`,
-          filteredJobExperienceData[index].job_title || ""
-        );
-        setValue(
-          `jobExperiences.${index}.employmentType`,
-          filteredJobExperienceData[index].employment_type || ""
-        );
-        setValue(
-          `jobExperiences.${index}.stateLocation`,
-          filteredJobExperienceData[index].state || ""
-        );
-        setValue(
-          `jobExperiences.${index}.countryLocation`,
-          filteredJobExperienceData[index].country || ""
-        );
-
-        const jobStatusFromData =
-          filteredJobExperienceData[index].job_status || "former"; // Fallback to "former"
-        setValue(`jobExperiences.${index}.jobStatus`, jobStatusFromData);
-        setJobStatus(jobStatusFromData);
-
-        if (jobStatusFromData === "current") {
-          setValue(`jobExperiences.${index}.endedDate`, "1960-01-01");
-        } else {
-          setValue(
-            `jobExperiences.${index}.endedDate`,
-            filteredJobExperienceData[index].year_ended || ""
-          );
-        }
-
-        setValue(
-          `jobExperiences.${index}.startedDate`,
-          filteredJobExperienceData[index].year_started || ""
-        );
-        setValue(
-          `jobExperiences.${index}.jobSummary`,
-          filteredJobExperienceData[index].job_summary || ""
-        );
-
-        // Mark only the current job experience as initialized
-        setValue(`jobExperiences.${index}.initialized`, true);
-      }
+      setValue(
+        `jobExperiences.${index}.currentProfessionalStatus`,
+        jobExperience.professional_status || ""
+      );
+      setValue(
+        `jobExperiences.${index}.currentJobTitle`,
+        jobExperience.job_title || ""
+      );
+      setValue(
+        `jobExperiences.${index}.employmentType`,
+        jobExperience.employment_type || ""
+      );
+      setValue(
+        `jobExperiences.${index}.stateLocation`,
+        jobExperience.state || ""
+      );
+      setValue(
+        `jobExperiences.${index}.countryLocation`,
+        jobExperience.country || ""
+      );
+      setValue(
+        `jobExperiences.${index}.startedDate`,
+        jobExperience.year_started || ""
+      );
+      setValue(
+        `jobExperiences.${index}.endedDate`,
+        jobExperience.year_ended || ""
+      );
+      setValue(
+        `jobExperiences.${index}.jobStatus`,
+        jobExperience.job_status || ""
+      );
+      setValue(
+        `jobExperiences.${index}.companyDescription`,
+        jobExperience.company_description || ""
+      );
+      setValue(
+        `jobExperiences.${index}.jobSummary`,
+        jobExperience.job_summary || ""
+      );
     }
-  }, [jobExperienceData, setValue, index]);
+  }, [jobExperience, setValue, index]);
 
   const handleRefine = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -172,9 +154,52 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
     }
   };
 
+  const handleSaveChanges = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    index: number
+  ) => {
+    e.preventDefault();
+    setLoadingIndex(index);
+    try {
+      const data: JobExperience = {
+        business_name: getValues(`jobExperiences.${index}.workPlaceName`),
+        professional_status: getValues(
+          `jobExperiences.${index}.currentProfessionalStatus`
+        ),
+        job_title: getValues(`jobExperiences.${index}.currentJobTitle`),
+        employment_type: getValues(`jobExperiences.${index}.employmentType`),
+        state: getValues(`jobExperiences.${index}.stateLocation`),
+        country: getValues(`jobExperiences.${index}.countryLocation`),
+        year_started: getValues(`jobExperiences.${index}.startedDate`),
+        year_ended: getValues(`jobExperiences.${index}.endedDate`),
+        job_status: getValues(`jobExperiences.${index}.jobStatus`),
+        company_description: getValues(
+          `jobExperiences.${index}.companyDescription`
+        ),
+        job_summary: getValues(`jobExperiences.${index}.jobSummary`),
+        candidate: id,
+      };
+
+      await postJobExperience(data, jobExperienceId!);
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Job experience updated successfully.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to save changes.",
+      });
+    } finally {
+      setLoadingIndex(null);
+    }
+  };
+
   return (
     <div className="border border-pale-bg mb-5 py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
-      {isJobExpLoading && (
+      {isLoading && (
         <div className="fixed inset-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="text-white text-xl flex items-center justify-center gap-2">
             <Loader2 className="animate-spin" /> Loading...
@@ -419,8 +444,23 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
           </div>
         </div>
 
-        <div className="flex items-end w-full flex-col md:flex-row justify-between gap-4 md:gap-8">
-          <div className="w-full md:w-1/2 hidden md:flex"></div>
+        <div className="flex items-end w-full flex-col-reverse md:flex-row justify-between gap-4 md:gap-8">
+          <div className="w-full md:w-1/2 md:flex">
+            <Button
+              className="bg-red"
+              onClick={(e) => handleSaveChanges(e, index)}
+              disabled={loadingIndex === index}
+            >
+              {loadingIndex === index ? (
+                <div className="flex items-center justify-center gap-2">
+                  <p>Saving</p>
+                  <Loader2 className="animate-spin" />
+                </div>
+              ) : (
+                "Save Job Experience"
+              )}
+            </Button>
+          </div>
           <Button
             onClick={handleRefine}
             disabled={refineLoading}

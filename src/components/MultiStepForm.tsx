@@ -18,7 +18,6 @@ import {
 } from "@/types";
 import RegisterSuccessModal from "./RegisterSuccessModal";
 import {
-  postJobExperience,
   submitEducationDetails,
   submitRecommenderDetails,
   submitRefereeDetails,
@@ -29,7 +28,6 @@ import {
 } from "@/lib/actions/candidate.actions";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "./ui/use-toast";
 
 const steps = [
   { component: Step1, schema: step1Schema, title: "PERSONAL DETAILS" },
@@ -49,30 +47,11 @@ const MultiStepForm = () => {
   const [formData, setFormData] = useState<FormData>({} as FormData);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [jobsCount, setJobsCount] = useState(1); // Initialize with a default count if needed
-
-  const { toast } = useToast();
 
   const navigate = useNavigate();
 
-  const initialJobExperiences = Array.from({ length: jobsCount }).map(() => ({
-    workPlaceName: "",
-    currentProfessionalStatus: "",
-    currentJobTitle: "",
-    employmentType: "",
-    stateLocation: "",
-    countryLocation: "",
-    startedDate: "",
-    endedDate: "1960-01-01",
-    jobStatus: "",
-    companyDescription: "",
-    jobSummary: "",
-  }));
-
   const defaultValues = {
     ...formData,
-    jobExperiences:
-      currentStep === 2 ? initialJobExperiences : formData.jobExperiences,
   };
 
   const methods = useForm({
@@ -176,46 +155,6 @@ const MultiStepForm = () => {
         };
 
         await submitWorkExperience(workData);
-
-        const jobCountFromData = parseInt(currentFormData.jobsToShowcase, 10);
-        setJobsCount(jobCountFromData);
-
-        if (jobCountFromData > 0) {
-          const jobExperiences = [];
-          for (let i = 0; i < jobCountFromData; i++) {
-            const experienceData = {
-              business_name: currentFormData.jobExperiences[i].workPlaceName,
-              professional_status:
-                currentFormData.jobExperiences[i].currentProfessionalStatus,
-              job_title: currentFormData.jobExperiences[i].currentJobTitle,
-              employment_type: currentFormData.jobExperiences[i].employmentType,
-              state: currentFormData.jobExperiences[i].stateLocation,
-              country: currentFormData.jobExperiences[i].countryLocation,
-              year_started: currentFormData.jobExperiences[i].startedDate,
-              company_description:
-                currentFormData.jobExperiences[i].companyDescription,
-              job_summary: currentFormData.jobExperiences[i].jobSummary,
-              year_ended: currentFormData.jobExperiences[i].endedDate,
-              job_status: currentFormData.jobExperiences[i].jobStatus,
-              candidate: id,
-            };
-            const jobExperienceId = Cookies.get(`work_experience_id${i + 1}`);
-
-            if (jobExperienceId) {
-              jobExperiences.push(
-                postJobExperience(experienceData, jobExperienceId)
-              );
-            } else {
-              toast({
-                title: "Error",
-                description: `No ID found for job experience ${i + 1}`,
-                variant: "destructive",
-              });
-            }
-          }
-
-          await Promise.all(jobExperiences);
-        }
       } else if (currentStep === 3) {
         // Step 4: REFEREE DETAILS
         const referee1Data: LoanReferee = {
