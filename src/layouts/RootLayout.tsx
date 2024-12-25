@@ -23,9 +23,9 @@ const RootLayout = ({ children, title }: AuthLayoutProps) => {
   }
 
   return (
-    <main className="flex h-screen w-full">
+    <main className="flex h-screen w-full overflow-hidden">
       <SideBar />
-      <div className="flex size-full flex-col">
+      <div className="flex size-full flex-col overflow-hidden">
         <TopNavBar title={title} />
         <div className="root-layout border-b border-gray shadow-md h-[100px] sm:h-[120px] overflow-y-hidden">
           <div className="flex items-center justify-center w-[160px] sm:w-[240px]">

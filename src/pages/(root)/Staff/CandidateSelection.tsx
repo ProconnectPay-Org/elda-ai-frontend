@@ -41,9 +41,11 @@ const CandidateSelection = () => {
         full_name: `${candidate.user?.full_name}` || "No name",
         status: candidate.status || "Inactive",
         assigned_course1: candidate.assigned_course1 || "No course assigned",
-        assigned_school1: candidate.assigned_university1 || "No school assigned",
+        assigned_school1:
+          candidate.assigned_university1 || "No school assigned",
         assigned_course2: candidate.assigned_course2 || "No course assigned",
-        assigned_school2: candidate.assigned_university2 || "No school assigned",
+        assigned_school2:
+          candidate.assigned_university2 || "No school assigned",
         resume_status: candidate.resume_status || "Not Started",
         sop_status: candidate.sop_status || "Not Started",
         school_application_status1:
@@ -83,11 +85,13 @@ const CandidateSelection = () => {
             ))}
           </div>
         ) : (
-          <DataTable
-            columns={columns}
-            data={candidateTableData}
-            onRowClick={handleRowClick}
-          />
+          <div className="overflow-x-auto">
+            <DataTable
+              columns={columns}
+              data={candidateTableData}
+              onRowClick={handleRowClick}
+            />
+          </div>
         )}
 
         {selectedRowData && (

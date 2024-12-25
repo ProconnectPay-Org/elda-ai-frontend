@@ -130,11 +130,13 @@ const AssignedCandidates = () => {
             ))}
           </div>
         ) : (
-          <DataTable
-            columns={columns}
-            data={candidateTableData}
-            onRowClick={handleRowClick}
-          />
+          <div className="overflow-x-auto">
+            <DataTable
+              columns={columns}
+              data={candidateTableData}
+              onRowClick={handleRowClick}
+            />
+          </div>
         )}
 
         {selectedRowData && (
