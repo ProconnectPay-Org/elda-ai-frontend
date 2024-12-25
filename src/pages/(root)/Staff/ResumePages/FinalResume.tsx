@@ -99,7 +99,7 @@ const FinalResume = () => {
         </Link>
       </div>
 
-      <div ref={resumeRef}>
+      <div ref={resumeRef} className="max-w-3xl m-auto">
         <NewResumePdf />
       </div>
 

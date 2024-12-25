@@ -135,8 +135,9 @@ const Step4 = ({
                 href={`/sop/${candidateId}?type=${
                   prefix === "2" ? "school2" : "school1"
                 }`}
+                target="_blank"
               >
-                <Button className="bg-red">Download SOP</Button>
+                <Button className="bg-red">Full Preview SOP</Button>
               </a>
               <Link to="/assigned-candidates">
                 <Button variant="outline" className="border-red text-red">

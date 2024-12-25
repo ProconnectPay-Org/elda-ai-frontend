@@ -99,7 +99,7 @@ const DownloadResume = () => {
       <div className="mb-2">
         <ArrowLeft className="cursor-pointer" onClick={() => navigate(-1)} />
       </div>
-      <div className="max-w-4xl m-auto">
+      <div className="max-w-3xl m-auto">
         <div ref={resumeRef}>
           <NewResumePdf />
         </div>
