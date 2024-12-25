@@ -13,10 +13,13 @@ const useAuth = () => {
   const userRole = Cookies.get("user_role");
 
   const handleLogout = async () => {
-    if (loggedInUser) {
-      await logoutAccount(loggedInUser.role);
+    if (userRole) {
+      await logoutAccount(userRole as "staff" | "admin" | "candidate");
+      Cookies.remove("user_role");
       setLoggedInUser(null);
       navigate("/sign-in");
+    } else {
+      console.error("No user role found for logout");
     }
   };
 
