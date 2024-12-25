@@ -29,9 +29,7 @@ const HeaderDetails = () => {
     useCandidates(id);
 
   useEffect(() => {
-    if (singleCandidate) {
-      console.log(singleCandidate);
-            
+    if (singleCandidate) {            
       Cookies.set("studentId", singleCandidate.id)
       Cookies.set("studentCareerId", singleCandidate.career[0].id)
       Cookies.set("studentEducationId", singleCandidate.education[0].id)

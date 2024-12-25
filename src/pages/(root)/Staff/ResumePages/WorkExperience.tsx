@@ -246,6 +246,7 @@ const WorkExperience = () => {
                   <input
                     className="border capitalize border-gray-border rounded-md py-2 px-4"
                     id={`mode-${index}`}
+                    disabled
                     {...register(`jobExperiences.${index}.mode`)}
                     placeholder="Hybrid"
                   />

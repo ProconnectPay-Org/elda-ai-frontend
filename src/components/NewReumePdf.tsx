@@ -193,10 +193,7 @@ const NewResumePdf = () => {
     singleCandidate: formData,
     singleCandidateLoading,
     singleCandidateError,
-  } = useCandidates(id);
-
-  console.log(formData);
-  
+  } = useCandidates(id);  
 
   if (singleCandidateLoading) {
     return <FinalResumeSkeleton />;

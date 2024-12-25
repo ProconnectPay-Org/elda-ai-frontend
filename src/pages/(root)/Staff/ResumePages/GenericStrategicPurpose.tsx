@@ -44,7 +44,7 @@ const GenericStrategicPurpose = () => {
   const promptValue = watch("prompt");
 
   useEffect(() => {
-    if (singleCandidate?.career_strategic_purpose === "") {
+    if (singleCandidate?.career_strategic_purpose === null) {
       refetch();
     } else {
       setValue("prompt", singleCandidate?.career_strategic_purpose || "");
@@ -139,7 +139,7 @@ const GenericStrategicPurpose = () => {
               {...register("prompt")}
               placeholder={`${
                 isLoading || singleCandidateLoading
-                  ? "Getting Career Strategic Purpose"
+                  ? "Generating Career Strategic Purpose ..."
                   : "Enter your prompt"
               }`}
               onChange={(e) => {
