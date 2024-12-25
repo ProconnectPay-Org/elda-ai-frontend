@@ -45,7 +45,7 @@ const ReAssignModal = ({ onClose, id }: ModalProps) => {
       document.body.style.overflow = "auto";
       document.removeEventListener("scroll", handleBackgroundScroll);
     };
-  }, []);
+  }, []);  
 
   const assignCandidate = async () => {
     if (!selectedStaff) {

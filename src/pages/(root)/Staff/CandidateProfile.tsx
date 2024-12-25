@@ -7,7 +7,12 @@ import {
 } from "@/types";
 import { ChevronDown, MailIcon, PhoneCallIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { formatDate, getCountryNameFromISO, getInitials } from "@/lib/utils";
+import {
+  formatDate,
+  formatMonthDay,
+  getCountryNameFromISO,
+  getInitials,
+} from "@/lib/utils";
 import useAuth from "@/hooks/useAuth";
 
 import { useQuery } from "@tanstack/react-query";
@@ -351,7 +356,10 @@ const CandidateProfile = () => {
               <CopyText label="Middle Name" text={candidate?.middle_name} />
               <CopyText label="Last Name" text={candidate?.last_name} />
               <CopyText label="Gender" text={candidate?.gender} />
-              <CopyText label="Birth Date" text={candidate?.birth_date} />
+              <CopyText
+                label="Birth Date"
+                text={formatMonthDay(String(candidate?.birth_date))}
+              />
               <CopyText
                 label="City of Residence"
                 text={candidate?.city_current_reside}
