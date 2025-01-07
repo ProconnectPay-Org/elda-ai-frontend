@@ -320,7 +320,7 @@ const NewResumePdf = () => {
                           📅 Duration: {formatDate(experience.year_started)} -{" "}
                           {experience.year_ended === "1960-01-01"
                             ? "Present"
-                            : formatDate(experience.year_ended) || "Present"}
+                            : formatDate(experience.year_ended) || "Till Date"}
                         </Text>
                       </View>
                     </View>
