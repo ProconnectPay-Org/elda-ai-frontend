@@ -116,6 +116,57 @@ const WorkExperience = () => {
     }
   };
 
+  const handleDeleteChanges = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    index: number
+  ) => {
+    e.preventDefault();
+    setLoadingIndex(index);
+
+    try {
+      // const experienceData = getValues(`jobExperiences.${index}`);
+      const job_experience_id = Cookies.get(`studentJobId${index + 1}`);
+
+      if (!job_experience_id) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: `Missing ID for job ${index + 1}.`,
+        });
+        return;
+      }
+
+      setValue(`jobExperiences.${index}.nameOfCompany`, "");
+
+      // Optionally clear other related fields if needed
+      setValue(`jobExperiences.${index}.jobTitle`, "");
+
+      const jobExperienceData = {
+        business_name: getValues(`jobExperiences.${index}.nameOfCompany`),
+        job_title: getValues(`jobExperiences.${index}.jobTitle`),
+        job_summary: getValues(`jobExperiences.${index}.jobDescription`),
+        employment_type: getValues(`jobExperiences.${index}.mode`),
+        state: getValues(`jobExperiences.${index}.location`),
+      } as JobExperience;
+
+      await postJobExperience(jobExperienceData, job_experience_id);
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Job experience deleted successfully!",
+      });
+    } catch (error) {
+      const axiosError = error as CustomAxiosError;
+      toast({
+        variant: "destructive",
+        title: "Error saving changes:",
+        description: axiosError.response?.data || "Unknown error",
+      });
+    } finally {
+      setLoadingIndex(null); // Reset loading state
+    }
+  };
+
   const handleSaveChanges = async (
     e: React.MouseEvent<HTMLButtonElement>,
     index: number
@@ -358,7 +409,20 @@ const WorkExperience = () => {
                 )}
               </div>
               <div className="flex items-center justify-between">
-                <Button className="bg-red">Delete Experience</Button>
+                <Button
+                  className="bg-red"
+                  onClick={(e) => handleDeleteChanges(e, index)}
+                  disabled={loadingIndex === index}
+                >
+                  {loadingIndex === index ? (
+                    <>
+                      <Loader2 className="animate-spin h-4 w-4" />
+                      Deleting...
+                    </>
+                  ) : (
+                    "Delete"
+                  )}
+                </Button>
                 <Button
                   className="bg-red"
                   onClick={(e) => handleSaveChanges(e, index)}
