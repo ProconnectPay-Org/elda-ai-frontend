@@ -203,6 +203,8 @@ const NewResumePdf = () => {
     return <div>Error fetching data</div>;
   }
 
+  const jobCount = formData?.career[0]?.jobs_to_show || 0;  
+
   return (
     <>
       <Document>
@@ -304,6 +306,7 @@ const NewResumePdf = () => {
           <View style={styles.section}>
             <Text style={styles.resumeTitleText}>WORK EXPERIENCE</Text>
             {formData?.job_experience
+              ?.slice(0, jobCount)
               .map((experience: JobExperience) =>
                 experience.business_name ? (
                   <View key={experience.id} style={styles.mb2}>
@@ -319,7 +322,7 @@ const NewResumePdf = () => {
                         <Text style={styles.fontMedTextSm}>
                           📅 Duration: {formatDate(experience.year_started)} -{" "}
                           {experience.year_ended === "1960-01-01"
-                            ? "Present"
+                            ? "Till Date"
                             : formatDate(experience.year_ended) || "Till Date"}
                         </Text>
                       </View>
