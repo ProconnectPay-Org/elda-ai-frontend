@@ -1,8 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { getErrorMessage } from "@/lib/utils";
-import { ResumeStep1FormData } from "@/types";
-import { Controller, useFormContext } from "react-hook-form";
+import {
+  formatMonthDay,
+  getDemonymFromISO,
+  getErrorMessage,
+} from "@/lib/utils";
+import { ResumeStep1FormData, updateCandidateProfile } from "@/types";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 import ReactPhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import helpIcon from "@/assets/help-icon.svg";
@@ -10,6 +14,11 @@ import mailIcon from "@/assets/mail.svg";
 import { useParams } from "react-router-dom";
 import { useCandidates } from "@/hooks/useCandidiates";
 import Cookies from "js-cookie";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/use-toast";
+import { updatePersonalDetails } from "@/lib/actions/staffresume.actions";
+import { genderOptions } from "@/constants";
+import CountrySelect from "@/components/CountrySelect";
 
 const HeaderDetails = () => {
   const {
@@ -17,6 +26,7 @@ const HeaderDetails = () => {
     control,
     formState: { errors },
     setValue,
+    getValues,
   } = useFormContext<ResumeStep1FormData>();
 
   const { id } = useParams<{ id: string }>();
@@ -28,21 +38,88 @@ const HeaderDetails = () => {
   const { singleCandidate, singleCandidateLoading, singleCandidateError } =
     useCandidates(id);
 
+  const [isModified, setIsModified] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Watch form values
+  const watchedValues = useWatch({ control });
+
   useEffect(() => {
-    if (singleCandidate) {            
-      Cookies.set("studentId", singleCandidate.id)
-      Cookies.set("studentCareerId", singleCandidate.career[0].id)
-      Cookies.set("studentEducationId", singleCandidate.education[0].id)
+    if (singleCandidate) {
+      Cookies.set("studentId", singleCandidate.id);
+      Cookies.set("studentCareerId", singleCandidate.career[0].id);
+      Cookies.set("studentEducationId", singleCandidate.education[0].id);
       const foundCandidate = singleCandidate;
+
+      setValue("email", foundCandidate.user?.email || "");
       setValue("fullName", foundCandidate.user?.full_name || "");
       setValue("phoneNumber", foundCandidate.phone_number || "");
-      setValue("email", foundCandidate.user?.email || "");
       setValue("city", foundCandidate.city_of_birth || "");
       setValue("state", foundCandidate.state_of_birth || "");
+      setValue("gender", foundCandidate.gender || "");
+      setValue("dateOfBirth", foundCandidate.birth_date || "");
+      setValue("nationality", foundCandidate.country_of_birth || "");
+      setValue("preferredName", foundCandidate.preferred_call_name || "");
       setValue("country", foundCandidate.country_of_birth || "");
-      setValue("profession", foundCandidate.career[0]?.profession || "");
     }
   }, [singleCandidate, id, setValue]);
+
+  useEffect(() => {
+    if (singleCandidate) {
+      // Define the type for initialValues explicitly
+      const initialValues: Record<keyof typeof watchedValues, string> = {
+        email: singleCandidate.user?.email || "",
+        fullName: singleCandidate.user?.full_name || "",
+        phoneNumber: singleCandidate.phone_number || "",
+        city: singleCandidate.city_of_birth || "",
+        state: singleCandidate.state_of_birth || "",
+        gender: singleCandidate.gender || "",
+        dateOfBirth: singleCandidate.birth_date || "",
+        nationality: singleCandidate.country_of_birth || "",
+        preferredName: singleCandidate.preferred_call_name || "",
+        country: singleCandidate.country_of_birth || "",
+      };
+
+      // Ensure keys match the watchedValues keys
+      const hasChanges = (
+        Object.keys(initialValues) as Array<keyof typeof initialValues>
+      ).some((key) => watchedValues[key] !== initialValues[key]);
+
+      setIsModified(hasChanges);
+    }
+  }, [watchedValues, singleCandidate]);
+
+  const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const personalData = {
+      preferred_call_name: getValues("preferredName"),
+      gender: getValues("gender"),
+      birth_date: getValues("dateOfBirth"),
+      country_of_birth: getValues("nationality"),
+      city_of_birth: getValues("city"),
+      state_of_birth: getValues("state"),
+      phone_number: getValues("phoneNumber"),
+      email_address: getValues("email"),
+    } as updateCandidateProfile;
+
+    try {
+      await updatePersonalDetails(personalData);
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Updated successfully!",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update details.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (singleCandidateLoading) {
     return <div>Loading...</div>;
@@ -151,7 +228,6 @@ const HeaderDetails = () => {
                 type="text"
                 {...register("state")}
                 className="border bg-white border-gray-border h-[42px] rounded-md py-2 px-4"
-                disabled
               />
               {errors.state && (
                 <span className="text-red text-sm">
@@ -161,23 +237,125 @@ const HeaderDetails = () => {
             </div>
           </div>
 
-          <div className="flex w-full">
-            <div className="flex flex-col w-full">
-              <label htmlFor="profession" className="text-[#344054]">
-                Profession <span className="text-red">*</span>
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
+            <div className="flex flex-col sm:w-1/2">
+              <label htmlFor="gender">
+                Gender <span className="text-red">*</span>
               </label>
-              <input
-                className="border border-gray-border rounded-md py-2 px-4"
-                id="profession"
-                {...register("profession")}
-                placeholder="Enter your profession"
-              />
-              {errors.profession && (
+              <div className="relative">
+                <select
+                  id="gender"
+                  {...register("gender")}
+                  className="border w-full border-gray-border bg-white h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 pr-8"
+                >
+                  <option value="">Select your gender</option>
+                  {genderOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                <span className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    ></path>
+                  </svg>
+                </span>
+              </div>
+              {errors.gender && (
                 <span className="text-red text-sm">
-                  {getErrorMessage(errors.profession)}
+                  {getErrorMessage(errors.gender)}
                 </span>
               )}
             </div>
+
+            <div className="flex flex-col w-full sm:w-1/2">
+              <label htmlFor="dateOfBirth">
+                Date of Birth <span className="text-red">*</span>
+              </label>
+              <input
+                type="date"
+                className="border border-gray-border bg-white min-w-[240px] w-full h-[42px] rounded-md py-2 px-4"
+                id="dateOfBirth"
+                {...register("dateOfBirth")}
+                placeholder="Enter your date of birth"
+              />
+              <p className="text-blue-500 text-sm mt-1">
+                {watchedValues.dateOfBirth
+                  ? formatMonthDay(watchedValues.dateOfBirth)
+                  : "Select a date"}
+              </p>
+              {errors.dateOfBirth && (
+                <span className="text-red text-sm">
+                  {getErrorMessage(errors.dateOfBirth)}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
+            <div>
+              <CountrySelect label="Nationality" name="nationality" />
+              <p className="text-blue-500 text-sm mt-1">
+                {watchedValues.nationality
+                  ? getDemonymFromISO(watchedValues.nationality)
+                  : "Select a country"}
+              </p>
+            </div>
+            {/* <div className="flex flex-col sm:w-1/2">
+              <label htmlFor="nationality" className="text-[#344054]">
+                Nationality
+              </label>
+              <input
+                className="border border-gray-border rounded-md py-2 px-4"
+                id="nationality"
+                {...register("nationality")}
+                placeholder="Nigerian"
+              />
+              {errors.nationality && (
+                <span className="text-red text-sm">
+                  {getErrorMessage(errors.nationality)}
+                </span>
+              )}
+            </div> */}
+            <div className="flex flex-col sm:w-1/2">
+              <label htmlFor="preferredName">
+                Preferred Call Name <span className="text-red">*</span>
+              </label>
+              <input
+                className="border border-gray-border rounded-md py-2 px-4"
+                id="preferredName"
+                {...register("preferredName")}
+                placeholder="Enter your preferred name"
+              />
+              {errors.preferredName && (
+                <span className="text-red text-sm">
+                  {getErrorMessage(errors.preferredName)}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div>
+            <Button
+              className={`bg-red ${
+                !isModified || isLoading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              onClick={handleSave}
+              disabled={!isModified || isLoading}
+            >
+              {isLoading ? "Saving..." : "Save Changes"}
+            </Button>
           </div>
         </div>
       </div>
