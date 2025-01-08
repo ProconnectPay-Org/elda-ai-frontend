@@ -95,8 +95,8 @@ const CraftSOP = () => {
         </div>
 
         {isGenerating ? (
-          <div className="flex items-center ">
-            Loading... <Loader2 className="animate-spin" />
+          <div className="flex items-center animate-pulse">
+            Generating SOP file... <Loader2 className="animate-spin" />
           </div>
         ) : (
           <StepComponent prevStep={prevStep} candidateId={id} file={file} />

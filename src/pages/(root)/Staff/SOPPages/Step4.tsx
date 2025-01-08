@@ -84,7 +84,7 @@ const Step4 = ({
             Review New Statement of Purpose
           </h2>
 
-          <div className="flex flex-col gap-5 w-full mx-auto md:w-[760px]">
+          <div className="flex flex-col gap-5 w-full mx-auto">
             <div ref={sopRef} className="hidden">
               <h1 className="text-red font-bold text-center mb-4 text-xl uppercase">
                 Statement of Purpose
@@ -131,14 +131,14 @@ const Step4 = ({
             </DialogHeader>
             <img src={SuccessImage} alt="" />
             <div className="flex items-center flex-col justify-center gap-6">
-              <a
-                href={`/sop/${candidateId}?type=${
+              <Link
+                to={`/sop/${candidateId}?type=${
                   prefix === "2" ? "school2" : "school1"
                 }`}
                 target="_blank"
               >
-                <Button className="bg-red">Full Preview SOP</Button>
-              </a>
+                <Button className="bg-red">Full Preview SOP {prefix === "2" ? "2" : "1"}</Button>
+              </Link>
               <Link to="/assigned-candidates">
                 <Button variant="outline" className="border-red text-red">
                   Back to dashboard

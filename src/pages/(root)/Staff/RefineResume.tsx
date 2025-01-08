@@ -96,13 +96,7 @@ const RefineResume = () => {
     setIsLoading(true);
 
     try {
-      if (currentStep === 2) {
-        // const educationData = {
-        //   school_name: currentFormData.tertiaryInstitutionAttended,
-        //   specific_course_of_study: currentFormData.course,
-        // } as EducationHistory;
-        // await submitEducationDetails(educationData);
-      } else if (currentStep === steps.length - 1) {
+      if (currentStep === steps.length - 1) {
         // Final Step: Navigate to Final Resume
         if (resumeData?.resume) {
           navigate(`/refine-resume/final-resume/${id}`);
