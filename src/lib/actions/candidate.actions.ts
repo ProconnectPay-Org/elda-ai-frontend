@@ -142,7 +142,12 @@ export const postJobExperience = async (
   experienceData: JobExperience,
   job_experience_id: string
 ) => {
-  const token = Cookies.get("candidate_access_token");
+  const token =
+    Cookies.get("candidate_access_token") || Cookies.get("staff_access_token");
+
+  if (!token) {
+    throw new Error("Unauthorized: No access token available");
+  }
   return await axios.patch(
     `${API_URL}register/job-experience/${job_experience_id}/`,
     experienceData,
@@ -171,7 +176,12 @@ export const fetchCareerData = async () => {
 export const fetchJobExperienceData = async (
   work_experience_id: string | undefined
 ) => {
-  const token = Cookies.get("candidate_access_token");
+  const token =
+    Cookies.get("candidate_access_token") || Cookies.get("staff_access_token");
+
+  if (!token) {
+    throw new Error("Unauthorized: No access token available");
+  }
 
   const { data } = await axios.get(
     `${API_URL}register/job-experience/${work_experience_id}/`,

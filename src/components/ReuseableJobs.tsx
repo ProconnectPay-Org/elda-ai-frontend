@@ -1,5 +1,5 @@
 import { Button } from "./ui/button";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { CustomAxiosError, JobExperience, Step3FormData } from "@/types";
 import { refinePrompt } from "@/lib/actions/user.actions";
@@ -14,13 +14,15 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useToast } from "./ui/use-toast";
+import { formatDate } from "@/lib/utils";
 
 interface ReuseableJobsProps {
   index: number; // New prop for the job experience index
 }
 
 const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
-  const { register, getValues, setValue } = useFormContext<Step3FormData>();
+  const { register, getValues, setValue, control } =
+    useFormContext<Step3FormData>();
   const { toast } = useToast();
 
   const divClass = "flex flex-col w-full md:w-1/2";
@@ -66,6 +68,11 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
     queryFn: () => fetchJobExperienceData(jobExperienceId!),
     enabled: !!jobExperienceId,
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+  });
+
+  const watchedValues = useWatch({
+    name: `jobExperiences.${index}`,
+    control,
   });
 
   useEffect(() => {
@@ -161,7 +168,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
     e.preventDefault();
     setLoadingIndex(index);
     try {
-      const data: JobExperience = {
+      const data = {
         business_name: getValues(`jobExperiences.${index}.workPlaceName`),
         professional_status: getValues(
           `jobExperiences.${index}.currentProfessionalStatus`
@@ -178,7 +185,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
         ),
         job_summary: getValues(`jobExperiences.${index}.jobSummary`),
         candidate: id,
-      };
+      } as JobExperience;
 
       await postJobExperience(data, jobExperienceId!);
       toast({
@@ -397,6 +404,11 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
                 {...register(`jobExperiences.${index}.startedDate`)}
                 className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none bg-white focus:outline-none focus:ring-2 pr-8"
               />
+              <p className="text-blue-500 text-sm mt-1">
+                {watchedValues.startedDate
+                  ? formatDate(watchedValues.startedDate)
+                  : "Select a date"}
+              </p>
             </div>
           </div>
         </div>
@@ -417,6 +429,11 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
                   {...register(`jobExperiences.${index}.endedDate`)}
                   className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none bg-white focus:outline-none focus:ring-2 pr-8"
                 />
+                <p className="text-blue-500 text-sm mt-1">
+                  {watchedValues.endedDate
+                    ? formatDate(watchedValues.endedDate)
+                    : "Select a date"}
+                </p>
               </div>
             )}
           </div>

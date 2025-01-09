@@ -15,6 +15,7 @@ import {
   getCountryNameFromISO,
   getDemonymFromISO,
 } from "@/lib/utils";
+import Cookies from "js-cookie";
 
 // Define your styles
 const styles = StyleSheet.create({
@@ -193,7 +194,7 @@ const NewResumePdf = () => {
     singleCandidate: formData,
     singleCandidateLoading,
     singleCandidateError,
-  } = useCandidates(id);  
+  } = useCandidates(id);
 
   if (singleCandidateLoading) {
     return <FinalResumeSkeleton />;
@@ -203,7 +204,30 @@ const NewResumePdf = () => {
     return <div>Error fetching data</div>;
   }
 
-  const jobCount = formData?.career[0]?.jobs_to_show || 0;  
+  const workExperienceIdsFromCookies = [
+    Cookies.get("work_experience_id1"),
+    Cookies.get("work_experience_id2"),
+    Cookies.get("work_experience_id3"),
+  ].filter(Boolean); // Filter out null/undefined values
+
+  // Array of IDs returned (e.g., from API or some data source)
+  const retrievedIds =
+    formData?.job_experience?.map((job: JobExperience) => job.id) || [];
+
+  // Find matching IDs and sort them from lowest to highest
+  const matchingSortedIds = retrievedIds
+    .filter((id: string) => workExperienceIdsFromCookies.includes(String(id))) // Compare with cookies
+    .sort((a: any, b: any) => a - b);
+
+  // Process the sorted IDs for further use
+  const sortedJobExperiences = formData?.job_experience
+    ?.filter((job: JobExperience) => matchingSortedIds.includes(job.id)) // Filter jobs matching sorted IDs
+    .sort(
+      (a: JobExperience, b: JobExperience) =>
+        matchingSortedIds.indexOf(a.id) - matchingSortedIds.indexOf(b.id)
+    );
+
+  const jobCount = formData?.career[0]?.jobs_to_show || 0;
 
   return (
     <>
@@ -305,7 +329,7 @@ const NewResumePdf = () => {
           {/* WORK EXPERIENCE */}
           <View style={styles.section}>
             <Text style={styles.resumeTitleText}>WORK EXPERIENCE</Text>
-            {formData?.job_experience
+            {sortedJobExperiences
               ?.slice(0, jobCount)
               .map((experience: JobExperience) =>
                 experience.business_name ? (

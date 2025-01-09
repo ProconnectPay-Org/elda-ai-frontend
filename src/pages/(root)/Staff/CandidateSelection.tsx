@@ -28,6 +28,8 @@ const CandidateSelection = () => {
   const { toast } = useToast();
 
   useEffect(() => {
+    localStorage.setItem("resumeCurrentPage", "0");
+    localStorage.setItem("sopCurrentPage", "0");
     if (loggedInStaff) {
       setAssignedCandidates(loggedInStaff.number_of_assigned_candidates);
     }

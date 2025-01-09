@@ -251,7 +251,7 @@ export type CandidateCareer = {
 };
 
 export type JobExperience = {
-  id?: number;
+  id: number;
   business_name: string;
   professional_status: string;
   job_title: string;

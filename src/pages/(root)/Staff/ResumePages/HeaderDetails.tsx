@@ -5,7 +5,11 @@ import {
   getDemonymFromISO,
   getErrorMessage,
 } from "@/lib/utils";
-import { ResumeStep1FormData, updateCandidateProfile } from "@/types";
+import {
+  JobExperience,
+  ResumeStep1FormData,
+  updateCandidateProfile,
+} from "@/types";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import ReactPhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -49,6 +53,24 @@ const HeaderDetails = () => {
       Cookies.set("studentId", singleCandidate.id);
       Cookies.set("studentCareerId", singleCandidate.career[0].id);
       Cookies.set("studentEducationId", singleCandidate.education[0].id);
+      const sortedJobExperiences = singleCandidate.job_experience.sort(
+        (a: JobExperience, b: JobExperience) => a.id - b.id
+      );
+
+      // Slice the sorted array to get only the first 3 IDs
+      const topThreeJobExperiences = sortedJobExperiences.slice(0, 3);
+
+      // Save the top three job experience IDs to cookies
+      topThreeJobExperiences.forEach((job: JobExperience, index: number) => {
+        Cookies.set(`work_experience_id${index + 1}`, String(job.id), {
+          expires: 7,
+        });
+      });
+
+      // Optional: Clear any extra job experience cookies
+      for (let i = topThreeJobExperiences.length + 1; i <= 3; i++) {
+        Cookies.remove(`work_experience_id${i}`);
+      }
       const foundCandidate = singleCandidate;
 
       setValue("email", foundCandidate.user?.email || "");
@@ -304,7 +326,7 @@ const HeaderDetails = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
-            <div>
+            <div className="w-full sm:w-1/2">
               <CountrySelect label="Nationality" name="nationality" />
               <p className="text-blue-500 text-sm mt-1">
                 {watchedValues.nationality

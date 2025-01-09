@@ -29,6 +29,14 @@ export const logoutAccount = async (role: "candidate" | "staff" | "admin") => {
       break;
     case "staff":
       Cookies.remove("staff_access_token");
+      Cookies.remove("studentEducationId");
+      Cookies.remove("studentCareerId");
+      Cookies.remove("studentId");
+      Cookies.remove("work_experience_id1");
+      Cookies.remove("work_experience_id2");
+      Cookies.remove("work_experience_id3");
+      localStorage.removeItem("resumeCurrentPage");
+      localStorage.removeItem("sopCurrentPage");
       break;
     case "candidate":
       Cookies.remove("candidate_access_token");
