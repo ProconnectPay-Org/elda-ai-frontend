@@ -74,7 +74,9 @@ const HeaderDetails = () => {
       const foundCandidate = singleCandidate;
 
       setValue("email", foundCandidate.user?.email || "");
-      setValue("fullName", foundCandidate.user?.full_name || "");
+      setValue("firstName", foundCandidate.first_name || "");
+      setValue("middleName", foundCandidate.middle_name || "");
+      setValue("lastName", foundCandidate.last_name || "");
       setValue("phoneNumber", foundCandidate.phone_number || "");
       setValue("city", foundCandidate.city_of_birth || "");
       setValue("state", foundCandidate.state_of_birth || "");
@@ -91,7 +93,9 @@ const HeaderDetails = () => {
       // Define the type for initialValues explicitly
       const initialValues: Record<keyof typeof watchedValues, string> = {
         email: singleCandidate.user?.email || "",
-        fullName: singleCandidate.user?.full_name || "",
+        firstName: singleCandidate.first_name || "",
+        middleName: singleCandidate.middle_name || "",
+        lastName: singleCandidate.last_name || "",
         phoneNumber: singleCandidate.phone_number || "",
         city: singleCandidate.city_of_birth || "",
         state: singleCandidate.state_of_birth || "",
@@ -115,6 +119,9 @@ const HeaderDetails = () => {
     e.preventDefault();
     setIsLoading(true);
     const personalData = {
+      first_name: getValues("firstName"),
+      middle_name: getValues("middleName"),
+      last_name: getValues("lastName"),
       preferred_call_name: getValues("preferredName"),
       gender: getValues("gender"),
       birth_date: getValues("dateOfBirth"),
@@ -132,6 +139,7 @@ const HeaderDetails = () => {
         title: "Success",
         description: "Updated successfully!",
       });
+      setIsModified(false);
     } catch (error) {
       toast({
         variant: "destructive",
@@ -171,20 +179,58 @@ const HeaderDetails = () => {
 
       <div className="bg-gray py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl">
         <div className="flex flex-col gap-8">
+          <div className="flex items-center gap-2">
+            <p className="font-semibold">Full Name: </p>
+            <p>{getValues("firstName")} {getValues("middleName")} {getValues("lastName")}</p>
+          </div>
           <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
             <div className="flex flex-col sm:w-1/2">
               <label htmlFor="firstName" className="text-[#344054]">
-                Full Name <span className="text-red">*</span>
+                First Name <span className="text-red">*</span>
               </label>
               <input
                 className="border border-gray-border rounded-md py-2 px-4"
-                id="fullName"
-                {...register("fullName")}
-                placeholder="Enter your full name"
+                id="firstName"
+                {...register("firstName")}
+                placeholder="Enter your first name"
               />
-              {errors.fullName && (
+              {errors.firstName && (
                 <span className="text-red text-sm">
-                  {getErrorMessage(errors.fullName)}
+                  {getErrorMessage(errors.firstName)}
+                </span>
+              )}
+            </div>
+            <div className="flex flex-col sm:w-1/2">
+              <label htmlFor="middleName" className="text-[#344054]">
+                Middle Name <span className="text-red">*</span>
+              </label>
+              <input
+                className="border border-gray-border rounded-md py-2 px-4"
+                id="middleName"
+                {...register("middleName")}
+                placeholder="Enter your middle name"
+              />
+              {errors.middleName && (
+                <span className="text-red text-sm">
+                  {getErrorMessage(errors.middleName)}
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
+            <div className="flex flex-col sm:w-1/2">
+              <label htmlFor="lastName" className="text-[#344054]">
+                Last Name <span className="text-red">*</span>
+              </label>
+              <input
+                className="border border-gray-border rounded-md py-2 px-4"
+                id="lastName"
+                {...register("lastName")}
+                placeholder="Enter your last name"
+              />
+              {errors.lastName && (
+                <span className="text-red text-sm">
+                  {getErrorMessage(errors.lastName)}
                 </span>
               )}
             </div>

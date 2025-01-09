@@ -62,7 +62,6 @@ const EducationHistory = () => {
     const initialValues = {
       country: singleCandidate?.education[0]?.country || "",
       degree: singleCandidate?.education[0]?.degree_type || "",
-      classOfDegree: singleCandidate?.education[0]?.class_of_degree || "",
       kindOfDegree: singleCandidate?.education[0]?.degree_type || "",
       tertiaryInstitutionAttended:
         singleCandidate?.education[0]?.school_name || "",
@@ -116,10 +115,10 @@ const EducationHistory = () => {
     const educationData = {
       degree_type: getValues("kindOfDegree"),
       school_name: getValues("tertiaryInstitutionAttended"),
-      country: getValues("countryOfEducation"),
+      country: getValues("country"),
       specific_course_of_study: getValues("course"),
-      admission_date: getValues("yearAdmitted"),
-      graduation_date: getValues("yearGraduated"),
+      admission_date: getValues("startDate"),
+      graduation_date: getValues("endDate"),
     } as Edu;
 
     try {
@@ -129,6 +128,7 @@ const EducationHistory = () => {
         title: "Success",
         description: "Updated successfully!",
       });
+      setIsModified(false);
     } catch (error) {
       toast({
         variant: "destructive",
