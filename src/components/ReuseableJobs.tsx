@@ -9,7 +9,6 @@ import promptImage from "@/assets/prompt.svg";
 import deleteBtn from "@/assets/delete-trash.svg";
 import promptWhiteImage from "@/assets/prompt-white.svg";
 import {
-  deleteJobExperience,
   fetchJobExperienceData,
   submitJobExperience,
 } from "@/lib/actions/candidate.actions";
@@ -20,9 +19,17 @@ import { formatDate } from "@/lib/utils";
 
 interface ReuseableJobsProps {
   index: number; // New prop for the job experience index
+  job: JobExperience; // Adjust this to match the structure of your job object
+  onDelete: () => void;
+  isDeleting: boolean;
 }
 
-const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
+const ReuseableJobs = ({
+  index,
+  job,
+  onDelete,
+  isDeleting,
+}: ReuseableJobsProps) => {
   const { register, getValues, setValue, control } =
     useFormContext<Step3FormData>();
   const { toast } = useToast();
@@ -32,28 +39,23 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
     "flex flex-col md:flex-row justify-between gap-4 md:gap-8";
 
   const [refineLoading, setRefineLoading] = useState(false);
-  const [jobStatus, setJobStatus] = useState("");
   const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
-  const [isDeleting, setIsDeleting] = useState<number | null>(null);
 
   const id = Cookies.get("candidate_id");
   const jobExperienceId = Cookies.get(`work_experience_id${index + 1}`);
 
   const currentJobStatus = getValues(`jobExperiences.${index}.jobStatus`) || "";
 
+  const watchedJobStatus = useWatch({
+    name: `jobExperiences.${index}.jobStatus`,
+    control,
+  });
+
   const handleJobStatusChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const value = event.target.value;
-    setJobStatus(value);
     setValue(`jobExperiences.${index}.jobStatus`, value);
-
-    // Set the endedDate based on job status
-    if (value === "current") {
-      setValue(`jobExperiences.${index}.endedDate`, "1960-01-01");
-    } else {
-      setValue(`jobExperiences.${index}.endedDate`, "");
-    }
   };
 
   // Handler for current professional status
@@ -77,54 +79,94 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
     control,
   });
 
+  // Update the endedDate based on the watched job status
   useEffect(() => {
-    if (jobExperience) {
+    if (watchedJobStatus === "current") {
+      setValue(`jobExperiences.${index}.endedDate`, "1960-01-01");
+    } else {
+      setValue(
+        `jobExperiences.${index}.endedDate`,
+        jobExperience?.year_ended || ""
+      );
+    }
+  }, [watchedJobStatus, setValue, index]);
+
+  useEffect(() => {
+    if (job) {
       setValue(
         `jobExperiences.${index}.workPlaceName`,
-        jobExperience.business_name || ""
+        job.business_name || ""
       );
       setValue(
         `jobExperiences.${index}.currentProfessionalStatus`,
-        jobExperience.professional_status || ""
+        job.professional_status || ""
       );
-      setValue(
-        `jobExperiences.${index}.currentJobTitle`,
-        jobExperience.job_title || ""
-      );
+      setValue(`jobExperiences.${index}.currentJobTitle`, job.job_title || "");
       setValue(
         `jobExperiences.${index}.employmentType`,
-        jobExperience.employment_type || ""
+        job.employment_type || ""
       );
-      setValue(
-        `jobExperiences.${index}.stateLocation`,
-        jobExperience.state || ""
-      );
-      setValue(
-        `jobExperiences.${index}.countryLocation`,
-        jobExperience.country || ""
-      );
-      setValue(
-        `jobExperiences.${index}.startedDate`,
-        jobExperience.year_started || ""
-      );
-      setValue(
-        `jobExperiences.${index}.endedDate`,
-        jobExperience.year_ended || ""
-      );
-      setValue(
-        `jobExperiences.${index}.jobStatus`,
-        jobExperience.job_status || ""
-      );
+      setValue(`jobExperiences.${index}.stateLocation`, job.state || "");
+      setValue(`jobExperiences.${index}.countryLocation`, job.country || "");
+      setValue(`jobExperiences.${index}.startedDate`, job.year_started || "");
+      setValue(`jobExperiences.${index}.endedDate`, job.year_ended || "");
+      setValue(`jobExperiences.${index}.jobStatus`, job.job_status || "");
       setValue(
         `jobExperiences.${index}.companyDescription`,
-        jobExperience.company_description || ""
+        job.company_description || ""
       );
-      setValue(
-        `jobExperiences.${index}.jobSummary`,
-        jobExperience.job_summary || ""
-      );
+      setValue(`jobExperiences.${index}.jobSummary`, job.job_summary || "");
     }
-  }, [jobExperience, setValue, index]);
+  }, [job, setValue, index]);
+
+  // useEffect(() => {
+  //   if (jobExperience) {
+  //     setValue(
+  //       `jobExperiences.${index}.workPlaceName`,
+  //       jobExperience.business_name || ""
+  //     );
+  //     setValue(
+  //       `jobExperiences.${index}.currentProfessionalStatus`,
+  //       jobExperience.professional_status || ""
+  //     );
+  //     setValue(
+  //       `jobExperiences.${index}.currentJobTitle`,
+  //       jobExperience.job_title || ""
+  //     );
+  //     setValue(
+  //       `jobExperiences.${index}.employmentType`,
+  //       jobExperience.employment_type || ""
+  //     );
+  //     setValue(
+  //       `jobExperiences.${index}.stateLocation`,
+  //       jobExperience.state || ""
+  //     );
+  //     setValue(
+  //       `jobExperiences.${index}.countryLocation`,
+  //       jobExperience.country || ""
+  //     );
+  //     setValue(
+  //       `jobExperiences.${index}.startedDate`,
+  //       jobExperience.year_started || ""
+  //     );
+  //     setValue(
+  //       `jobExperiences.${index}.endedDate`,
+  //       jobExperience.year_ended || ""
+  //     );
+  //     setValue(
+  //       `jobExperiences.${index}.jobStatus`,
+  //       jobExperience.job_status || ""
+  //     );
+  //     setValue(
+  //       `jobExperiences.${index}.companyDescription`,
+  //       jobExperience.company_description || ""
+  //     );
+  //     setValue(
+  //       `jobExperiences.${index}.jobSummary`,
+  //       jobExperience.job_summary || ""
+  //     );
+  //   }
+  // }, [jobExperience, setValue, index]);
 
   const handleRefine = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -208,31 +250,6 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
     }
   };
 
-  const handleDelete = async (
-    e: React.MouseEvent<HTMLButtonElement>,
-    index: number
-  ) => {
-    e.preventDefault();
-    setIsDeleting(index);
-    try {
-      await deleteJobExperience(jobExperienceId!);
-      toast({
-        variant: "success",
-        title: "Success",
-        description: `Job experience deleted successfully. ${jobExperienceId}`,
-      });
-      Cookies.set(`work_experience_id${index + 1}`, "");
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to delete job experience.",
-      });
-    } finally {
-      setIsDeleting(null);
-    }
-  };
-
   return (
     <div className="border border-pale-bg mb-5 py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
       {isLoading && (
@@ -260,7 +277,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
                 id="jobStatus"
                 {...register(`jobExperiences.${index}.jobStatus`)}
                 onChange={handleJobStatusChange}
-                value={currentJobStatus}
+                value={watchedJobStatus}
               >
                 <option value="">Select job status</option>
                 <option value="current">Current</option>
@@ -444,7 +461,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
 
         <div className={outerDivClass}>
           <div className="w-full md:w-1/2 gap-8 flex flex-col">
-            {jobStatus === "former" && (
+            {watchedJobStatus === "former" && (
               <div className="flex flex-col w-full">
                 <label
                   htmlFor={`jobExperiences.${index}.endedDate`}
@@ -509,9 +526,11 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
             <Button
               variant={"outline"}
               className="w-fit p-2"
-              onClick={(e) => handleDelete(e, index)}
+              onClick={onDelete}
+              type="button"
+              // onClick={(e) => handleDelete(e, index)}
             >
-              {isDeleting === index ? (
+              {isDeleting ? (
                 <div className="flex items-center justify-center gap-2">
                   <Loader2 className="animate-spin" />
                 </div>

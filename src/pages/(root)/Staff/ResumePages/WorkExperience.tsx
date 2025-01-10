@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useCandidates } from "@/hooks/useCandidiates";
 import { getErrorMessage } from "@/lib/utils";
-import { CandidateCareer, ResumeStep4FormData } from "@/types";
+import { CandidateCareer, JobExperience, ResumeStep4FormData } from "@/types";
 import { useEffect, useState } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import "react-phone-input-2/lib/style.css";
@@ -9,6 +9,13 @@ import { useParams } from "react-router-dom";
 import ReuseableJobs from "@/components/ReuseableJobs";
 import { submitCareer } from "@/lib/actions/staffresume.actions";
 import { toast } from "@/components/ui/use-toast";
+import Cookies from "js-cookie";
+import {
+  deleteJobExperience,
+  fetchJobExperienceData,
+} from "@/lib/actions/candidate.actions";
+import { useQuery } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 
 const WorkExperience = () => {
   const {
@@ -29,6 +36,33 @@ const WorkExperience = () => {
   const [jobsCount, setJobsCount] = useState(0);
   const [isModified, setIsModified] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [jobs, setJobs] = useState<JobExperience[]>([]);
+  const [isDeleting, setIsDeleting] = useState<number | null>(null);
+
+  // Fetch job experience IDs from cookies
+  const jobExperienceIds = [1, 2, 3]
+    .map((i) => Cookies.get(`work_experience_id${i}`))
+    .filter(Boolean); // Exclude null/undefined IDs
+
+  // Fetch job experiences using React Query
+  const { data: fetchedJobs, isLoading: jobsLoading } = useQuery({
+    queryKey: ["jobExperiences", jobExperienceIds],
+    queryFn: async () => {
+      const promises = jobExperienceIds.map((id) => fetchJobExperienceData(id));
+      return Promise.all(promises);
+    },
+    enabled: jobExperienceIds.length > 0, // Only run query if IDs exist
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+  });
+
+  // Update jobs state when data is fetched
+  useEffect(() => {
+    if (fetchedJobs) {
+      setJobs(fetchedJobs);
+      setJobsCount(fetchedJobs.length);
+    }
+  }, [fetchedJobs]);
 
   const watchedValues = useWatch({ control });
 
@@ -113,7 +147,96 @@ const WorkExperience = () => {
     }
   };
 
-  if (singleCandidateLoading) {
+  const handleAddJob = async () => {
+    if (jobsCount >= 3) {
+      toast({
+        variant: "destructive",
+        title: "Limit Reached",
+        description: "You can only add up to 3 jobs.",
+      });
+      return;
+    }
+
+    const newJob: JobExperience = {
+      id: 0,
+      business_name: "",
+      professional_status: "",
+      job_title: "",
+      employment_type: "",
+      state: "",
+      country: "",
+      year_started: "",
+      year_ended: "",
+      company_description: "",
+      job_summary: "",
+      job_status: "",
+      candidate: id,
+    };
+
+    setJobs((prevJobs) => [...prevJobs, newJob]);
+    setJobsCount((prevCount) => prevCount + 1);
+
+    setIsLoading(true);
+
+    const workData = {
+      jobs_to_show: jobsCount,
+    } as CandidateCareer;
+    try {
+      await submitCareer(workData);
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "added job!",
+      });
+      setIsModified(false);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update details.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async (index: number, jobExperienceId: string) => {
+    setIsDeleting(index);
+
+    // Check if jobExperienceId is an empty string or not defined
+    if (jobExperienceId == String(0)) {
+      setJobs((prevJobs) =>
+        prevJobs.filter((job) => String(job.id) !== jobExperienceId)
+      );
+      setJobsCount((prevCount) => prevCount - 1); // Decrement jobsCount
+      setIsDeleting(null);
+      return;
+    }
+
+    try {
+      if (jobExperienceId) await deleteJobExperience(jobExperienceId!);
+      toast({
+        variant: "success",
+        title: "Success",
+        description: `Job experience deleted successfully. ${jobExperienceId}`,
+      });
+      setJobs((prevJobs) =>
+        prevJobs.filter((job) => String(job.id) !== jobExperienceId)
+      );
+      setJobsCount((prevCount) => prevCount - 1); // Decrement jobsCount
+      Cookies.set(`work_experience_id${index + 1}`, "");
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to delete job experience.",
+      });
+    } finally {
+      setIsDeleting(null);
+    }
+  };
+
+  if (singleCandidateLoading || jobsLoading) {
     return <div>Loading...</div>;
   }
 
@@ -132,6 +255,7 @@ const WorkExperience = () => {
             id="jobsToShowcase"
             {...register("jobsToShowcase")}
             onChange={handleJobsCountChange}
+            value={jobsCount}
             className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
           >
             <option disabled value="0">
@@ -295,10 +419,25 @@ const WorkExperience = () => {
         {isLoading ? "Saving..." : "Save Changes"}
       </Button>
 
+      {/* Reuseable Job Container */}
       <div>
-        {jobsCount >= 1 && <ReuseableJobs index={0} />}
-        {jobsCount >= 2 && <ReuseableJobs index={1} />}
-        {jobsCount === 3 && <ReuseableJobs index={2} />}
+        {jobs.slice(0, jobsCount).map((job, index) => (
+          <ReuseableJobs
+            key={job.id}
+            job={job}
+            onDelete={() => handleDelete(index, String(job.id))}
+            index={index}
+            isDeleting={isDeleting === index}
+          />
+        ))}
+        <Button
+          type="button"
+          onClick={handleAddJob}
+          className="mt-4 border-red text-red"
+          variant={"outline"}
+        >
+          Add Experience + {isLoading && <Loader2 className="animate-spin" />}
+        </Button>
       </div>
     </div>
   );

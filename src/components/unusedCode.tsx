@@ -205,3 +205,11 @@
         )
       )} */
 }
+
+{
+  /* <div>
+        {jobsCount >= 1 && <ReuseableJobs index={0} />}
+        {jobsCount >= 2 && <ReuseableJobs index={1} />}
+        {jobsCount === 3 && <ReuseableJobs index={2} />}
+      </div> */
+}

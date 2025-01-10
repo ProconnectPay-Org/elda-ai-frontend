@@ -216,7 +216,7 @@ export const step3Schema = z.object({
   jobExperiences: z.array(
     z.object({
       workPlaceName: z.string().optional(),
-      currentProfessionalStatus: z.string().optional(),
+      currentProfessionalStatus: z.enum(["former", "current", ""]).transform((val) => val === "former"),
       currentJobTitle: z.string().optional(),
       employmentType: z.string().optional(),
       stateLocation: z.string().optional(),
