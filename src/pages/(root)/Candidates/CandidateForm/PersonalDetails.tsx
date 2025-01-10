@@ -1,22 +1,29 @@
 import { genderOptions } from "@/constants";
 import { getErrorMessage } from "@/lib/utils";
-import { Step1FormData } from "@/types";
-import { useFormContext } from "react-hook-form";
+import { Step1FormData, updateCandidateProfile } from "@/types";
+import { useFormContext, useWatch } from "react-hook-form";
 import "react-phone-input-2/lib/style.css";
 import StateSelect from "@/components/StateSelect";
 import CountrySelect from "@/components/CountrySelect";
 import PhoneInputField from "@/components/PhoneInputField";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getPersonalDetails } from "@/lib/actions/candidate.actions";
+import {
+  getPersonalDetails,
+  updatePersonalDetails,
+} from "@/lib/actions/candidate.actions";
 import { Loader2 } from "lucide-react";
 import Cookies from "js-cookie";
+import { toast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 
 const PersonalDetails = () => {
   const {
     register,
     setValue,
     formState: { errors },
+    getValues,
+    control,
   } = useFormContext<Step1FormData>();
   const candidateId = Cookies.get("candidate_id");
 
@@ -27,8 +34,14 @@ const PersonalDetails = () => {
     enabled: !!candidateId,
   });
 
+  const [isModified, setIsModified] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Watch form values
+  const watchedValues = useWatch({ control });
+
   useEffect(() => {
-    if (candidateData) {      
+    if (candidateData) {
       setValue("firstName", candidateData.data.first_name || "");
       setValue("middleName", candidateData.data.middle_name || "");
       setValue("surname", candidateData.data.last_name || "");
@@ -40,13 +53,91 @@ const PersonalDetails = () => {
       setValue("countryOfBirth", candidateData.data.country_of_birth || "");
       setValue("emailAddress", candidateData.data.email_address || "");
       setValue("phoneNumber", candidateData.data.phone_number || "");
-      setValue("countryOfResidence", candidateData.data.country_current_reside || "");
-      setValue("stateOfResidence", candidateData.data.state_current_reside || "");
+      setValue(
+        "countryOfResidence",
+        candidateData.data.country_current_reside || ""
+      );
+      setValue(
+        "stateOfResidence",
+        candidateData.data.state_current_reside || ""
+      );
       setValue("cityOfResidence", candidateData.data.city_current_reside || "");
       setValue("houseAddress", candidateData.data.current_house_address || "");
       setValue("postalAddress", candidateData.data.postal_code || "");
     }
   }, [candidateData, setValue]);
+
+  useEffect(() => {
+    if (candidateData) {
+      // Define the type for initialValues explicitly
+      const initialValues: Record<keyof typeof watchedValues, string> = {
+        firstName: candidateData.data.first_name || "",
+        middleName: candidateData.data.middle_name || "",
+        surname: candidateData.data.last_name || "",
+        preferredName: candidateData.data.preferred_call_name || "",
+        gender: candidateData.data.gender || "",
+        dateOfBirth: candidateData.data.birth_date || "",
+        countryOfBirth: candidateData.data.country_of_birth || "",
+        cityOfBirth: candidateData.data.city_of_birth || "",
+        stateOfBirth: candidateData.data.state_of_birth || "",
+        phoneNumber: candidateData.data.phone_number || "",
+        emailAddress: candidateData.data.email_address || "",
+        countryOfResidence: candidateData.data.country_current_reside || "",
+        stateOfResidence: candidateData.data.state_current_reside || "",
+        cityOfResidence: candidateData.data.city_current_reside || "",
+        houseAddress: candidateData.data.current_house_address || "",
+        postalAddress: candidateData.data.postal_code || "",
+      };
+
+      // Ensure keys match the watchedValues keys
+      const hasChanges = (
+        Object.keys(initialValues) as Array<keyof typeof initialValues>
+      ).some((key) => watchedValues[key] !== initialValues[key]);
+
+      setIsModified(hasChanges);
+    }
+  }, [watchedValues, candidateData]);
+
+  const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    const personalData = {
+      first_name: getValues("firstName"),
+      middle_name: getValues("middleName"),
+      last_name: getValues("surname"),
+      preferred_call_name: getValues("preferredName"),
+      gender: getValues("gender"),
+      birth_date: getValues("dateOfBirth"),
+      country_of_birth: getValues("countryOfBirth"),
+      city_of_birth: getValues("cityOfBirth"),
+      state_of_birth: getValues("stateOfBirth"),
+      phone_number: getValues("phoneNumber"),
+      email_address: getValues("email"),
+      country_current_reside: getValues("countryOfResidence"),
+      state_current_reside: getValues("stateOfResidence"),
+      city_current_reside: getValues("cityOfResidence"),
+      current_house_address: getValues("houseAddress"),
+      postal_code: getValues("postalAddress"),
+    } as updateCandidateProfile;
+
+    try {
+      await updatePersonalDetails(personalData);
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Updated successfully!",
+      });
+      setIsModified(false);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update details.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
@@ -256,7 +347,7 @@ const PersonalDetails = () => {
         <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
           <PhoneInputField name="phoneNumber" />
           <CountrySelect
-            label="Country where you currently reside"
+            label="Country where you reside"
             name="countryOfResidence"
           />
         </div>
@@ -317,6 +408,17 @@ const PersonalDetails = () => {
               </span>
             )}
           </div>
+        </div>
+        <div className="w-full">
+          <Button
+            className={`bg-red w-full ${
+              !isModified || loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            onClick={handleSave}
+            disabled={!isModified || loading}
+          >
+            {loading ? "Saving..." : "Save"}
+          </Button>
         </div>
       </div>
     </div>

@@ -138,7 +138,7 @@ export const submitWorkExperience = async (workData: CandidateCareer) => {
   ]);
 };
 
-export const postJobExperience = async (
+export const patchJobExperience = async (
   experienceData: JobExperience,
   job_experience_id: string
 ) => {
@@ -151,6 +151,68 @@ export const postJobExperience = async (
   return await axios.patch(
     `${API_URL}register/job-experience/${job_experience_id}/`,
     experienceData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+export const postJobExperience = async (
+  experienceData: JobExperience,
+) => {
+  const token =
+    Cookies.get("candidate_access_token") || Cookies.get("staff_access_token");
+
+  if (!token) {
+    throw new Error("Unauthorized: No access token available");
+  }
+  return await axios.post(
+    `${API_URL}register/job-experience/`,
+    experienceData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+export const submitJobExperience = async (
+  experienceData: JobExperience,
+  job_experience_id: string
+) => {
+  try {
+    let response;
+
+    // Check if job_experience_id is null or undefined
+    if (job_experience_id == "") {
+      // If null or undefined, post the experience
+      response = await postJobExperience(experienceData);
+    } else {
+      // If not null or undefined, patch the experience
+      response = await patchJobExperience(experienceData, job_experience_id);
+    }
+
+    return response;
+  } catch (error) {
+    console.error("Error submitting job experience:", error);
+    throw error;
+  }
+};
+
+export const deleteJobExperience = async (job_experience_id: string) => {
+  const token =
+    Cookies.get("candidate_access_token") || Cookies.get("staff_access_token");
+
+  if (!token) {
+    throw new Error("Unauthorized: No access token available");
+  }
+  return await axios.delete(
+    `${API_URL}register/job-experience/${job_experience_id}/`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -316,7 +378,7 @@ export const submitRecommenderDetails = async (
   recommenderDataList: Recommender[]
 ) => {
   const professionalRecommenderId = Cookies.get("ProfessionalRecommender");
-  const academicRecommenderId = Cookies.get("PcademicRecommender");
+  const academicRecommenderId = Cookies.get("AcademicRecommender");
   const otherRecommenderId = Cookies.get("otherRecommender");
 
   const recommenderIds = [

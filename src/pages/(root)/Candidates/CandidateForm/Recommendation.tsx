@@ -1,12 +1,17 @@
 import PhoneInputField from "@/components/PhoneInputField";
-import { getRecommenderDetails } from "@/lib/actions/candidate.actions";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/use-toast";
+import {
+  getRecommenderDetails,
+  submitRecommenderDetails,
+} from "@/lib/actions/candidate.actions";
 import { getErrorMessage } from "@/lib/utils";
 import { Recommender, Step4FormData } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
-import { useFormContext } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
 
 const professionalRelationshipOptions = [
   "Current Employer",
@@ -48,6 +53,8 @@ const Recommendation = () => {
     register,
     formState: { errors },
     setValue,
+    control,
+    getValues,
   } = useFormContext<Step4FormData>();
 
   const recommenderIds = {
@@ -56,26 +63,39 @@ const Recommendation = () => {
     other: "otherRecommender",
   };
 
+  const id = Cookies.get("candidate_id");
+
   const { isLoading: isReferee1Loading, data: recommender1Data } = useQuery({
     queryKey: ["recommender1Data"],
     queryFn: () => getRecommenderDetails(recommenderIds.professional),
-    enabled: recommenderIds.professional !== undefined && !!Cookies.get(recommenderIds.professional),
+    enabled:
+      recommenderIds.professional !== undefined &&
+      !!Cookies.get(recommenderIds.professional),
     staleTime: 5 * 1000 * 60,
   });
 
   const { isLoading: isReferee2Loading, data: recommender2Data } = useQuery({
     queryKey: ["recommender2Data"],
     queryFn: () => getRecommenderDetails(recommenderIds.academic),
-    enabled: recommenderIds.academic !== undefined && !!Cookies.get(recommenderIds.academic),
+    enabled:
+      recommenderIds.academic !== undefined &&
+      !!Cookies.get(recommenderIds.academic),
     staleTime: 5 * 1000 * 60,
   });
 
   const { isLoading: isReferee3Loading, data: recommender3Data } = useQuery({
     queryKey: ["recommender3Data"],
     queryFn: () => getRecommenderDetails(recommenderIds.other),
-    enabled: recommenderIds.other !== undefined && !!Cookies.get(recommenderIds.other),
+    enabled:
+      recommenderIds.other !== undefined && !!Cookies.get(recommenderIds.other),
     staleTime: 5 * 1000 * 60,
   });
+
+  const [isModified, setIsModified] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Watch form values
+  const watchedValues = useWatch({ control });
 
   useEffect(() => {
     const setRecommenderValues = (data: Recommender, prefix: string) => {
@@ -93,6 +113,92 @@ const Recommendation = () => {
     setRecommenderValues(recommender2Data, "recommendation2");
     setRecommenderValues(recommender3Data, "recommendation3");
   }, [recommender1Data, recommender2Data, recommender3Data, setValue]);
+
+  useEffect(() => {
+    const initialValues: Record<keyof typeof watchedValues, string> = {
+      recommendation1fullname: recommender1Data?.full_name || "",
+      recommendation1email: recommender1Data?.email || "",
+      recommendation1phoneNumber: recommender1Data?.phone_number || "",
+      recommendation1relationship: recommender1Data?.relationship || "",
+      recommendation1job: recommender1Data?.job_title || "",
+      recommendation1organization: recommender1Data?.organization || "",
+      recommendation2fullname: recommender2Data?.full_name || "",
+      recommendation2email: recommender2Data?.email || "",
+      recommendation2phoneNumber: recommender2Data?.phone_number || "",
+      recommendation2relationship: recommender2Data?.relationship || "",
+      recommendation2job: recommender2Data?.job_title || "",
+      recommendation2organization: recommender2Data?.organization || "",
+      recommendation3fullname: recommender3Data?.full_name || "",
+      recommendation3email: recommender3Data?.email || "",
+      recommendation3phoneNumber: recommender3Data?.phone_number || "",
+      recommendation3relationship: recommender3Data?.relationship || "",
+      recommendation3job: recommender3Data?.job_title || "",
+      recommendation3organization: recommender3Data?.organization || "",
+    };
+
+    // Ensure keys match the watchedValues keys
+    const hasChanges = (
+      Object.keys(initialValues) as Array<keyof typeof initialValues>
+    ).some((key) => watchedValues[key] !== initialValues[key]);
+
+    setIsModified(hasChanges);
+  }, [recommender1Data, recommender2Data, recommender3Data, watchedValues]);
+
+  const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const recommenderDataList = [
+      {
+        recommender_type: "Professional",
+        full_name: getValues("recommendation1fullname"),
+        email: getValues("recommendation1email"),
+        phone_number: getValues("recommendation1phoneNumber"),
+        relationship: getValues("recommendation1relationship"),
+        organization: getValues("recommendation1organization"),
+        job_title: getValues("recommendation1job"),
+        candidate: id,
+      },
+      {
+        recommender_type: "Academic",
+        full_name: getValues("recommendation2fullname"),
+        email: getValues("recommendation2email"),
+        phone_number: getValues("recommendation2phoneNumber"),
+        relationship: getValues("recommendation2relationship"),
+        organization: getValues("recommendation2organization"),
+        job_title: getValues("recommendation2job"),
+        candidate: id,
+      },
+      {
+        recommender_type: "other",
+        full_name: getValues("recommendation3fullname"),
+        email: getValues("recommendation3email"),
+        phone_number: getValues("recommendation3phoneNumber"),
+        relationship: getValues("recommendation3relationship"),
+        organization: getValues("recommendation3organization"),
+        job_title: getValues("recommendation3job"),
+        candidate: id,
+      },
+    ];
+
+    try {
+      await submitRecommenderDetails(recommenderDataList);
+      toast({
+        variant: "success",
+        title: "Saved",
+        description: "Recommender details saved successfully!",
+      });
+      setIsModified(false);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to save recommender details.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const isLoading = isReferee1Loading || isReferee2Loading || isReferee3Loading;
 
@@ -483,6 +589,18 @@ const Recommendation = () => {
                   </span>
                 )}
               </div>
+            </div>
+
+            <div className="w-full">
+              <Button
+                className={`bg-red w-full ${
+                  !isModified || loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                onClick={handleSave}
+                disabled={!isModified || loading}
+              >
+                {loading ? "Saving..." : "Save"}
+              </Button>
             </div>
           </div>
         </div>

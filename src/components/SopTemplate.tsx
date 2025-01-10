@@ -71,7 +71,7 @@ const SopTemplate = () => {
     },
     paragraph: {
       textAlign: "justify",
-      lineHeight: 1.4,
+      lineHeight: 1.2,
     },
   });
 

@@ -1,13 +1,18 @@
 // components/Step3.tsx
 import { getErrorMessage } from "@/lib/utils";
-import { CareerInterest, Step3FormData } from "@/types";
-import { Controller, useFormContext } from "react-hook-form";
+import { CandidateCareer, CareerInterest, Step3FormData } from "@/types";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchCareerData } from "@/lib/actions/candidate.actions";
+import {
+  fetchCareerData,
+  submitWorkExperience,
+} from "@/lib/actions/candidate.actions";
 import Cookies from "js-cookie";
 import ReuseableJobs from "@/components/ReuseableJobs";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/use-toast";
 
 type CareerInterestOption = {
   name: string;
@@ -21,9 +26,12 @@ const WorkExperience = () => {
     control,
     setValue,
     formState: { errors },
+    getValues,
   } = useFormContext<Step3FormData>();
   const [jobsCount, setJobsCount] = useState(0);
   const [inputValue, setInputValue] = useState("");
+  const [isModified, setIsModified] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const divClass = "flex flex-col w-full md:w-1/2";
   const outerDivClass =
@@ -38,9 +46,12 @@ const WorkExperience = () => {
     staleTime: 5 * 1000 * 60,
   });
 
+
+  // Watch form values
+  const watchedValues = useWatch({ control });
+
   useEffect(() => {
     if (careerData) {
-      setValue("workPlaceName", careerData.business_name || "");
       setValue("profession", careerData.profession || "");
       setValue("sectorOfProfession", careerData.sector || "");
       setValue(
@@ -63,6 +74,64 @@ const WorkExperience = () => {
       setJobsCount(careerData.jobs_to_show || 1);
     }
   }, [careerData, setValue]);
+
+  useEffect(() => {
+    if (careerData) {
+      // Define the type for initialValues explicitly
+      const initialValues: Record<keyof typeof watchedValues, string> = {
+        profession: careerData.profession || "",
+        sectorOfProfession: careerData.sector || "",
+        careerInterest: careerData.career_interests || [],
+        yearsOfProfessionalExperiencePostFirstDegree:
+          careerData.years_of_experience_post_degree || 0,
+        yearsOfProfessionalExperiencePriorToGraduation:
+          careerData.years_of_experience_pre_graduation || 0,
+        jobsToShowcase: careerData.jobs_to_show || 1,
+      };
+
+      // Ensure keys match the watchedValues keys
+      const hasChanges = (
+        Object.keys(initialValues) as Array<keyof typeof initialValues>
+      ).some((key) => watchedValues[key] !== initialValues[key]);
+
+      setIsModified(hasChanges);
+    }
+  }, [watchedValues, careerData]);
+
+  const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    const workData = {
+      profession: getValues("profession"),
+      sector: getValues("sectorOfProfession"),
+      career_interests: getValues("careerInterest"),
+      years_of_experience_post_degree: getValues(
+        "yearsOfProfessionalExperiencePostFirstDegree"
+      ),
+      years_of_experience_pre_graduation: getValues(
+        "yearsOfProfessionalExperiencePriorToGraduation"
+      ),
+      jobs_to_show: getValues("jobsToShowcase"),
+    } as CandidateCareer;
+
+    try {
+      await submitWorkExperience(workData);
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Updated successfully!",
+      });
+      setIsModified(false);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update details.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleJobsCountChange = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -307,7 +376,9 @@ const WorkExperience = () => {
                   onChange={handleJobsCountChange}
                   className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
                 >
-                  <option disabled value="0">0</option>
+                  <option disabled value="0">
+                    0
+                  </option>
                   <option value="1">1</option>
                   <option value="2">2</option>
                   <option value="3">3</option>
@@ -340,6 +411,18 @@ const WorkExperience = () => {
                 </p>
               )}
             </div>
+          </div>
+
+          <div className="w-full">
+            <Button
+              className={`bg-red w-full ${
+                !isModified || loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              onClick={handleSave}
+              disabled={!isModified || loading}
+            >
+              {loading ? "Saving..." : "Save"}
+            </Button>
           </div>
         </div>
       </div>

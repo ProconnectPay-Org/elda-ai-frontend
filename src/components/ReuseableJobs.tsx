@@ -6,10 +6,12 @@ import { refinePrompt } from "@/lib/actions/user.actions";
 import Cookies from "js-cookie";
 import CountrySelect from "./CountrySelect";
 import promptImage from "@/assets/prompt.svg";
+import deleteBtn from "@/assets/delete-trash.svg";
 import promptWhiteImage from "@/assets/prompt-white.svg";
 import {
+  deleteJobExperience,
   fetchJobExperienceData,
-  postJobExperience,
+  submitJobExperience,
 } from "@/lib/actions/candidate.actions";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
@@ -32,8 +34,10 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
   const [refineLoading, setRefineLoading] = useState(false);
   const [jobStatus, setJobStatus] = useState("");
   const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState<number | null>(null);
 
   const id = Cookies.get("candidate_id");
+  const jobExperienceId = Cookies.get(`work_experience_id${index + 1}`);
 
   const currentJobStatus = getValues(`jobExperiences.${index}.jobStatus`) || "";
 
@@ -59,8 +63,6 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
     const value = event.target.value;
     setValue(`jobExperiences.${index}.currentProfessionalStatus`, value);
   };
-
-  const jobExperienceId = Cookies.get(`work_experience_id${index + 1}`);
 
   // Fetch job experience data by ID
   const { data: jobExperience, isLoading } = useQuery({
@@ -187,7 +189,9 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
         candidate: id,
       } as JobExperience;
 
-      await postJobExperience(data, jobExperienceId!);
+      const response = await submitJobExperience(data, jobExperienceId!);
+      Cookies.set(`work_experience_id${index + 1}`, `${response?.data?.id}`);
+
       toast({
         variant: "success",
         title: "Success",
@@ -201,6 +205,31 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
       });
     } finally {
       setLoadingIndex(null);
+    }
+  };
+
+  const handleDelete = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    index: number
+  ) => {
+    e.preventDefault();
+    setIsDeleting(index);
+    try {
+      await deleteJobExperience(jobExperienceId!);
+      toast({
+        variant: "success",
+        title: "Success",
+        description: `Job experience deleted successfully. ${jobExperienceId}`,
+      });
+      Cookies.set(`work_experience_id${index + 1}`, "");
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to delete job experience.",
+      });
+    } finally {
+      setIsDeleting(null);
     }
   };
 
@@ -462,7 +491,7 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
         </div>
 
         <div className="flex items-end w-full flex-col-reverse md:flex-row justify-between gap-4 md:gap-8">
-          <div className="w-full md:w-1/2 md:flex">
+          <div className="w-full md:w-1/2 flex items-center justify-between">
             <Button
               className="bg-red"
               onClick={(e) => handleSaveChanges(e, index)}
@@ -474,14 +503,27 @@ const ReuseableJobs = ({ index }: ReuseableJobsProps) => {
                   <Loader2 className="animate-spin" />
                 </div>
               ) : (
-                "Save Job Experience"
+                <p className="text-xs xl:text-sm">Save Job Experience</p>
+              )}
+            </Button>
+            <Button
+              variant={"outline"}
+              className="w-fit p-2"
+              onClick={(e) => handleDelete(e, index)}
+            >
+              {isDeleting === index ? (
+                <div className="flex items-center justify-center gap-2">
+                  <Loader2 className="animate-spin" />
+                </div>
+              ) : (
+                <img src={deleteBtn} alt="" className="w-8" />
               )}
             </Button>
           </div>
           <Button
             onClick={handleRefine}
             disabled={refineLoading}
-            className="w-full text-[8px] md:w-1/2 bg-red flex gap-2 md:text-xs xl:text-sm"
+            className="w-full text-[8px] sm:text-xs md:text-[8px] md:w-1/2 bg-red flex gap-2 lg:text-xs xl:text-sm"
           >
             <img src={promptWhiteImage} alt="prompt" />
             {refineLoading

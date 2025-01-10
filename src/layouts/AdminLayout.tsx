@@ -61,10 +61,6 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
     }
   }, [access_token, navigate]);
 
-  if (!access_token) {
-    return null;
-  }
-
   return (
     <div>
       <nav className="flex items-center justify-between bg-pale-bg h-28 p-4 lg:p-12 gap-16 overflow-y-hidden">

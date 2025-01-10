@@ -149,7 +149,7 @@ const ProfileTabs = () => {
           <form className="space-y-4 md:space-y-8">
             <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
               <div className="w-full">
-                <label>Full Name</label>
+                <label className="text-gray-text">Full Name</label>
                 <input
                   {...registerDetails("fullName", {
                     required: activeTab === "all" && "Full Name is required",
@@ -164,7 +164,7 @@ const ProfileTabs = () => {
                 )}
               </div>
 
-              <div className="w-full">
+              {/* <div className="w-full">
                 <label>Gender</label>
                 <input
                   {...registerDetails("gender", {
@@ -178,10 +178,10 @@ const ProfileTabs = () => {
                     {errorsDetails.gender.message}
                   </p>
                 )}
-              </div>
+              </div> */}
             </div>
 
-            <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
+            {/* <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
               <div className="w-full">
                 <label>Date of Birth</label>
                 <input
@@ -214,11 +214,11 @@ const ProfileTabs = () => {
                   </p>
                 )}
               </div>
-            </div>
+            </div> */}
 
             <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
               <div className="w-full">
-                <label>Email</label>
+                <label className="text-gray-text">Email</label>
                 <input
                   {...registerDetails("email", {
                     required: activeTab === "all" && "Email is required",
@@ -238,7 +238,7 @@ const ProfileTabs = () => {
               </div>
 
               <div className="w-full">
-                <label>Number of Assigned Jobs so far</label>
+                <label className="text-gray-text">Number of Assigned Jobs so far</label>
                 <input
                   {...registerDetails("numberOfJobs", {
                     required:
@@ -246,6 +246,7 @@ const ProfileTabs = () => {
                   })}
                   placeholder="20"
                   className="w-full p-2 rounded-md"
+                  disabled
                 />
                 {errorsDetails.numberOfJobs && (
                   <p className="text-red text-sm">

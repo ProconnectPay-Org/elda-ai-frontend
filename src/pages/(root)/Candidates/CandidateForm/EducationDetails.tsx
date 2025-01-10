@@ -1,14 +1,19 @@
 import { getErrorMessage } from "@/lib/utils";
-import { Step2FormData } from "@/types";
-import { useFormContext } from "react-hook-form";
+import { EducationHistory, Step2FormData } from "@/types";
+import { useFormContext, useWatch } from "react-hook-form";
 import CountrySelect from "@/components/CountrySelect";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchEducationData } from "@/lib/actions/candidate.actions";
+import {
+  fetchEducationData,
+  submitEducationDetails,
+} from "@/lib/actions/candidate.actions";
 import Cookies from "js-cookie";
 import AdvancedDegree from "@/components/AdvancedDegree";
 import { degreeOptions } from "@/constants";
+import { toast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 
 const EducationDetails = () => {
   const {
@@ -16,6 +21,8 @@ const EducationDetails = () => {
     watch,
     setValue,
     formState: { errors },
+    control,
+    getValues,
   } = useFormContext<Step2FormData>();
   const educationId = Cookies.get("education_id");
 
@@ -25,6 +32,14 @@ const EducationDetails = () => {
     staleTime: 5 * 1000,
     enabled: !!educationId,
   });
+
+  const id = Cookies.get("candidate_id");
+
+  const [isModified, setIsModified] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Watch form values
+  const watchedValues = useWatch({ control });
 
   useEffect(() => {
     if (data) {
@@ -40,6 +55,67 @@ const EducationDetails = () => {
       setValue("advancedDegree", data.has_advanced_degree ? "yes" : "no");
     }
   }, [data, setValue]);
+
+  useEffect(() => {
+    if (data) {
+      // Define the type for initialValues explicitly
+      const initialValues: Record<keyof typeof watchedValues, string> = {
+        currentStatus: data.current_status || "",
+        degreeType: data.degree_type || "",
+        countryOfEducation: data.country || "",
+        courseOfStudy: data.specific_course_of_study || "",
+        institutionName: data.school_name || "",
+        degreeClass: data.class_of_degree || "",
+        currentCGPA: data.specific_cgpa || "",
+        yearAdmitted: data.admission_date || "",
+        yearGraduated: data.graduation_date || "",
+        advancedDegree: data.has_advanced_degree ? "yes" : "no",
+      };
+
+      // Ensure keys match the watchedValues keys
+      const hasChanges = (
+        Object.keys(initialValues) as Array<keyof typeof initialValues>
+      ).some((key) => watchedValues[key] !== initialValues[key]);
+
+      setIsModified(hasChanges);
+    }
+  }, [watchedValues, data]);
+
+  const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    const educationData: EducationHistory = {
+      current_status: getValues("currentStatus"),
+      degree_type: getValues("degreeType"),
+      country: getValues("countryOfEducation"),
+      school_name: getValues("institutionName"),
+      specific_course_of_study: getValues("courseOfStudy"),
+      class_of_degree: getValues("degreeClass"),
+      specific_cgpa: getValues("currentCGPA"),
+      graduation_date: getValues("yearGraduated"),
+      admission_date: getValues("yearAdmitted"),
+      has_advanced_degree: getValues("advancedDegree"),
+      candidate: id,
+    };
+
+    try {
+      await submitEducationDetails(educationData);
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Updated successfully!",
+      });
+      setIsModified(false);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update details.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const hasAdvancedDegree = watch("advancedDegree") === "yes";
 
@@ -287,6 +363,18 @@ const EducationDetails = () => {
                 </span>
               )}
             </div>
+          </div>
+
+          <div className="w-full">
+            <Button
+              className={`bg-red w-full ${
+                !isModified || loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              onClick={handleSave}
+              disabled={!isModified || loading}
+            >
+              {loading ? "Saving..." : "Save"}
+            </Button>
           </div>
         </div>
       </div>

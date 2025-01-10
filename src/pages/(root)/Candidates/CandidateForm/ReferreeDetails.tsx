@@ -1,13 +1,19 @@
 import PhoneInputField from "@/components/PhoneInputField";
-import { fetchReferee1, fetchReferee2 } from "@/lib/actions/candidate.actions";
+import {
+  fetchReferee1,
+  fetchReferee2,
+  submitRefereeDetails,
+} from "@/lib/actions/candidate.actions";
 import { getErrorMessage } from "@/lib/utils";
-import { Step4FormData } from "@/types";
+import { LoanReferee, Step4FormData } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
-import { useFormContext } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
 import Recommendation from "./Recommendation";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/use-toast";
 
 const relationshipOptions = [
   "father",
@@ -19,7 +25,7 @@ const relationshipOptions = [
   "cousin",
   "spouse",
   "colleague",
-  "friend"
+  "friend",
 ];
 
 const ReferreeDetails = () => {
@@ -27,6 +33,8 @@ const ReferreeDetails = () => {
     register,
     setValue,
     formState: { errors },
+    control,
+    getValues,
   } = useFormContext<Step4FormData>();
 
   const referee1Id = Cookies.get("referee1_id");
@@ -46,6 +54,14 @@ const ReferreeDetails = () => {
     staleTime: 5 * 1000 * 60,
   });
 
+  const id = Cookies.get("candidate_id");
+
+  const [isModified, setIsModified] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Watch form values
+  const watchedValues = useWatch({ control });
+
   useEffect(() => {
     if (referee1Data) {
       setValue("referee1fullname", referee1Data.name || "");
@@ -63,6 +79,65 @@ const ReferreeDetails = () => {
       setValue("referee2relationship", referee2Data.relationship || "");
     }
   }, [referee2Data, setValue]);
+
+  useEffect(() => {
+    // Define the type for initialValues explicitly
+    const initialValues: Record<keyof typeof watchedValues, string> = {
+      referee1fullname: referee1Data?.name || "",
+      referee1email: referee1Data?.email || "",
+      referee1phoneNumber: referee1Data?.phone_number || "",
+      referee1relationship: referee1Data?.relationship || "",
+      referee2fullname: referee2Data?.name || "",
+      referee2email: referee2Data?.email || "",
+      referee2phoneNumber: referee2Data?.phone_number || "",
+      referee2relationship: referee2Data?.relationship || "",
+    };
+
+    // Ensure keys match the watchedValues keys
+    const hasChanges = (
+      Object.keys(initialValues) as Array<keyof typeof initialValues>
+    ).some((key) => watchedValues[key] !== initialValues[key]);
+
+    setIsModified(hasChanges);
+  }, [watchedValues, referee1Data, referee2Data]);
+
+  const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    const referee1Data: LoanReferee = {
+      name: getValues("referee1fullname"),
+      email: getValues("referee1email"),
+      phone_number: getValues("referee1phoneNumber"),
+      relationship: getValues("referee1relationship"),
+      candidate: id,
+    };
+
+    const referee2Data: LoanReferee = {
+      name: getValues("referee2fullname"),
+      email: getValues("referee2email"),
+      phone_number: getValues("referee2phoneNumber"),
+      relationship: getValues("referee2relationship"),
+      candidate: id,
+    };
+
+    try {
+      await submitRefereeDetails(referee1Data, referee2Data);
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Saved successfully!",
+      });
+      setIsModified(false);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update details.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const isLoading = isReferee1Loading || isReferee2Loading;
 
@@ -87,9 +162,7 @@ const ReferreeDetails = () => {
             <h2 className="text-2xl">Loan Referee Details 1</h2>
             <div className={outerDivClass}>
               <div className={divClass}>
-                <label htmlFor="referee1fullname">
-                  Full Name
-                </label>
+                <label htmlFor="referee1fullname">Full Name</label>
                 <input
                   className="border border-gray-border rounded-md py-2 px-4"
                   id="referee1fullname"
@@ -103,9 +176,7 @@ const ReferreeDetails = () => {
                 )}
               </div>
               <div className={divClass}>
-                <label htmlFor="referee1email">
-                  Email Address
-                </label>
+                <label htmlFor="referee1email">Email Address</label>
                 <input
                   className="border border-gray-border rounded-md py-2 px-4"
                   id="referee1email"
@@ -123,9 +194,7 @@ const ReferreeDetails = () => {
             <div className={outerDivClass}>
               <PhoneInputField name="referee1phoneNumber" />
               <div className={divClass}>
-                <label htmlFor="referee1relationship">
-                  Relationship
-                </label>
+                <label htmlFor="referee1relationship">Relationship</label>
                 <div className="relative">
                   <select
                     className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
@@ -168,9 +237,7 @@ const ReferreeDetails = () => {
 
             <div className={outerDivClass}>
               <div className={divClass}>
-                <label htmlFor="referee2fullname">
-                  Full Name
-                </label>
+                <label htmlFor="referee2fullname">Full Name</label>
                 <input
                   className="border border-gray-border rounded-md py-2 px-4"
                   id="referee2fullname"
@@ -184,9 +251,7 @@ const ReferreeDetails = () => {
                 )}
               </div>
               <div className={divClass}>
-                <label htmlFor="referee2email">
-                  Email Address
-                </label>
+                <label htmlFor="referee2email">Email Address</label>
                 <input
                   className="border border-gray-border rounded-md py-2 px-4"
                   id="referee2email"
@@ -204,9 +269,7 @@ const ReferreeDetails = () => {
             <div className={outerDivClass}>
               <PhoneInputField name="referee2phoneNumber" />
               <div className={divClass}>
-                <label htmlFor="referee2relationship">
-                  Relationship
-                </label>
+                <label htmlFor="referee2relationship">Relationship</label>
                 <div className="relative">
                   <select
                     className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
@@ -244,10 +307,21 @@ const ReferreeDetails = () => {
                 )}
               </div>
             </div>
+
+            <div className="w-full">
+              <Button
+                className={`bg-red w-full ${
+                  !isModified || loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                onClick={handleSave}
+                disabled={!isModified || loading}
+              >
+                {loading ? "Saving..." : "Save"}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
-
     </div>
   );
 };

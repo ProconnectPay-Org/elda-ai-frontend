@@ -305,6 +305,34 @@ export const assignCandidateToStaff = async ({
   }
 };
 
+// export const deleteCandidateFromStaff = async ({
+//   candidate_ids,
+//   staff_id,
+// }: AssignCandidateProps) => {
+//   const access_token = Cookies.get("access_token"); // Fetch token from cookies
+
+//   if (!access_token) {
+//     throw new Error("Access token is missing. Please sign in again.");
+//   }
+
+//   try {
+//     const response = await axios.delete(
+//       `${API_URL}assign-candidate/`,
+//       { candidate_ids, staff_id },
+//       {
+//         headers: {
+//           Authorization: `Bearer ${access_token}`,
+//         },
+//       }
+//     );
+
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error assigning candidate:", error);
+//     throw error;
+//   }
+// };
+
 export const getLoggedInUser = async (
   role: "staff" | "admin" | "candidate"
 ) => {

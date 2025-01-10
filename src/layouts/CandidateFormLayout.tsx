@@ -16,10 +16,6 @@ const CandidateFormLayout = ({ children }: CandidateLayoutProps) => {
     }
   }, [loggedInCandidate, navigate]);
 
-  if (!loggedInCandidate) {
-    return null;
-  }
-
   return (
     <div className="relative min-h-screen w-full form-bg">
       <div className="flex items-center justify-center flex-col pt-8">

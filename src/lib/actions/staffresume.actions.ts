@@ -1,7 +1,6 @@
 import {
   CandidateCareer,
   EducationHistory,
-  JobExperience,
   updateCandidateProfile,
 } from "@/types";
 import axios from "axios";
@@ -69,23 +68,6 @@ export const submitCareer = async (workData: CandidateCareer) => {
   return await axios.patch(
     `${API_URL}staff-dashboard-edit-candidate-career-detail/${careerId}/`,
     workData,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-};
-
-export const postJobExperience = async (
-  experienceData: JobExperience,
-  job_experience_id: string
-) => {
-  const token = Cookies.get("staff_access_token");
-  return await axios.patch(
-    `${API_URL}register/job-experience/${job_experience_id}/`,
-    experienceData,
     {
       headers: {
         Authorization: `Bearer ${token}`,

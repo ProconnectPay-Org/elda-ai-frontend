@@ -18,10 +18,6 @@ const RootLayout = ({ children, title }: AuthLayoutProps) => {
     }
   }, [staff_access_token, navigate]);
 
-  if (!staff_access_token) {
-    return null;
-  }
-
   return (
     <main className="flex h-screen w-full overflow-hidden">
       <SideBar />

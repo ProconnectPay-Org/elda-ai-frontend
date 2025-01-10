@@ -1,19 +1,26 @@
 import { getErrorMessage } from "@/lib/utils";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import CountrySelect from "./CountrySelect";
-import { Step2FormData } from "@/types";
-import { useEffect } from "react";
+import { AdvancedEducation, Step2FormData } from "@/types";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAdvancedDegree } from "@/lib/actions/candidate.actions";
+import {
+  getAdvancedDegree,
+  updateAdvancedDegree,
+} from "@/lib/actions/candidate.actions";
 import Cookies from "js-cookie";
 import { Loader2 } from "lucide-react";
 import { degreeOptions } from "@/constants";
+import { Button } from "./ui/button";
+import { toast } from "./ui/use-toast";
 
 const AdvancedDegree = () => {
   const {
     register,
     setValue,
     formState: { errors },
+    control,
+    getValues,
   } = useFormContext<Step2FormData>();
   const advancedId = Cookies.get("advanced_education1_id");
 
@@ -23,6 +30,14 @@ const AdvancedDegree = () => {
     staleTime: 5 * 60 * 1000,
     enabled: !!advancedId,
   });
+
+  const id = Cookies.get("candidate_id");
+
+  const [isModified, setIsModified] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Watch form values
+  const watchedValues = useWatch({ control });
 
   useEffect(() => {
     if (advancedDegreeData) {
@@ -42,6 +57,63 @@ const AdvancedDegree = () => {
       );
     }
   }, [advancedDegreeData, setValue]);
+
+  useEffect(() => {
+    if (advancedDegreeData) {
+      // Define the type for initialValues explicitly
+      const initialValues: Record<keyof typeof watchedValues, string> = {
+        advancedDegreeType: advancedDegreeData.advanced_degree_type || "",
+        graduateType: advancedDegreeData.graduate_type || "",
+        advancedCountry: advancedDegreeData.country || "",
+        advancedDegreeClass: advancedDegreeData.class_of_degree || "",
+        advancedInstitutionName: advancedDegreeData.school_name || "",
+        advancedCurrentCGPA: advancedDegreeData.specific_cgpa || "",
+        advancedYearAdmitted: advancedDegreeData.admission_date || "",
+        advancedYearGraduated: advancedDegreeData.graduation_date || "",
+      };
+
+      // Ensure keys match the watchedValues keys
+      const hasChanges = (
+        Object.keys(initialValues) as Array<keyof typeof initialValues>
+      ).some((key) => watchedValues[key] !== initialValues[key]);
+
+      setIsModified(hasChanges);
+    }
+  }, [watchedValues, advancedDegreeData]);
+
+  const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    const advancedDegreeData: AdvancedEducation = {
+      advanced_degree_type: getValues("advancedDegreeType"),
+      graduate_type: getValues("graduateType"),
+      country: getValues("advancedCountry"),
+      school_name: getValues("advancedInstitutionName"),
+      class_of_degree: getValues("advancedDegreeClass"),
+      specific_cgpa: getValues("advancedCurrentCGPA"),
+      graduation_date: getValues("advancedYearGraduated"),
+      admission_date: getValues("advancedYearAdmitted"),
+      candidate: id,
+    };
+
+    try {
+      await updateAdvancedDegree(advancedDegreeData);
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Updated successfully!",
+      });
+      setIsModified(false);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update details.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const inputClass =
     "border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none bg-white focus:outline-none focus:ring-2 pr-8";
@@ -179,7 +251,7 @@ const AdvancedDegree = () => {
           </div>
           <div className={divClass}>
             <label htmlFor="advancedCurrentCGPA">
-              Specific CGPA (e.g 3.5/5.0) <span className="text-red">*</span>
+              Specific CGPA (e.g 3.5) <span className="text-red">*</span>
             </label>
             <input
               className={inputClass}
@@ -230,6 +302,18 @@ const AdvancedDegree = () => {
               </span>
             )}
           </div>
+        </div>
+
+        <div className="w-full">
+          <Button
+            className={`bg-red w-full ${
+              !isModified || loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            onClick={handleSave}
+            disabled={!isModified || loading}
+          >
+            {loading ? "Saving..." : "Save"}
+          </Button>
         </div>
       </div>
     </div>
