@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useCandidates } from "@/hooks/useCandidiates";
 import { postEditedCandidate } from "@/lib/actions/staff.actions";
 import { toast } from "@/components/ui/use-toast";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Cookies from "js-cookie";
 
 const Step2 = ({
@@ -14,6 +14,7 @@ const Step2 = ({
   prevStep: () => void;
   candidateId: string;
 }) => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const routeType = searchParams.get("type");
   const [manualDescription, setManualDescription] = useState("");
@@ -31,6 +32,7 @@ const Step2 = ({
 
   const staffToken = Cookies.get("staff_access_token");
   if (!staffToken) {
+    navigate("/sign-in");
     console.error("Staff token is missing. Please log in again.");
     return null; // Prevent the component from rendering further
   }

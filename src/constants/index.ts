@@ -169,6 +169,7 @@ export const statusProps = [
 export const degreeOptions = [
   "Bachelor of Science (BSC)",
   "Bachelor of Arts (B.A)",
+  "Bachelor of Dental Surgery",
   "Bachelor of Engineering (B.ENG)",
   "Bachelor of Medicine and Bachelor of Surgery (MBBS)",
   "Bachelor in Law (LLB)",

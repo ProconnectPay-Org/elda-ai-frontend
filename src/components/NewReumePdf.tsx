@@ -227,8 +227,6 @@ const NewResumePdf = () => {
         matchingSortedIds.indexOf(a.id) - matchingSortedIds.indexOf(b.id)
     );
 
-  const jobCount = formData?.career[0]?.jobs_to_show || 0;
-
   return (
     <>
       <Document>
@@ -330,7 +328,6 @@ const NewResumePdf = () => {
           <View style={styles.section}>
             <Text style={styles.resumeTitleText}>WORK EXPERIENCE</Text>
             {sortedJobExperiences
-              ?.slice(0, jobCount)
               .map((experience: JobExperience) =>
                 experience.business_name ? (
                   <View key={experience.id} style={styles.mb2}>

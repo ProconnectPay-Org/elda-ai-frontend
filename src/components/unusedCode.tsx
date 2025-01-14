@@ -213,3 +213,52 @@
         {jobsCount === 3 && <ReuseableJobs index={2} />}
       </div> */
 }
+
+// useEffect(() => {
+//   if (jobExperience) {
+//     setValue(
+//       `jobExperiences.${index}.workPlaceName`,
+//       jobExperience.business_name || ""
+//     );
+//     setValue(
+//       `jobExperiences.${index}.currentProfessionalStatus`,
+//       jobExperience.professional_status || ""
+//     );
+//     setValue(
+//       `jobExperiences.${index}.currentJobTitle`,
+//       jobExperience.job_title || ""
+//     );
+//     setValue(
+//       `jobExperiences.${index}.employmentType`,
+//       jobExperience.employment_type || ""
+//     );
+//     setValue(
+//       `jobExperiences.${index}.stateLocation`,
+//       jobExperience.state || ""
+//     );
+//     setValue(
+//       `jobExperiences.${index}.countryLocation`,
+//       jobExperience.country || ""
+//     );
+//     setValue(
+//       `jobExperiences.${index}.startedDate`,
+//       jobExperience.year_started || ""
+//     );
+//     setValue(
+//       `jobExperiences.${index}.endedDate`,
+//       jobExperience.year_ended || ""
+//     );
+//     setValue(
+//       `jobExperiences.${index}.jobStatus`,
+//       jobExperience.job_status || ""
+//     );
+//     setValue(
+//       `jobExperiences.${index}.companyDescription`,
+//       jobExperience.company_description || ""
+//     );
+//     setValue(
+//       `jobExperiences.${index}.jobSummary`,
+//       jobExperience.job_summary || ""
+//     );
+//   }
+// }, [jobExperience, setValue, index]);

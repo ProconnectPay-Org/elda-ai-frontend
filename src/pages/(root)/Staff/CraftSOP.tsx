@@ -4,7 +4,7 @@ import { SopStep1, SopStep2, SopStep4 } from ".";
 import { useParams, useSearchParams } from "react-router-dom";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { generateSop, generateSop2 } from "@/lib/actions/staff.actions";
+import { generateSop } from "@/lib/actions/staff.actions";
 import { Loader2 } from "lucide-react";
 
 const steps = [
@@ -51,10 +51,14 @@ const CraftSOP = () => {
       if (currentStep === 1) {
         setIsGenerating(true);
         try {
+          const sopType = prefix === "2" ? "second_sop" : "first_sop";
           const selectedGenerateFn =
-            prefix === "2" ? generateSop2 : generateSop;
-          const sopData = await selectedGenerateFn(id);
-          const generatedFile = await generateSopFile(sopData.SOP?.text, id);
+            prefix === "2"
+              ? generateSop(id, "second")
+              : generateSop(id, "first");
+          const sopData = await selectedGenerateFn;
+          const sopText = sopData[sopType]?.text;
+          const generatedFile = await generateSopFile(sopText, id);
           setFile(generatedFile);
         } catch (error) {
           console.error("Error generating SOP file:", error);

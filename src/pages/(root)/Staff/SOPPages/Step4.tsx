@@ -11,11 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import SuccessImage from "@/assets/sop-successful.svg";
 import { useQuery } from "@tanstack/react-query";
-import {
-  generateSop,
-  generateSop2,
-  updateSop,
-} from "@/lib/actions/staff.actions";
+import { generateSop, updateSop } from "@/lib/actions/staff.actions";
 
 const Step4 = ({
   prevStep,
@@ -45,7 +41,9 @@ const Step4 = ({
   const { data, isLoading } = useQuery({
     queryKey: ["sopGenerate"],
     queryFn: () =>
-      prefix === "2" ? generateSop2(candidateId) : generateSop(candidateId),
+      prefix === "2"
+        ? generateSop(candidateId, "second")
+        : generateSop(candidateId, "first"),
     staleTime: 5 * 60 * 1000,
   });
 
@@ -137,7 +135,9 @@ const Step4 = ({
                 }`}
                 target="_blank"
               >
-                <Button className="bg-red">Full Preview SOP {prefix === "2" ? "2" : "1"}</Button>
+                <Button className="bg-red">
+                  Full Preview SOP {prefix === "2" ? "2" : "1"}
+                </Button>
               </Link>
               <Link to="/assigned-candidates">
                 <Button variant="outline" className="border-red text-red">

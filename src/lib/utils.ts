@@ -18,8 +18,9 @@ export function getCountryNameFromISO(isoCode: string) {
 
 // Function to get the demonym from ISO code
 export function getDemonymFromISO(isoCode: string) {
-  const country = countriesData.find((c: { country: string; demonym: string }) => 
-    c.country === getCountryNameFromISO(isoCode)
+  const country = countriesData.find(
+    (c: { country: string; demonym: string }) =>
+      c.country === getCountryNameFromISO(isoCode)
   );
   return country ? country.demonym : "Unknown";
 }
@@ -216,14 +217,16 @@ export const step3Schema = z.object({
   jobExperiences: z.array(
     z.object({
       workPlaceName: z.string().optional(),
-      currentProfessionalStatus: z.enum(["former", "current", ""]).transform((val) => val === "former"),
+      jobStatus: z
+        .enum(["former", "current", ""])
+        .transform((val) => val === "former"),
+      currentProfessionalStatus: z.string().optional(),
       currentJobTitle: z.string().optional(),
       employmentType: z.string().optional(),
       stateLocation: z.string().optional(),
       countryLocation: z.string().optional(),
       startedDate: z.string().optional(),
       endedDate: z.string().optional(),
-      jobStatus: z.string().optional(),
       companyDescription: z.string().optional(),
       jobSummary: z.string().optional(),
     })

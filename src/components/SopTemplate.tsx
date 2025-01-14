@@ -11,11 +11,6 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { Loader2Icon } from "lucide-react";
 import Cookies from "js-cookie";
 
-type SopItem = {
-  id: number;
-  text: string;
-};
-
 const SopTemplate = () => {
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
@@ -43,12 +38,16 @@ const SopTemplate = () => {
     return <div>Error fetching data</div>;
   }
 
-  const sopText = singleCandidate?.sop
-    ?.reduce(
-      (max: SopItem, item: SopItem) => (item.id > max.id ? item : max),
-      singleCandidate?.sop[0]
-    ) // Find the SOP with the highest ID
-    ?.text.replace(/^\*\*?Statement of Purpose\*\*?/i, "");
+  const sopText =
+    prefix === "2"
+      ? singleCandidate?.second_sop?.text.replace(
+          /^\*\*?Statement of Purpose\*\*?/i,
+          ""
+        )
+      : singleCandidate?.first_sop?.text.replace(
+          /^\*\*?Statement of Purpose\*\*?/i,
+          ""
+        );
 
   // Define styles for the PDF
   const styles = StyleSheet.create({

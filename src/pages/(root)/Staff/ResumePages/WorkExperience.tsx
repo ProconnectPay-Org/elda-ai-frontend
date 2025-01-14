@@ -43,7 +43,7 @@ const WorkExperience = () => {
   // Fetch job experience IDs from cookies
   const jobExperienceIds = [1, 2, 3]
     .map((i) => Cookies.get(`work_experience_id${i}`))
-    .filter(Boolean); // Exclude null/undefined IDs
+    .filter(Boolean);
 
   // Fetch job experiences using React Query
   const { data: fetchedJobs, isLoading: jobsLoading } = useQuery({
@@ -52,15 +52,14 @@ const WorkExperience = () => {
       const promises = jobExperienceIds.map((id) => fetchJobExperienceData(id));
       return Promise.all(promises);
     },
-    enabled: jobExperienceIds.length > 0, // Only run query if IDs exist
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    enabled: jobExperienceIds.length > 0,
+    staleTime: 5 * 60 * 1000,
   });
 
   // Update jobs state when data is fetched
   useEffect(() => {
     if (fetchedJobs) {
       setJobs(fetchedJobs);
-      setJobsCount(fetchedJobs.length);
     }
   }, [fetchedJobs]);
 
@@ -175,29 +174,6 @@ const WorkExperience = () => {
 
     setJobs((prevJobs) => [...prevJobs, newJob]);
     setJobsCount((prevCount) => prevCount + 1);
-
-    setIsLoading(true);
-
-    const workData = {
-      jobs_to_show: jobsCount,
-    } as CandidateCareer;
-    try {
-      await submitCareer(workData);
-      toast({
-        variant: "success",
-        title: "Success",
-        description: "added job!",
-      });
-      setIsModified(false);
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to update details.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   const handleDelete = async (index: number, jobExperienceId: string) => {

@@ -8,11 +8,7 @@ import CountrySelect from "./CountrySelect";
 import promptImage from "@/assets/prompt.svg";
 import deleteBtn from "@/assets/delete-trash.svg";
 import promptWhiteImage from "@/assets/prompt-white.svg";
-import {
-  fetchJobExperienceData,
-  submitJobExperience,
-} from "@/lib/actions/candidate.actions";
-import { useQuery } from "@tanstack/react-query";
+import { submitJobExperience } from "@/lib/actions/candidate.actions";
 import { Loader2 } from "lucide-react";
 import { useToast } from "./ui/use-toast";
 import { formatDate } from "@/lib/utils";
@@ -66,14 +62,6 @@ const ReuseableJobs = ({
     setValue(`jobExperiences.${index}.currentProfessionalStatus`, value);
   };
 
-  // Fetch job experience data by ID
-  const { data: jobExperience, isLoading } = useQuery({
-    queryKey: ["jobExperience", jobExperienceId],
-    queryFn: () => fetchJobExperienceData(jobExperienceId!),
-    enabled: !!jobExperienceId,
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-  });
-
   const watchedValues = useWatch({
     name: `jobExperiences.${index}`,
     control,
@@ -84,10 +72,7 @@ const ReuseableJobs = ({
     if (watchedJobStatus === "current") {
       setValue(`jobExperiences.${index}.endedDate`, "1960-01-01");
     } else {
-      setValue(
-        `jobExperiences.${index}.endedDate`,
-        jobExperience?.year_ended || ""
-      );
+      setValue(`jobExperiences.${index}.endedDate`, job?.year_ended || "");
     }
   }, [watchedJobStatus, setValue, index]);
 
@@ -118,55 +103,6 @@ const ReuseableJobs = ({
       setValue(`jobExperiences.${index}.jobSummary`, job.job_summary || "");
     }
   }, [job, setValue, index]);
-
-  // useEffect(() => {
-  //   if (jobExperience) {
-  //     setValue(
-  //       `jobExperiences.${index}.workPlaceName`,
-  //       jobExperience.business_name || ""
-  //     );
-  //     setValue(
-  //       `jobExperiences.${index}.currentProfessionalStatus`,
-  //       jobExperience.professional_status || ""
-  //     );
-  //     setValue(
-  //       `jobExperiences.${index}.currentJobTitle`,
-  //       jobExperience.job_title || ""
-  //     );
-  //     setValue(
-  //       `jobExperiences.${index}.employmentType`,
-  //       jobExperience.employment_type || ""
-  //     );
-  //     setValue(
-  //       `jobExperiences.${index}.stateLocation`,
-  //       jobExperience.state || ""
-  //     );
-  //     setValue(
-  //       `jobExperiences.${index}.countryLocation`,
-  //       jobExperience.country || ""
-  //     );
-  //     setValue(
-  //       `jobExperiences.${index}.startedDate`,
-  //       jobExperience.year_started || ""
-  //     );
-  //     setValue(
-  //       `jobExperiences.${index}.endedDate`,
-  //       jobExperience.year_ended || ""
-  //     );
-  //     setValue(
-  //       `jobExperiences.${index}.jobStatus`,
-  //       jobExperience.job_status || ""
-  //     );
-  //     setValue(
-  //       `jobExperiences.${index}.companyDescription`,
-  //       jobExperience.company_description || ""
-  //     );
-  //     setValue(
-  //       `jobExperiences.${index}.jobSummary`,
-  //       jobExperience.job_summary || ""
-  //     );
-  //   }
-  // }, [jobExperience, setValue, index]);
 
   const handleRefine = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -252,13 +188,6 @@ const ReuseableJobs = ({
 
   return (
     <div className="border border-pale-bg mb-5 py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
-      {isLoading && (
-        <div className="fixed inset-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="text-white text-xl flex items-center justify-center gap-2">
-            <Loader2 className="animate-spin" /> Loading...
-          </div>
-        </div>
-      )}
       <h3 className="text-2xl font-medium mb-5">Job History</h3>
 
       <div className="flex flex-col gap-8">
@@ -451,7 +380,7 @@ const ReuseableJobs = ({
                 className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none bg-white focus:outline-none focus:ring-2 pr-8"
               />
               <p className="text-blue-500 text-sm mt-1">
-                {watchedValues.startedDate
+                {watchedValues?.startedDate
                   ? formatDate(watchedValues.startedDate)
                   : "Select a date"}
               </p>

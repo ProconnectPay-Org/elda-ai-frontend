@@ -31,12 +31,14 @@ import CraftSOP from "./pages/(root)/Staff/CraftSOP";
 import CandidateSelection from "./pages/(root)/Staff/CandidateSelection";
 import DownloadResume from "./pages/(root)/DownloadResume";
 import SopTemplate from "./components/SopTemplate";
+import GeneratePDF from "./components/GeneratePDF";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<Home />} path="/" />
+        <Route element={<GeneratePDF />} path="/pdf/:id" />
         {/* <Route element={<SignUp />} path="/sign-up" /> */}
         <Route element={<DownloadResume />} path="/download-resume/:id" />
         <Route element={<SopTemplate />} path="/sop/:id" />

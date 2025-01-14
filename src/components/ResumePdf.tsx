@@ -134,7 +134,6 @@ const ResumePdf = () => {
       <div className="resume-inner-container">
         <h2 className="resume-title-text">WORK EXPERIENCE</h2>
         {formData?.job_experience
-          ?.slice(0, 3)
           .map((experience: JobExperience) =>
             experience.business_name ? (
               <div key={experience.id} className="mb-2">

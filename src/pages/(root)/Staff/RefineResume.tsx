@@ -56,6 +56,7 @@ const RefineResume = () => {
 
   const staffToken = Cookies.get("staff_access_token");
   if (!staffToken) {
+    navigate("/sign-in");
     console.error("Staff token is missing. Please log in again.");
     return null;
   }
