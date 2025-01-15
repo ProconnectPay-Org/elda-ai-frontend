@@ -5,6 +5,7 @@ import {
   StyleSheet,
   PDFDownloadLink,
   View,
+  Font,
 } from "@react-pdf/renderer";
 import { useCandidates } from "@/hooks/useCandidiates";
 import { useParams, useSearchParams } from "react-router-dom";
@@ -38,6 +39,18 @@ const SopTemplate = () => {
     return <div>Error fetching data</div>;
   }
 
+  const programType = singleCandidate?.[`program_type${prefix}`];
+  const assignedCourse = singleCandidate?.[`assigned_course${prefix}`];
+  const assignedUniversity = singleCandidate?.[`assigned_university${prefix}`];
+
+  const isMBA =
+    programType?.toLowerCase() === "mba" &&
+    assignedCourse?.toLowerCase() === "mba";
+
+  const title = isMBA
+    ? `${assignedCourse} AT THE ${assignedUniversity}`
+    : `PURSUING AN ${programType} IN ${assignedCourse} at ${assignedUniversity}`;
+
   const sopText =
     prefix === "2"
       ? singleCandidate?.second_sop?.text.replace(
@@ -48,6 +61,10 @@ const SopTemplate = () => {
           /^\*\*?Statement of Purpose\*\*?/i,
           ""
         );
+
+  Font.registerHyphenationCallback((word) => {
+    return [word];
+  });
 
   // Define styles for the PDF
   const styles = StyleSheet.create({
@@ -83,10 +100,8 @@ const SopTemplate = () => {
         <View>
           <Text style={styles.title}>
             STATEMENT OF PURPOSE FOR {singleCandidate?.last_name}{" "}
-            {singleCandidate?.first_name} {singleCandidate?.middle_name}:
-            PURSUING AN {singleCandidate?.[`program_type${prefix}`]} IN{" "}
-            {singleCandidate?.[`assigned_course${prefix}`]} AT{" "}
-            {singleCandidate?.[`assigned_university${prefix}`]}
+            {singleCandidate?.first_name} {singleCandidate?.middle_name}:{" "}
+            {title}
           </Text>
         </View>
         <View>
@@ -105,10 +120,7 @@ const SopTemplate = () => {
       <div className="px-8">
         <h1 className="text-red font-bold text-center mb-4 text-xl uppercase">
           STATEMENT OF PURPOSE FOR {singleCandidate?.last_name}{" "}
-          {singleCandidate?.first_name} {singleCandidate?.middle_name}: PURSUING
-          AN {singleCandidate?.[`program_type${prefix}`]} IN{" "}
-          {singleCandidate?.[`assigned_course${prefix}`]} AT{" "}
-          {singleCandidate?.[`assigned_university${prefix}`]}
+          {singleCandidate?.first_name} {singleCandidate?.middle_name}: {title}
         </h1>
         <div>
           {sopText?.split("\n").map((paragraph: string, index: number) => (

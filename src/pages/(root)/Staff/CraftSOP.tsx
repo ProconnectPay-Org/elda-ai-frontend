@@ -1,11 +1,7 @@
 import { useState } from "react";
 import RootLayout from "@/layouts/RootLayout";
 import { SopStep1, SopStep2, SopStep4 } from ".";
-import { useParams, useSearchParams } from "react-router-dom";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
-import { generateSop } from "@/lib/actions/staff.actions";
-import { Loader2 } from "lucide-react";
+import { useParams } from "react-router-dom";
 
 const steps = [
   {
@@ -27,17 +23,10 @@ const totalSteps = steps.length;
 const CraftSOP = () => {
   const { id = "" } = useParams<{ id: string }>();
 
-  const [searchParams] = useSearchParams();
-  const routeType = searchParams.get("type");
-
   const [currentStep, setCurrentStep] = useState(() => {
     const savedStep = localStorage.getItem("sopCurrentPage");
     return savedStep ? Number(savedStep) : 0;
   });
-  const [file, setFile] = useState<File | null>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
-
-  const prefix = routeType === "school2" ? "2" : "1"; // Default to `1` if it's not `craft-sop-2`
 
   const StepComponent = steps[currentStep].component;
 
@@ -48,24 +37,6 @@ const CraftSOP = () => {
 
   const nextStep = async () => {
     if (currentStep < totalSteps - 1) {
-      if (currentStep === 1) {
-        setIsGenerating(true);
-        try {
-          const sopType = prefix === "2" ? "second_sop" : "first_sop";
-          const selectedGenerateFn =
-            prefix === "2"
-              ? generateSop(id, "second")
-              : generateSop(id, "first");
-          const sopData = await selectedGenerateFn;
-          const sopText = sopData[sopType]?.text;
-          const generatedFile = await generateSopFile(sopText, id);
-          setFile(generatedFile);
-        } catch (error) {
-          console.error("Error generating SOP file:", error);
-        } finally {
-          setIsGenerating(false);
-        }
-      }
       saveCurrentStep(currentStep + 1);
     }
   };
@@ -98,14 +69,7 @@ const CraftSOP = () => {
           ></div>
         </div>
 
-        {isGenerating ? (
-          <div className="flex items-center font-semibold animate-pulse">
-            Generating SOP file. Please do not refresh{" "}
-            <Loader2 className="animate-spin" />
-          </div>
-        ) : (
-          <StepComponent prevStep={prevStep} candidateId={id} file={file} />
-        )}
+        <StepComponent prevStep={prevStep} candidateId={id} />
 
         {currentStep < totalSteps - 1 && (
           <div className="flex mt-10 items-center justify-between gap-8">
@@ -132,29 +96,3 @@ const CraftSOP = () => {
 };
 
 export default CraftSOP;
-
-const generateSopFile = async (sopText: string, candidateId: string) => {
-  const sopContainer = document.createElement("div");
-
-  sopContainer.style.position = "absolute";
-  sopContainer.style.visibility = "hidden";
-  sopContainer.innerHTML = `
-    <h1 class="text-red font-bold text-center mb-4 text-xl uppercase">Statement of Purpose</h1>
-    <p>${sopText}</p>
-  `;
-  document.body.appendChild(sopContainer);
-
-  const canvas = await html2canvas(sopContainer, { scale: 2, useCORS: true });
-  document.body.removeChild(sopContainer);
-
-  const imgData = canvas.toDataURL("image/jpeg");
-  const pdf = new jsPDF("p", "mm", "a4");
-  const pdfWidth = pdf.internal.pageSize.getWidth();
-  const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-  pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
-
-  const blob = pdf.output("blob");
-  return new File([blob], `${candidateId}-sop.pdf`, {
-    type: "application/pdf",
-  });
-};

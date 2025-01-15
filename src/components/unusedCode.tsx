@@ -262,3 +262,30 @@
 //     );
 //   }
 // }, [jobExperience, setValue, index]);
+
+
+// const generateSopFile = async (sopText: string, candidateId: string) => {
+//   const sopContainer = document.createElement("div");
+
+//   sopContainer.style.position = "absolute";
+//   sopContainer.style.visibility = "hidden";
+//   sopContainer.innerHTML = `
+//     <h1 class="text-red font-bold text-center mb-4 text-xl uppercase">Statement of Purpose</h1>
+//     <p>${sopText}</p>
+//   `;
+//   document.body.appendChild(sopContainer);
+
+//   const canvas = await html2canvas(sopContainer, { scale: 2, useCORS: true });
+//   document.body.removeChild(sopContainer);
+
+//   const imgData = canvas.toDataURL("image/jpeg");
+//   const pdf = new jsPDF("p", "mm", "a4");
+//   const pdfWidth = pdf.internal.pageSize.getWidth();
+//   const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+//   pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
+
+//   const blob = pdf.output("blob");
+//   return new File([blob], `${candidateId}-sop.pdf`, {
+//     type: "application/pdf",
+//   });
+// };

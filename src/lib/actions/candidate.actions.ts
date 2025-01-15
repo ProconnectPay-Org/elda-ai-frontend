@@ -160,9 +160,7 @@ export const patchJobExperience = async (
   );
 };
 
-export const postJobExperience = async (
-  experienceData: JobExperience,
-) => {
+export const postJobExperience = async (experienceData: JobExperience) => {
   const token =
     Cookies.get("candidate_access_token") || Cookies.get("staff_access_token");
 
@@ -189,7 +187,7 @@ export const submitJobExperience = async (
     let response;
 
     // Check if job_experience_id is null or undefined
-    if (job_experience_id == "") {
+    if (!job_experience_id || job_experience_id == "") {
       // If null or undefined, post the experience
       response = await postJobExperience(experienceData);
     } else {

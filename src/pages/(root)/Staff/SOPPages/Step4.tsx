@@ -10,17 +10,16 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import SuccessImage from "@/assets/sop-successful.svg";
-import { useQuery } from "@tanstack/react-query";
 import { generateSop, updateSop } from "@/lib/actions/staff.actions";
+import { useCandidates } from "@/hooks/useCandidiates";
+import { toast } from "@/components/ui/use-toast";
 
 const Step4 = ({
   prevStep,
   candidateId,
-  file,
 }: {
   prevStep: () => void;
   candidateId: string;
-  file: File | null;
 }) => {
   const [searchParams] = useSearchParams();
   const routeType = searchParams.get("type");
@@ -30,44 +29,72 @@ const Step4 = ({
   const [sopId, setSopId] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [sopLoading, setSopLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const sopRef = useRef<HTMLDivElement>(null);
 
+  const { singleCandidate, singleCandidateLoading, refetchSingleCandidate } =
+    useCandidates(candidateId);
+
   const prefix = routeType === "school2" ? "2" : "1"; // Default to `1` if it's not `craft-sop-2`
-
-  const handleShowModal = () => {
-    setShowModal((prev) => !prev);
-  };
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["sopGenerate"],
-    queryFn: () =>
-      prefix === "2"
-        ? generateSop(candidateId, "second")
-        : generateSop(candidateId, "first"),
-    staleTime: 5 * 60 * 1000,
-  });
+  const prefixName = routeType === "school2" ? "second" : "first";
 
   useEffect(() => {
-    if (data) {
-      setCandidateSop(data.SOP?.text);
-      setSopId(data.SOP?.id);
+    const existingSop = singleCandidate?.[`${prefixName}_sop`];
+    if (existingSop) {
+      setCandidateSop(existingSop.text);
+      setSopId(existingSop.id);
     }
-  }, [data]);
+  }, [singleCandidate, prefixName]);
 
-  const handleUpdateSop = async () => {
-    if (!file) return;
-    localStorage.setItem("sopCurrentPage", String(0));
-    setSopLoading(true);
+  const createSop = async () => {
+    setIsLoading(true);
     try {
-      const response = await updateSop(sopId, candidateId, candidateSop, file);
-      if (response) {
-        handleShowModal();
+      const response = await generateSop(candidateId, prefixName);
+      if (response?.SOP) {
+        setCandidateSop(response.SOP.text);
+        setSopId(response.SOP.id);
+        toast({
+          variant: "success",
+          title: "SOP Generated",
+          description: "A new Statement of Purpose has been created.",
+        });
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error generating SOP:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleUpdateSop = async () => {
+    if (!sopId) return;
+
+    setSopLoading(true);
+    try {
+      const soptext = {
+        text: candidateSop,
+        id: sopId,
+      };
+      const response = await updateSop(sopId, soptext);
+      if (response) {
+        setCandidateSop(response.SOP?.text);
+        toast({
+          variant: "success",
+          title: "SOP Updated",
+          description: "Your changes have been saved.",
+        });
+        await refetchSingleCandidate();
+      }
+    } catch (error) {
+      console.error("Error updating SOP:", error);
     } finally {
       setSopLoading(false);
     }
+  };
+
+  const handleCompleted = () => {
+    localStorage.setItem("sopCurrentPage", String(0));
+    setShowModal((prev) => !prev);
   };
 
   return (
@@ -91,14 +118,34 @@ const Step4 = ({
             </div>
             <Textarea
               placeholder={
-                isLoading ? "Generating your SOP..." : "Type your message here."
+                isLoading || singleCandidateLoading
+                  ? "Loading..."
+                  : "Type your SOP here."
               }
               value={candidateSop}
-              disabled={!isEditing}
+              disabled={!isEditing || isLoading || singleCandidateLoading}
               className="text-lg p-4 leading-[32px] min-h-80 text-black"
               onChange={(e) => setCandidateSop(e.target.value)}
             />
           </div>
+        </div>
+        <div className="flex items-center justify-between w-full mt-5">
+          <Button
+            onClick={handleUpdateSop}
+            className="border-red bg-red text-white"
+            variant={"default"}
+            disabled={!isEditing || sopLoading}
+          >
+            {sopLoading ? "Saving..." : "Save"}
+          </Button>
+
+          <Button
+            onClick={createSop}
+            className="border-red text-red"
+            variant={"outline"}
+          >
+            {isLoading ? "Generating Sop..." : "Generate Sop"}
+          </Button>
         </div>
       </div>
       <div className="flex items-center mt-10 justify-between w-full">
@@ -112,10 +159,9 @@ const Step4 = ({
 
         <Button
           className="bg-red text-white w-32 h-12"
-          onClick={handleUpdateSop}
-          disabled={sopLoading || !file}
+          onClick={handleCompleted}
         >
-          {sopLoading ? "Completing..." : "Complete"}
+          Complete
         </Button>
       </div>
 

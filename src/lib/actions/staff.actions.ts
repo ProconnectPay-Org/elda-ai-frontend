@@ -1,3 +1,4 @@
+import { SopType } from "@/types";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -113,22 +114,12 @@ export const generateSop = async (id: string, number: string) => {
   return data;
 };
 
-export const updateSop = async (
-  id: string,
-  candidateId: string,
-  text?: string,
-  file?: File
-) => {
+export const updateSop = async (id: string, text: SopType) => {
   const staffToken = Cookies.get("staff_access_token");
-
-  const formData = new FormData();
-  if (text) formData.append("text", text);
-  if (file) formData.append("file", file);
-  formData.append("candidateId", candidateId);
 
   const { data } = await axios.patch(
     `${API_URL}staff-dashboard/update-sop/${id}/`,
-    formData,
+    text,
     {
       headers: {
         Authorization: `Bearer ${staffToken}`,
@@ -140,7 +131,11 @@ export const updateSop = async (
   return data;
 };
 
-export const postEditedCandidate = async (id: string, data: any, userToken: string) => {
+export const postEditedCandidate = async (
+  id: string,
+  data: any,
+  userToken: string
+) => {
   const { data: response } = await axios.patch(
     `${API_URL}staff-dashboard/edit-candidate/${id}/`,
     data,

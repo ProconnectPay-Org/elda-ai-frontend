@@ -234,6 +234,11 @@ export type Sop = {
   candidate: number;
 };
 
+export type SopType = {
+  id: string;
+  text: string;
+};
+
 export type CareerInterest = {
   id: number;
   name: string;
