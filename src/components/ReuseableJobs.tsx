@@ -37,7 +37,7 @@ const ReuseableJobs = ({
   const [refineLoading, setRefineLoading] = useState(false);
   const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
 
-  const id = Cookies.get("candidate_id");
+  const id = Cookies.get("candidate_id") || Cookies.get("studentId");
   const jobExperienceId = Cookies.get(`work_experience_id${index + 1}`);
 
   const currentJobStatus = getValues(`jobExperiences.${index}.jobStatus`) || "";

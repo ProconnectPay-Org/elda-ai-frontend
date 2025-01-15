@@ -227,6 +227,11 @@ const NewResumePdf = () => {
         matchingSortedIds.indexOf(a.id) - matchingSortedIds.indexOf(b.id)
     );
 
+  const businessNameWithCurrentJob =
+    sortedJobExperiences?.find(
+      (job: JobExperience) => job.job_status === "current"
+    )?.job_title || "No current job";
+
   return (
     <>
       <Document>
@@ -269,7 +274,7 @@ const NewResumePdf = () => {
               <Text style={styles.semiBold}>|</Text>
               <Text style={styles.smallBold}>Global Citizen</Text>
               <Text style={styles.semiBold}>|</Text>
-              <Text style={styles.smallBold}>{formData?.career[0].sector}</Text>
+              <Text style={styles.smallBold}>{businessNameWithCurrentJob}</Text>
             </View>
           </View>
 
@@ -327,38 +332,37 @@ const NewResumePdf = () => {
           {/* WORK EXPERIENCE */}
           <View style={styles.section}>
             <Text style={styles.resumeTitleText}>WORK EXPERIENCE</Text>
-            {sortedJobExperiences
-              .map((experience: JobExperience) =>
-                experience.business_name ? (
-                  <View key={experience.id} style={styles.mb2}>
-                    <View>
-                      <Text style={styles.smallBold}>
-                        {experience.business_name}: {experience.job_title}
+            {sortedJobExperiences.map((experience: JobExperience) =>
+              experience.business_name ? (
+                <View key={experience.id} style={styles.mb2}>
+                  <View>
+                    <Text style={styles.smallBold}>
+                      {experience.business_name}: {experience.job_title}
+                    </Text>
+                    <View style={styles.flexItemsCenterGap3}>
+                      <Text style={styles.fontMedTextSm}>
+                        📍 Location: {experience.state}, {experience.country}
                       </Text>
-                      <View style={styles.flexItemsCenterGap3}>
-                        <Text style={styles.fontMedTextSm}>
-                          📍 Location: {experience.state}, {experience.country}
-                        </Text>
-                        <Text style={styles.semiBold}>|</Text>
-                        <Text style={styles.fontMedTextSm}>
-                          📅 Duration: {formatDate(experience.year_started)} -{" "}
-                          {experience.year_ended === "1960-01-01"
-                            ? "Till Date"
-                            : formatDate(experience.year_ended) || "Till Date"}
-                        </Text>
-                      </View>
-                    </View>
-                    <View style={styles.break}>
-                      <Text style={styles.redBoldSm}>
-                        Job Description and Key Achievements
-                      </Text>
-                      <Text style={styles.smallText}>
-                        {experience.job_summary}
+                      <Text style={styles.semiBold}>|</Text>
+                      <Text style={styles.fontMedTextSm}>
+                        📅 Duration: {formatDate(experience.year_started)} -{" "}
+                        {experience.year_ended === "1960-01-01"
+                          ? "Till Date"
+                          : formatDate(experience.year_ended) || "Till Date"}
                       </Text>
                     </View>
                   </View>
-                ) : null
-              )}
+                  <View style={styles.break}>
+                    <Text style={styles.redBoldSm}>
+                      Job Description and Key Achievements
+                    </Text>
+                    <Text style={styles.smallText}>
+                      {experience.job_summary}
+                    </Text>
+                  </View>
+                </View>
+              ) : null
+            )}
           </View>
 
           {/* EDUCATION DETAILS */}
