@@ -46,6 +46,8 @@ const UploadDocuments: React.FC = () => {
     "post_graduate_certificate",
     "post_graduate_transcript",
     "utility_bill",
+    "admission_letter",
+    "gregmat_result",
   ];
 
   const beLabels = [
@@ -58,6 +60,8 @@ const UploadDocuments: React.FC = () => {
     "Post graduate certificate",
     "Post graduate transcript",
     "Utility bill",
+    "Letter of admission",
+    "GRE or GMAT result",
   ];
 
   const { data, isLoading } = useQuery({
@@ -201,7 +205,7 @@ const UploadDocuments: React.FC = () => {
           </div>
         </div>
       )}
-      {Array.from({ length: 9 }, (_, i) => (
+      {Array.from({ length: 11 }, (_, i) => (
         <div key={i} className="mb-4">
           <label className="block text-sm capitalize font-medium text-gray-700">
             Upload {i + 1} - {beLabels[i] || `Other Document ${i - 1}`}

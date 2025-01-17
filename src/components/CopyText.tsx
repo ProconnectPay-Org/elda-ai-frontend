@@ -15,8 +15,8 @@ const CopyText: React.FC<CopyTextProps> = ({ label, text, className }) => {
     <div className="flex flex-row gap-2">
       <label className={`font-semibold ${className}`}>{label} :</label>
       <div className="flex gap-2">
-        <p className="capitalize flex items-center gap-2">
-          {text || "No information provided"}
+        <p className="flex items-center gap-2">
+          {text || "No information provided yet"}
         </p>
         <button
           onClick={() => copyToClipboard(text || "", toast)}

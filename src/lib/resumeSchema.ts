@@ -2,9 +2,9 @@ import { z } from "zod";
 
 export const ResumeStep1Schema = z.object({
   firstName: z.string().nonempty("First name is required"),
-  middleName: z.string().nonempty("Middle name is required"),
+  middleName: z.string().optional(),
   lastName: z.string().nonempty("Last name is required"),
-  preferredName: z.string().nonempty("Preferred name is required"),
+  preferredName: z.string().optional(),
   phoneNumber: z.string().nonempty("Phone number is required"),
   email: z.string().email("Invalid email address"),
   city: z.string().nonempty("City is required"),
@@ -14,8 +14,6 @@ export const ResumeStep1Schema = z.object({
   dateOfBirth: z.string(),
   nationality: z.string().nonempty("Nationality is required"),
 });
-
-export const ResumeStep2Schema = z.object({});
 
 export const ResumeStep3Schema = z.object({
   kindOfDegree: z.string().nonempty("Kind of degree is required"),

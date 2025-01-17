@@ -402,7 +402,7 @@ const CandidatePage = () => {
                 text={referee.recommender_type}
                 className="text-blue-500"
               />
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center flex-wrap">
                 <CopyText label="Recommender Name" text={referee.full_name} />
                 <CopyText
                   label="Recommender Relationship"
@@ -425,7 +425,7 @@ const CandidatePage = () => {
         <h3 className="font-semibold text-lg mb-4">LOAN REFEREES</h3>
         <div className="space-y-4 m-4">
           {candidate?.loan_referees?.map((referee, index) => (
-            <div key={index} className="flex justify-between items-center">
+            <div key={index} className="flex justify-between items-center flex-wrap">
               <CopyText label="Referee Name" text={referee.name} />
               <CopyText label="Relationship" text={referee.relationship} />
               <CopyText label="Email" text={referee.email} />

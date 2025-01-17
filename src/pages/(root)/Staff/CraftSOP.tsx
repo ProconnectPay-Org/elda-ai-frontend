@@ -77,14 +77,14 @@ const CraftSOP = () => {
               <button
                 type="button"
                 onClick={prevStep}
-                className="form-btn border border-red text-red w-28 px-10 py-2 rounded-md flex items-center justify-center"
+                className="form-btn border border-red text-red hover:bg-red hover:bg-opacity-40 hover:text-white w-28 px-10 py-2 rounded-md flex items-center justify-center"
               >
                 Back
               </button>
             )}
             <button
               type="submit"
-              className="form-btn bg-red text-white w-28 px-10 py-2 rounded-md flex items-center justify-center"
+              className="form-btn bg-red hover:bg-opacity-40 text-white w-28 px-10 py-2 rounded-md flex items-center justify-center"
             >
               Next
             </button>

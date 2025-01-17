@@ -55,6 +55,7 @@ declare type CreateCandidateProfileProps = {
   role: "candidate" | "admin" | "staff";
   assigned_course1?: string;
   assigned_university1?: string;
+  country?: string;
   assigned_course2?: string;
   assigned_university2?: string;
   program_type1?: string;

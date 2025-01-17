@@ -6,6 +6,7 @@ import { useCandidates } from "@/hooks/useCandidiates";
 import { submitEducationDetails } from "@/lib/actions/staffresume.actions";
 import { formatDate, getErrorMessage } from "@/lib/utils";
 import { EducationHistory as Edu, ResumeStep3FormData } from "@/types";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import "react-phone-input-2/lib/style.css";
@@ -77,10 +78,6 @@ const EducationHistory = () => {
     );
   }, [watchedValues, getValues, singleCandidate]);
 
-  if (singleCandidateLoading) {
-    return <div>Loading...</div>;
-  }
-
   if (singleCandidateError) {
     return <div>Error fetching data</div>;
   }
@@ -142,6 +139,13 @@ const EducationHistory = () => {
 
   return (
     <div className="space-y-5">
+      {singleCandidateLoading && (
+        <div className="fixed inset-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="text-white text-xl flex items-center justify-center gap-2">
+            <Loader2 className="animate-spin" /> Loading...
+          </div>
+        </div>
+      )}
       <div className="space-y-2">
         <label htmlFor="" className="text-[#344054]">
           What degrees do you have?

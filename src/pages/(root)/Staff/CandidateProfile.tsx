@@ -209,122 +209,6 @@ const CandidateProfile = () => {
         </div>
       </div>
 
-      {/* <hr className="w-full h-2 my-8" /> */}
-
-      {/* <div>
-        <h3 className="font-semibold text-lg mb-4">CAREER STRATEGIC PURPOSE</h3>
-        <div className="text-[#5E6366]">
-          {candidate?.career_strategic_purpose || (
-            <span className="flex gap-4 items-center">
-              <p>No career strategic purpose provided</p>
-              <Link
-                to={`/craft-sop/${id}`}
-                target="_blank"
-                className="button bg-red text-white flex items-center justify-center text-center px-4 rounded-lg h-12"
-              >
-                Get Started
-              </Link>
-            </span>
-          )}
-        </div>
-      </div> */}
-
-      {/* <hr className="w-full h-2 my-8" /> */}
-
-      {/* <div className="flex flex-col gap-4"> */}
-      {/* <span className="flex gap-5 items-center"> */}
-      {/* <h3 className="font-semibold text-lg">EDUCATION HISTORY</h3> */}
-      {/* <p className="text-[#5E6366] font-semibold">
-            {combinedEducationData.length
-              ? `${combinedEducationData.length} degrees`
-              : "No education history provided"}
-          </p> */}
-      {/* </span> */}
-      {/* {candidate?.education?.map((education, index: number) => (
-          <span key={index} className="flex gap-5 items-center">
-            <p className="text-[#5E6366] font-semibold md:w-60">
-              {`${education.admission_date || "No year set"} - ${
-                education.graduation_date || "No year set"
-              }`}
-            </p>
-            <p className="font-semibold capitalize">
-              {`${education.degree_type} in ${
-                education.specific_course_of_study
-              } at ${education.school_name || "No school"}`}
-            </p>
-          </span>
-        )) || <p>No education history available</p>} */}
-
-      {/* Advanced Education */}
-      {/* {candidate?.advanced_education?.map((education, index: number) =>
-          education.admission_date === null ? (
-            ""
-          ) : (
-            <span key={index} className="flex gap-5 items-center">
-              <p className="text-[#5E6366] font-semibold md:w-60">
-                {`${education.admission_date || "No year set"} - ${
-                  education.graduation_date || "No year set"
-                }`}
-              </p>
-              <p className="font-semibold capitalize">
-                {`${education.advanced_degree_type} in ${
-                  education.graduate_type
-                } at ${education.school_name || "No school"}`}
-              </p>
-            </span>
-          )
-        ) || <p>No education history available</p>} */}
-      {/* </div> */}
-
-      {/* <hr className="w-full h-2 my-8" /> */}
-
-      {/* <div className="flex flex-col gap-4">
-        <span className="flex gap-5 items-center">
-          <h3 className="font-semibold text-lg">WORK HISTORY</h3>
-          <p className="text-[#5E6366] font-semibold"></p>
-        </span>
-        {candidate?.job_experience?.map((jobExperienceData, index: number) =>
-          jobExperienceData.business_name ? (
-            <span key={index} className="flex gap-5 items-center">
-              <p className="text-[#5E6366] font-semibold md:w-60">
-                {jobExperienceData?.year_started || "No start year"} -{" "}
-                {jobExperienceData?.year_ended || "Till Date"}
-              </p>
-              <p className="font-semibold capitalize">{`${
-                jobExperienceData?.job_title || "No job title"
-              } at ${jobExperienceData?.business_name}`}</p>
-            </span>
-          ) : null
-        )}
-      </div> */}
-
-      {/* <hr className="w-full h-2 my-8" /> */}
-
-      {/* JOB SUMMARY */}
-      {/* <div>
-        <h3 className="font-semibold text-lg mb-4">JOB SUMMARY</h3>
-        <div className="text-[#5E6366]">
-          {candidate?.job_experience?.length ? (
-            candidate.job_experience.map((job) =>
-              job.job_summary ? (
-                <div key={job.id} className="mb-5">
-                  <p className="mb-3">{job.job_summary}</p>
-                  <CopyIcon
-                    size={16}
-                    cursor="pointer"
-                    onClick={() => copyToClipboard(job.job_summary, toast)}
-                  />
-                </div>
-              ) : null
-            )
-          ) : (
-            <span className="flex gap-4 items-center">
-              <p>No job summary provided</p>
-            </span>
-          )}
-        </div>
-      </div> */}
-
       <hr className="w-full h-2 my-8" />
 
       {/* OTHER INFO */}
@@ -558,7 +442,7 @@ const CandidateProfile = () => {
                     text={referee.recommender_type}
                     className="text-blue-500"
                   />
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center flex-wrap">
                     <CopyText
                       label="Recommender Name"
                       text={referee.full_name}
@@ -590,7 +474,7 @@ const CandidateProfile = () => {
             </h3>
             <div className="space-y-4 m-4">
               {candidate?.loan_referees?.map((referee, index) => (
-                <div key={index} className="flex justify-between items-center">
+                <div key={index} className="flex justify-between items-center flex-wrap">
                   <CopyText label="Referee Name" text={referee.name} />
                   <CopyText label="Relationship" text={referee.relationship} />
                   <CopyText label="Email" text={referee.email} />

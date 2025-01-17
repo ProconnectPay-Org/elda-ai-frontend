@@ -212,16 +212,20 @@ const WorkExperience = () => {
     }
   };
 
-  if (singleCandidateLoading || jobsLoading) {
-    return <div>Loading...</div>;
-  }
-
   if (singleCandidateError) {
     return <div>Error fetching data</div>;
   }
 
   return (
     <div className="space-y-5">
+      {singleCandidateLoading ||
+        (jobsLoading && (
+          <div className="fixed inset-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div className="text-white text-xl flex items-center justify-center gap-2">
+              <Loader2 className="animate-spin" /> Loading...
+            </div>
+          </div>
+        ))}
       <div className="space-y-2">
         <label htmlFor="" className="text-[#344054]">
           How many jobs are you showcasing?

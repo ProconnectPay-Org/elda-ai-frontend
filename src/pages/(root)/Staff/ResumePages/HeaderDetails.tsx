@@ -23,6 +23,7 @@ import { toast } from "@/components/ui/use-toast";
 import { updatePersonalDetails } from "@/lib/actions/staffresume.actions";
 import { genderOptions } from "@/constants";
 import CountrySelect from "@/components/CountrySelect";
+import { Loader2 } from "lucide-react";
 
 const HeaderDetails = () => {
   const {
@@ -151,16 +152,19 @@ const HeaderDetails = () => {
     }
   };
 
-  if (singleCandidateLoading) {
-    return <div>Loading...</div>;
-  }
-
   if (singleCandidateError) {
     return <div>Error fetching data</div>;
   }
 
   return (
     <div className="space-y-10">
+      {singleCandidateLoading && (
+        <div className="fixed inset-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="text-white text-xl flex items-center justify-center gap-2">
+            <Loader2 className="animate-spin" /> Loading...
+          </div>
+        </div>
+      )}
       <div className="space-y-2">
         <label htmlFor="">
           Email <span className="text-red">*</span>
@@ -181,7 +185,10 @@ const HeaderDetails = () => {
         <div className="flex flex-col gap-8">
           <div className="flex items-center gap-2">
             <p className="font-semibold">Full Name: </p>
-            <p>{getValues("firstName")} {getValues("middleName")} {getValues("lastName")}</p>
+            <p>
+              {getValues("firstName")} {getValues("middleName")}{" "}
+              {getValues("lastName")}
+            </p>
           </div>
           <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
             <div className="flex flex-col sm:w-1/2">

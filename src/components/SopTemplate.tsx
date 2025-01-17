@@ -29,7 +29,7 @@ const SopTemplate = () => {
   if (singleCandidateLoading) {
     return (
       <div className="flex items-center justify-center">
-        Loading SOP...
+        Loading SOP &nbsp;
         <Loader2Icon className="animate-spin" />
       </div>
     );

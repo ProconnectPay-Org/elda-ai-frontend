@@ -1,169 +1,90 @@
 import AdminLayout from "@/layouts/AdminLayout";
-import Mail from "../../../assets/mail.png";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import CandidateProfileSuccess from "@/components/CandidateProfileSuccess";
 import { useState } from "react";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createCandidateProfile } from "@/lib/actions/user.actions";
 import { toast } from "@/components/ui/use-toast";
 import { CustomAxiosError } from "@/types";
 import Cookies from "js-cookie";
-import { sortedSchools } from "@/constants";
+import { countryOptions, programTypes, sortedSchools } from "@/constants";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const createCandidateSchema = () =>
+  z.object({
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    fullname: z.string().min(1, "Full name is required"),
+    programType1: z.string().min(1, "Program Type 1 is required"),
+    assignedSchool1: z.string().min(1, "Assigned School 1 is required"),
+    assignedCourse1: z.string().min(1, "Assigned Course 1 is required"),
+    country: z.string().min(1, "Country is required"),
+    programType2: z.string().min(1, "Program Type 2 is required"),
+    assignedSchool2: z.string().min(1, "Assigned School 2 is required"),
+    assignedCourse2: z.string().min(1, "Assigned Course 2 is required"),
+  });
+
+const formSchema = createCandidateSchema();
 
 const CreateCandidateProfile = () => {
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Input states
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [fullname, setFullname] = useState("");
-  const [programType1, setProgramType1] = useState("");
-  const [assignedSchool1, setAssignedSchool1] = useState("");
-  const [assignedCourse1, setAssignedCourse1] = useState("");
-  const [programType2, setProgramType2] = useState("");
-  const [assignedSchool2, setAssignedSchool2] = useState("");
-  const [assignedCourse2, setAssignedCourse2] = useState("");
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      fullname: "",
+      programType1: "",
+      assignedSchool1: "",
+      assignedCourse1: "",
+      country: "",
+      programType2: "",
+      assignedSchool2: "",
+      assignedCourse2: "",
+    },
+  });
 
-  // Error states
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [fullnameError, setFullnameError] = useState("");
-  const [programType1Error, setProgramType1Error] = useState("");
-  const [assignedSchool1Error, setAssignedSchool1Error] = useState("");
-  const [assignedCourse1Error, setAssignedCourse1Error] = useState("");
-  const [programType2Error, setProgramType2Error] = useState("");
-  const [assignedSchool2Error, setAssignedSchool2Error] = useState("");
-  const [assignedCourse2Error, setAssignedCourse2Error] = useState("");
-
-  const svgSpan = (
-    <span className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-      <svg
-        className="w-4 h-4"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M19 9l-7 7-7-7"
-        ></path>
-      </svg>
-    </span>
-  );
-
-  const validateFields = () => {
-    let valid = true;
-
-    // Email validation
-    if (!email) {
-      setEmailError("Email is required");
-      valid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      setEmailError("Invalid email format");
-      valid = false;
-    } else {
-      setEmailError("");
-    }
-
-    // Password validation
-    if (!password) {
-      setPasswordError("Password is required");
-      valid = false;
-    } else if (password.length < 8) {
-      setPasswordError("Password must be at least 8 characters");
-      valid = false;
-    } else {
-      setPasswordError("");
-    }
-
-    // Full name validation
-    if (!fullname) {
-      setFullnameError("Full name is required");
-      valid = false;
-    } else {
-      setFullnameError("");
-    }
-
-    // Program Type 1 validation
-    if (!programType1) {
-      setProgramType1Error("Program type is required");
-      valid = false;
-    } else {
-      setProgramType1Error("");
-    }
-
-    // Assigned School 1 validation
-    if (!assignedSchool1) {
-      setAssignedSchool1Error("Assigned school is required");
-      valid = false;
-    } else {
-      setAssignedSchool1Error("");
-    }
-
-    // Assigned Course 1 validation
-    if (!assignedCourse1) {
-      setAssignedCourse1Error("Assigned course is required");
-      valid = false;
-    } else {
-      setAssignedCourse1Error("");
-    }
-
-    // Program Type 2 validation
-    if (!assignedSchool2) {
-      setAssignedSchool2Error("Please select a school for Program Type 2");
-      valid = false;
-    } else {
-      setAssignedSchool2Error("");
-    }
-
-    // Assigned Course 2 validation
-    if (!programType2) {
-      setProgramType2Error(
-        "Please select a Program Type for Assigned Course 2"
-      );
-      valid = false;
-    } else {
-      setProgramType2Error("");
-    }
-
-    // Assigned Course 2 validation
-    if (!assignedCourse2) {
-      setAssignedCourse2Error("Assigned course is required");
-      valid = false;
-    } else {
-      setAssignedCourse2Error("");
-    }
-
-    return valid;
-  };
-
-  const createProfile = async () => {
-    if (!validateFields()) return;
-
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
 
     try {
       const response = await createCandidateProfile({
-        email,
-        password,
-        full_name: fullname,
+        email: data.email,
+        password: data.password,
+        full_name: data.fullname,
         role: "candidate",
-        assigned_course1: assignedCourse1,
-        assigned_university1: assignedSchool1,
-        assigned_course2: assignedCourse2,
-        assigned_university2: assignedSchool2,
-        program_type1: programType1,
-        program_type2: programType2,
+        assigned_course1: data.assignedCourse1,
+        assigned_university1: data.assignedSchool1,
+        country: "",
+        assigned_course2: data.assignedCourse2,
+        assigned_university2: data.assignedSchool2,
+        program_type1: data.programType1,
+        program_type2: data.programType2,
       });
 
       if (response) {
         setSuccess(true);
-        Cookies.set("user_password", password);
+        Cookies.set("user_password", data.password);
       }
     } catch (error) {
       const axiosError = error as CustomAxiosError;
@@ -208,191 +129,304 @@ const CreateCandidateProfile = () => {
           </h2>
         </div>
 
-        <div className="flex flex-col items-center justify-center w-full">
-          {/* INPUT FIELDS */}
-          <div className="flex flex-col gap-3 w-full">
-            <div className="flex flex-col w-full gap-1.5">
-              <label htmlFor="email">
-                Email <span className="text-red">*</span>
-              </label>
-              <div className="flex border border-gray-border w-full justify-between gap-2 items-center py-2 px-4 rounded-lg">
-                <img src={Mail} alt="mail icon" />
-                <input
-                  className="border-none w-full lowercase focus:outline-none"
-                  id="email"
-                  placeholder="Enter your email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)} // Update email state
-                />
-              </div>
-              {emailError && <p className="text-red text-sm">{emailError}</p>}
-            </div>
-            <div className="flex flex-col w-full gap-1.5">
-              <label htmlFor="password">
-                Password <span className="text-red">*</span>
-              </label>
-              <div className="flex border border-gray-border w-full justify-between gap-2 items-center py-2 px-4 rounded-lg">
-                <input
-                  className="border-none w-full focus:outline-none"
-                  id="password"
-                  placeholder="Enter a password for candidate"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              {passwordError && (
-                <p className="text-red text-sm">{passwordError}</p>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name={"email"}
+              render={({ field }) => (
+                <div className="">
+                  <FormLabel className="form-label">Email *</FormLabel>
+                  <div className="flex w-full flex-col relative">
+                    <FormControl>
+                      <Input
+                        id={"email"}
+                        placeholder="Enter Candidate's Email Address"
+                        className=""
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="form-message mt-2" />
+                  </div>
+                </div>
               )}
-            </div>
-            <div className="flex flex-col w-full gap-1.5">
-              <label htmlFor="fullName">Full Name</label>
-              <div className="flex border border-gray-border justify-between gap-2 items-center py-2 px-4 rounded-lg">
-                <input
-                  className="border-none w-full focus:outline-none"
-                  id="fullName"
-                  placeholder="Enter candidate's full name"
-                  value={fullname}
-                  onChange={(e) => setFullname(e.target.value)}
-                />
-              </div>
-              {fullnameError && (
-                <p className="text-red text-sm">{fullnameError}</p>
-              )}
-            </div>
+            />
 
-            <div className="flex flex-col w-full gap-1.5">
-              <label htmlFor="programType1">Program Type (1)</label>
-              <div className="relative">
-                <select
-                  name="programType1"
-                  id="programType1"
-                  className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
-                  onChange={(e) => setProgramType1(e.target.value)}
-                  value={programType1}
-                >
-                  <option value="">--Select a program--</option>
-                  <option value="MSC">MSC</option>
-                  <option value="MBA">MBA</option>
-                </select>
-                {svgSpan}
-              </div>
-              {programType1Error && (
-                <p className="text-red text-sm">{programType1Error}</p>
+            <FormField
+              control={form.control}
+              name={"password"}
+              render={({ field }) => (
+                <div className="">
+                  <FormLabel className="form-label">Password *</FormLabel>
+                  <div className="flex w-full flex-col relative">
+                    <FormControl>
+                      <Input
+                        id={"password"}
+                        placeholder="Enter a password for candidate"
+                        className=""
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="form-message mt-2" />
+                  </div>
+                </div>
               )}
-            </div>
+            />
 
-            <div className="flex flex-col w-full gap-1.5">
-              <label htmlFor="assignedSchool1">Assign School (1)</label>
-              <div className="relative">
-                <select
-                  name="assignedSchool1"
-                  id="assignedSchool1"
-                  value={assignedSchool1}
-                  onChange={(e) => setAssignedSchool1(e.target.value)}
-                  className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
-                >
-                  <option value="">--Select a school--</option>
-                  {sortedSchools.map((item, index) => (
-                    <option key={index} value={item.name}>
-                      {item.name}
-                    </option>
-                  ))}
-                </select>
-                {svgSpan}
-              </div>
-              {assignedSchool1Error && (
-                <p className="text-red text-sm">{assignedSchool1Error}</p>
+            <FormField
+              control={form.control}
+              name={"fullname"}
+              render={({ field }) => (
+                <div className="">
+                  <FormLabel className="form-label">Full Name *</FormLabel>
+                  <div className="flex w-full flex-col relative">
+                    <FormControl>
+                      <Input
+                        id={"fullname"}
+                        placeholder="Enter the full name of candidate"
+                        className=""
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="form-message mt-2" />
+                  </div>
+                </div>
               )}
-            </div>
+            />
 
-            <div className="flex flex-col w-full gap-1.5">
-              <label htmlFor="assignedCourse1">Assign a Course (1)</label>
-              <div className="relative">
-                <input
-                  name="assignedCourse1"
-                  id="assignedCourse1"
-                  placeholder="Fill in a course"
-                  value={assignedCourse1}
-                  onChange={(e) => setAssignedCourse1(e.target.value)}
-                  className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
-                />
-              </div>
-              {assignedCourse1Error && (
-                <p className="text-red text-sm">{assignedCourse1Error}</p>
+            <FormField
+              control={form.control}
+              name={"programType1"}
+              render={({ field }) => (
+                <div className="">
+                  <FormLabel className="form-label">
+                    Program Type (1) *
+                  </FormLabel>
+                  <div className="flex w-full flex-col relative">
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        value={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="--Select a program--" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {programTypes.map((program) => (
+                            <SelectItem key={program} value={program}>
+                              {program}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage className="form-message mt-2" />
+                  </div>
+                </div>
               )}
-            </div>
+            />
 
-            <div className="flex flex-col w-full gap-1.5">
-              <label htmlFor="programType2">Program Type (2)</label>
-              <div className="relative">
-                <select
-                  name="programType2"
-                  id="programType2"
-                  value={programType2}
-                  onChange={(e) => setProgramType2(e.target.value)}
-                  className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
-                >
-                  <option value="">--Select a program--</option>
-                  <option value="MSC">MSC</option>
-                  <option value="MBA">MBA</option>
-                </select>
-                {svgSpan}
-              </div>
-              {programType2Error && (
-                <p className="text-red text-sm">{programType2Error}</p>
+            <FormField
+              control={form.control}
+              name={"country"}
+              render={({ field }) => (
+                <div className="">
+                  <FormLabel className="form-label">Country *</FormLabel>
+                  <div className="flex w-full flex-col relative">
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        value={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="--Select a country--" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {countryOptions.map((program) => (
+                            <SelectItem key={program} value={program}>
+                              {program}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage className="form-message mt-2" />
+                  </div>
+                </div>
               )}
-            </div>
+            />
 
-            <div className="flex flex-col w-full gap-1.5">
-              <label htmlFor="assignedSchool2">Assign School (2)</label>
-              <div className="relative">
-                <select
-                  name="assignedSchool2"
-                  id="assignedSchool2"
-                  value={assignedSchool2}
-                  onChange={(e) => setAssignedSchool2(e.target.value)}
-                  className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
-                >
-                  <option value="">--Select a school--</option>
-                  {sortedSchools.map((item, index) => (
-                    <option key={index} value={item.name}>
-                      {item.name}
-                    </option>
-                  ))}
-                </select>
-                {svgSpan}
-              </div>
-              {assignedSchool2Error && (
-                <p className="text-red text-sm">{assignedSchool2Error}</p>
+            <FormField
+              control={form.control}
+              name={"assignedSchool1"}
+              render={({ field }) => (
+                <div className="">
+                  <FormLabel className="form-label">
+                    Assign School (1) *
+                  </FormLabel>
+                  <div className="flex w-full flex-col relative">
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        value={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="--Select a school--" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {sortedSchools.map((program) => (
+                            <SelectItem
+                              key={program.uniqueId}
+                              value={program.name}
+                            >
+                              {program.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage className="form-message mt-2" />
+                  </div>
+                </div>
               )}
-            </div>
+            />
 
-            <div className="flex flex-col w-full gap-1.5">
-              <label htmlFor="assignedCourse2">Assign a Course (2)</label>
-              <div className="relative">
-                <input
-                  name="assignedCourse2"
-                  id="assignedCourse2"
-                  placeholder="Fill in a course"
-                  value={assignedCourse2}
-                  onChange={(e) => setAssignedCourse2(e.target.value)}
-                  className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
-                />
-              </div>
-              {assignedCourse2Error && (
-                <p className="text-red text-sm">{assignedCourse2Error}</p>
+            <FormField
+              control={form.control}
+              name={"assignedCourse1"}
+              render={({ field }) => (
+                <div className="">
+                  <FormLabel className="form-label">
+                    Assigned Course 1 *
+                  </FormLabel>
+                  <div className="flex w-full flex-col relative">
+                    <FormControl>
+                      <Input
+                        id={"assignedCourse1"}
+                        placeholder="Fill in a course"
+                        className=""
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="form-message mt-2" />
+                  </div>
+                </div>
               )}
-            </div>
-          </div>
+            />
 
-          <Button
-            className="w-full mt-10 bg-red h-12 text-lg"
-            onClick={createProfile}
-            disabled={isLoading}
-          >
-            {isLoading ? "Loading..." : "Create User ID"}
-          </Button>
-        </div>
+            <FormField
+              control={form.control}
+              name={"programType2"}
+              render={({ field }) => (
+                <div className="">
+                  <FormLabel className="form-label">
+                    Program Type (2) *
+                  </FormLabel>
+                  <div className="flex w-full flex-col relative">
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        value={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="--Select a program--" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {programTypes.map((program) => (
+                            <SelectItem key={program} value={program}>
+                              {program}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage className="form-message mt-2" />
+                  </div>
+                </div>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name={"assignedSchool2"}
+              render={({ field }) => (
+                <div className="">
+                  <FormLabel className="form-label">
+                    Assign School (2) *
+                  </FormLabel>
+                  <div className="flex w-full flex-col relative">
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        value={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="--Select a school--" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {sortedSchools.map((program) => (
+                            <SelectItem
+                              key={program.uniqueId}
+                              value={program.name}
+                            >
+                              {program.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage className="form-message mt-2" />
+                  </div>
+                </div>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name={"assignedCourse2"}
+              render={({ field }) => (
+                <div className="">
+                  <FormLabel className="form-label">
+                    Assigned Course 2 *
+                  </FormLabel>
+                  <div className="flex w-full flex-col relative">
+                    <FormControl>
+                      <Input
+                        id={"assignedCourse2"}
+                        placeholder="Fill in a course"
+                        className=""
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="form-message mt-2" />
+                  </div>
+                </div>
+              )}
+            />
+
+            <div className="flex flex-col gap-4">
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="form-btn bg-red"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 size={20} className="animate-spin" /> &nbsp;
+                    Loading...
+                  </>
+                ) : (
+                  "Create User ID"
+                )}
+              </Button>
+            </div>
+          </form>
+        </Form>
       </div>
     </AdminLayout>
   );

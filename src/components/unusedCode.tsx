@@ -263,7 +263,6 @@
 //   }
 // }, [jobExperience, setValue, index]);
 
-
 // const generateSopFile = async (sopText: string, candidateId: string) => {
 //   const sopContainer = document.createElement("div");
 
@@ -289,3 +288,250 @@
 //     type: "application/pdf",
 //   });
 // };
+
+{
+  /* INPUT FIELDS */
+}
+{
+  /* <div className="flex flex-col gap-3 w-full">
+            <div className="flex flex-col w-full gap-1.5">
+              <label htmlFor="email">
+                Email <span className="text-red">*</span>
+              </label>
+              <div className="flex border border-gray-border w-full justify-between gap-2 items-center py-2 px-4 rounded-lg">
+                <img src={Mail} alt="mail icon" />
+                <input
+                  className="border-none w-full lowercase focus:outline-none"
+                  id="email"
+                  placeholder="Enter your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)} // Update email state
+                />
+              </div>
+              {emailError && <p className="text-red text-sm">{emailError}</p>}
+            </div>
+            <div className="flex flex-col w-full gap-1.5">
+              <label htmlFor="password">
+                Password <span className="text-red">*</span>
+              </label>
+              <div className="flex border border-gray-border w-full justify-between gap-2 items-center py-2 px-4 rounded-lg">
+                <input
+                  className="border-none w-full focus:outline-none"
+                  id="password"
+                  placeholder="Enter a password for candidate"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              {passwordError && (
+                <p className="text-red text-sm">{passwordError}</p>
+              )}
+            </div>
+            <div className="flex flex-col w-full gap-1.5">
+              <label htmlFor="fullName">Full Name</label>
+              <div className="flex border border-gray-border justify-between gap-2 items-center py-2 px-4 rounded-lg">
+                <input
+                  className="border-none w-full focus:outline-none"
+                  id="fullName"
+                  placeholder="Enter candidate's full name"
+                  value={fullname}
+                  onChange={(e) => setFullname(e.target.value)}
+                />
+              </div>
+              {fullnameError && (
+                <p className="text-red text-sm">{fullnameError}</p>
+              )}
+            </div>
+
+            <div className="flex flex-col w-full gap-1.5">
+              <label htmlFor="programType1">Program Type (1)</label>
+              <div className="relative">
+                <select
+                  name="programType1"
+                  id="programType1"
+                  className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
+                  onChange={(e) => setProgramType1(e.target.value)}
+                  value={programType1}
+                >
+                  <option value="">--Select a program--</option>
+                  {programTypes.map((program) => (
+                    <option key={program} value={program}>
+                      {program}
+                    </option>
+                  ))}
+                </select>
+                {svgSpan}
+              </div>
+              {programType1Error && (
+                <p className="text-red text-sm">{programType1Error}</p>
+              )}
+            </div>
+
+            <div className="flex flex-col w-full gap-1.5">
+              <label htmlFor="assignedSchool1">Assign School (1)</label>
+              <div className="relative">
+                <select
+                  name="assignedSchool1"
+                  id="assignedSchool1"
+                  value={assignedSchool1}
+                  onChange={(e) => setAssignedSchool1(e.target.value)}
+                  className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
+                >
+                  <option value="">--Select a school--</option>
+                  {sortedSchools.map((item, index) => (
+                    <option key={index} value={item.name}>
+                      {item.name}
+                    </option>
+                  ))}
+                </select>
+                {svgSpan}
+              </div>
+              {assignedSchool1Error && (
+                <p className="text-red text-sm">{assignedSchool1Error}</p>
+              )}
+            </div>
+
+            <div className="flex flex-col w-full gap-1.5">
+              <label htmlFor="assignedCourse1">Assign a Course (1)</label>
+              <div className="relative">
+                <input
+                  name="assignedCourse1"
+                  id="assignedCourse1"
+                  placeholder="Fill in a course"
+                  value={assignedCourse1}
+                  onChange={(e) => setAssignedCourse1(e.target.value)}
+                  className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
+                />
+              </div>
+              {assignedCourse1Error && (
+                <p className="text-red text-sm">{assignedCourse1Error}</p>
+              )}
+            </div>
+
+            <div className="flex flex-col w-full gap-1.5">
+              <label htmlFor="programType2">Program Type (2)</label>
+              <div className="relative">
+                <select
+                  name="programType2"
+                  id="programType2"
+                  value={programType2}
+                  onChange={(e) => setProgramType2(e.target.value)}
+                  className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
+                >
+                  <option value="">--Select a program--</option>
+                  <option value="MSC">MSC</option>
+                  <option value="MBA">MBA</option>
+                </select>
+                {svgSpan}
+              </div>
+              {programType2Error && (
+                <p className="text-red text-sm">{programType2Error}</p>
+              )}
+            </div>
+
+            <div className="flex flex-col w-full gap-1.5">
+              <label htmlFor="assignedSchool2">Assign School (2)</label>
+              <div className="relative">
+                <select
+                  name="assignedSchool2"
+                  id="assignedSchool2"
+                  value={assignedSchool2}
+                  onChange={(e) => setAssignedSchool2(e.target.value)}
+                  className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
+                >
+                  <option value="">--Select a school--</option>
+                  {sortedSchools.map((item, index) => (
+                    <option key={index} value={item.name}>
+                      {item.name}
+                    </option>
+                  ))}
+                </select>
+                {svgSpan}
+              </div>
+              {assignedSchool2Error && (
+                <p className="text-red text-sm">{assignedSchool2Error}</p>
+              )}
+            </div>
+
+            <div className="flex flex-col w-full gap-1.5">
+              <label htmlFor="assignedCourse2">Assign a Course (2)</label>
+              <div className="relative">
+                <input
+                  name="assignedCourse2"
+                  id="assignedCourse2"
+                  placeholder="Fill in a course"
+                  value={assignedCourse2}
+                  onChange={(e) => setAssignedCourse2(e.target.value)}
+                  className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-8"
+                />
+              </div>
+              {assignedCourse2Error && (
+                <p className="text-red text-sm">{assignedCourse2Error}</p>
+              )}
+            </div>
+          </div> */
+}
+
+{
+  /* <Button
+            className="w-full mt-10 bg-red h-12 text-lg"
+            onClick={createProfile}
+            disabled={isLoading}
+          >
+            {isLoading ? "Loading..." : "Create User ID"}
+          </Button> */
+}
+
+
+// const currentJob = sortedJobExperiences.find(
+//   (experience: JobExperience) => experience.job_status === "current"
+// );
+// const otherJobs = sortedJobExperiences.filter(
+//   (experience: JobExperience) => experience !== currentJob
+// );
+
+
+  // useEffect(() => {
+  //   if (formData) {
+  //     const sortedJobExperiences = formData.job_experience
+  //       .sort((a: JobExperience, b: JobExperience) => a.id - b.id)
+  //       .slice(0, 3);
+
+  //     // Save the top three job experience IDs to cookies
+  //     sortedJobExperiences.forEach((job: JobExperience, index: number) => {
+  //       Cookies.set(`work_experience_id${index + 1}`, String(job.id), {
+  //         expires: 7,
+  //       });
+  //     });
+
+  //     // Optional: Clear any extra job experience cookies
+  //     for (let i = sortedJobExperiences.length + 1; i <= 3; i++) {
+  //       Cookies.remove(`work_experience_id${i}`);
+  //     }
+
+  //     const workExperienceIdsFromCookies = [
+  //       Cookies.get("work_experience_id1"),
+  //       Cookies.get("work_experience_id2"),
+  //       Cookies.get("work_experience_id3"),
+  //     ].filter(Boolean);
+
+  //     const retrievedIds =
+  //       formData?.job_experience?.map((job: JobExperience) => job.id) || [];
+
+  //     // Find matching IDs and sort them from lowest to highest
+  //     const matchingSortedIds = retrievedIds
+  //       .filter((id: string) =>
+  //         workExperienceIdsFromCookies.includes(String(id))
+  //       ) // Compare with cookies
+  //       .sort((a: any, b: any) => a - b);
+
+  //     // Process the sorted IDs for further use
+  //     const jobExperiences = formData?.job_experience
+  //       ?.filter((job: JobExperience) => matchingSortedIds.includes(job.id)) // Filter jobs matching sorted IDs
+  //       .sort(
+  //         (a: JobExperience, b: JobExperience) =>
+  //           matchingSortedIds.indexOf(a.id) - matchingSortedIds.indexOf(b.id)
+  //       );
+  //     setMyJobs(jobExperiences);
+  //   }
+  // }, [formData, id]);

@@ -16,6 +16,7 @@ import {
   getDemonymFromISO,
 } from "@/lib/utils";
 import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
 
 // Define your styles
 const styles = StyleSheet.create({
@@ -182,6 +183,40 @@ const styles = StyleSheet.create({
   },
 });
 
+const processJobExperiences = (formData: any) => {
+  return formData.job_experience
+    .sort((a: JobExperience, b: JobExperience) => a.id - b.id)
+    .slice(0, 3);
+};
+
+const manageCookies = (jobExperiences: JobExperience[]) => {
+  jobExperiences.forEach((job, index) => {
+    Cookies.set(`work_experience_id${index + 1}`, String(job.id), {
+      expires: 7,
+    });
+  });
+
+  // Clear extra cookies if necessary
+  for (let i = jobExperiences.length + 1; i <= 3; i++) {
+    Cookies.remove(`work_experience_id${i}`);
+  }
+};
+
+const retrieveJobsFromCookies = (formData: any) => {
+  const workExperienceIdsFromCookies = [
+    Cookies.get("work_experience_id1"),
+    Cookies.get("work_experience_id2"),
+    Cookies.get("work_experience_id3"),
+  ].filter(Boolean);
+
+  const retrievedIds =
+    formData?.job_experience?.map((job: JobExperience) => job.id) || [];
+
+  return retrievedIds
+    .filter((id: string) => workExperienceIdsFromCookies.includes(String(id)))
+    .sort((a: any, b: any) => a - b);
+};
+
 const NewResumePdf = () => {
   const { id } = useParams<{ id: string }>();
 
@@ -196,6 +231,27 @@ const NewResumePdf = () => {
     singleCandidateError,
   } = useCandidates(id);
 
+  const [myJobs, setMyJobs] = useState<JobExperience[]>([]);
+
+  useEffect(() => {
+    if (formData) {
+      const sortedJobExperiences = processJobExperiences(formData);
+
+      manageCookies(sortedJobExperiences);
+
+      const matchingSortedIds = retrieveJobsFromCookies(formData);
+
+      const jobExperiences = formData.job_experience
+        ?.filter((job: JobExperience) => matchingSortedIds.includes(job.id))
+        .sort(
+          (a: JobExperience, b: JobExperience) =>
+            matchingSortedIds.indexOf(a.id) - matchingSortedIds.indexOf(b.id)
+        );
+
+      setMyJobs(jobExperiences);
+    }
+  }, [formData]);
+
   if (singleCandidateLoading) {
     return <FinalResumeSkeleton />;
   }
@@ -204,33 +260,9 @@ const NewResumePdf = () => {
     return <div>Error fetching data</div>;
   }
 
-  const workExperienceIdsFromCookies = [
-    Cookies.get("work_experience_id1"),
-    Cookies.get("work_experience_id2"),
-    Cookies.get("work_experience_id3"),
-  ].filter(Boolean); // Filter out null/undefined values
-
-  // Array of IDs returned (e.g., from API or some data source)
-  const retrievedIds =
-    formData?.job_experience?.map((job: JobExperience) => job.id) || [];
-
-  // Find matching IDs and sort them from lowest to highest
-  const matchingSortedIds = retrievedIds
-    .filter((id: string) => workExperienceIdsFromCookies.includes(String(id))) // Compare with cookies
-    .sort((a: any, b: any) => a - b);
-
-  // Process the sorted IDs for further use
-  const sortedJobExperiences = formData?.job_experience
-    ?.filter((job: JobExperience) => matchingSortedIds.includes(job.id)) // Filter jobs matching sorted IDs
-    .sort(
-      (a: JobExperience, b: JobExperience) =>
-        matchingSortedIds.indexOf(a.id) - matchingSortedIds.indexOf(b.id)
-    );
-
   const businessNameWithCurrentJob =
-    sortedJobExperiences?.find(
-      (job: JobExperience) => job.job_status === "current"
-    )?.job_title || "No current job";
+    myJobs?.find((job: JobExperience) => job.job_status === "current")
+      ?.job_title || "No current job";
 
   return (
     <>
@@ -332,7 +364,7 @@ const NewResumePdf = () => {
           {/* WORK EXPERIENCE */}
           <View style={styles.section}>
             <Text style={styles.resumeTitleText}>WORK EXPERIENCE</Text>
-            {sortedJobExperiences.map((experience: JobExperience) =>
+            {myJobs.map((experience: JobExperience) =>
               experience.business_name ? (
                 <View key={experience.id} style={styles.mb2}>
                   <View>

@@ -34,7 +34,7 @@ const Step2 = ({
   if (!staffToken) {
     navigate("/sign-in");
     console.error("Staff token is missing. Please log in again.");
-    return null; // Prevent the component from rendering further
+    return null;
   }
 
   useEffect(() => {
@@ -177,7 +177,7 @@ const Step2 = ({
               >
                 {courseDescriptionLoading ? (
                   <>
-                    <p>Saving...</p>
+                    <p>Saving</p> &nbsp;
                     <Loader2 className="animate-spin" />
                   </>
                 ) : (
