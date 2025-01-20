@@ -66,7 +66,9 @@ const StatusBox = ({
       }}
     >
       <div className="flex items-center gap-2 md:gap-4">
-        <p className="font-semibold text-sm w-20 sm:w-fit md:text-2xl text-red">{text}</p>
+        <p className="font-semibold text-sm w-20 sm:w-fit md:text-2xl text-red">
+          {text}
+        </p>
         <div className="border border-red px-2 h-6 flex items-center gap-1 rounded-md">
           {icon}
           <p className="text-[10px] text-center text-gray-text">{status}</p>
@@ -110,6 +112,8 @@ const CandidateStatus = () => {
     post_graduate_certificate: "Post-Graduate Certificate",
     post_graduate_transcript: "Post-Graduate Transcript",
     utility_bill: "Utility Bill",
+    admission_letter: "Admission Letter",
+    gre_document: "GRE or GMAT result",
   };
 
   const statusProps = [

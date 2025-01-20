@@ -11,7 +11,6 @@ import {
 } from "./ui/dropdown-menu";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Link } from "react-router-dom";
-import { getCountryNameFromISO } from "@/lib/utils";
 import SchoolApplicationModal from "./SchoolApplicationModal";
 import { useState } from "react";
 import ReAssignModal from "./ReAssignModal";
@@ -32,10 +31,18 @@ export const allTabsColumns = (
     ),
   },
   {
-    accessorKey: "country",
-    header: "Country",
+    accessorKey: "first_country",
+    header: "First Country",
     cell: ({ row }) => {
-      const country = getCountryNameFromISO(row.original.country_of_birth);
+      const country = row.original.first_country;
+      return <p className="capitalize">{country || "No country"}</p>;
+    },
+  },
+  {
+    accessorKey: "second_country",
+    header: "Second Country",
+    cell: ({ row }) => {
+      const country = row.original.second_country;
       return <p className="capitalize">{country || "No country"}</p>;
     },
   },

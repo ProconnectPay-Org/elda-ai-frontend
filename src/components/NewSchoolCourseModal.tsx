@@ -5,7 +5,7 @@ import { toast } from "@/components/ui/use-toast";
 import { CandidateData } from "@/types";
 import { getSingleCandidate } from "@/lib/actions/user.actions";
 import { postEditedCandidate } from "@/lib/actions/staff.actions";
-import { sortedSchools } from "@/constants";
+import { countryOptions, programTypes, sortedSchools } from "@/constants";
 
 interface ModalProps {
   onClose: () => void;
@@ -16,6 +16,8 @@ const NewSchoolCourseModal = ({ onClose, id }: ModalProps) => {
   const [formValues, setFormValues] = useState({
     assigned_course1: "",
     assigned_university1: "",
+    first_country: "",
+    second_country: "",
     assigned_course2: "",
     assigned_university2: "",
     program_type1: "",
@@ -44,9 +46,11 @@ const NewSchoolCourseModal = ({ onClose, id }: ModalProps) => {
         program_type1: candidate.program_type1 || "",
         assigned_university1: candidate.assigned_university1 || "",
         assigned_course1: candidate.assigned_course1 || "",
+        first_country: candidate.first_country || "",
         program_type2: candidate.program_type2 || "",
         assigned_university2: candidate.assigned_university2 || "",
         assigned_course2: candidate.assigned_course2 || "",
+        second_country: candidate.second_country || "",
       });
     }
   }, [candidate]);
@@ -66,9 +70,7 @@ const NewSchoolCourseModal = ({ onClose, id }: ModalProps) => {
     setIsLoading(true);
 
     try {
-      const response = await postEditedCandidate(id, formValues, accessToken);
-      console.log(response);
-      console.log(formValues);
+      await postEditedCandidate(id, formValues, accessToken);
 
       toast({
         variant: "success",
@@ -130,19 +132,17 @@ const NewSchoolCourseModal = ({ onClose, id }: ModalProps) => {
           <p>Loading....</p>
         ) : (
           <form>
-            <div className="space-y-4">
+            <div className="space-y-2">
               <h2 className="text-2xl font-bold">Change School or Course</h2>
 
-              <p>
-                Candidate - {candidate?.first_name} {candidate?.last_name}
-              </p>
+              <p>Candidate - {candidate?.user?.full_name}</p>
 
               {[
                 {
                   label: "Program Type (1)",
                   name: "program_type1",
                   type: "select",
-                  options: ["MSC", "MBA"],
+                  options: programTypes.map((t) => t),
                 },
                 {
                   label: "Assign School (1)",
@@ -156,10 +156,16 @@ const NewSchoolCourseModal = ({ onClose, id }: ModalProps) => {
                   type: "input",
                 },
                 {
+                  label: "Country (1)",
+                  name: "first_country",
+                  type: "select",
+                  options: countryOptions.map((t) => t),
+                },
+                {
                   label: "Program Type (2)",
                   name: "program_type2",
                   type: "select",
-                  options: ["MSC", "MBA"],
+                  options: programTypes.map((t) => t),
                 },
                 {
                   label: "Assign School (2)",
@@ -171,6 +177,12 @@ const NewSchoolCourseModal = ({ onClose, id }: ModalProps) => {
                   label: "Assign a Course (2)",
                   name: "assigned_course2",
                   type: "input",
+                },
+                {
+                  label: "Country (2)",
+                  name: "second_country",
+                  type: "select",
+                  options: countryOptions.map((t) => t),
                 },
               ].map(({ label, name, type, options }, index) => (
                 <div key={index} className="flex flex-col w-full gap-1.5">

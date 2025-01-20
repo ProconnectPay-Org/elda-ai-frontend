@@ -91,6 +91,8 @@ const CandidateProfile = () => {
     utility_bill: "Utility Bill",
     post_graduate_certificate: "Post Graduate Certificate",
     post_graduate_transcript: "Post Graduate Transcript",
+    admission_letter: "Admission Letter",
+    gre_document: "GRE or GMAT result",
   };
 
   return (
@@ -132,6 +134,10 @@ const CandidateProfile = () => {
               text={candidate?.program_type1 || "No program provided"}
             />
             <CopyText
+              label="Assigned Country 1"
+              text={candidate?.first_country || "No country provided"}
+            />
+            <CopyText
               label="Assigned Course 2"
               text={candidate?.assigned_course2 || "No course provided"}
             />
@@ -142,6 +148,10 @@ const CandidateProfile = () => {
             <CopyText
               label="Assigned Program Type 2"
               text={candidate?.program_type2 || "No program provided"}
+            />
+            <CopyText
+              label="Assigned Country 2"
+              text={candidate?.second_country || "No country provided"}
             />
             <div className="flex items-center gap-4">
               <div className="bg-pale-bg text-red rounded-xl px-2 text-xs flex items-center gap-1 py-1">
@@ -474,7 +484,10 @@ const CandidateProfile = () => {
             </h3>
             <div className="space-y-4 m-4">
               {candidate?.loan_referees?.map((referee, index) => (
-                <div key={index} className="flex justify-between items-center flex-wrap">
+                <div
+                  key={index}
+                  className="flex justify-between items-center flex-wrap"
+                >
                   <CopyText label="Referee Name" text={referee.name} />
                   <CopyText label="Relationship" text={referee.relationship} />
                   <CopyText label="Email" text={referee.email} />

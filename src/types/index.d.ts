@@ -55,7 +55,8 @@ declare type CreateCandidateProfileProps = {
   role: "candidate" | "admin" | "staff";
   assigned_course1?: string;
   assigned_university1?: string;
-  country?: string;
+  first_country?: string;
+  second_country?: string;
   assigned_course2?: string;
   assigned_university2?: string;
   program_type1?: string;
@@ -302,6 +303,8 @@ export type VerificationDocument = {
   intl_passport: string | null;
   nin_slip: string | null;
   utility_bill: string | null;
+  admission_letter: string | null;
+  gre_document: string | null;
   post_graduate_certificate: string | null;
   post_graduate_transcript: string | null;
   candidate: string | undefined;
@@ -363,6 +366,7 @@ export type CandidateData = {
   duplicate?: string;
   email_address: string;
   first_name?: string;
+  first_country: string;
   full_name?: string;
   last_name?: string;
   middle_name?: string;
@@ -376,6 +380,7 @@ export type CandidateData = {
   resume_status?: string;
   gender?: string;
   postal_code?: string;
+  second_country: string;
   serial_number: number;
   sop_status?: string;
   sop_status1?: string;

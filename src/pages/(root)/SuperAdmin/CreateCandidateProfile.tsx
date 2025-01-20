@@ -36,7 +36,8 @@ const createCandidateSchema = () =>
     programType1: z.string().min(1, "Program Type 1 is required"),
     assignedSchool1: z.string().min(1, "Assigned School 1 is required"),
     assignedCourse1: z.string().min(1, "Assigned Course 1 is required"),
-    country: z.string().min(1, "Country is required"),
+    country1: z.string().min(1, "Country is required"),
+    country2: z.string().min(1, "Country is required"),
     programType2: z.string().min(1, "Program Type 2 is required"),
     assignedSchool2: z.string().min(1, "Assigned School 2 is required"),
     assignedCourse2: z.string().min(1, "Assigned Course 2 is required"),
@@ -57,7 +58,8 @@ const CreateCandidateProfile = () => {
       programType1: "",
       assignedSchool1: "",
       assignedCourse1: "",
-      country: "",
+      country1: "",
+      country2: "",
       programType2: "",
       assignedSchool2: "",
       assignedCourse2: "",
@@ -75,7 +77,8 @@ const CreateCandidateProfile = () => {
         role: "candidate",
         assigned_course1: data.assignedCourse1,
         assigned_university1: data.assignedSchool1,
-        country: "",
+        first_country: data.country1,
+        second_country: data.country2,
         assigned_course2: data.assignedCourse2,
         assigned_university2: data.assignedSchool2,
         program_type1: data.programType1,
@@ -229,10 +232,10 @@ const CreateCandidateProfile = () => {
 
             <FormField
               control={form.control}
-              name={"country"}
+              name={"country1"}
               render={({ field }) => (
                 <div className="">
-                  <FormLabel className="form-label">Country *</FormLabel>
+                  <FormLabel className="form-label">Country 1*</FormLabel>
                   <div className="flex w-full flex-col relative">
                     <FormControl>
                       <Select
@@ -337,6 +340,37 @@ const CreateCandidateProfile = () => {
                         </SelectTrigger>
                         <SelectContent>
                           {programTypes.map((program) => (
+                            <SelectItem key={program} value={program}>
+                              {program}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage className="form-message mt-2" />
+                  </div>
+                </div>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name={"country2"}
+              render={({ field }) => (
+                <div className="">
+                  <FormLabel className="form-label">Country 2*</FormLabel>
+                  <div className="flex w-full flex-col relative">
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        value={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="--Select a country--" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {countryOptions.map((program) => (
                             <SelectItem key={program} value={program}>
                               {program}
                             </SelectItem>

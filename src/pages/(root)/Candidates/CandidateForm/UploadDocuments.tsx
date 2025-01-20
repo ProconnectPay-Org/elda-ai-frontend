@@ -47,7 +47,7 @@ const UploadDocuments: React.FC = () => {
     "post_graduate_transcript",
     "utility_bill",
     "admission_letter",
-    "gregmat_result",
+    "gre_document",
   ];
 
   const beLabels = [

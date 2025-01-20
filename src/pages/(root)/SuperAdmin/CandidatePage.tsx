@@ -42,6 +42,8 @@ const CandidatePage = () => {
     utility_bill: "Utility Bill",
     post_graduate_certificate: "Post Graduate Certificate",
     post_graduate_transcript: "Post Graduate Transcript",
+    admission_letter: "Admission Letter",
+    gre_document: "GRE or GMAT result",
   };
 
   if (isLoading || !candidate) {
@@ -112,12 +114,20 @@ const CandidatePage = () => {
               text={candidate?.program_type1 || "No program provided"}
             />
             <CopyText
+              label="Assigned Country 1"
+              text={candidate?.first_country || "No country provided"}
+            />
+            <CopyText
               label="Assigned Course 2"
               text={candidate?.assigned_course2 || "No course provided"}
             />
             <CopyText
               label="Assigned School 2"
               text={candidate?.assigned_university2 || "No school provided"}
+            />
+            <CopyText
+              label="Assigned Country 2"
+              text={candidate?.second_country || "No country provided"}
             />
             <CopyText
               label="Assigned Program Type 2"

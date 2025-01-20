@@ -70,6 +70,8 @@ const AssignedCandidates = () => {
         assigned_course1: candidate.assigned_course1 || "No course assigned",
         assigned_school1:
           candidate.assigned_university1 || "No school assigned",
+        first_country: candidate.first_country || "No country",
+        second_country: candidate.second_country || "No country",
         resume_status: candidate.resume_status || "Not Started",
         assigned_course2: candidate.assigned_course2 || "No course assigned",
         assigned_school2:

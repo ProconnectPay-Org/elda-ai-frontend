@@ -33,6 +33,22 @@ export const columns: ColumnDef<CandidateData>[] = [
     header: "Recommended Course 1",
   },
   {
+    accessorKey: "first_country",
+    header: "First Country",
+    cell: ({ row }) => {
+      const country = row.original.first_country;
+      return <p className="capitalize">{country || "No country"}</p>;
+    },
+  },
+  {
+    accessorKey: "second_country",
+    header: "Second Country",
+    cell: ({ row }) => {
+      const country = row.original.second_country;
+      return <p className="capitalize">{country || "No country"}</p>;
+    },
+  },
+  {
     accessorKey: "assigned_school2",
     header: "Recommended School 2",
   },
