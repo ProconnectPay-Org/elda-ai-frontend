@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon } from "lucide-react";
+import { ChevronLeftIcon, Loader2 } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useRef, useState } from "react";
@@ -136,7 +136,13 @@ const Step4 = ({
             variant={"default"}
             disabled={!isEditing || sopLoading}
           >
-            {sopLoading ? "Saving..." : "Save"}
+            {sopLoading ? (
+              <>
+                Saving <Loader2 className="animate-spin" />
+              </>
+            ) : (
+              "Save"
+            )}
           </Button>
 
           <Button
@@ -144,7 +150,13 @@ const Step4 = ({
             className="border-red text-red"
             variant={"outline"}
           >
-            {isLoading ? "Generating Sop..." : "Generate Sop"}
+            {isLoading ? (
+              <>
+                Generating Sop <Loader2 className="animate-spin" />
+              </>
+            ) : (
+              "Generate Sop"
+            )}
           </Button>
         </div>
       </div>

@@ -41,20 +41,20 @@ export const columns: ColumnDef<CandidateData>[] = [
     },
   },
   {
-    accessorKey: "second_country",
-    header: "Second Country",
-    cell: ({ row }) => {
-      const country = row.original.second_country;
-      return <p className="capitalize">{country || "No country"}</p>;
-    },
-  },
-  {
     accessorKey: "assigned_school2",
     header: "Recommended School 2",
   },
   {
     accessorKey: "assigned_course2",
     header: "Recommended Course 2",
+  },
+  {
+    accessorKey: "second_country",
+    header: "Second Country",
+    cell: ({ row }) => {
+      const country = row.original.second_country;
+      return <p className="capitalize">{country || "No country"}</p>;
+    },
   },
   {
     accessorKey: "resume_status",
