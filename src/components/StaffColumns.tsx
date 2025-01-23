@@ -3,6 +3,8 @@ import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import { deleteStaff } from "@/lib/actions/user.actions";
 import { AllStaff } from "@/types";
+import { Avatar, AvatarFallback } from "./ui/avatar";
+import clsx from "clsx";
 
 export const StaffColumns: ColumnDef<AllStaff>[] = [
   {
@@ -35,25 +37,53 @@ export const StaffColumns: ColumnDef<AllStaff>[] = [
     accessorKey: "full_name",
     header: "Full Name",
     cell: ({ row }) => (
-      <p className="capitalize">{row.original.full_name || "No name"}</p>
+      <p className="capitalize">{row.original.user?.full_name || "No name"}</p>
     ),
   },
   {
     accessorKey: "status",
     header: "Staff Status",
   },
+  // {
+  //   accessorKey: "assigned_candidates",
+  //   header: "Assigned Candidates",
+  //   cell: ({ row }) => (
+  //     <p className="capitalize font-semibold">
+  //       {row.original.assigned_candidates || "0"}
+  //     </p>
+  //   ),
+  // },
   {
     accessorKey: "assigned_candidates",
     header: "Assigned Candidates",
-    cell: ({ row }) => (
-      <p className="capitalize font-semibold">
-        {row.original.assigned_candidates || "0"}
-      </p>
-    ),
-  },
-  {
-    accessorKey: "permission",
-    header: "Permission",
+    cell: ({ row }) => {
+      const assignedCandidates = row.original.assigned_candidates;      
+
+      return assignedCandidates && assignedCandidates.length > 0 ? (
+        <div className="flex -space-x-3">
+          {assignedCandidates.slice(0, 5).map((candidate, index) => (
+            <Avatar
+              key={candidate.id || index}
+              className={clsx(
+                "w-8 h-8 border-2 border-white",
+                index >= 4 && "hidden"
+              )}
+            >
+              <AvatarFallback>
+                {candidate.first_name?.charAt(0) || "-"}
+              </AvatarFallback>
+            </Avatar>
+          ))}
+          {assignedCandidates.length > 5 && (
+            <div className="w-8 h-8 bg-gray-200 flex items-center justify-center rounded-full text-sm font-medium border-2 border-white">
+              +{assignedCandidates.length - 5}
+            </div>
+          )}
+        </div>
+      ) : (
+        <p className="text-gray-500">No candidates</p>
+      );
+    },
   },
   {
     accessorKey: "deleteAccount",
@@ -64,13 +94,15 @@ export const StaffColumns: ColumnDef<AllStaff>[] = [
           className="bg-[#D74632]"
           onClick={async () => {
             const confirmed = window.confirm(
-              `Are you sure you want to delete ${row.original.full_name}'s account?`
+              `Are you sure you want to delete ${row.original.user?.full_name}'s account?`
             );
 
             if (confirmed) {
               try {
                 await deleteStaff(row.original.user.id);
-                alert(`Staff ${row.original.full_name} deleted successfully.`);
+                alert(
+                  `Staff ${row.original.user?.full_name} deleted successfully.`
+                );
               } catch (error) {
                 alert("Failed to delete staff. Please try again.");
                 console.error("Error deleting staff:", error);

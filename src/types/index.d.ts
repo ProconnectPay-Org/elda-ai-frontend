@@ -361,6 +361,8 @@ export type CandidateData = {
   country_current_reside: string;
   country_of_birth: string;
   course_description: string;
+  course_description1: string;
+  course_description2: string;
   current_house_address?: string;
   date_of_birth: string;
   duplicate?: string;
@@ -414,11 +416,9 @@ declare interface AllCandidatesResponse {
 }
 
 declare interface AllStaff {
-  full_name: string;
+  assigned_candidates: CandidateData[];
+  id: number;
   status?: string;
-  assigned_candidates?: number | string;
-  permission?: string;
-  serialNumber?: number;
   user: User;
 }
 

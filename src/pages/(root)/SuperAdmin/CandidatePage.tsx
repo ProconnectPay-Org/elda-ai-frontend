@@ -333,11 +333,23 @@ const CandidatePage = () => {
         <span className="flex gap-5 items-center">
           <h3 className="font-semibold text-lg">COURSE DESCRIPTION</h3>
         </span>
-        <p>{candidate?.course_description || "No course description"}</p>
+        <p>
+          Course Description 1:{" "}
+          {candidate?.course_description1 || "No course description"}
+        </p>
         <CopyIcon
           size={16}
           cursor="pointer"
-          onClick={() => copyToClipboard(candidate?.course_description, toast)}
+          onClick={() => copyToClipboard(candidate?.course_description1, toast)}
+        />
+        <p>
+          Course Description 2:{" "}
+          {candidate?.course_description2 || "No course description"}
+        </p>
+        <CopyIcon
+          size={16}
+          cursor="pointer"
+          onClick={() => copyToClipboard(candidate?.course_description2, toast)}
         />
       </div>
 
@@ -435,7 +447,10 @@ const CandidatePage = () => {
         <h3 className="font-semibold text-lg mb-4">LOAN REFEREES</h3>
         <div className="space-y-4 m-4">
           {candidate?.loan_referees?.map((referee, index) => (
-            <div key={index} className="flex justify-between items-center flex-wrap">
+            <div
+              key={index}
+              className="flex justify-between items-center flex-wrap"
+            >
               <CopyText label="Referee Name" text={referee.name} />
               <CopyText label="Relationship" text={referee.relationship} />
               <CopyText label="Email" text={referee.email} />

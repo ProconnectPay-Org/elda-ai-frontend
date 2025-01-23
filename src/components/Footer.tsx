@@ -9,7 +9,7 @@ const Footer = () => {
   return (
     <div className="flex items-center justify-start gap-4">
       <Avatar>
-        <AvatarFallback className="bg-red">
+        <AvatarFallback className="bg-red text-white">
           {getInitials(loggedInUser?.full_name || "")}
         </AvatarFallback>
       </Avatar>
