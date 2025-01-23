@@ -48,7 +48,7 @@ const NewSideBar = () => {
   const navLocation = useLocation();
   return (
     <Sidebar collapsible="icon">
-      <SidebarContent>
+      <SidebarContent className="overflow-x-hidden">
         <SidebarGroup>
           <SidebarGroupLabel className="h-fit">
             <div className="flex items-center justify-center scale-150 w-[160px] sm:w-[240px] sm:h-[160px]">

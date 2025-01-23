@@ -206,11 +206,18 @@ export const allTabsColumns = (
         setSchoolCourseModalOpen(false);
       };
 
-      const { id, resume_status, sop_status, full_name, user_id } =
-        row.original;
+      const {
+        id,
+        resume_status,
+        sop_status1,
+        sop_status2,
+        full_name,
+        user_id,
+      } = row.original;
 
       const isResumeDisabled = resume_status !== "Completed";
-      const isSopDisabled = sop_status !== "Completed";
+      const isSopDisabled1 = sop_status1 !== "Completed";
+      const isSopDisabled2 = sop_status2 !== "Completed";
 
       return (
         <>
@@ -252,11 +259,11 @@ export const allTabsColumns = (
                   to={`/sop/${id}?type=school1`}
                   target="_blank"
                   className={
-                    isSopDisabled
+                    isSopDisabled1
                       ? "text-gray-400 cursor-not-allowed pointer-events-none"
                       : ""
                   }
-                  aria-disabled={isSopDisabled}
+                  aria-disabled={isSopDisabled1}
                 >
                   View Crafted SOP 1
                 </Link>
@@ -266,11 +273,11 @@ export const allTabsColumns = (
                   to={`/sop/${id}?type=school2`}
                   target="_blank"
                   className={
-                    isSopDisabled
+                    isSopDisabled2
                       ? "text-gray-400 cursor-not-allowed pointer-events-none"
                       : ""
                   }
-                  aria-disabled={isSopDisabled}
+                  aria-disabled={isSopDisabled2}
                 >
                   View Crafted SOP 2
                 </Link>

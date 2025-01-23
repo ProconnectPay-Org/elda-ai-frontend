@@ -8,8 +8,8 @@ import {
   Font,
 } from "@react-pdf/renderer";
 import { useCandidates } from "@/hooks/useCandidiates";
-import { useParams, useSearchParams } from "react-router-dom";
-import { Loader2Icon } from "lucide-react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { ArrowLeft, Loader2Icon } from "lucide-react";
 import Cookies from "js-cookie";
 
 const SopTemplate = () => {
@@ -17,6 +17,7 @@ const SopTemplate = () => {
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type"); // school1 or school2
   const prefix = type === "school2" ? "2" : "1"; // Determine the prefix
+  const navigate = useNavigate();
 
   if (!id) {
     console.error("No ID provided");
@@ -117,6 +118,9 @@ const SopTemplate = () => {
 
   return (
     <div className="py-4 px-8">
+      <div className="mb-2">
+        <ArrowLeft className="cursor-pointer" onClick={() => navigate(-1)} />
+      </div>
       <div className="px-8">
         <h1 className="text-red font-bold text-center mb-4 text-xl uppercase">
           STATEMENT OF PURPOSE FOR {singleCandidate?.last_name}{" "}
