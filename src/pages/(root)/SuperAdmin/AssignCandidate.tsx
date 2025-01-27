@@ -12,6 +12,7 @@ import {
 import { CandidateData, OptionType } from "@/types";
 import { toast } from "@/components/ui/use-toast";
 import { useQuery } from "@tanstack/react-query";
+import Cookies from "js-cookie";
 
 const AssignCandidate: React.FC = () => {
   const [selectedStaff, setSelectedStaff] =
@@ -23,6 +24,7 @@ const AssignCandidate: React.FC = () => {
   const [staffOptions, setStaffOptions] = useState<OptionType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const isAnalyst = Cookies.get("user_role") === "analyst";
 
   const { data: staffResponse, isLoading: isLoadingStaff } = useQuery({
     queryKey: ["staff"],
@@ -180,7 +182,7 @@ const AssignCandidate: React.FC = () => {
           </div>
           <Button
             className="bg-red mt-10 w-full h-12 text-lg"
-            disabled={isLoading}
+            disabled={isLoading || isAnalyst}
             onClick={assignCandidate}
           >
             {isLoading ? "Candidate is being assigned..." : "Assign"}

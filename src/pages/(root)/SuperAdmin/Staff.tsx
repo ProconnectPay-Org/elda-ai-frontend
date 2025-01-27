@@ -23,6 +23,7 @@ const Staff = () => {
   const pageSize = 50;
 
   const getToken = () => Cookies.get("access_token");
+  const isAnalyst = Cookies.get("user_role") === "analyst";
 
   const [selectedRowData, setSelectedRowData] = useState<AllStaff | null>(null);
 
@@ -90,10 +91,15 @@ const Staff = () => {
             <p className="text-sm md:text-base">Invite and Manage your Staff</p>
           </div>
 
-          <Link to="/admin/invite-employee">
+          <Link to="/admin/invite-employee" aria-disabled={isAnalyst}>
             <Button
               variant="outline"
-              className="border-red text-red md:h-[52px] flex items-center gap-2.5 hover:text-white hover:bg-red"
+              className={`border-red text-red md:h-[52px] flex items-center gap-2.5 hover:text-white hover:bg-red ${
+                isAnalyst ? "cursor-not-allowed opacity-50" : ""
+              }`}
+              onClick={(e) => {
+                if (isAnalyst) e.preventDefault();
+              }}
             >
               Invite Employee
             </Button>

@@ -49,7 +49,7 @@ const AuthForm = () => {
         const userRole = response.user.role;
         Cookies.set("user_role", userRole);
 
-        if (userRole === "admin") {
+        if (userRole === "admin" || userRole === "analyst") {
           Cookies.set("access_token", response.access, { expires: 7 }); // 7 days expiration
           navigate("/admin-dashboard");
         } else if (userRole === "staff") {

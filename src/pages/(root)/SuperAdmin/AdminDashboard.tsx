@@ -22,6 +22,7 @@ import { CustomAxiosError, NotificationProps } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "@/components/ui/use-toast";
 import { AxiosError } from "axios";
+import Cookies from "js-cookie";
 
 interface staticCardProps {
   title: string;
@@ -61,6 +62,7 @@ const AdminDashboard = () => {
   const [pendingJobs, setPendingJobs] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const isAnalyst = Cookies.get("user_role") === "analyst";
 
   const {
     isLoading: isAdminLoading,
@@ -84,13 +86,16 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const handleAxiosError = (error: unknown) => {
-      if ((error as AxiosError).response && (error as AxiosError).response?.data) {
+      if (
+        (error as AxiosError).response &&
+        (error as AxiosError).response?.data
+      ) {
         const axiosError = error as CustomAxiosError;
         return axiosError.response?.data?.detail || "Unknown error occurred.";
       }
       return "An error occurred. Please try again.";
     };
-  
+
     if (adminError) {
       setError("Failed to fetch admin data.");
       const errorMessage = handleAxiosError(adminError);
@@ -100,7 +105,7 @@ const AdminDashboard = () => {
         variant: "destructive",
       });
     }
-  
+
     if (activityError) {
       setError("Failed to fetch recent activities.");
       const errorMessage = handleAxiosError(activityError);
@@ -155,19 +160,29 @@ const AdminDashboard = () => {
           </Select>
         </div>
         <div className="flex gap-2 md:gap-4">
-          <Link to="/admin/invite-employee">
+          <Link to="/admin/invite-employee" aria-disabled={isAnalyst}>
             <Button
               variant="outline"
-              className="border-red text-red text-xs md:text-base flex items-center gap-2 hover:text-red hover:bg-pale-bg"
+              className={`border-red text-red text-xs md:text-base flex items-center gap-2 hover:text-red hover:bg-pale-bg ${
+                isAnalyst ? "cursor-not-allowed opacity-50" : ""
+              }`}
+              onClick={(e) => {
+                if (isAnalyst) e.preventDefault();
+              }}
             >
               <img src={EmployeeMail} alt="icon" />
               Invite Employee
             </Button>
           </Link>
-          <Link to="/admin/create-candidate-profile">
+          <Link to="/admin/create-candidate-profile" aria-disabled={isAnalyst}>
             <Button
               variant="outline"
-              className="border-red text-red text-xs md:text-base flex items-center gap-2 hover:text-red hover:bg-pale-bg"
+              className={`border-red text-red text-xs md:text-base flex items-center gap-2 hover:text-red hover:bg-pale-bg ${
+                isAnalyst ? "cursor-not-allowed opacity-50" : ""
+              }`}
+              onClick={(e) => {
+                if (isAnalyst) e.preventDefault();
+              }}
             >
               <img src={CandidateIcon} alt="icon" />
               Create Candidate Profile

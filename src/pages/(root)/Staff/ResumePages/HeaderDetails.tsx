@@ -93,7 +93,7 @@ const HeaderDetails = () => {
     if (singleCandidate) {
       // Define the type for initialValues explicitly
       const initialValues: Record<keyof typeof watchedValues, string> = {
-        email: singleCandidate.user?.email || "",
+        email: singleCandidate.email_address || "",
         firstName: singleCandidate.first_name || "",
         middleName: singleCandidate.middle_name || "",
         lastName: singleCandidate.last_name || "",

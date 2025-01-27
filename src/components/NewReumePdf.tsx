@@ -326,7 +326,7 @@ const NewResumePdf = () => {
               <View style={styles.flex}>
                 <Text style={styles.utilityClass}>Date of Birth:</Text>
                 <Text style={styles.width200TextSm}>
-                  {formatMonthDay(formData?.birth_date)}
+                  {formatMonthDay(formData?.birth_date || "")}
                 </Text>
               </View>
               <View style={styles.flex}>

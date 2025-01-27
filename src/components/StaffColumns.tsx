@@ -5,6 +5,9 @@ import { deleteStaff } from "@/lib/actions/user.actions";
 import { AllStaff } from "@/types";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import clsx from "clsx";
+import Cookies from "js-cookie";
+
+const isAnalyst = Cookies.get("user_role") === "analyst";
 
 export const StaffColumns: ColumnDef<AllStaff>[] = [
   {
@@ -57,7 +60,7 @@ export const StaffColumns: ColumnDef<AllStaff>[] = [
     accessorKey: "assigned_candidates",
     header: "Assigned Candidates",
     cell: ({ row }) => {
-      const assignedCandidates = row.original.assigned_candidates;      
+      const assignedCandidates = row.original.assigned_candidates;
 
       return assignedCandidates && assignedCandidates.length > 0 ? (
         <div className="flex -space-x-3">
@@ -91,7 +94,9 @@ export const StaffColumns: ColumnDef<AllStaff>[] = [
     cell: ({ row }) => (
       <div className="flex justify-center">
         <Button
-          className="bg-[#D74632]"
+          className={`bg-[#D74632] ${
+            isAnalyst ? "cursor-not-allowed opacity-50" : ""
+          }`}
           onClick={async () => {
             const confirmed = window.confirm(
               `Are you sure you want to delete ${row.original.user?.full_name}'s account?`
@@ -109,6 +114,7 @@ export const StaffColumns: ColumnDef<AllStaff>[] = [
               }
             }
           }}
+          disabled={isAnalyst}
         >
           Delete Account
         </Button>

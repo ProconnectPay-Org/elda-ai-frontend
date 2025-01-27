@@ -104,7 +104,7 @@ interface User {
   email: string;
   full_name: string;
   country?: string;
-  role: "candidate" | "staff" | "admin";
+  role: "candidate" | "staff" | "admin" | "analyst";
   isLoggedIn?: boolean;
   groups?: string[];
   is_active?: boolean;

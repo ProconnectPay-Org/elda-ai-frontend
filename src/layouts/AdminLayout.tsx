@@ -3,7 +3,7 @@
 import { AuthLayoutProps } from "@/types";
 import Logo from "../assets/elda-new-logo.png";
 import Hamburger from "@/assets/mobile_hamburger.svg";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   Sheet,
   SheetContent,
@@ -12,7 +12,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { Button } from "@/components/ui/button";
@@ -49,6 +48,7 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
   const location = useLocation();
   const isSettingsActive = location.pathname.startsWith("/settings");
   const isDashboardActive = location.pathname.startsWith("/admin");
+  const isAnalyst = Cookies.get("user_role") === "analyst";
 
   const { handleLogout } = useAuth();
 
@@ -60,6 +60,13 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
       navigate("/sign-in");
     }
   }, [access_token, navigate]);
+
+  const filteredSidebarLinks = sidebarLinks.map((link) => ({
+    ...link,
+    disabled:
+      isAnalyst &&
+      (link.route === "/settings/account" || link.route === "/view/complaints"),
+  }));
 
   return (
     <div>
@@ -81,7 +88,9 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
           <NavLink
             to="/candidates"
             className={({ isActive }) =>
-              `px-4 py-2 rounded font-semibold ${isActive ? "bg-red text-white" : ""}`
+              `px-4 py-2 rounded font-semibold ${
+                isActive ? "bg-red text-white" : ""
+              }`
             }
           >
             Candidates
@@ -89,7 +98,9 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
           <NavLink
             to="/staff"
             className={({ isActive }) =>
-              `px-4 py-2 rounded font-semibold ${isActive ? "bg-red text-white" : ""}`
+              `px-4 py-2 rounded font-semibold ${
+                isActive ? "bg-red text-white" : ""
+              }`
             }
           >
             Staff
@@ -98,7 +109,9 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
             to="/assign-candidate"
             target="_blank"
             className={({ isActive }) =>
-              `px-4 py-2 rounded font-semibold ${isActive ? "bg-red text-white" : ""}`
+              `px-4 py-2 rounded font-semibold ${
+                isActive ? "bg-red text-white" : ""
+              }`
             }
           >
             Assign Candidate
@@ -106,16 +119,28 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
           <NavLink
             to="/settings/account"
             className={() =>
-              `px-4 py-2 rounded font-semibold ${isSettingsActive ? "bg-red text-white" : ""}`
+              `px-4 py-2 rounded font-semibold ${
+                isSettingsActive ? "bg-red text-white" : ""
+              } ${isAnalyst ? "cursor-not-allowed opacity-50" : ""}`
             }
+            onClick={(e) => {
+              if (isAnalyst) e.preventDefault();
+            }}
+            aria-disabled={isAnalyst}
           >
             Settings
           </NavLink>
           <NavLink
             to="/view/complaints"
             className={({ isActive }) =>
-              `px-4 py-2 rounded font-semibold ${isActive ? "bg-red text-white" : ""}`
+              `px-4 py-2 rounded font-semibold ${
+                isActive ? "bg-red text-white" : ""
+              } ${isAnalyst ? "cursor-not-allowed opacity-50" : ""}`
             }
+            onClick={(e) => {
+              if (isAnalyst) e.preventDefault();
+            }}
+            aria-disabled={isAnalyst}
           >
             Complaints
           </NavLink>
@@ -156,25 +181,22 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
                   </SheetDescription>
                 </SheetHeader>
                 <ul className="flex flex-col items-start justify-start gap-5">
-                  {sidebarLinks.map((item) => {
-                    const isActive =
-                      location.pathname === item.route ||
-                      location.pathname.startsWith(`${item.route}/`);
-
-                    return (
-                      <Link
-                        className={cn("flex gap-2 p-2 rounded-lg w-full", {
-                          "bg-pale-bg": isActive,
-                        })}
-                        to={item.route}
-                        key={item.label}
-                      >
-                        <li className={cn("flex", { "!text-red": isActive })}>
-                          {item.label}
-                        </li>
-                      </Link>
-                    );
-                  })}
+                  {filteredSidebarLinks.map(({ route, label, disabled }) => (
+                    <NavLink
+                      key={label}
+                      to={route}
+                      className={({ isActive }) =>
+                        `px-4 py-2 rounded font-semibold ${
+                          isActive ? "bg-red text-white" : ""
+                        } ${disabled ? "cursor-not-allowed opacity-50" : ""}`
+                      }
+                      onClick={(e) => {
+                        if (disabled) e.preventDefault();
+                      }}
+                    >
+                      {label}
+                    </NavLink>
+                  ))}
                 </ul>
                 <Button
                   className="h-fit mt-4 w-fit bg-red hover:bg-rose-900 flex items-center justify-center md:hidden"

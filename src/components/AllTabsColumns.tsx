@@ -15,6 +15,7 @@ import SchoolApplicationModal from "./SchoolApplicationModal";
 import { useState } from "react";
 import ReAssignModal from "./ReAssignModal";
 import NewSchoolCourseModal from "./NewSchoolCourseModal";
+import Cookies from "js-cookie";
 
 export const allTabsColumns = (
   handleDeleteCandidate: (userId: string, fullName: string) => void
@@ -181,6 +182,7 @@ export const allTabsColumns = (
       const [isModalOpen, setIsModalOpen] = useState(false);
       const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
       const [schoolCourseModalOpen, setSchoolCourseModalOpen] = useState(false);
+      const isAnalyst = Cookies.get("user_role") === "analyst";
 
       const openModal = () => {
         setIsModalOpen(true);
@@ -236,11 +238,11 @@ export const allTabsColumns = (
                   Candidate Info
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={openReAssignModal}>
+              <DropdownMenuItem onClick={openReAssignModal} disabled={isAnalyst}>
                 Reassign Candidate
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem disabled={isResumeDisabled}>
                 <Link
                   to={`/download-resume/${id}`}
                   target="_blank"
@@ -254,7 +256,7 @@ export const allTabsColumns = (
                   View Resume
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem disabled={isSopDisabled1}>
                 <Link
                   to={`/sop/${id}?type=school1`}
                   target="_blank"
@@ -268,7 +270,7 @@ export const allTabsColumns = (
                   View Crafted SOP 1
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem disabled={isSopDisabled2}>
                 <Link
                   to={`/sop/${id}?type=school2`}
                   target="_blank"
@@ -282,13 +284,13 @@ export const allTabsColumns = (
                   View Crafted SOP 2
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={openSchoolCourseModal}>
+              <DropdownMenuItem onClick={openSchoolCourseModal} disabled={isAnalyst}>
                 Change assigned school or course
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={openModal}>
+              <DropdownMenuItem onClick={openModal} disabled={isAnalyst}>
                 School Application Status
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem disabled={isAnalyst}>
                 <Button
                   onClick={() => {
                     if (user_id) {
