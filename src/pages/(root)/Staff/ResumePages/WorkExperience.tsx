@@ -319,7 +319,9 @@ const WorkExperience = () => {
                   >
                     {interest}
                     <button
-                      onClick={() => {
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
                         const updatedInterests = field.value.filter(
                           (_: string, i: number) => i !== index
                         );
@@ -344,6 +346,9 @@ const WorkExperience = () => {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                    }
                     const isDelimiter = e.key === "," || e.key === ".";
                     if (isDelimiter && inputValue.trim()) {
                       if ((field.value || []).length >= 3) {

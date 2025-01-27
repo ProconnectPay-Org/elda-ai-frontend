@@ -18,12 +18,10 @@ const Step2 = ({
   const [searchParams] = useSearchParams();
   const routeType = searchParams.get("type");
   const [manualDescription, setManualDescription] = useState("");
-  const [programType, setProgramType] = useState("");
-  const [assignedUniversity, setAssignedUniversity] = useState("");
-  const [assignedCourse, setAssignedCourse] = useState("");
-  const [yearsOfExperience, setYearsOfExperience] = useState("");
+  const [savedDescription, setSavedDescription] = useState("");
   const [courseDescriptionLoading, setCourseDescriptionLoading] =
     useState(false);
+  const [candidateData, setCandidateData] = useState<any>({});
 
   const { singleCandidate, singleCandidateLoading, singleCandidateError } =
     useCandidates(id);
@@ -39,17 +37,19 @@ const Step2 = ({
 
   useEffect(() => {
     if (singleCandidate) {
-      setProgramType(singleCandidate[`program_type${prefix}`] || "");
-      setAssignedUniversity(
-        singleCandidate[`assigned_university${prefix}`] || ""
-      );
-      setAssignedCourse(singleCandidate[`assigned_course${prefix}`] || "");
-      setYearsOfExperience(
-        singleCandidate.career[0]?.years_of_experience_post_degree || "0"
-      );
-      setManualDescription(singleCandidate[`course_description${prefix}`]);
+      setCandidateData({
+        programType: singleCandidate[`program_type${prefix}`] || "",
+        assignedUniversity:
+          singleCandidate[`assigned_university${prefix}`] || "",
+        assignedCourse: singleCandidate[`assigned_course${prefix}`] || "",
+        yearsOfExperience:
+          singleCandidate.career[0]?.years_of_experience_post_degree || "0",
+      });
+      const description = singleCandidate[`course_description${prefix}`] || "";
+      setManualDescription(description);
+      setSavedDescription(description); // Sync saved description
     }
-  }, [singleCandidate, routeType]);
+  }, [singleCandidate, prefix, routeType]);
 
   const handleReview = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -62,6 +62,7 @@ const Step2 = ({
         },
         staffToken
       );
+      setSavedDescription(manualDescription); // Update saved description
       toast({
         variant: "success",
         title: "Course Description Updated",
@@ -79,6 +80,17 @@ const Step2 = ({
       setCourseDescriptionLoading(false);
     }
   };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setManualDescription(e.target.value);
+  };
+
+  useEffect(() => {
+    if (manualDescription !== savedDescription) {
+      // User is typing
+      return;
+    }
+  }, [manualDescription, savedDescription]);
 
   if (singleCandidateLoading) return <div>Loading...</div>;
   if (singleCandidateError) return <div>Error fetching data</div>;
@@ -103,11 +115,9 @@ const Step2 = ({
               <input
                 type="text"
                 id="programType"
-                name="programType"
-                value={programType}
-                onChange={(e) => setProgramType(e.target.value)}
-                className="bg-transparent"
-                disabled
+                value={candidateData.programType || ""}
+                readOnly
+                className="bg-transparent outline-none"
               />
             </div>
             <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
@@ -117,11 +127,9 @@ const Step2 = ({
               <input
                 type="text"
                 id="assignedUniversity"
-                name="assignedUniversity"
-                value={assignedUniversity}
-                onChange={(e) => setAssignedUniversity(e.target.value)}
+                value={candidateData.assignedUniversity || ""}
+                readOnly
                 className="bg-transparent outline-none"
-                disabled
               />
             </div>
           </div>
@@ -134,11 +142,9 @@ const Step2 = ({
               <input
                 type="text"
                 id="assignedCourse"
-                name="assignedCourse"
-                value={assignedCourse}
-                onChange={(e) => setAssignedCourse(e.target.value)}
+                value={candidateData.assignedCourse || ""}
+                readOnly
                 className="bg-transparent outline-none"
-                disabled
               />
             </div>
             <div className="flex flex-col gap-2 border border-gray-border w-full lg:w-1/2 rounded-lg py-1 px-4">
@@ -148,11 +154,9 @@ const Step2 = ({
               <input
                 type="text"
                 id="yearsOfExperience"
-                name="yearsOfExperience"
-                value={yearsOfExperience}
-                onChange={(e) => setYearsOfExperience(e.target.value)}
+                value={candidateData.yearsOfExperience || "0"}
+                readOnly
                 className="bg-transparent outline-none"
-                disabled
               />
             </div>
           </div>
@@ -163,10 +167,9 @@ const Step2 = ({
             </label>
             <textarea
               id="courseDescription"
-              name="courseDescription"
               value={manualDescription}
-              onChange={(e) => setManualDescription(e.target.value)}
-              className="bg-transparent outline-none min-h-20 md:min-h-20"
+              onChange={handleInputChange}
+              className="bg-transparent outline-none min-h-20 md:min-h-40"
               placeholder="A brief course description about the course"
             />
             <div className="flex items-center my-4 justify-end w-full">

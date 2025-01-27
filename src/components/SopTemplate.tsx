@@ -81,7 +81,7 @@ const SopTemplate = () => {
       fontSize: 16,
       fontWeight: "bold",
       textAlign: "center",
-      marginBottom: -28,
+      // marginBottom: -28,
       textTransform: "uppercase",
       color: "#db251a",
       lineHeight: 1.5,

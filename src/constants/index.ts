@@ -174,7 +174,6 @@ export const degreeOptions = [
   "Bachelor of Education (B.ED)",
   "Bachelor of Medicine and Bachelor of Surgery (MBBS)",
   "Bachelor in Law (LLB)",
-  "Master of Education (M.ED)",
   "Bachelor of Pharmacy",
   "Bachelor of Nursing",
   "Bachelor of Medical Laboratory Science",

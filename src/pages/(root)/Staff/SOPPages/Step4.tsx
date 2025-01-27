@@ -39,12 +39,14 @@ const Step4 = ({
   const prefixName = routeType === "school2" ? "second" : "first";
 
   useEffect(() => {
-    const existingSop = singleCandidate?.[`${prefixName}_sop`];
-    if (existingSop) {
-      setCandidateSop(existingSop.text);
-      setSopId(existingSop.id);
+    if (!isEditing) {
+      const existingSop = singleCandidate?.[`${prefixName}_sop`];
+      if (existingSop && existingSop.text !== candidateSop) {
+        setCandidateSop(existingSop.text);
+        setSopId(existingSop.id);
+      }
     }
-  }, [singleCandidate, prefixName]);
+  }, [singleCandidate, prefixName, isEditing, candidateSop]);
 
   const createSop = async () => {
     setIsLoading(true);
@@ -69,24 +71,40 @@ const Step4 = ({
   const handleUpdateSop = async () => {
     if (!sopId) return;
 
+    const previousSop = candidateSop; // Save the current SOP for rollback in case of failure
+
     setSopLoading(true);
     try {
+      // Optimistically update the state
+      const updatedSop = candidateSop; // Preserve the current text to display immediately
+      setCandidateSop(updatedSop);
+
       const soptext = {
-        text: candidateSop,
+        text: updatedSop,
         id: sopId,
       };
       const response = await updateSop(sopId, soptext);
+
       if (response) {
-        setCandidateSop(response.SOP?.text);
+        setCandidateSop(response.SOP?.text); // Update the state with the server response (if different)
         toast({
           variant: "success",
           title: "SOP Updated",
           description: "Your changes have been saved.",
         });
-        await refetchSingleCandidate();
       }
+
+      setIsEditing(false); // Close edit mode
+      await refetchSingleCandidate(); // Ensure the UI syncs with the latest server state
     } catch (error) {
       console.error("Error updating SOP:", error);
+      // Roll back to the previous SOP if the update fails
+      setCandidateSop(previousSop);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update SOP. Please try again.",
+      });
     } finally {
       setSopLoading(false);
     }
@@ -123,7 +141,7 @@ const Step4 = ({
                   : "Type your SOP here."
               }
               value={candidateSop}
-              disabled={!isEditing || isLoading || singleCandidateLoading}
+              disabled={!isEditing || isLoading || singleCandidateLoading || sopLoading}
               className="text-lg p-4 leading-[32px] min-h-80 text-black"
               onChange={(e) => setCandidateSop(e.target.value)}
             />
