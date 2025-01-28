@@ -145,12 +145,13 @@ const AssignedCandidates = () => {
 
         {selectedRowData && (
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogContent className="w-[364px] md:w-full">
+            <DialogContent className="w-[364px] md:w-full overflow-y-scroll">
               <DialogHeader>
                 <div className="flex w-full justify-between mt-4">
                   <DialogTitle className="text-red">
                     Candidate Details
                   </DialogTitle>
+                  <DialogDescription></DialogDescription>
                   <Link
                     to={`/assigned-candidates/${selectedRowData.id}`}
                     className="underline text-sm text-red font-medium"
@@ -159,7 +160,7 @@ const AssignedCandidates = () => {
                   </Link>
                 </div>
               </DialogHeader>
-              <DialogDescription className="flex flex-col gap-8">
+              <div className="flex flex-col gap-8 text-sm">
                 <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
                   <div className="w-1/2">
                     <label>Full Name</label>
@@ -309,7 +310,7 @@ const AssignedCandidates = () => {
                     Refine Resume
                   </Link>
                 </div>
-              </DialogDescription>
+              </div>
             </DialogContent>
           </Dialog>
         )}
