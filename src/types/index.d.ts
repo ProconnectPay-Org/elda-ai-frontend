@@ -8,6 +8,7 @@ import {
   ResumeStep5Schema,
 } from "@/lib/resumeSchema";
 import {
+  onboardSchema,
   step1Schema,
   step2Schema,
   step3Schema,
@@ -202,6 +203,8 @@ export type FormData = Step1FormData &
   Step4FormData &
   Step5FormData;
 
+export type OnboardFormData = z.infer<typeof onboardSchema>;
+
 declare type Resume = {
   id: number;
   resume: string;
@@ -311,7 +314,7 @@ export type VerificationDocument = {
 };
 
 export type AdvancedEducation = {
-  id?: number;
+  id: number;
   advanced_degree_type: string;
   graduate_type: string;
   country: string;

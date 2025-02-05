@@ -8,3 +8,4 @@ export { default as CandidateView } from "./CandidateView";
 export { default as LinkedInMasterclass } from "./LinkedInMasterclass";
 export { default as Feedback } from "./Feedback";
 export { default as Complaints } from "./Complaints";
+export { default as Onboard } from "./Onboard";

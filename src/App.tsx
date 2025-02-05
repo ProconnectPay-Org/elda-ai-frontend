@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { AdminSignIn, CandidateLogin, Home } from "./pages";
+import { AdminSignIn, CandidateLogin, CandidateOTP, Home } from "./pages";
 import {
   AssignedCandidates,
   CandidateProfile,
@@ -26,6 +26,7 @@ import {
   Complaints,
   Feedback,
   LinkedInMasterclass,
+  Onboard,
 } from "./pages/(root)/Candidates";
 import CraftSOP from "./pages/(root)/Staff/CraftSOP";
 import CandidateSelection from "./pages/(root)/Staff/CandidateSelection";
@@ -72,6 +73,8 @@ function App() {
         {/* CANDIDATES */}
         <Route element={<RegistrationForm />} path="/register" />
         <Route element={<CandidateLogin />} path="/candidate/login" />
+        <Route element={<Onboard />} path="/onboard" />
+        <Route element={<CandidateOTP />} path="/candidate/otp" />
         <Route element={<CandidateStatus />} path="/candidate/status" />
         <Route element={<CandidateView />} path="/candidate/view" />
         <Route element={<Feedback />} path="/feedback" />

@@ -84,7 +84,7 @@ const AdvancedDegree = () => {
   const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setLoading(true);
-    const advancedDegreeData: AdvancedEducation = {
+    const advancedDegreeData = {
       advanced_degree_type: getValues("advancedDegreeType"),
       graduate_type: getValues("graduateType"),
       country: getValues("advancedCountry"),
@@ -94,7 +94,7 @@ const AdvancedDegree = () => {
       graduation_date: getValues("advancedYearGraduated"),
       admission_date: getValues("advancedYearAdmitted"),
       candidate: id,
-    };
+    } as AdvancedEducation;
 
     try {
       await updateAdvancedDegree(advancedDegreeData);
@@ -162,8 +162,11 @@ const AdvancedDegree = () => {
                 {...register("advancedDegreeType")}
               >
                 <option value="">Select advanced degree type</option>
-                <option value="MSC">MSC</option>
-                <option value="MBA">MBA</option>
+                {degreeOptions.map((option, index) => (
+                  <option value={option} key={index}>
+                    {option}
+                  </option>
+                ))}
               </select>
               {svgSpan}
             </div>
@@ -175,22 +178,14 @@ const AdvancedDegree = () => {
           </div>
           <div className={divClass}>
             <label htmlFor="graduateType">
-              Graduate Type <span className="text-red">*</span>
+              Advanced Course Studied <span className="text-red">*</span>
             </label>
-            <div className="relative">
-              <select
-                className={inputClass}
-                id="graduateType"
-                {...register("graduateType")}
-              >
-                {degreeOptions.map((option, index) => (
-                  <option value={option} key={index}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-              {svgSpan}
-            </div>
+            <input
+              className={inputClass}
+              id="graduateType"
+              {...register("graduateType")}
+              placeholder="Enter the name of institution"
+            />
             {errors.graduateType && (
               <span className="text-red text-sm">
                 {getErrorMessage(errors.graduateType)}

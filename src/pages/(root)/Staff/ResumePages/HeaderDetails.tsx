@@ -6,6 +6,7 @@ import {
   getErrorMessage,
 } from "@/lib/utils";
 import {
+  AdvancedEducation,
   JobExperience,
   ResumeStep1FormData,
   updateCandidateProfile,
@@ -50,7 +51,21 @@ const HeaderDetails = () => {
   const watchedValues = useWatch({ control });
 
   useEffect(() => {
-    if (singleCandidate) {
+    if (singleCandidate) {      
+      const sortedAdvancedEducation = singleCandidate.advanced_education.sort(
+        (a: AdvancedEducation, b: AdvancedEducation) => a.id - b.id
+      );
+
+      // Store only the lowest ID in cookies
+      if (sortedAdvancedEducation.length > 0) {
+        Cookies.set(
+          "advanced_education1_id",
+          String(sortedAdvancedEducation[0].id),
+          {
+            expires: 7,
+          }
+        );
+      }
       Cookies.set("studentId", singleCandidate.id);
       Cookies.set("studentCareerId", singleCandidate.career[0].id);
       Cookies.set("studentEducationId", singleCandidate.education[0].id);
@@ -74,7 +89,7 @@ const HeaderDetails = () => {
       }
       const foundCandidate = singleCandidate;
 
-      setValue("email", foundCandidate.user?.email || "");
+      setValue("email", foundCandidate.email_address || foundCandidate.user?.email || "");
       setValue("firstName", foundCandidate.first_name || "");
       setValue("middleName", foundCandidate.middle_name || "");
       setValue("lastName", foundCandidate.last_name || "");
@@ -93,7 +108,7 @@ const HeaderDetails = () => {
     if (singleCandidate) {
       // Define the type for initialValues explicitly
       const initialValues: Record<keyof typeof watchedValues, string> = {
-        email: singleCandidate.email_address || "",
+        email: singleCandidate.email_address || singleCandidate.user?.email || "",
         firstName: singleCandidate.first_name || "",
         middleName: singleCandidate.middle_name || "",
         lastName: singleCandidate.last_name || "",

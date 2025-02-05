@@ -210,7 +210,7 @@ export const countryOptions = [
   "United Kingdom",
 ];
 
-export const programTypes = ["MSC", "MBA", "MPH", "MENG", "LLM", "MA"];
+export const programTypes = ["MSC", "MBA", "MPH", "MENG", "LLM", "MA", "MREs"];
 
 export const countriesData = [
   { country: "Afghanistan", demonym: "Afghan" },
@@ -904,7 +904,6 @@ const supportedSchools = [
   { id: 123, name: "New Mexico State University" },
   { id: 124, name: "New York Medical College" },
   { id: 125, name: "New York University" },
-  { id: 126, name: "North Carolina A&T State University" },
   { id: 127, name: "North Carolina State University" },
   { id: 128, name: "North Dakota State University" },
   { id: 130, name: "Northern Arizona University" },

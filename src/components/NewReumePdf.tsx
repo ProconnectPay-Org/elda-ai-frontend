@@ -202,6 +202,34 @@ const manageCookies = (jobExperiences: JobExperience[]) => {
   }
 };
 
+const manageAdvancedEducationCookies = (educationData: AdvancedEducation[]) => {
+  if (educationData.length > 0) {
+    const sortedAdvancedEducation = educationData.sort((a, b) => a.id - b.id);
+
+    Cookies.set(
+      "advanced_education1_id",
+      String(sortedAdvancedEducation[0].id),
+      {
+        expires: 7,
+      }
+    );
+  } else {
+    Cookies.remove("advanced_education1_id");
+  }
+};
+
+const retrieveAdvancedEducationFromCookies = (formData: any) => {
+  const advancedEducationIdFromCookie = Cookies.get("advanced_education1_id");
+
+  if (!advancedEducationIdFromCookie) return null;
+
+  const matchedEducation = formData?.advanced_education?.find(
+    (edu: AdvancedEducation) => String(edu.id) === advancedEducationIdFromCookie
+  );
+
+  return matchedEducation || null;
+};
+
 const retrieveJobsFromCookies = (formData: any) => {
   const workExperienceIdsFromCookies = [
     Cookies.get("work_experience_id1"),
@@ -232,6 +260,8 @@ const NewResumePdf = () => {
   } = useCandidates(id);
 
   const [myJobs, setMyJobs] = useState<JobExperience[]>([]);
+  const [selectedEducation, setSelectedEducation] =
+    useState<AdvancedEducation | null>(null);
 
   useEffect(() => {
     if (formData) {
@@ -249,6 +279,13 @@ const NewResumePdf = () => {
         );
 
       setMyJobs(jobExperiences);
+
+      // Process advanced education
+      if (formData?.advanced_education?.length) {
+        manageAdvancedEducationCookies(formData.advanced_education);
+      }
+      const matchedEducation = retrieveAdvancedEducationFromCookies(formData);
+      setSelectedEducation(matchedEducation);
     }
   }, [formData]);
 
@@ -281,7 +318,7 @@ const NewResumePdf = () => {
               <View style={styles.newClass}>
                 ✉️
                 <Text style={styles.blueSmallText}>
-                  {formData?.email_address}
+                  {formData?.email_address || formData?.user?.email}
                 </Text>
               </View>
               <Text style={styles.semiBold}>|</Text>
@@ -414,21 +451,27 @@ const NewResumePdf = () => {
                 </View>
               </View>
             ))}
-            {formData?.advanced_education?.map((item: AdvancedEducation) =>
-              item.admission_date === null ||
-              !item.advanced_degree_type ? null : (
-                <View key={item.id}>
+
+            {formData?.education[0]?.has_advanced_degree &&
+              selectedEducation && (
+                <View>
                   <View style={styles.moreClasses}>
-                    {item.advanced_degree_type} ({item.graduate_type}){" "}
-                    <Text style={styles.semiBold}>|</Text>
-                    Graduated {formatDate(String(item.graduation_date))}
+                    {selectedEducation.advanced_degree_type} (
+                    {selectedEducation.graduate_type})
                   </View>
-                  <Text style={styles.smallText}>
-                    {item.school_name}, {getCountryNameFromISO(item.country)}
-                  </Text>
+                  <View style={styles.smGap3}>
+                    <Text style={styles.smallText}>
+                      {selectedEducation.school_name},{" "}
+                      {getCountryNameFromISO(selectedEducation.country)}
+                    </Text>
+                    <Text style={styles.semiBold}>|</Text>
+                    <Text style={styles.semiBold}>
+                      Graduated{" "}
+                      {formatDate(String(selectedEducation.graduation_date))}
+                    </Text>
+                  </View>
                 </View>
-              )
-            )}
+              )}
           </View>
 
           <View style={styles.section}>

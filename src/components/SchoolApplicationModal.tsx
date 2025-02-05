@@ -5,6 +5,7 @@ import {
 } from "@/lib/actions/user.actions";
 import { useState, useEffect } from "react";
 import { toast } from "./ui/use-toast";
+import { Loader2 } from "lucide-react";
 
 interface ModalProps {
   onClose: () => void;
@@ -155,13 +156,13 @@ const SchoolApplicationModal = ({ onClose, id }: ModalProps) => {
                 {!singleCandidateLoading &&
                   singleCandidate?.assigned_course1 && (
                     <option value="course 1">
-                     Course 1 - {singleCandidate.assigned_course1}
+                      Course 1 - {singleCandidate.assigned_course1}
                     </option>
                   )}
                 {!singleCandidateLoading &&
                   singleCandidate?.assigned_course2 && (
                     <option value="course 2">
-                     Course 2 - {singleCandidate.assigned_course2}
+                      Course 2 - {singleCandidate.assigned_course2}
                     </option>
                   )}
               </select>
@@ -202,7 +203,13 @@ const SchoolApplicationModal = ({ onClose, id }: ModalProps) => {
               disabled={applicationLoading}
               className="w-full bg-red text-white py-2 z-10 rounded-lg hover:bg-red-600"
             >
-              {applicationLoading ? "Loading..." : "Submit"}
+              {applicationLoading ? (
+                <>
+                  Loading <Loader2 />
+                </>
+              ) : (
+                "Submit"
+              )}
             </button>
             <button
               type="button"

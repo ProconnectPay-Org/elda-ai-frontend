@@ -1,3 +1,4 @@
+import AdvancedDegree from "@/components/AdvancedDegree";
 import CountrySelect from "@/components/CountrySelect";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
@@ -19,6 +20,7 @@ const EducationHistory = () => {
     getValues,
     formState: { errors },
     control,
+    watch,
   } = useFormContext<ResumeStep3FormData>();
 
   const { id } = useParams<{ id: string }>();
@@ -37,8 +39,6 @@ const EducationHistory = () => {
   useEffect(() => {
     if (singleCandidate) {
       const foundCandidate = singleCandidate;
-      // setValue("city", foundCandidate.city_current_reside || "");
-      // setValue("state", foundCandidate.state_of_birth || "");
       setValue("country", foundCandidate.education[0].country || "");
       setValue("degree", foundCandidate.education[0].degree_type || "");
       setValue(
@@ -56,6 +56,10 @@ const EducationHistory = () => {
       );
       setValue("startDate", foundCandidate.education[0].admission_date || "");
       setValue("endDate", foundCandidate.education[0].graduation_date || "");
+      setValue(
+        "advancedDegree",
+        foundCandidate.education[0].has_advanced_degree ? "yes" : "no"
+      );
     }
   }, [singleCandidate, id, setValue]);
 
@@ -69,6 +73,9 @@ const EducationHistory = () => {
       course: singleCandidate?.education[0]?.specific_course_of_study || "",
       startDate: singleCandidate?.education[0]?.admission_date || "",
       endDate: singleCandidate?.education[0]?.graduation_date || "",
+      advancedDegree: singleCandidate?.education[0]?.has_advanced_degree
+        ? "yes"
+        : "no",
     };
 
     setIsModified(
@@ -77,6 +84,8 @@ const EducationHistory = () => {
       )
     );
   }, [watchedValues, getValues, singleCandidate]);
+
+  const hasAdvancedDegree = watch("advancedDegree") === "yes";
 
   if (singleCandidateError) {
     return <div>Error fetching data</div>;
@@ -116,6 +125,7 @@ const EducationHistory = () => {
       specific_course_of_study: getValues("course"),
       admission_date: getValues("startDate"),
       graduation_date: getValues("endDate"),
+      has_advanced_degree: getValues("advancedDegree"),
     } as Edu;
 
     try {
@@ -160,7 +170,7 @@ const EducationHistory = () => {
         <p className="text-xs text-[#667085]">Choose the correct degree type</p>
       </div>
       <div className="bg-gray py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl">
-        <h3 className="font-bold mb-4 text-lg">Eductaion Information</h3>
+        <h3 className="font-bold mb-4 text-lg">Education Information</h3>
         <div className="flex flex-col gap-8">
           <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
             <div className="flex flex-col sm:w-1/2">
@@ -208,41 +218,6 @@ const EducationHistory = () => {
               )}
             </div>
           </div>
-
-          {/* <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
-            <div className="flex flex-col sm:w-1/2">
-              <label htmlFor="city" className="text-[#344054]">
-                City
-              </label>
-              <input
-                className="border border-gray-border rounded-md py-2 px-4"
-                id="city"
-                {...register("city")}
-                placeholder="Enter your city"
-              />
-              {errors.city && (
-                <span className="text-red text-sm">
-                  {getErrorMessage(errors.city)}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col sm:w-1/2">
-              <label htmlFor="state" className="text-[#344054]">
-                State
-              </label>
-              <input
-                type="text"
-                {...register("state")}
-                className="border border-gray-border bg-white rounded-md h-[42px] py-2 px-4"
-                disabled
-              />
-              {errors.state && (
-                <span className="text-red text-sm">
-                  {getErrorMessage(errors.state)}
-                </span>
-              )}
-            </div>
-          </div> */}
 
           <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
             <CountrySelect label="Country" name="country" />
@@ -309,6 +284,29 @@ const EducationHistory = () => {
             </div>
           </div>
 
+          <div className="flex flex-col w-full">
+            <label htmlFor="advancedDegree">
+              Do you have an advanced degree?
+            </label>
+            <div className="relative">
+              <select
+                className="border w-full border-gray-border h-[42px] rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 bg-white pr-8"
+                id="advancedDegree"
+                {...register("advancedDegree")}
+              >
+                <option value="">Select one</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+              {svgSpan}
+            </div>
+            {errors.advancedDegree && (
+              <span className="text-red text-sm">
+                {getErrorMessage(errors.advancedDegree)}
+              </span>
+            )}
+          </div>
+
           <Button
             className={`bg-red ${
               !isModified || loading ? "opacity-50 cursor-not-allowed" : ""
@@ -320,6 +318,8 @@ const EducationHistory = () => {
           </Button>
         </div>
       </div>
+
+      {hasAdvancedDegree && <AdvancedDegree />}
     </div>
   );
 };

@@ -40,16 +40,38 @@ const AssignedCandidates = () => {
     }
   }, [loggedInStaff]);
 
+  const totalApplications = 2 * (loggedInStaff?.staff_candidates.length || 0);
+
+  const completedApplications: number =
+    loggedInStaff?.staff_candidates.reduce(
+      (acc, candidate) =>
+        acc +
+        (["Complete", "True"].includes(candidate.school_application_status1)
+          ? 1
+          : 0) +
+        (["Complete", "True"].includes(candidate.school_application_status2)
+          ? 1
+          : 0),
+      0 // Set initial value to 0 to prevent undefined
+    ) ?? 0;
+
+  const pendingJobs = totalApplications - completedApplications;
+
   const smallBox = loggedInStaff
     ? [
         {
-          name: "Jobs Completed",
-          number: loggedInStaff.jobs_completed,
+          name: "Jobs / Applications Completed",
+          number: loggedInStaff.jobs_completed || completedApplications,
           icon: icon1,
         },
         {
-          name: "Jobs Pending",
-          number: loggedInStaff.jobs_pending,
+          name: "Total Applications",
+          number: totalApplications,
+          icon: icon1,
+        },
+        {
+          name: "Pending Jobs / Applications",
+          number: pendingJobs || loggedInStaff.jobs_pending,
           icon: icon2,
         },
         {
@@ -95,9 +117,9 @@ const AssignedCandidates = () => {
       <p className="text-red text-[32px] font-semibold">
         Welcome, {loggedInUser?.full_name}!
       </p>
-      <div className="flex justify-between w-full gap-8 flex-wrap mt-4">
+      <div className="flex justify-between w-full gap-3 flex-wrap mt-4">
         {isStaffLoading
-          ? [1, 2, 3].map((_, i) => (
+          ? [1, 2, 3, 4].map((_, i) => (
               <div key={i} className="flex-1 p-4">
                 <Skeleton className="h-24 w-full mb-2" />
               </div>

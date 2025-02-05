@@ -93,7 +93,7 @@ export const postAdvancedDegree = async (degreeDetails: AdvancedEducation) => {
 export const updateAdvancedDegree = async (
   degreeDetails: AdvancedEducation
 ) => {
-  const token = Cookies.get("candidate_access_token");
+  const token = Cookies.get("candidate_access_token") ||  Cookies.get("staff_access_token");
   const advancedId = Cookies.get("advanced_education1_id");
 
   return await axios.patch(
@@ -109,7 +109,7 @@ export const updateAdvancedDegree = async (
 };
 
 export const getAdvancedDegree = async () => {
-  const token = Cookies.get("candidate_access_token");
+  const token = Cookies.get("candidate_access_token") || Cookies.get("staff_access_token");
 
   const advancedId = Cookies.get("advanced_education1_id");
   const { data } = await axios.get(

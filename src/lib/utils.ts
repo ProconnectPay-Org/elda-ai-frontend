@@ -345,3 +345,35 @@ export const step5Schema = z.object({
     })
     .optional(),
 });
+
+export const onboardSchema = z.object({
+  membershipStatus: z.string().nonempty("Status is required"),
+  firstName: z.string().nonempty("First name is required"),
+  middleName: z.string().optional(),
+  surname: z.string().nonempty("Surname is required"),
+  emailAddress: z.string().email("Invalid email address"),
+  phoneNumber: z.string().nonempty("Phone number is required"),
+  whatsappNumber: z.string().nonempty("Whatsapp number is required"),
+  gender: z.enum(["Male", "Female"]),
+  dateOfBirth: z.string().nonempty("Date of birth is required"),
+  age: z.string().nonempty("Age is required"),
+  graduateOf: z.enum(["Polytechnic", "University"]),
+  graduatedFrom: z.string().nonempty("School name is required"),
+  kindOfDegree: z.string().nonempty("Kind of degree is required"),
+
+  courseOfStudy: z.string().optional(),
+
+  classOfDegree: z.string().nonempty("Class of degree is required"),
+  specificCGPA: z.string().nonempty("Specific CGPA is required"),
+  hasMasters: z.string(),
+  mastersDegree: z.string().optional(),
+  mastersCourse: z.string().optional(),
+  classOfDegreeMasters: z.string().optional(),
+  specificCGPAMasters: z.string().nonempty("Specific CGPA is required"),
+  typeOfAcademicDegree: z.string().optional(),
+  academicProgram: z.string().optional(),
+  specificUniversity: z.string().optional(),
+  uploadCV: z.string().optional(),
+  GMATGRE: z.string().optional(),
+  countryInterestedIn: z.string().optional(),
+});

@@ -1,4 +1,7 @@
+// NODE_OPTIONS="--max-old-space-size=4096" npm run build
+
 {
+
   /* {filteredJobExperiences.map(
         (experience: JobExperience, index: number) => (
           <div

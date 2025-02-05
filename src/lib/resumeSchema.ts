@@ -27,6 +27,7 @@ export const ResumeStep3Schema = z.object({
   classOfDegree: z.string().optional(),
   startDate: z.string().optional(),
   endDate: z.string().optional(),
+  advancedDegree: z.enum(["yes", "no"]),
 });
 
 export const ResumeStep4Schema = z.object({
