@@ -10,8 +10,6 @@ import {
 } from "@/lib/resumeSchema";
 import { ResumeStep1, ResumeStep3, ResumeStep4, ResumeStep5 } from ".";
 import RootLayout from "@/layouts/RootLayout";
-import { useQuery } from "@tanstack/react-query";
-import { craftCandidateResume } from "@/lib/actions/staff.actions";
 import { useNavigate, useParams } from "react-router-dom";
 import Cookies from "js-cookie";
 
@@ -61,11 +59,6 @@ const RefineResume = () => {
     return null;
   }
 
-  const { data: resumeData } = useQuery({
-    queryKey: ["candidateResume"],
-    queryFn: () => craftCandidateResume(id),
-  });
-
   const methods = useForm({
     resolver: zodResolver(steps[currentStep].schema),
     defaultValues: formData,
@@ -99,12 +92,9 @@ const RefineResume = () => {
     try {
       if (currentStep === steps.length - 1) {
         // Final Step: Navigate to Final Resume
-        if (resumeData?.resume) {
-          navigate(`/refine-resume/final-resume/${id}`);
-          return; // Prevent further execution
-        } else {
-          console.error("Resume URL not found.");
-        }
+
+        navigate(`/refine-resume/final-resume/${id}`);
+        return; // Prevent further execution
       } else {
         // Other Steps: Save data and proceed
         setFormData(currentFormData);
