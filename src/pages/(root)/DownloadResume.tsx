@@ -86,6 +86,8 @@ const DownloadResume = () => {
 
       const fileName = singleCandidate?.user?.full_name
         ? `${singleCandidate.user.full_name} Resume.pdf`
+        : singleCandidate?.first_name
+        ? `${singleCandidate.first_name} Resume.pdf`
         : "Resume.pdf";
 
       pdf.save(fileName);

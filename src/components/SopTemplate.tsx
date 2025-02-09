@@ -54,11 +54,11 @@ const SopTemplate = () => {
 
   const sopText =
     prefix === "2"
-      ? singleCandidate?.second_sop?.text.replace(
+      ? singleCandidate?.second_sop?.text?.replace(
           /^\*\*?Statement of Purpose\*\*?/i,
           ""
         )
-      : singleCandidate?.first_sop?.text.replace(
+      : singleCandidate?.first_sop?.text?.replace(
           /^\*\*?Statement of Purpose\*\*?/i,
           ""
         );
