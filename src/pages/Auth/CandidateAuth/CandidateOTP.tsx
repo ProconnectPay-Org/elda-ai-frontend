@@ -15,13 +15,20 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 
 const CandidateOTP = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [value, setValue] = useState("");
   const navigate = useNavigate();
 
   const formSchema = z.object({
     password: z.string().min(6),
+    email: z.string().email("Invalid email address"),
   });
 
   // 1. Define your form.
@@ -29,6 +36,7 @@ const CandidateOTP = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       password: "",
+      email: "",
     },
   });
 
@@ -61,6 +69,54 @@ const CandidateOTP = () => {
           >
             <FormField
               control={form.control}
+              name={"email"}
+              render={({ field }) => (
+                <div className="">
+                  <FormLabel className="form-label">Email Address</FormLabel>
+                  <div className="flex w-full flex-col relative">
+                    <FormControl>
+                      <Input
+                        id={"email"}
+                        placeholder="Enter Email"
+                        className="input-class"
+                        type="text"
+                        {...field}
+                      />
+                    </FormControl>
+
+                    <FormMessage className="form-message mt-2" />
+                  </div>
+                </div>
+              )}
+            />
+            <div>
+              <label htmlFor="" className="text-sm font-medium">
+                Enter OTP sent to your mail
+              </label>
+              <InputOTP
+                maxLength={7}
+                value={value}
+                onChange={(value) => setValue(value)}
+                className="w-full mx-auto flex items-center justify-center"
+              >
+                <InputOTPGroup className="w-full items-center justify-between gap-5">
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
+              <div className="text-center text-sm my-5">
+                You didn't receive a code ?{" "}
+                <span className="text-red underline cursor-pointer">
+                  Click to resend
+                </span>
+              </div>
+            </div>
+            {/* <FormField
+              control={form.control}
               name={"password"}
               render={({ field }) => (
                 <div className="">
@@ -80,7 +136,7 @@ const CandidateOTP = () => {
                   </div>
                 </div>
               )}
-            />
+            /> */}
 
             <div className="flex flex-col gap-4">
               <div>
