@@ -126,20 +126,7 @@ export function DataTable<TData, TValue>({
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Filters</SelectLabel>
-              <SelectItem value="full_name">Name</SelectItem>
-              <SelectItem value="assigned_course1">Assigned Course 1</SelectItem>
-              <SelectItem value="assigned_course2">Assigned Course 2</SelectItem>
-              <SelectItem value="assigned_school1">Assigned School 1</SelectItem>
-              <SelectItem value="assigned_school2">Assigned School 2</SelectItem>
-              <SelectItem value="resume_status">Resume Status</SelectItem>
-              <SelectItem value="sop_status1">SOP Status 1</SelectItem>
-              <SelectItem value="sop_status2">SOP Status 2</SelectItem>
-              <SelectItem value="school_application_status1">
-                School Application Status 1
-              </SelectItem>
-              <SelectItem value="school_application_status2">
-                School Application Status 2
-              </SelectItem>
+              <SelectItem value="full_name">Full Name</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>

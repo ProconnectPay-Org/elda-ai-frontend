@@ -1,7 +1,7 @@
 import { useCandidates } from "@/hooks/useCandidiates";
 import {
-  assignCandidateToStaff,
   getAllStaff,
+  reAssignCandidateToStaff,
 } from "@/lib/actions/user.actions";
 import { useState, useEffect } from "react";
 import { toast } from "./ui/use-toast";
@@ -45,7 +45,7 @@ const ReAssignModal = ({ onClose, id }: ModalProps) => {
       document.body.style.overflow = "auto";
       document.removeEventListener("scroll", handleBackgroundScroll);
     };
-  }, []);  
+  }, []);
 
   const assignCandidate = async () => {
     if (!selectedStaff) {
@@ -54,9 +54,10 @@ const ReAssignModal = ({ onClose, id }: ModalProps) => {
     }
     setIsLoading(true);
     try {
-      await assignCandidateToStaff({
-        candidate_ids: [id],
-        staff_id: selectedStaff.value,
+      await reAssignCandidateToStaff({
+        candidate_id: id,
+        staff_id: singleCandidate?.assigned_manager[0]?.id,
+        new_staff_id: selectedStaff.value,
       });
       setError(null);
       toast({
@@ -120,13 +121,22 @@ const ReAssignModal = ({ onClose, id }: ModalProps) => {
                 <p className="text-red-500">Error loading candidate details.</p>
               ) : (
                 <>
-                  <p>Name: {singleCandidate?.user?.full_name}</p>
-                  <p>Id: {singleCandidate?.id}</p>
+                  <p className="font-semibold">
+                    Name: {singleCandidate?.user?.full_name}
+                  </p>
+                  <p className="text-xs">Id: {singleCandidate?.id}</p>
                 </>
               )}
             </div>
+            <div>
+              <p className="font-semibold">Former Staff Assigned</p>
+              <p>
+                {singleCandidate?.assigned_manager[0]?.user?.full_name ||
+                  "Not yet assigned"}
+              </p>
+            </div>
             <div className="flex flex-col w-full gap-1.5">
-              <p>Select Staff to Re-Assign</p>
+              <p className="font-semibold">Select Staff to Re-Assign</p>
               <ReactSelect
                 options={staffOptions}
                 onChange={handleStaffChange}

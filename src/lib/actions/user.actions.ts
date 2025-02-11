@@ -2,6 +2,7 @@ import {
   AssignCandidateProps,
   CreateCandidateProfileProps,
   PasswordProps,
+  ReAssignCandidateProps,
   signInProps,
 } from "@/types";
 import axios from "axios";
@@ -184,13 +185,13 @@ export const getAllCandidates = async (
   }
 };
 
-export const getAllTableCandidates = async (page?: number) => {
+export const getAllTableCandidates = async (page?: number, filter?: string) => {
   const token = Cookies.get("access_token");
 
   if (!token) throw new Error("Access token is missing. Please sign in again.");
   const url = !page
-    ? `${API_URL}all-candidates-medium/`
-    : `${API_URL}all-candidates-medium/?page=${page}`;
+    ? `${API_URL}all-candidates-medium/?format=json&query=${filter}`
+    : `${API_URL}all-candidates-medium/?format=json&page=${page}&query=${filter}`;
   try {
     const response = await axios.get(`${url}`, {
       headers: {
@@ -311,8 +312,36 @@ export const assignCandidateToStaff = async ({
     throw error;
   }
 };
+export const reAssignCandidateToStaff = async ({
+  candidate_id,
+  staff_id,
+  new_staff_id,
+}: ReAssignCandidateProps) => {
+  const access_token = Cookies.get("access_token"); // Fetch token from cookies
 
-// export const deleteCandidateFromStaff = async ({
+  if (!access_token) {
+    throw new Error("Access token is missing. Please sign in again.");
+  }
+
+  try {
+    const response = await axios.patch(
+      `${API_URL}assign-candidate/`,
+      { candidate_id, staff_id, new_staff_id },
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error assigning candidate:", error);
+    throw error;
+  }
+};
+
+// export const unassignCandidateFromStaff = async ({
 //   candidate_ids,
 //   staff_id,
 // }: AssignCandidateProps) => {

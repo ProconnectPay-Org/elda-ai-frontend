@@ -1,6 +1,21 @@
 // NODE_OPTIONS="--max-old-space-size=4096" npm run build
 // 234Tree1333
 // acs@proconnectpay.com
+
+
+  // const completedApplications: number =
+  //   loggedInStaff?.results.reduce(
+  //     (acc, candidate) =>
+  //       acc +
+  //       (["Complete", "True"].includes(candidate.school_application_status1)
+  //         ? 1
+  //         : 0) +
+  //       (["Complete", "True"].includes(candidate.school_application_status2)
+  //         ? 1
+  //         : 0),
+  //     0 // Set initial value to 0 to prevent undefined
+  //   ) ?? 0;
+  
 {
 
   /* {filteredJobExperiences.map(

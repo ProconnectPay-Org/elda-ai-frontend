@@ -4,7 +4,29 @@ import Cookies from "js-cookie";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export const getStaffDetails = async () => {
+export const getStaffDetails = async (page?: number) => {
+  const staffToken = Cookies.get("staff_access_token");
+
+  if (!staffToken) {
+    throw new Error("No token available");
+  }
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${staffToken}`,
+      "Content-Type": "application/json",
+    },
+  };
+
+  const url = !page
+    ? `${API_URL}staff-assigned-candidates/`
+    : `${API_URL}staff-assigned-candidates/?page=${page}`;
+
+  const { data } = await axios.get(`${url}`, config);
+  return data;
+};
+
+export const getStaffAccountDetails = async () => {
   const staffToken = Cookies.get("staff_access_token");
 
   if (!staffToken) {

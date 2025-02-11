@@ -120,7 +120,10 @@ interface Staff {
   jobs_completed: number;
   jobs_pending: number;
   number_of_assigned_candidates: number;
-  staff_candidates: CandidateData[];
+  results: CandidateData[];
+  count: number;
+  previous: string | null;
+  next: string | null;
 }
 
 declare type DottedBoxProps = {
@@ -435,6 +438,12 @@ declare interface AllStaffResponse {
 declare interface AssignCandidateProps {
   candidate_ids: (number | string)[];
   staff_id: number | string;
+}
+
+declare interface ReAssignCandidateProps {
+  candidate_id: number | string;
+  staff_id: number | string;
+  new_staff_id: number | string;
 }
 
 export type AllColumn = {
