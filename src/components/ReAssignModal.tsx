@@ -2,6 +2,7 @@ import { useCandidates } from "@/hooks/useCandidiates";
 import {
   getAllStaff,
   reAssignCandidateToStaff,
+  unassignCandidateFromStaff,
 } from "@/lib/actions/user.actions";
 import { useState, useEffect } from "react";
 import { toast } from "./ui/use-toast";
@@ -12,9 +13,10 @@ import ReactSelect, { SingleValue } from "react-select";
 interface ModalProps {
   onClose: () => void;
   id?: string;
+  mode: "reassign" | "unassign";
 }
 
-const ReAssignModal = ({ onClose, id }: ModalProps) => {
+const ReAssignModal = ({ onClose, id, mode }: ModalProps) => {
   const { singleCandidate, singleCandidateLoading, singleCandidateError } =
     useCandidates(id);
   const [selectedStaff, setSelectedStaff] =
@@ -48,31 +50,42 @@ const ReAssignModal = ({ onClose, id }: ModalProps) => {
   }, []);
 
   const assignCandidate = async () => {
-    if (!selectedStaff) {
-      setError("Please select both a staff and one or more candidates.");
-      return;
-    }
     setIsLoading(true);
     try {
-      await reAssignCandidateToStaff({
-        candidate_id: id,
-        staff_id: singleCandidate?.assigned_manager[0]?.id,
-        new_staff_id: selectedStaff.value,
-      });
-      setError(null);
-      toast({
-        title: "Success",
-        description: "Candidate Re-assigned",
-        variant: "success",
-      });
+      if (mode === "reassign") {
+        if (!selectedStaff) {
+          setError("Please select a new staff.");
+          return;
+        }
+        await reAssignCandidateToStaff({
+          candidate_id: id,
+          staff_id: singleCandidate?.assigned_manager[0]?.id,
+          new_staff_id: selectedStaff.value,
+        });
+        toast({
+          title: "Success",
+          description: "Candidate Re-assigned",
+          variant: "success",
+        });
+      } else if (mode === "unassign") {
+        await unassignCandidateFromStaff({
+          candidate_id: id,
+          staff_id: singleCandidate?.assigned_manager[0]?.id,
+        });
+        toast({
+          title: "Success",
+          description: "Candidate Unassigned",
+          variant: "success",
+        });
+      }
+      onClose();
     } catch (error) {
-      console.error("Error assigning candidates:", error);
+      console.error("Error processing request:", error);
       toast({
         title: "Error",
-        description: "There was an error assigning candidates.",
+        description: "There was an error processing your request.",
         variant: "destructive",
       });
-      setError("An error occurred while assigning candidates.");
     } finally {
       setIsLoading(false);
     }
@@ -112,7 +125,11 @@ const ReAssignModal = ({ onClose, id }: ModalProps) => {
       >
         <form>
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold">Assign To Another Staff</h2>
+            <h2 className="text-2xl font-bold">
+              {mode === "reassign"
+                ? "Re-assign Candidate"
+                : "Unassign Candidate"}
+            </h2>
 
             <div className="flex flex-col w-full gap-1.5">
               {singleCandidateLoading ? (
@@ -129,23 +146,33 @@ const ReAssignModal = ({ onClose, id }: ModalProps) => {
               )}
             </div>
             <div>
-              <p className="font-semibold">Former Staff Assigned</p>
-              <p>
-                {singleCandidate?.assigned_manager[0]?.user?.full_name ||
-                  "Not yet assigned"}
-              </p>
+              <p className="font-semibold">Current Staff Assigned</p>
+              {singleCandidateLoading ? (
+                <p>Getting staff...</p>
+              ) : singleCandidateError ? (
+                <p className="text-red-500">Error loading staff details.</p>
+              ) : (
+                <>
+                  <p>
+                    {singleCandidate?.assigned_manager[0]?.user?.full_name ||
+                      "Not yet assigned"}
+                  </p>
+                </>
+              )}
             </div>
-            <div className="flex flex-col w-full gap-1.5">
-              <p className="font-semibold">Select Staff to Re-Assign</p>
-              <ReactSelect
-                options={staffOptions}
-                onChange={handleStaffChange}
-                className="border-gray-border"
-                placeholder="Select Staff"
-                value={selectedStaff}
-                isLoading={isLoadingStaff}
-              />
-            </div>
+            {mode === "reassign" && (
+              <div className="flex flex-col w-full gap-1.5">
+                <p className="font-semibold">Select New Staff</p>
+                <ReactSelect
+                  options={staffOptions}
+                  onChange={handleStaffChange}
+                  className="border-gray-border"
+                  placeholder="Select Staff"
+                  value={selectedStaff}
+                  isLoading={isLoadingStaff}
+                />
+              </div>
+            )}
             {error && <p className="text-red-500">{error}</p>}
           </div>
 
@@ -156,7 +183,11 @@ const ReAssignModal = ({ onClose, id }: ModalProps) => {
               disabled={isLoading}
               className="w-full bg-red text-white py-2 rounded-lg hover:bg-red-600"
             >
-              {isLoading ? "Loading..." : "Re-Assign"}
+              {isLoading
+                ? "Processing..."
+                : mode === "reassign"
+                ? "Re-Assign"
+                : "Unassign"}
             </button>
             <button
               type="button"

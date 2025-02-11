@@ -443,7 +443,7 @@ declare interface AssignCandidateProps {
 declare interface ReAssignCandidateProps {
   candidate_id: number | string;
   staff_id: number | string;
-  new_staff_id: number | string;
+  new_staff_id?: number | string;
 }
 
 export type AllColumn = {
