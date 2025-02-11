@@ -185,13 +185,13 @@ export const getAllCandidates = async (
   }
 };
 
-export const getAllTableCandidates = async (page?: number, filter?: string) => {
+export const getAllTableCandidates = async (page?: number) => {
   const token = Cookies.get("access_token");
 
   if (!token) throw new Error("Access token is missing. Please sign in again.");
   const url = !page
-    ? `${API_URL}all-candidates-medium/?format=json&query=${filter}`
-    : `${API_URL}all-candidates-medium/?format=json&page=${page}&query=${filter}`;
+    ? `${API_URL}all-candidates-medium/?format=json`
+    : `${API_URL}all-candidates-medium/?format=json&page=${page}`;
   try {
     const response = await axios.get(`${url}`, {
       headers: {
