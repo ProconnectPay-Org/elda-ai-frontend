@@ -9,6 +9,7 @@ import { toast } from "./ui/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { CandidateData, OptionType } from "@/types";
 import ReactSelect, { SingleValue } from "react-select";
+import { Link } from "react-router-dom";
 
 interface ModalProps {
   onClose: () => void;
@@ -27,7 +28,7 @@ const ReAssignModal = ({ onClose, id, mode }: ModalProps) => {
 
   const { data: staffResponse, isLoading: isLoadingStaff } = useQuery({
     queryKey: ["staff"],
-    queryFn: () => getAllStaff(),
+    queryFn: async () => getAllStaff(),
     staleTime: 5 * 1000,
   });
 
@@ -155,7 +156,12 @@ const ReAssignModal = ({ onClose, id, mode }: ModalProps) => {
                 <>
                   <p>
                     {singleCandidate?.assigned_manager[0]?.user?.full_name ||
-                      "Not yet assigned"}
+                      (<p className="flex gap-2 items-center">
+                        <span>Not yet assigned</span>
+                        <Link target="_blank" to="/assign-candidate" className="text-red hover:underline">
+                          Assign Now
+                        </Link>
+                      </p>)}
                   </p>
                 </>
               )}
@@ -180,8 +186,20 @@ const ReAssignModal = ({ onClose, id, mode }: ModalProps) => {
             <button
               type="submit"
               onClick={assignCandidate}
-              disabled={isLoading}
-              className="w-full bg-red text-white py-2 rounded-lg hover:bg-red-600"
+              disabled={
+                isLoading ||
+                isLoadingStaff ||
+                singleCandidateLoading ||
+                singleCandidate?.assigned_manager?.length === 0
+              }
+              className={`w-full text-white py-2 rounded-lg ${
+                isLoading ||
+                isLoadingStaff ||
+                singleCandidateLoading ||
+                singleCandidate?.assigned_manager?.length === 0
+                  ? "bg-pale-bg cursor-not-allowed"
+                  : "bg-red hover:bg-red"
+              }`}
             >
               {isLoading
                 ? "Processing..."

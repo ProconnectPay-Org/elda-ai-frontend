@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export const getStaffDetails = async (page?: number) => {
+export const getStaffDetails = async (page?: number, query?: string) => {
   const staffToken = Cookies.get("staff_access_token");
 
   if (!staffToken) {
@@ -18,11 +18,17 @@ export const getStaffDetails = async (page?: number) => {
     },
   };
 
-  const url = !page
-    ? `${API_URL}staff-assigned-candidates/`
-    : `${API_URL}staff-assigned-candidates/?page=${page}`;
+  let url = `${API_URL}staff-assigned-candidates/?format=json`;
 
-  const { data } = await axios.get(`${url}`, config);
+  if (page) {
+    url += `&page=${page}`;
+  }
+
+  if (query) {
+    url += `&query=${encodeURIComponent(query)}`;
+  }
+
+  const { data } = await axios.get(url, config);
   return data;
 };
 

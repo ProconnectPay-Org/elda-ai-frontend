@@ -48,19 +48,28 @@ const TabsComponent = () => {
   const token = Cookies.get("access_token");
 
   const [currentTab, setCurrentTab] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const {
     data: allCandidates,
     error: allCandidatesError,
     isLoading: allCandidatesLoading,
   } = useQuery({
-    queryKey: ["allCandidates", page],
+    queryKey: ["allCandidates", page, searchQuery],
     queryFn: async () => {
-      return page ? getAllTableCandidates(page) : getAllTableCandidates();
+      return getAllTableCandidates(page, searchQuery);
     },
     enabled: !!token,
     staleTime: 5 * 1000 * 60,
   });
+
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      queryClient.invalidateQueries({ queryKey: ["allCandidates"] });
+    }, 500);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchQuery, queryClient]);
 
   useEffect(() => {
     if (token && allCandidates?.next) {
@@ -131,7 +140,7 @@ const TabsComponent = () => {
       sop_status1: candidate.sop_status1 || "No status",
       sop_status2: candidate.sop_status2 || "No status",
       duplicate: candidate.duplicate || "none",
-    })) || [];    
+    })) || [];
 
   const assignedData = tableData
     .filter((candidate) => candidate.assigned)
@@ -174,9 +183,17 @@ const TabsComponent = () => {
           Unassigned
         </TabsTrigger>
       </TabsList>
-      <div className="w-full">
+      <div className="w-full relative">
         {/* Display all candidates */}
+          <input
+            type="text"
+            placeholder="Search candidates by name"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full md:w-1/3 p-2 border rounded-md mb-4 absolute top-6"
+          />
         <TabsContent value="all">
+
           <DataTable
             columns={allTabsColumns(handleDeleteCandidate)}
             data={tableData}

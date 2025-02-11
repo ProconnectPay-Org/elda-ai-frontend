@@ -18,16 +18,6 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "./ui/skeleton";
 import React from "react";
-import { Input } from "./ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -52,8 +42,6 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const [selectedFilter, setSelectedFilter] =
-    React.useState<string>("full_name");
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
 
@@ -75,12 +63,6 @@ export function DataTable<TData, TValue>({
       },
     },
   });
-
-  const handleFilterChange = (value: string) => {
-    setSelectedFilter(value);
-    // Reset filter value when filter changes
-    table.getColumn(value)?.setFilterValue("");
-  };
 
   if (isLoading) {
     return (
@@ -119,28 +101,6 @@ export function DataTable<TData, TValue>({
   return (
     <>
       <div className="flex items-center py-4 gap-4 px-4">
-        <Select onValueChange={handleFilterChange}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select a filter" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Filters</SelectLabel>
-              <SelectItem value="full_name">Full Name</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <Input
-          placeholder={`Filter by ${selectedFilter}...`}
-          value={
-            (table.getColumn(selectedFilter)?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn(selectedFilter)?.setFilterValue(event.target.value)
-          }
-          className="max-w-xs"
-        />
-
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
