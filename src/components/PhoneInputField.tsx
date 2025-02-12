@@ -3,7 +3,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import ReactPhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
-const PhoneInputField = ({ name }: { name: string }) => {
+const PhoneInputField = ({ name, label }: { name: string; label?: string }) => {
   const {
     control,
     formState: { errors },
@@ -12,7 +12,7 @@ const PhoneInputField = ({ name }: { name: string }) => {
   return (
     <div className="flex flex-col md:w-1/2">
       <label htmlFor={name}>
-        Phone Number <span className="text-red">*</span>
+        {label || 'Phone Number'} <span className="text-red">*</span>
       </label>
       <Controller
         name={name}
