@@ -1,4 +1,4 @@
-import { getErrorMessage } from "@/lib/utils";
+import { formatDate, getErrorMessage } from "@/lib/utils";
 import { useFormContext, useWatch } from "react-hook-form";
 import CountrySelect from "./CountrySelect";
 import { AdvancedEducation, Step2FormData } from "@/types";
@@ -274,6 +274,11 @@ const AdvancedDegree = () => {
               {...register("advancedYearAdmitted")}
               placeholder="Enter the year you were admitted"
             />
+            <p className="text-blue-500 text-sm mt-1">
+              {watchedValues.advancedYearAdmitted
+                ? formatDate(watchedValues.advancedYearAdmitted)
+                : ""}
+            </p>
             {errors.advancedYearAdmitted && (
               <span className="text-red text-sm">
                 {getErrorMessage(errors.advancedYearAdmitted)}
@@ -291,6 +296,11 @@ const AdvancedDegree = () => {
               {...register("advancedYearGraduated")}
               placeholder="Enter the year you graduated"
             />
+            <p className="text-blue-500 text-sm mt-1">
+              {watchedValues.advancedYearGraduated
+                ? formatDate(watchedValues.advancedYearGraduated)
+                : ""}
+            </p>
             {errors.advancedYearGraduated && (
               <span className="text-red text-sm">
                 {getErrorMessage(errors.advancedYearGraduated)}
