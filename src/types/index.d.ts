@@ -206,7 +206,13 @@ export type FormData = Step1FormData &
   Step4FormData &
   Step5FormData;
 
-export type OnboardFormData = z.infer<typeof onboardSchema>;
+export interface OnboardFormData {
+  courseOfStudy: string;
+  institutionName: string;
+  currentCGPA: string;
+  yearAdmitted: string;
+  surname: string;
+}
 
 declare type Resume = {
   id: number;

@@ -97,12 +97,18 @@ export const getErrorMessage = (
   error:
     | string
     | FieldError
-    | Merge<FieldError, FieldErrorsImpl<any>>
+    | Merge<FieldError, FieldErrorsImpl<Record<string, FieldError>>>
     | undefined
-): any | undefined => {
+): string | undefined => {
   if (!error) return undefined;
   if (typeof error === "string") return error;
-  return error.message;
+  
+  // Type guard to check if error has a message property
+  if ('message' in error && typeof error.message === 'string') {
+    return error.message;
+  }
+  
+  return undefined;
 };
 
 export const copyToClipboard = async (
@@ -163,6 +169,7 @@ export const step1Schema = z.object({
   cityOfResidence: z.string().nonempty("City of residence is required"),
   postalAddress: z.string().nonempty("Postal address is required"),
   houseAddress: z.string().nonempty("House address is required"),
+  age: z.number().min(18, "You must be at least 18 years old").optional(),
 });
 
 export const step2Schema = z.object({
@@ -190,6 +197,7 @@ export const step2Schema = z.object({
   advancedCurrentCGPA: z.string().optional(),
   advancedYearAdmitted: z.string().optional(),
   advancedYearGraduated: z.string().optional(),
+  graduateOf: z.string().optional(),
 });
 
 export const step3Schema = z.object({
@@ -347,33 +355,35 @@ export const step5Schema = z.object({
 });
 
 export const onboardSchema = z.object({
-  membershipStatus: z.string().nonempty("Status is required"),
-  firstName: z.string().nonempty("First name is required"),
-  middleName: z.string().optional(),
-  surname: z.string().nonempty("Surname is required"),
-  emailAddress: z.string().email("Invalid email address"),
-  phoneNumber: z.string().nonempty("Phone number is required"),
-  whatsappNumber: z.string().nonempty("Whatsapp number is required"),
-  gender: z.enum(["Male", "Female"]),
-  dateOfBirth: z.string().nonempty("Date of birth is required"),
-  age: z.string().nonempty("Age is required"),
-  graduateOf: z.enum(["Polytechnic", "University"]),
-  graduatedFrom: z.string().nonempty("School name is required"),
-  kindOfDegree: z.string().nonempty("Kind of degree is required"),
+  // ...step4Schema.shape,
+  // ...step1Schema.shape,
+  uploadCV: z.string().optional(), // Allow optional file name or path
+  countriesOfInterest: z.array(z.string()).min(1, "At least one country is required"), // Update to support multiple countries
+  membershipStatus: z.string().optional(),
+  dateOfBirth: z.string().optional(), // Add dateOfBirth field
+  GMATGRE: z.enum(["yes", "no"]).optional(), // Add GMATGRE field
+  specificUniversity: z.string().optional(), // Add specificUniversity field
+  currentStatus: z.string().optional(), // Add currentStatus field
+  degreeType: z.string().optional(), // Add degreeType field
+  countryOfEducation: z.string().optional(), // Add this line
+  courseOfStudy: z.string().optional(), // Add this line
+  gender: z.enum(["Male", "Female", "Other"]).optional(), // Add gender field with specific enum
+  graduateOf: z.string().optional(), // Add graduateOf field
+  institutionName: z.string().optional(), // Add this line
+  degreeClass: z.string().optional(), // Add degreeClass as optional
+  currentCGPA: z.string().optional(), // Add currentCGPA as optional
+});
 
-  courseOfStudy: z.string().optional(),
+export const onboardSchema2 = z.object({
+  ...step1Schema.shape,
+  ...step2Schema.shape,
+  ...step3Schema.shape,
+  ...step4Schema.shape,
+  ...step5Schema.shape,
 
-  classOfDegree: z.string().nonempty("Class of degree is required"),
-  specificCGPA: z.string().nonempty("Specific CGPA is required"),
-  hasMasters: z.string(),
+  countriesOfInterest: z.array(z.string()).optional(),
+  hasMasters: z.enum(["yes", "no"]).optional(),
   mastersDegree: z.string().optional(),
   mastersCourse: z.string().optional(),
-  classOfDegreeMasters: z.string().optional(),
-  specificCGPAMasters: z.string().nonempty("Specific CGPA is required"),
-  typeOfAcademicDegree: z.string().optional(),
-  academicProgram: z.string().optional(),
-  specificUniversity: z.string().optional(),
-  uploadCV: z.string().optional(),
-  GMATGRE: z.string().optional(),
-  countryInterestedIn: z.string().optional(),
+  specificUniversity: z.string().optional(), // Add specificUniversity field
 });
