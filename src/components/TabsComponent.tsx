@@ -65,6 +65,7 @@ const TabsComponent = () => {
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
+      setSearchParams({ page: "1" });
       queryClient.invalidateQueries({ queryKey: ["allCandidates"] });
     }, 500);
 

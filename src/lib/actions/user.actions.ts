@@ -193,12 +193,12 @@ export const getAllTableCandidates = async (page?: number, query?: string) => {
   if (!token) throw new Error("Access token is missing. Please sign in again.");
   let url = `${API_URL}all-candidates-medium/?format=json`;
 
-  if (page) {
-    url += `&page=${page}`;
-  }
-
   if (query) {
     url += `&query=${encodeURIComponent(query)}`;
+  }
+
+  if (page && (!query || page > 1)) {
+    url += `&page=${page}`;
   }
 
   try {

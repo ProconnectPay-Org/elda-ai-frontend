@@ -1,5 +1,5 @@
 {
-  "name": "eldanicai",
+  "name": "eldaai",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,6 +11,10 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.4.2",
+    "@pdfme/common": "^5.3.5",
+    "@pdfme/generator": "^5.3.5",
+    "@pdfme/schemas": "^5.3.5",
+    "@pdfme/ui": "^5.3.5",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-dialog": "^1.1.4",
