@@ -54,182 +54,182 @@ const membershipOptions = [
   },
 ];
 
-const degreeTypeOptions = [
-  {
-    value: "Bachelor of Science",
-    label: "Bachelor of Arts",
-  },
-  {
-    value: "Bachelor of Education",
-    label: "Bachelor of Education",
-  },
-  {
-    value: "Bachelor of Law",
-    label: "Bachelor of Law",
-  },
-  {
-    value: "Bachelor of Engineering",
-    label: "Bachelor of Engineering",
-  },
-  {
-    value: "Bachelor of Medicine and Surgery",
-    label: "Bachelor of Medicine and Surgery",
-  },
+// const degreeTypeOptions = [
+//   {
+//     value: "Bachelor of Science",
+//     label: "Bachelor of Arts",
+//   },
+//   {
+//     value: "Bachelor of Education",
+//     label: "Bachelor of Education",
+//   },
+//   {
+//     value: "Bachelor of Law",
+//     label: "Bachelor of Law",
+//   },
+//   {
+//     value: "Bachelor of Engineering",
+//     label: "Bachelor of Engineering",
+//   },
+//   {
+//     value: "Bachelor of Medicine and Surgery",
+//     label: "Bachelor of Medicine and Surgery",
+//   },
 
-  {
-    value: "Bachelor of Dental Surgery",
-    label: "Bachelor of Dental Surgery",
-  },
+//   {
+//     value: "Bachelor of Dental Surgery",
+//     label: "Bachelor of Dental Surgery",
+//   },
 
-  {
-    value: "Bachelor of Pharmacy",
-    label: "Bachelor of Pharmacy",
-  },
+//   {
+//     value: "Bachelor of Pharmacy",
+//     label: "Bachelor of Pharmacy",
+//   },
 
-  {
-    value: "Bachelor of Nursing",
-    label: "Bachelor of Nursing",
-  },
+//   {
+//     value: "Bachelor of Nursing",
+//     label: "Bachelor of Nursing",
+//   },
 
-  {
-    value: "Bachelor of Medical Laboratory Science",
-    label: "Bachelor of Medical Laboratory Science",
-  },
+//   {
+//     value: "Bachelor of Medical Laboratory Science",
+//     label: "Bachelor of Medical Laboratory Science",
+//   },
 
-  {
-    value: "Higher National Diploma",
-    label: "Higher National Diploma",
-  },
-]; 
+//   {
+//     value: "Higher National Diploma",
+//     label: "Higher National Diploma",
+//   },
+// ]; 
 
-const classOfDegreeOptions = [
-  {
-      value: "First Class and below 32 years old – All 17 countries",
-      label: "First Class and below 32 years old – All 17 countries",
-    },
-    {
-      value: "First Class and above 32 years old – restricted to the U.S and Canada 🇺🇸 🇨🇦",
-      label: "First Class and above 32 years old – restricted to the U.S and Canada 🇺🇸 🇨🇦",
-    },
-    {
-      value: "Second Class Upper and below 32 years old – All 17 Countries",
-      label: "Second Class Upper and below 32 years old – All 17 Countries",
-    },
+// const classOfDegreeOptions = [
+//   {
+//       value: "First Class and below 32 years old – All 17 countries",
+//       label: "First Class and below 32 years old – All 17 countries",
+//     },
+//     {
+//       value: "First Class and above 32 years old – restricted to the U.S and Canada 🇺🇸 🇨🇦",
+//       label: "First Class and above 32 years old – restricted to the U.S and Canada 🇺🇸 🇨🇦",
+//     },
+//     {
+//       value: "Second Class Upper and below 32 years old – All 17 Countries",
+//       label: "Second Class Upper and below 32 years old – All 17 Countries",
+//     },
 
-    {
-      value: "Second Class Upper and above 32 years old - restricted to the U.S and Canada 🇺🇸 🇨🇦",
-      label: "Second Class Upper and above 32 years old - restricted to the U.S and Canada 🇺🇸 🇨🇦",
-    },
+//     {
+//       value: "Second Class Upper and above 32 years old - restricted to the U.S and Canada 🇺🇸 🇨🇦",
+//       label: "Second Class Upper and above 32 years old - restricted to the U.S and Canada 🇺🇸 🇨🇦",
+//     },
 
-    {
-      value: "Second Class Lower and below 32 years old – cannot apply to selected countries 🇨🇦 🇸🇬 🇨🇳 🇦🇺",
-      label: "Second Class Lower and below 32 years old – cannot apply to selected countries 🇨🇦 🇸🇬 🇨🇳 🇦🇺",
-    },
+//     {
+//       value: "Second Class Lower and below 32 years old – cannot apply to selected countries 🇨🇦 🇸🇬 🇨🇳 🇦🇺",
+//       label: "Second Class Lower and below 32 years old – cannot apply to selected countries 🇨🇦 🇸🇬 🇨🇳 🇦🇺",
+//     },
 
-    {
-      value: "Second Class Lower and above 32 years old – restricted only to the U.S 🇺🇸",
-      label: "Second Class Lower and above 32 years old – restricted only to the U.S 🇺🇸",
-    },
+//     {
+//       value: "Second Class Lower and above 32 years old – restricted only to the U.S 🇺🇸",
+//       label: "Second Class Lower and above 32 years old – restricted only to the U.S 🇺🇸",
+//     },
 
-    {
-      value: "Third Class and below 32 years old - restricted only to the U.S and U.K 🇺🇸 🇬🇧",
-      label: "Third Class and below 32 years old - restricted only to the U.S and U.K 🇺🇸 🇬🇧",
-    },
+//     {
+//       value: "Third Class and below 32 years old - restricted only to the U.S and U.K 🇺🇸 🇬🇧",
+//       label: "Third Class and below 32 years old - restricted only to the U.S and U.K 🇺🇸 🇬🇧",
+//     },
 
-    {
-      value: "Third Class and above 32 years old - restricted only to the U.S 🇺🇸",
-      label: "Third Class and above 32 years old - restricted only to the U.S 🇺🇸",
-    },
+//     {
+//       value: "Third Class and above 32 years old - restricted only to the U.S 🇺🇸",
+//       label: "Third Class and above 32 years old - restricted only to the U.S 🇺🇸",
+//     },
 
-    {
-      value: "Pass and below 32 years old – not eligible",
-      label: "Pass and below 32 years old – not eligible",
-    },
+//     {
+//       value: "Pass and below 32 years old – not eligible",
+//       label: "Pass and below 32 years old – not eligible",
+//     },
 
-    {
-      value: "Pass and above 32 years old – not eligible",
-      label: "Pass and above 32 years old – not eligible",
-    },
-];
+//     {
+//       value: "Pass and above 32 years old – not eligible",
+//       label: "Pass and above 32 years old – not eligible",
+//     },
+// ];
 
-const classOfDegreeMastersOptions = [
-  {
-    value: "First Class",
-    label: "First Class",
-  },
-  {
-    value: "Second Class Upper",
-    label: "Second Class Upper",
-  },
-  {
-    value: "Second Class Lower",
-    label: "Second Class Lower",
-  },
-  {
-    value: "Third Class",
-    label: "Third Class",
-  },
-  {
-    value: "Pass",
-    label: "Pass",
-  },
-  {
-    value: "Not Applicable",
-    label: "Not Applicable",
-  },
-];
+// const classOfDegreeMastersOptions = [
+//   {
+//     value: "First Class",
+//     label: "First Class",
+//   },
+//   {
+//     value: "Second Class Upper",
+//     label: "Second Class Upper",
+//   },
+//   {
+//     value: "Second Class Lower",
+//     label: "Second Class Lower",
+//   },
+//   {
+//     value: "Third Class",
+//     label: "Third Class",
+//   },
+//   {
+//     value: "Pass",
+//     label: "Pass",
+//   },
+//   {
+//     value: "Not Applicable",
+//     label: "Not Applicable",
+//   },
+// ];
 
-const typeOfAcademicDegreeOptions = [
-  {
-    value:
-      "MBA",
-    label:
-      "MBA",
-  },
-  {
-    value:
-      "MSc",
-    label:
-      "MSc",
-  },
-  {
-    value:
-      "MRes",
-    label:
-      "MRes",
-  },
-  {
-    value:
-      "LLM",
-    label:
-      "LLM",
-  },
-  {
-    value:
-      "MBA",
-    label:
-      "MBA",
-  },
-  {
-    value:
-      "MENG",
-    label:
-      "MENG",
-  },
-  {
-    value:
-      "MA",
-    label:
-      "MA",
-  },
-  {
-    value:
-      "Open to ANY Suitable Option recommended by the Team",
-    label:
-      "Open to ANY Suitable Option recommended by the Team",
-  },
+// const typeOfAcademicDegreeOptions = [
+//   {
+//     value:
+//       "MBA",
+//     label:
+//       "MBA",
+//   },
+//   {
+//     value:
+//       "MSc",
+//     label:
+//       "MSc",
+//   },
+//   {
+//     value:
+//       "MRes",
+//     label:
+//       "MRes",
+//   },
+//   {
+//     value:
+//       "LLM",
+//     label:
+//       "LLM",
+//   },
+//   {
+//     value:
+//       "MBA",
+//     label:
+//       "MBA",
+//   },
+//   {
+//     value:
+//       "MENG",
+//     label:
+//       "MENG",
+//   },
+//   {
+//     value:
+//       "MA",
+//     label:
+//       "MA",
+//   },
+//   {
+//     value:
+//       "Open to ANY Suitable Option recommended by the Team",
+//     label:
+//       "Open to ANY Suitable Option recommended by the Team",
+//   },
   
-];
+// ];
 
 const countriesOfInterestOptions = [
   {
@@ -299,7 +299,7 @@ const countriesOfInterestOptions = [
 
 const Onboard = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState<OnboardFormData>({} as FormData);
+  const [formData, setFormData] = useState<OnboardFormData>();
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const defaultValues = {
@@ -312,11 +312,12 @@ const Onboard = () => {
     mode: "onBlur",
   });
 
-  const onSubmit = async (data: z.infer<typeof onboardSchema>) => {
+  const onSubmit = async (data: any) => {
     setIsLoading(true);
     try {
       console.log("Submitting data:", data);
-      setFormData(data); // Save submitted data to state
+      console.log("Selected Date:", selectedDate);
+      setFormData(data)
       // Perform API call or any logic
     } catch (error) {
       console.error("Submission error:", error);
@@ -349,7 +350,7 @@ const Onboard = () => {
                   className="md:col-span-2"
                 />
 
-                <FormInput
+                {/* <FormInput
                   control={form.control}
                   name="firstName"
                   label="First Name"
@@ -362,9 +363,9 @@ const Onboard = () => {
                   label="Middle Name"
                   type="input"
                   placeholder="Enter your middle name"
-                />
+                /> */}
 
-                <FormInput
+                {/* <FormInput
                   control={form.control}
                   name="surname"
                   label="Surname"
@@ -377,7 +378,7 @@ const Onboard = () => {
                   label="Email"
                   type="input"
                   placeholder="Enter your personal email address"
-                />
+                /> */}
 
                 <PhoneInputField name="phoneNumber" label="Phone Number"/>
                 <PhoneInputField name="whatsappNumber" label="WhatsApp Number" />
@@ -421,13 +422,13 @@ const Onboard = () => {
                 </div>
 
 
-                <FormInput
+                {/* <FormInput
                   control={form.control}
                   name="age"
                   label="How old are you"
                   type="input"
                   placeholder="Enter your age as at today"
-                />
+                /> */}
                 <FormInput
                   control={form.control}
                   name="graduateOf"
@@ -437,34 +438,34 @@ const Onboard = () => {
                   placeholder="--Select--"
                 />
 
-                <FormInput
+                {/* <FormInput
                   control={form.control}
                   name="graduatedFrom"
                   label="Name of University or Polytechnic Graduated from"
                   type="input"
                   placeholder=""
-                />
-                <FormInput
+                /> */}
+                {/* <FormInput
                   control={form.control}
                   name="kindOfDegree"
                   label="Kind Of Degree"
                   type="select"
                   placeholder="-- Select --"
                   options={degreeTypeOptions}
-                />
+                /> */}
 
 
                 {/* Class of degree */}
-                <FormInput
+                {/* <FormInput
                   control={form.control}
                   name="classOfDegree"
                   label="Class Of Degree"
                   type="select"
                   placeholder="-- Select --"
                   options={classOfDegreeOptions}
-                />
+                /> */}
 
-                <FormInput
+                {/* <FormInput
                   control={form.control}
                   name="specificCGPA"
                   label="Specific CGPA"
@@ -486,27 +487,27 @@ const Onboard = () => {
                   label="If yes, kind of degree"
                   type="input"
                   placeholder=""
-                />
+                /> */}
 
-                <FormInput
+                {/* <FormInput
                   control={form.control}
                   name="mastersCourse"
                   label="Course of Study Graduated from with master's if applicable"
                   type="input"
                   placeholder=""
-                />
+                /> */}
                 {/*Class of degree masters  */}
-                <FormInput
+                {/* <FormInput
                   control={form.control}
                   name="classOfDegreeMasters"
                   label="Class of degree masters"
                   type="select"
                   placeholder="-- Select --"
                   options={classOfDegreeMastersOptions}
-                />
+                /> */}
 
 
-                <FormInput
+                {/* <FormInput
                   control={form.control}
                   name="specificCGPAMasters"
                   label="Specific CGPA Masters"
@@ -529,7 +530,7 @@ const Onboard = () => {
                   label="Do you have a specific academic program or course in mind that aligns with your professional experience, whether as an employee, entrepreneur, intern, or recent graduate?"
                   type="input"
                   placeholder=""
-                />
+                /> */}
                 <FormInput
                   control={form.control}
                   name="specificUniversity"

@@ -199,9 +199,10 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
                   ))}
                 </ul>
                 <Button
-                  className="h-fit mt-4 w-fit bg-red hover:bg-rose-900 flex items-center justify-center md:hidden"
+                  className="h-fit mt-4 w-fit bg-red hover:bg-rose-900 flex items-center justify-center"
                   onClick={handleLogout}
                 >
+                  Logout
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="1em"

@@ -20,12 +20,12 @@ export const getStaffDetails = async (page?: number, query?: string) => {
 
   let url = `${API_URL}staff-assigned-candidates/?format=json`;
 
-  if (page) {
-    url += `&page=${page}`;
-  }
-
   if (query) {
     url += `&query=${encodeURIComponent(query)}`;
+  }
+
+  if (page && (!query || page > 1)) {
+    url += `&page=${page}`;
   }
 
   const { data } = await axios.get(url, config);

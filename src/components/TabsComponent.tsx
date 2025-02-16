@@ -24,15 +24,14 @@ const TabsComponent = () => {
         description: "Candidate deleted successfully.",
         variant: "success",
       });
-      queryClient.invalidateQueries({ queryKey: ["allCandidates"] });
+      queryClient.invalidateQueries({ queryKey: ["allTableCandidates"] });
     },
-    onError: (error: any) => {
+    onError: () => {
       toast({
         variant: "destructive",
         title: "Error",
         description: "Failed to delete candidate. Please try again.",
       });
-      console.error("Error deleting candidate:", error);
     },
   });
 
@@ -55,7 +54,7 @@ const TabsComponent = () => {
     error: allCandidatesError,
     isLoading: allCandidatesLoading,
   } = useQuery({
-    queryKey: ["allCandidates", page, searchQuery],
+    queryKey: ["allTableCandidates", page, searchQuery],
     queryFn: async () => {
       return getAllTableCandidates(page, searchQuery);
     },
@@ -156,6 +155,7 @@ const TabsComponent = () => {
       ...candidate,
       serialNumber: index + 1,
     }));
+
   if (allCandidatesError) return <p>Error: {allCandidatesError.message}</p>;
 
   return (
@@ -191,7 +191,7 @@ const TabsComponent = () => {
             placeholder="Search candidates by name"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full md:w-1/3 p-2 border rounded-md mb-4 absolute top-6"
+            className="w-full md:w-1/3 p-2 border rounded-md bg-white z-10 mb-4 absolute top-6"
           />
         <TabsContent value="all">
 

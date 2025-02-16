@@ -9,7 +9,6 @@ import RootLayout from "@/layouts/RootLayout";
 import { CandidateData } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import useAuth from "@/hooks/useAuth";
-import useStaffDetails from "@/hooks/useStaffDetails";
 import DottedBox from "@/components/DottedBox";
 import { Link, useSearchParams } from "react-router-dom";
 import { CopyIcon, MailIcon, PhoneCallIcon } from "lucide-react";
@@ -29,7 +28,6 @@ import {
 } from "@/lib/actions/staff.actions";
 const AssignedCandidates = () => {
   const { loggedInUser } = useAuth();
-  const { loggedInStaff, isStaffLoading } = useStaffDetails();
   const [selectedRowData, setSelectedRowData] = useState<CandidateData | null>(
     null
   );
@@ -37,6 +35,9 @@ const AssignedCandidates = () => {
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const page = parseInt(searchParams.get("page") || "1", 10);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState(searchQuery);
+
   const pageSize = 50;
 
   const queryClient = useQueryClient();
@@ -47,10 +48,25 @@ const AssignedCandidates = () => {
     staleTime: 10 * 1000 * 60,
   });
 
+  const { data: loggedInStaff, isLoading: isStaffLoading } = useQuery({
+    queryKey: ["staffDetails", page, debouncedSearch],
+    queryFn: async () => getStaffDetails(page, debouncedSearch),
+    staleTime: 5 * 60 * 1000,
+    enabled: debouncedSearch.length >= 2 || debouncedSearch === "",
+  });
+
   useEffect(() => {
     localStorage.setItem("resumeCurrentPage", "0");
     localStorage.setItem("sopCurrentPage", "0");
   }, []);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 700);
+
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   useEffect(() => {
     if (loggedInStaff?.next) {
@@ -187,26 +203,35 @@ const AssignedCandidates = () => {
               : `${assignedCandidates} new candidates`}
           </span>
         </div>
-        {isStaffLoading ? (
-          <div className="p-4">
-            {[1, 2, 3, 4].map((_, i) => (
-              <div key={i} className="flex justify-between mb-4">
-                <Skeleton className="h-6 w-1/12" />
-                <Skeleton className="h-6 w-1/3" />
-                <Skeleton className="h-6 w-1/4" />
-                <Skeleton className="h-6 w-1/4" />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <DataTable
-              columns={columns}
-              data={candidateTableData}
-              onRowClick={handleRowClick}
-            />
-          </div>
-        )}
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search candidates by name"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full md:w-1/3 bg-white z-10 p-2 border rounded-md mb-4 absolute top-3 left-4"
+          />
+          {isStaffLoading ? (
+            <div className="p-4">
+              {[1, 2, 3, 4].map((_, i) => (
+                <div key={i} className="flex justify-between mt-16 mb-4">
+                  <Skeleton className="h-6 w-1/12" />
+                  <Skeleton className="h-6 w-1/3" />
+                  <Skeleton className="h-6 w-1/4" />
+                  <Skeleton className="h-6 w-1/4" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <DataTable
+                columns={columns}
+                data={candidateTableData}
+                onRowClick={handleRowClick}
+              />
+            </div>
+          )}
+        </div>
 
         {selectedRowData && (
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
