@@ -1,5 +1,4 @@
 import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 import { z } from "zod";
 import { FieldError, Merge, FieldErrorsImpl } from "react-hook-form";
 import { Country } from "country-state-city";
@@ -34,7 +33,7 @@ interface ToastConfig {
 type ToastFunction = (config: ToastConfig) => void;
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  return clsx(inputs);
 }
 
 export const formatDate = (dateString: string): string => {
@@ -157,7 +156,10 @@ export const step1Schema = z.object({
   middleName: z.string().optional(),
   surname: z.string().nonempty("Surname is required"),
   preferredName: z.string().optional(),
-  dateOfBirth: z.string().nonempty("Date of birth is required"),
+  dateOfBirth: z.date({
+    required_error: "Date of birth is required",
+    invalid_type_error: "That's not a valid date",
+  }),
   gender: z.enum(["Male", "Female", "Other"]),
   cityOfBirth: z.string().nonempty("City of birth is required"),
   stateOfBirth: z.string().nonempty("State of birth is required"),
@@ -169,7 +171,12 @@ export const step1Schema = z.object({
   cityOfResidence: z.string().nonempty("City of residence is required"),
   postalAddress: z.string().nonempty("Postal address is required"),
   houseAddress: z.string().nonempty("House address is required"),
-  age: z.number().min(18, "You must be at least 18 years old").optional(),
+  age: z.string()
+    .nonempty("Age is required")
+    .transform((val) => parseInt(val, 10))
+    .refine((val) => !isNaN(val) && val >= 18, {
+      message: "You must be at least 18 years old",
+    }),
 });
 
 export const step2Schema = z.object({
@@ -361,8 +368,8 @@ export const step5Schema = z.object({
 });
 
 export const onboardSchema = z.object({
-  ...step4Schema.shape,
-  ...step1Schema.shape,
+  // ...step4Schema.shape,
+  // ...step1Schema.shape,
   uploadCV: z.string().optional(), // Allow optional file name or path
   countriesOfInterest: z.array(z.string()).min(1, "At least one country is required"), // Update to support multiple countries
   membershipStatus: z.string().optional(),

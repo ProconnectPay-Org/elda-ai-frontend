@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AdminSignIn, CandidateLogin, CandidateOTP, Home } from "./pages";
 import {
   AssignedCandidates,
@@ -33,6 +33,7 @@ import CandidateSelection from "./pages/(root)/Staff/CandidateSelection";
 import DownloadResume from "./pages/(root)/DownloadResume";
 import SopTemplate from "./components/SopTemplate";
 import GeneratePDF from "./components/GeneratePDF";
+import { ACSDashboard } from "./pages/(root)/ACS";
 
 function App() {
   return (
@@ -80,6 +81,10 @@ function App() {
         <Route element={<Feedback />} path="/feedback" />
         <Route element={<LinkedInMasterclass />} path="/masterclass" />
         <Route element={<Complaints />} path="/complaints" />
+        {/* ACADEMIC COUNSELOR */}
+        <Route element={<ACSDashboard />} path="/acs-dashboard/:id?" />
+        <Route path="*" element={<Navigate to="/acs-dashboard" replace />} />
+
       </Routes>
     </BrowserRouter>
   );

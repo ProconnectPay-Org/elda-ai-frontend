@@ -206,6 +206,16 @@ const Step4 = ({
             <img src={SuccessImage} alt="" />
             <div className="flex items-center flex-col justify-center gap-6">
               <Link
+                to={`/craft-sop/${candidateId}?type=${
+                  prefix === "2" ? "school1" : "school2"
+                }`}
+                target="_blank"
+              >
+                <Button className="bg-red">
+                  Create SOP {prefix === "2" ? "1" : "2"}
+                </Button>
+              </Link>
+              <Link
                 to={`/sop/${candidateId}?type=${
                   prefix === "2" ? "school2" : "school1"
                 }`}

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { genderOptions } from "@/constants";
 import { onboardSchema2 } from "@/lib/utils";
-// import { OnboardFormData } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { z } from "zod";
@@ -14,6 +13,7 @@ import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import axios from "axios";
 
 const yesNoOptions = [
   {
@@ -57,7 +57,7 @@ const membershipOptions = [
 const degreeTypeOptions = [
   {
     value: "Bachelor of Science",
-    label: "Bachelor of Arts",
+    label: "Bachelor of Science",
   },
   {
     value: "Bachelor of Education",
@@ -99,6 +99,16 @@ const degreeTypeOptions = [
   {
     value: "Higher National Diploma",
     label: "Higher National Diploma",
+  },
+
+  {
+    value: "Bachelor of Arts",
+    label: "Bachelor of Arts",
+  },
+
+  {
+    value: "Bachelor of Technology",
+    label: "Bachelor of Technology",
   },
 ];
 
@@ -267,53 +277,44 @@ const countriesOfInterestOptions = [
   },
 ];
 
+const BASEURL = "https://elda-ai-drf.onrender.com/api";
+
 const Onboard = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    firstName: "",
-    middleName: "",
-    surname: "",
-    preferredName: "",
-    dateOfBirth: "",
-    gender: "male",
-    cityOfBirth: "",
-    stateOfBirth: "",
-    countryOfBirth: "",
-    emailAddress: "",
-    phoneNumber: "",
-    houseAddress: "",
-    membershipStatus: "",
-    countriesOfInterest: [],
-    classOfDegreeBachelor: "",
-    specificCGPABachelor: "",
-    typeOfAcademicDegreeBachelor: "",
-    academicProgramBachelor: "",
-    specificUniversityBachelor: "",
-    classOfDegreeMasters: "",
-    specificCGPAMasters: "",
-    typeOfAcademicDegree: "",
-    academicProgram: "",
-    specificUniversity: "",
-    uploadCV: "",
-    GMATGRE: undefined,
-    hasMasters: undefined,
-    age: undefined,
-  });
-
   const form = useForm<z.infer<typeof onboardSchema2>>({
     resolver: zodResolver(onboardSchema2),
-    defaultValues: formData,
     mode: "onBlur",
   });
 
   const onSubmit = async (data: z.infer<typeof onboardSchema2>) => {
     setIsLoading(true);
     try {
-      console.log("Submitting data:", data);
-      setFormData(data); // Save submitted data to state
-      // Perform API call or any logic
+      const submissionData = {
+        ...data,
+        dateOfBirth: data.dateOfBirth.toISOString(),
+      };
+
+      const response = await axios.post(
+        `${BASEURL}/onboarding-candidate/`,
+        submissionData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 201 || response.status === 200) {
+        // Show success message
+        alert("Onboarding form submitted successfully!");
+        // Reset form
+        form.reset();
+      } else {
+        throw new Error("Submission failed");
+      }
     } catch (error) {
       console.error("Submission error:", error);
+      alert("Failed to submit form. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -334,7 +335,12 @@ const Onboard = () => {
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-14">
               <div className="border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
-                <h4>Personal Information</h4>
+                <h4
+                  className="text-[
+25px] font-bold"
+                >
+                  Personal Information
+                </h4>
                 <div className="gap-4 md:gap-8 flex flex-col">
                   <FormInput
                     control={form.control}
@@ -346,18 +352,20 @@ const Onboard = () => {
                     className="md:col-span-2"
                   />
                   {/* <span className="text-[10px] ">NEW CANDIDATE (JUST ONBOARDED), REPEAT CANDIDATE (DENIED ADMISSION INITIALLY FOR 1 APPLICATION DONE) or Repeat CANDIDATE (DENIED ADMISSION INITIALLY FOR 2 APPLICATIONS DONE)</span> */}
-                  </div>
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                   <div>
-                  <FormInput
-                    control={form.control}
-                    name="firstName"
-                    label="First Name"
-                    type="input"
-                    placeholder="Enter your first name"
-                  />
-                  <span className="text-[12px] text-[#667085]">as on international passport</span>
+                    <FormInput
+                      control={form.control}
+                      name="firstName"
+                      label="First Name"
+                      type="input"
+                      placeholder="Enter your first name"
+                    />
+                    <span className="text-[12px] text-[#667085]">
+                      as on international passport
+                    </span>
                   </div>
 
                   <FormInput
@@ -375,16 +383,19 @@ const Onboard = () => {
                     type="input"
                     placeholder="Enter your surname"
                   />
-                  
+
                   <div>
-                  <FormInput
-                    control={form.control}
-                    name="emailAddress"
-                    label="Email"
-                    type="input"
-                    placeholder="Enter your personal email address"
-                  />
-                  <span className="text-[12px] text-[#667085]">This will be used for the entire application process so give us the right personal email</span>
+                    <FormInput
+                      control={form.control}
+                      name="emailAddress"
+                      label="Email"
+                      type="input"
+                      placeholder="Enter your personal email address"
+                    />
+                    <span className="text-[12px] text-[#667085]">
+                      This will be used for the entire application process so
+                      give us the right personal email
+                    </span>
                   </div>
 
                   <PhoneInputField name="phoneNumber" label="Phone Number" />
@@ -410,13 +421,11 @@ const Onboard = () => {
                       control={form.control}
                       render={({ field }) => (
                         <ReactDatePicker
-                          {...field}
-                          selected={field.value ? new Date(field.value) : null}
+                          selected={field.value}
                           onChange={(date: Date | null) => {
-                            const formattedDate = date
-                              ? date.toISOString()
-                              : null;
-                            field.onChange(formattedDate);
+                            if (date) {
+                              field.onChange(date);
+                            }
                           }}
                           placeholderText="Select your date of birth"
                           dateFormat="dd/MM/yyyy"
@@ -426,24 +435,32 @@ const Onboard = () => {
                           maxDate={new Date()}
                           wrapperClassName="w-full"
                           className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
-                          // selectsRange={false}
                         />
                       )}
                     />
+                    {form.formState.errors.dateOfBirth && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {form.formState.errors.dateOfBirth.message}
+                      </p>
+                    )}
                   </div>
                   <FormInput
                     control={form.control}
                     name="age"
                     label="How old are you"
-                    type="input"
+                    type="number"
                     placeholder="Enter your age as at today"
+                    // min={18}
                   />
                 </div>
               </div>
               {/* First Details */}
 
               <div className="flex flex-col gap-y-3 border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
-                <h1 className="font-bold text-2xl sm:text-2xl">First Degree</h1>
+              <h4
+                  className="text-[
+25px] font-bold"
+                > First Degree</h4>
                 <div className=" grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                   <FormInput
                     control={form.control}
@@ -491,7 +508,10 @@ const Onboard = () => {
 
               {/* Second Degree Details */}
               <div className="flex flex-col gap-y-3 border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
-                <h1>Second Degree</h1>
+              <h4
+                  className="text-[
+25px] font-bold"
+                > Second Degree</h4>
 
                 <div className=" grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                   <FormInput
@@ -538,6 +558,10 @@ const Onboard = () => {
               </div>
               {/* Other information */}
               <div className="flex flex-col gap-y-3 border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
+              <h4
+                  className="text-[
+25px] font-bold"
+                > Other Information</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                   <FormInput
                     control={form.control}

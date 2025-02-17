@@ -2,6 +2,7 @@ import {
   AssignCandidateProps,
   CreateCandidateProfileProps,
   PasswordProps,
+  ReAssignCandidateProps,
   signInProps,
 } from "@/types";
 import axios from "axios";
@@ -22,7 +23,9 @@ export const adminSignIn = async ({ email, password }: signInProps) => {
   }
 };
 
-export const logoutAccount = async (role: "candidate" | "staff" | "admin" | "analyst") => {
+export const logoutAccount = async (
+  role: "candidate" | "staff" | "admin" | "analyst"
+) => {
   switch (role) {
     case "admin":
       Cookies.remove("access_token");
@@ -184,15 +187,22 @@ export const getAllCandidates = async (
   }
 };
 
-export const getAllTableCandidates = async (page?: number) => {
+export const getAllTableCandidates = async (page?: number, query?: string) => {
   const token = Cookies.get("access_token");
 
   if (!token) throw new Error("Access token is missing. Please sign in again.");
-  const url = !page
-    ? `${API_URL}all-candidates-medium/`
-    : `${API_URL}all-candidates-medium/?page=${page}`;
+  let url = `${API_URL}all-candidates-medium/?format=json`;
+
+  if (query) {
+    url += `&query=${encodeURIComponent(query)}`;
+  }
+
+  if (page && (!query || page > 1)) {
+    url += `&page=${page}`;
+  }
+
   try {
-    const response = await axios.get(`${url}`, {
+    const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -311,34 +321,59 @@ export const assignCandidateToStaff = async ({
     throw error;
   }
 };
+export const reAssignCandidateToStaff = async ({
+  candidate_id,
+  staff_id,
+  new_staff_id,
+}: ReAssignCandidateProps) => {
+  const access_token = Cookies.get("access_token"); // Fetch token from cookies
 
-// export const deleteCandidateFromStaff = async ({
-//   candidate_ids,
-//   staff_id,
-// }: AssignCandidateProps) => {
-//   const access_token = Cookies.get("access_token"); // Fetch token from cookies
+  if (!access_token) {
+    throw new Error("Access token is missing. Please sign in again.");
+  }
 
-//   if (!access_token) {
-//     throw new Error("Access token is missing. Please sign in again.");
-//   }
+  try {
+    const response = await axios.patch(
+      `${API_URL}assign-candidate/`,
+      { candidate_id, staff_id, new_staff_id },
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
 
-//   try {
-//     const response = await axios.delete(
-//       `${API_URL}assign-candidate/`,
-//       { candidate_ids, staff_id },
-//       {
-//         headers: {
-//           Authorization: `Bearer ${access_token}`,
-//         },
-//       }
-//     );
+    return response.data;
+  } catch (error) {
+    console.error("Error assigning candidate:", error);
+    throw error;
+  }
+};
 
-//     return response.data;
-//   } catch (error) {
-//     console.error("Error assigning candidate:", error);
-//     throw error;
-//   }
-// };
+export const unassignCandidateFromStaff = async ({
+  candidate_id,
+  staff_id,
+}: ReAssignCandidateProps) => {
+  const access_token = Cookies.get("access_token");
+
+  if (!access_token) {
+    throw new Error("Access token is missing. Please sign in again.");
+  }
+
+  try {
+    const response = await axios.delete(`${API_URL}assign-candidate/`, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+      data: { candidate_id, staff_id },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error assigning candidate:", error);
+    throw error;
+  }
+};
 
 export const getLoggedInUser = async (
   role: "staff" | "admin" | "candidate" | "analyst"

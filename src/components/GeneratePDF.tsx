@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     textTransform: "capitalize",
   },
   smGap3: {
-    fontSize: "14px",
+    fontSize: "12px",
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
@@ -192,11 +192,11 @@ const GeneratePDF: React.FC = () => {
         <View style={{ position: "relative", top: -20 }}>
           <View style={styles.flexSection}>
             <View style={styles.resumeUsername}>
-              <Text style={{ fontWeight: "extrabold" }}>Suleiman</Text>
+              <Text style={{ fontWeight: "heavy" }}>Suleiman</Text>
               {/* <Text>&nbsp;</Text> Explicit space */}
-              <Text style={{ fontWeight: "extrabold" }}>Oluwaseun</Text>
+              <Text style={{ fontWeight: "heavy" }}>Oluwaseun</Text>
               {/* <Text>&nbsp;</Text> Explicit space */}
-              <Text style={{ fontWeight: "extrabold" }}>Oyetunde</Text>
+              <Text style={{ fontWeight: "heavy" }}>Oyetunde</Text>
             </View>
 
             <View style={styles.specialClass}>
@@ -373,8 +373,7 @@ const GeneratePDF: React.FC = () => {
               </Text>
               <View style={styles.smGap3}>
                 <Text style={styles.smallText}>
-                  {" "}
-                  University Of Lagos, Nigeria{" "}
+                  University Of Lagos, Nigeria
                 </Text>
                 <Text style={styles.semiBold}>|</Text>
                 <Text style={styles.semiBold}>Graduated December 2024</Text>
@@ -419,13 +418,13 @@ const GeneratePDF: React.FC = () => {
           display: "inline-block",
           marginTop: "10px",
           padding: "10px 20px",
-          backgroundColor: "#007BFF",
+          backgroundColor: "#db2135",
           color: "#fff",
           textDecoration: "none",
           borderRadius: "5px",
         }}
       >
-        download
+        Download PDF
       </PDFDownloadLink>
 
       {/* Hidden Section for Pre-rendering */}

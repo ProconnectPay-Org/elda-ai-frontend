@@ -56,21 +56,22 @@ const CandidateLogin = () => {
           response.candidate.verification_documents[0],
           { expires: 7 }
         );
-        Cookies.set(
-          "work_experience_id1",
-          response.candidate.job_experience[0],
-          { expires: 7 }
-        );
-        Cookies.set(
-          "work_experience_id2",
-          response.candidate.job_experience[1],
-          { expires: 7 }
-        );
-        Cookies.set(
-          "work_experience_id3",
-          response.candidate.job_experience[2],
-          { expires: 7 }
-        );
+
+        if (Array.isArray(response.candidate.job_experience)) {
+          // Sort job experiences by ID in ascending order
+          const sortedJobExperiences = response.candidate.job_experience
+            .slice()
+            .sort((a: number, b: number) => a - b);
+
+          const topThreeJobExperiences = sortedJobExperiences.slice(0, 3);
+
+          topThreeJobExperiences.forEach((job: number, index: number) => {
+            Cookies.set(`work_experience_id${index + 1}`, String(job), {
+              expires: 7,
+            });
+          });
+        }
+
         Cookies.set("advanced_education1_id", response.advanced_education[0], {
           expires: 7,
         });

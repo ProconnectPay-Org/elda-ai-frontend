@@ -51,6 +51,15 @@ const ReuseableJobs = ({
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const value = event.target.value;
+    // Ensure the first job is always "Current"
+    if (index === 0 && value !== "current") {
+      return;
+    }
+
+    // Ensure other jobs are always "Former"
+    if (index > 0 && value !== "former") {
+      return;
+    }
     setValue(`jobExperiences.${index}.jobStatus`, value);
   };
 
@@ -209,8 +218,12 @@ const ReuseableJobs = ({
                 value={watchedJobStatus}
               >
                 <option value="">Select job status</option>
-                <option value="current">Current</option>
-                <option value="former">Former</option>
+                <option value="current" disabled={index > 0}>
+                  Current
+                </option>
+                <option value="former" disabled={index === 0}>
+                  Former
+                </option>
               </select>
               <span className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                 <svg

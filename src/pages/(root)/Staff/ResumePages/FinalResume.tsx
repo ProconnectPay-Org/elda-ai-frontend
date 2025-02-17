@@ -93,10 +93,23 @@ const FinalResume = () => {
 
   return (
     <RootLayout title="Final Resume Refined">
-      <div className="mb-5 w-fit">
-        <Link to={`/refine-resume/${id}`}>
-          <ArrowLeft className="cursor-pointer" />
-        </Link>
+      <div className="mb-10 flex justify-between items-center">
+        <div className="w-fit">
+          <Link to={`/refine-resume/${id}`}>
+            <ArrowLeft className="cursor-pointer" />
+          </Link>
+        </div>
+        <div className="space-x-5">
+          <Link
+            to={`/craft-sop/${id}?type=school1`}
+            target="_blank"
+          >
+            <Button className="bg-red">Start SOP 1</Button>
+          </Link>
+          <Link to={`/craft-sop/${id}?type=school2`} target="_blank">
+            <Button className="bg-red">Start SOP 2</Button>
+          </Link>
+        </div>
       </div>
 
       <div ref={resumeRef} className="max-w-3xl m-auto">

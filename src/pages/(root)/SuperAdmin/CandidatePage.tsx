@@ -12,6 +12,9 @@ import {
 } from "@/lib/utils";
 import CopyText from "@/components/CopyText";
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import ReAssignModal from "@/components/ReAssignModal";
 
 const CandidatePage = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,6 +23,24 @@ const CandidatePage = () => {
     console.error("No ID provided");
     return;
   }
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  const [isUnAssignModalOpen, setIsUnAssignModalOpen] = useState(false);
+
+  const openReAssignModal = () => {
+    setIsAssignModalOpen(true);
+  };
+
+  const closeReAssignModal = () => {
+    setIsAssignModalOpen(false);
+  };
+
+  const openUnAssignModal = () => {
+    setIsUnAssignModalOpen(true);
+  };
+
+  const closeUnAssignModal = () => {
+    setIsUnAssignModalOpen(false);
+  };
 
   const { toast } = useToast();
 
@@ -85,6 +106,12 @@ const CandidatePage = () => {
 
   return (
     <AdminLayout>
+      {isAssignModalOpen && (
+        <ReAssignModal onClose={closeReAssignModal} id={id} mode={"reassign"} />
+      )}
+      {isUnAssignModalOpen && (
+        <ReAssignModal onClose={closeUnAssignModal} id={id} mode={"unassign"} />
+      )}
       <div className="flex flex-col md:flex-row justify-between gap-5 md:gap-0">
         <div className="flex items-start gap-5 flex-col md:flex-row">
           <div className="flex flex-col gap-2">
@@ -214,6 +241,10 @@ const CandidatePage = () => {
             {candidate.assigned_manager[0]?.user?.full_name ||
               "Manager not found"}
           </p>
+          <div className="flex gap-3 mt-2">
+            <Button className="border-red text-red" onClick={openUnAssignModal} variant={"outline"}>Unassign</Button>
+            <Button className="bg-red" onClick={openReAssignModal}>Reassign</Button>
+          </div>
         </div>
       </div>
 

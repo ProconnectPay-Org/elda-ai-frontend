@@ -4,7 +4,35 @@ import Cookies from "js-cookie";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export const getStaffDetails = async () => {
+export const getStaffDetails = async (page?: number, query?: string) => {
+  const staffToken = Cookies.get("staff_access_token");
+
+  if (!staffToken) {
+    throw new Error("No token available");
+  }
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${staffToken}`,
+      "Content-Type": "application/json",
+    },
+  };
+
+  let url = `${API_URL}staff-assigned-candidates/?format=json`;
+
+  if (query) {
+    url += `&query=${encodeURIComponent(query)}`;
+  }
+
+  if (page && (!query || page > 1)) {
+    url += `&page=${page}`;
+  }
+
+  const { data } = await axios.get(url, config);
+  return data;
+};
+
+export const getStaffAccountDetails = async () => {
   const staffToken = Cookies.get("staff_access_token");
 
   if (!staffToken) {

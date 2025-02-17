@@ -24,15 +24,14 @@ const TabsComponent = () => {
         description: "Candidate deleted successfully.",
         variant: "success",
       });
-      queryClient.invalidateQueries({ queryKey: ["allCandidates"] });
+      queryClient.invalidateQueries({ queryKey: ["allTableCandidates"] });
     },
-    onError: (error: any) => {
+    onError: () => {
       toast({
         variant: "destructive",
         title: "Error",
         description: "Failed to delete candidate. Please try again.",
       });
-      console.error("Error deleting candidate:", error);
     },
   });
 
@@ -48,19 +47,29 @@ const TabsComponent = () => {
   const token = Cookies.get("access_token");
 
   const [currentTab, setCurrentTab] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const {
     data: allCandidates,
     error: allCandidatesError,
     isLoading: allCandidatesLoading,
   } = useQuery({
-    queryKey: ["allCandidates", page],
+    queryKey: ["allTableCandidates", page, searchQuery],
     queryFn: async () => {
-      return page ? getAllTableCandidates(page) : getAllTableCandidates();
+      return getAllTableCandidates(page, searchQuery);
     },
     enabled: !!token,
     staleTime: 5 * 1000 * 60,
   });
+
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      setSearchParams({ page: "1" });
+      queryClient.invalidateQueries({ queryKey: ["allCandidates"] });
+    }, 500);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchQuery, queryClient]);
 
   useEffect(() => {
     if (token && allCandidates?.next) {
@@ -131,7 +140,7 @@ const TabsComponent = () => {
       sop_status1: candidate.sop_status1 || "No status",
       sop_status2: candidate.sop_status2 || "No status",
       duplicate: candidate.duplicate || "none",
-    })) || [];    
+    })) || [];
 
   const assignedData = tableData
     .filter((candidate) => candidate.assigned)
@@ -146,6 +155,7 @@ const TabsComponent = () => {
       ...candidate,
       serialNumber: index + 1,
     }));
+
   if (allCandidatesError) return <p>Error: {allCandidatesError.message}</p>;
 
   return (
@@ -174,9 +184,17 @@ const TabsComponent = () => {
           Unassigned
         </TabsTrigger>
       </TabsList>
-      <div className="w-full">
+      <div className="w-full relative">
         {/* Display all candidates */}
+          <input
+            type="text"
+            placeholder="Search candidates by name"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full md:w-1/3 p-2 border rounded-md bg-white z-10 mb-4 absolute top-6"
+          />
         <TabsContent value="all">
+
           <DataTable
             columns={allTabsColumns(handleDeleteCandidate)}
             data={tableData}

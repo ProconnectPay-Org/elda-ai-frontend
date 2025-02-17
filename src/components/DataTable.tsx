@@ -18,16 +18,6 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "./ui/skeleton";
 import React from "react";
-import { Input } from "./ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -49,13 +39,26 @@ export function DataTable<TData, TValue>({
   onRowClick,
   isLoading,
 }: DataTableProps<TData, TValue>) {
+  const LOCAL_STORAGE_KEY = "table-column-visibility";
+  // Load column visibility from localStorage
+  const storedColumnVisibility = React.useMemo(() => {
+    if (typeof window !== "undefined") {
+      const savedState = localStorage.getItem(LOCAL_STORAGE_KEY);
+      return savedState ? JSON.parse(savedState) : {};
+    }
+    return {};
+  }, []);
+
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const [selectedFilter, setSelectedFilter] =
-    React.useState<string>("full_name");
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+    React.useState<VisibilityState>(storedColumnVisibility);
+
+  // Save column visibility changes to localStorage
+  React.useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(columnVisibility));
+  }, [columnVisibility]);
 
   const table = useReactTable({
     data,
@@ -75,12 +78,6 @@ export function DataTable<TData, TValue>({
       },
     },
   });
-
-  const handleFilterChange = (value: string) => {
-    setSelectedFilter(value);
-    // Reset filter value when filter changes
-    table.getColumn(value)?.setFilterValue("");
-  };
 
   if (isLoading) {
     return (
@@ -119,41 +116,6 @@ export function DataTable<TData, TValue>({
   return (
     <>
       <div className="flex items-center py-4 gap-4 px-4">
-        <Select onValueChange={handleFilterChange}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select a filter" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Filters</SelectLabel>
-              <SelectItem value="full_name">Name</SelectItem>
-              <SelectItem value="assigned_course1">Assigned Course 1</SelectItem>
-              <SelectItem value="assigned_course2">Assigned Course 2</SelectItem>
-              <SelectItem value="assigned_school1">Assigned School 1</SelectItem>
-              <SelectItem value="assigned_school2">Assigned School 2</SelectItem>
-              <SelectItem value="resume_status">Resume Status</SelectItem>
-              <SelectItem value="sop_status1">SOP Status 1</SelectItem>
-              <SelectItem value="sop_status2">SOP Status 2</SelectItem>
-              <SelectItem value="school_application_status1">
-                School Application Status 1
-              </SelectItem>
-              <SelectItem value="school_application_status2">
-                School Application Status 2
-              </SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <Input
-          placeholder={`Filter by ${selectedFilter}...`}
-          value={
-            (table.getColumn(selectedFilter)?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn(selectedFilter)?.setFilterValue(event.target.value)
-          }
-          className="max-w-xs"
-        />
-
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

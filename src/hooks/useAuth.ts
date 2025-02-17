@@ -68,7 +68,7 @@ const useAuth = () => {
     queryFn: () =>
       getLoggedInUser(userRole as "staff" | "admin" | "candidate" | "analyst"),
     enabled: !!userRole,
-    staleTime: 10 * 1000 * 60,
+    staleTime: 5 * 1000 * 60,
   });
 
   useEffect(() => {

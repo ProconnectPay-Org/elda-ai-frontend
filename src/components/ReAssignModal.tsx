@@ -1,20 +1,23 @@
 import { useCandidates } from "@/hooks/useCandidiates";
 import {
-  assignCandidateToStaff,
   getAllStaff,
+  reAssignCandidateToStaff,
+  unassignCandidateFromStaff,
 } from "@/lib/actions/user.actions";
 import { useState, useEffect } from "react";
 import { toast } from "./ui/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { CandidateData, OptionType } from "@/types";
 import ReactSelect, { SingleValue } from "react-select";
+import { Link } from "react-router-dom";
 
 interface ModalProps {
   onClose: () => void;
   id?: string;
+  mode: "reassign" | "unassign";
 }
 
-const ReAssignModal = ({ onClose, id }: ModalProps) => {
+const ReAssignModal = ({ onClose, id, mode }: ModalProps) => {
   const { singleCandidate, singleCandidateLoading, singleCandidateError } =
     useCandidates(id);
   const [selectedStaff, setSelectedStaff] =
@@ -25,7 +28,7 @@ const ReAssignModal = ({ onClose, id }: ModalProps) => {
 
   const { data: staffResponse, isLoading: isLoadingStaff } = useQuery({
     queryKey: ["staff"],
-    queryFn: () => getAllStaff(),
+    queryFn: async () => getAllStaff(),
     staleTime: 5 * 1000,
   });
 
@@ -45,33 +48,45 @@ const ReAssignModal = ({ onClose, id }: ModalProps) => {
       document.body.style.overflow = "auto";
       document.removeEventListener("scroll", handleBackgroundScroll);
     };
-  }, []);  
+  }, []);
 
   const assignCandidate = async () => {
-    if (!selectedStaff) {
-      setError("Please select both a staff and one or more candidates.");
-      return;
-    }
     setIsLoading(true);
     try {
-      await assignCandidateToStaff({
-        candidate_ids: [id],
-        staff_id: selectedStaff.value,
-      });
-      setError(null);
-      toast({
-        title: "Success",
-        description: "Candidate Re-assigned",
-        variant: "success",
-      });
+      if (mode === "reassign") {
+        if (!selectedStaff) {
+          setError("Please select a new staff.");
+          return;
+        }
+        await reAssignCandidateToStaff({
+          candidate_id: id,
+          staff_id: singleCandidate?.assigned_manager[0]?.id,
+          new_staff_id: selectedStaff.value,
+        });
+        toast({
+          title: "Success",
+          description: "Candidate Re-assigned",
+          variant: "success",
+        });
+      } else if (mode === "unassign") {
+        await unassignCandidateFromStaff({
+          candidate_id: id,
+          staff_id: singleCandidate?.assigned_manager[0]?.id,
+        });
+        toast({
+          title: "Success",
+          description: "Candidate Unassigned",
+          variant: "success",
+        });
+      }
+      onClose();
     } catch (error) {
-      console.error("Error assigning candidates:", error);
+      console.error("Error processing request:", error);
       toast({
         title: "Error",
-        description: "There was an error assigning candidates.",
+        description: "There was an error processing your request.",
         variant: "destructive",
       });
-      setError("An error occurred while assigning candidates.");
     } finally {
       setIsLoading(false);
     }
@@ -111,7 +126,11 @@ const ReAssignModal = ({ onClose, id }: ModalProps) => {
       >
         <form>
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold">Assign To Another Staff</h2>
+            <h2 className="text-2xl font-bold">
+              {mode === "reassign"
+                ? "Re-assign Candidate"
+                : "Unassign Candidate"}
+            </h2>
 
             <div className="flex flex-col w-full gap-1.5">
               {singleCandidateLoading ? (
@@ -120,22 +139,46 @@ const ReAssignModal = ({ onClose, id }: ModalProps) => {
                 <p className="text-red-500">Error loading candidate details.</p>
               ) : (
                 <>
-                  <p>Name: {singleCandidate?.user?.full_name}</p>
-                  <p>Id: {singleCandidate?.id}</p>
+                  <p className="font-semibold">
+                    Name: {singleCandidate?.user?.full_name}
+                  </p>
+                  <p className="text-xs">Id: {singleCandidate?.id}</p>
                 </>
               )}
             </div>
-            <div className="flex flex-col w-full gap-1.5">
-              <p>Select Staff to Re-Assign</p>
-              <ReactSelect
-                options={staffOptions}
-                onChange={handleStaffChange}
-                className="border-gray-border"
-                placeholder="Select Staff"
-                value={selectedStaff}
-                isLoading={isLoadingStaff}
-              />
+            <div>
+              <p className="font-semibold">Current Staff Assigned</p>
+              {singleCandidateLoading ? (
+                <p>Getting staff...</p>
+              ) : singleCandidateError ? (
+                <p className="text-red-500">Error loading staff details.</p>
+              ) : (
+                <>
+                  <p>
+                    {singleCandidate?.assigned_manager[0]?.user?.full_name ||
+                      (<p className="flex gap-2 items-center">
+                        <span>Not yet assigned</span>
+                        <Link target="_blank" to="/assign-candidate" className="text-red hover:underline">
+                          Assign Now
+                        </Link>
+                      </p>)}
+                  </p>
+                </>
+              )}
             </div>
+            {mode === "reassign" && (
+              <div className="flex flex-col w-full gap-1.5">
+                <p className="font-semibold">Select New Staff</p>
+                <ReactSelect
+                  options={staffOptions}
+                  onChange={handleStaffChange}
+                  className="border-gray-border"
+                  placeholder="Select Staff"
+                  value={selectedStaff}
+                  isLoading={isLoadingStaff}
+                />
+              </div>
+            )}
             {error && <p className="text-red-500">{error}</p>}
           </div>
 
@@ -143,10 +186,26 @@ const ReAssignModal = ({ onClose, id }: ModalProps) => {
             <button
               type="submit"
               onClick={assignCandidate}
-              disabled={isLoading}
-              className="w-full bg-red text-white py-2 rounded-lg hover:bg-red-600"
+              disabled={
+                isLoading ||
+                isLoadingStaff ||
+                singleCandidateLoading ||
+                singleCandidate?.assigned_manager?.length === 0
+              }
+              className={`w-full text-white py-2 rounded-lg ${
+                isLoading ||
+                isLoadingStaff ||
+                singleCandidateLoading ||
+                singleCandidate?.assigned_manager?.length === 0
+                  ? "bg-pale-bg cursor-not-allowed"
+                  : "bg-red hover:bg-red"
+              }`}
             >
-              {isLoading ? "Loading..." : "Re-Assign"}
+              {isLoading
+                ? "Processing..."
+                : mode === "reassign"
+                ? "Re-Assign"
+                : "Unassign"}
             </button>
             <button
               type="button"

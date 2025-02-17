@@ -181,6 +181,7 @@ export const allTabsColumns = (
     cell: ({ row }) => {
       const [isModalOpen, setIsModalOpen] = useState(false);
       const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+      const [isUnAssignModalOpen, setIsUnAssignModalOpen] = useState(false);
       const [schoolCourseModalOpen, setSchoolCourseModalOpen] = useState(false);
       const isAnalyst = Cookies.get("user_role") === "analyst";
 
@@ -196,8 +197,16 @@ export const allTabsColumns = (
         setIsAssignModalOpen(true);
       };
 
-      const closeAssignModal = () => {
+      const closeReAssignModal = () => {
         setIsAssignModalOpen(false);
+      };
+
+      const openUnAssignModal = () => {
+        setIsUnAssignModalOpen(true);
+      };
+
+      const closeUnAssignModal = () => {
+        setIsUnAssignModalOpen(false);
       };
 
       const openSchoolCourseModal = () => {
@@ -238,8 +247,17 @@ export const allTabsColumns = (
                   Candidate Info
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={openReAssignModal} disabled={isAnalyst}>
+              <DropdownMenuItem
+                onClick={openReAssignModal}
+                disabled={isAnalyst}
+              >
                 Reassign Candidate
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={openUnAssignModal}
+                disabled={isAnalyst}
+              >
+                Un-assign from current manager
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem disabled={isResumeDisabled}>
@@ -284,7 +302,10 @@ export const allTabsColumns = (
                   View Crafted SOP 2
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={openSchoolCourseModal} disabled={isAnalyst}>
+              <DropdownMenuItem
+                onClick={openSchoolCourseModal}
+                disabled={isAnalyst}
+              >
                 Change assigned school or course
               </DropdownMenuItem>
               <DropdownMenuItem onClick={openModal} disabled={isAnalyst}>
@@ -313,7 +334,18 @@ export const allTabsColumns = (
             <SchoolApplicationModal onClose={closeModal} id={id} />
           )}
           {isAssignModalOpen && (
-            <ReAssignModal onClose={closeAssignModal} id={id} />
+            <ReAssignModal
+              onClose={closeReAssignModal}
+              id={id}
+              mode={"reassign"}
+            />
+          )}
+          {isUnAssignModalOpen && (
+            <ReAssignModal
+              onClose={closeUnAssignModal}
+              id={id}
+              mode={"unassign"}
+            />
           )}
           {schoolCourseModalOpen && (
             <NewSchoolCourseModal onClose={closeSchoolCourseModal} id={id} />

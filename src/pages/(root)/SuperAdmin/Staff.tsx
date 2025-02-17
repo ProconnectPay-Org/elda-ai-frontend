@@ -16,6 +16,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useState } from "react";
+import ReAssignModal from "@/components/ReAssignModal";
 
 const Staff = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,6 +27,30 @@ const Staff = () => {
   const isAnalyst = Cookies.get("user_role") === "analyst";
 
   const [selectedRowData, setSelectedRowData] = useState<AllStaff | null>(null);
+
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  const [isUnAssignModalOpen, setIsUnAssignModalOpen] = useState(false);
+  const [selectedCandidateId, setSelectedCandidateId] = useState<
+    string | undefined
+  >(undefined);
+
+  const openReAssignModal = (id: string) => {
+    setSelectedCandidateId(id);
+    setIsAssignModalOpen(true);
+  };
+
+  const closeReAssignModal = () => {
+    setIsAssignModalOpen(false);
+  };
+
+  const openUnAssignModal = (id: string) => {
+    setSelectedCandidateId(id);
+    setIsUnAssignModalOpen(true);
+  };
+
+  const closeUnAssignModal = () => {
+    setIsUnAssignModalOpen(false);
+  };
 
   const { data, isLoading, error } = useQuery<AllStaffResponse, Error>({
     queryKey: ["allStaff", page],
@@ -82,6 +107,20 @@ const Staff = () => {
 
   return (
     <AdminLayout>
+      {isAssignModalOpen && (
+        <ReAssignModal
+          onClose={closeReAssignModal}
+          id={selectedCandidateId}
+          mode={"reassign"}
+        />
+      )}
+      {isUnAssignModalOpen && (
+        <ReAssignModal
+          onClose={closeUnAssignModal}
+          id={selectedCandidateId}
+          mode={"unassign"}
+        />
+      )}
       <div className="flex flex-col gap-12">
         <div className="flex justify-between items-center border rounded-sm py-2 px-3 border-[#EAECF0]">
           <div>
@@ -166,6 +205,31 @@ const Staff = () => {
                                   } ${cand.last_name || ""}`.trim()
                                 : "Not filled form yet - View Profile"}
                             </Link>
+                            <div className="flex gap-3 mt-2">
+                              <Button
+                                className="border-red text-red"
+                                onClick={() => {
+                                  if (cand.id) {
+                                    openUnAssignModal(cand.id);
+                                    setSelectedRowData(null);
+                                  }
+                                }}
+                                variant={"outline"}
+                              >
+                                Unassign
+                              </Button>
+                              <Button
+                                className="bg-red"
+                                onClick={() => {
+                                  if (cand.id) {
+                                    openReAssignModal(cand.id);
+                                    setSelectedRowData(null);
+                                  }
+                                }}
+                              >
+                                Reassign
+                              </Button>
+                            </div>
                           </li>
                         ))
                       : "No candidates assigned yet"}
