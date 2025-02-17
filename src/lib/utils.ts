@@ -198,6 +198,10 @@ export const step2Schema = z.object({
   advancedYearAdmitted: z.string().optional(),
   advancedYearGraduated: z.string().optional(),
   graduateOf: z.string().optional(),
+  typeOfAcademicDegree: z.string().optional(),
+  mastersCourse: z.string().optional(),
+  classOfDegreeMasters: z.string().optional(),
+  specificCGPAMasters: z.string().optional(),
 });
 
 export const step3Schema = z.object({
@@ -239,6 +243,8 @@ export const step3Schema = z.object({
       jobSummary: z.string().optional(),
     })
   ),
+  academicProgram: z.string().optional(),
+  specificUniversity: z.string().optional(),
 });
 
 const relationshipOptions = [
@@ -372,6 +378,8 @@ export const onboardSchema = z.object({
   institutionName: z.string().optional(), // Add this line
   degreeClass: z.string().optional(), // Add degreeClass as optional
   currentCGPA: z.string().optional(), // Add currentCGPA as optional
+  kindOfDegree: z.string().optional(), // Add kindOfDegree field
+  specificCGPA: z.string().optional(),
 });
 
 export const onboardSchema2 = z.object({
@@ -380,10 +388,19 @@ export const onboardSchema2 = z.object({
   ...step3Schema.shape,
   ...step4Schema.shape,
   ...step5Schema.shape,
-
+  gender: z.enum(["Male", "Female", "Other"]).optional(), // Add explicit gender enum
+  membershipStatus: z.string().nonempty("Membership status is required"),
   countriesOfInterest: z.array(z.string()).optional(),
   hasMasters: z.enum(["yes", "no"]).optional(),
   mastersDegree: z.string().optional(),
   mastersCourse: z.string().optional(),
   specificUniversity: z.string().optional(), // Add specificUniversity field
+  kindOfDegree: z.string().optional(), // Explicitly add kindOfDegree field
+  GMATGRE: z.enum(["yes", "no"]).optional(), // Add GMATGRE field
+  uploadCV: z.string().optional(), // Add uploadCV field for file upload
+  specificCGPA: z.string().optional(), // Add specificCGPA field
+  countryOfResidence: z.string().optional(),
+  stateOfResidence: z.string().optional(),
+  cityOfResidence: z.string().optional(),
+  postalAddress: z.string().optional(),
 });
