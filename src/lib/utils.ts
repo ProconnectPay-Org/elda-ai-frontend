@@ -171,12 +171,9 @@ export const step1Schema = z.object({
   cityOfResidence: z.string().nonempty("City of residence is required"),
   postalAddress: z.string().nonempty("Postal address is required"),
   houseAddress: z.string().nonempty("House address is required"),
-  age: z.string()
-    .nonempty("Age is required")
-    .transform((val) => parseInt(val, 10))
-    .refine((val) => !isNaN(val) && val >= 18, {
-      message: "You must be at least 18 years old",
-    }),
+  age: z.number()
+    .min(18, "You must be at least 18 years old")
+    .nonnegative("Age must be a positive number"),
 });
 
 export const step2Schema = z.object({

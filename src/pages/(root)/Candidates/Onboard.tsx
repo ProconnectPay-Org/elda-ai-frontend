@@ -119,9 +119,9 @@ const classOfDegreeOptions = [
   },
   {
     value:
-      "First Class and above 32 years old – restricted to the U.S and Canada 🇺🇸 🇨🇦",
+      "First Class and above 32 years old – restricted to the U.S and Canada ",
     label:
-      "First Class and above 32 years old – restricted to the U.S and Canada 🇺🇸 🇨🇦",
+      "First Class and above 32 years old – restricted to the U.S and Canada ",
   },
   {
     value: "Second Class Upper and below 32 years old – All 17 Countries",
@@ -130,35 +130,35 @@ const classOfDegreeOptions = [
 
   {
     value:
-      "Second Class Upper and above 32 years old - restricted to the U.S and Canada 🇺🇸 🇨🇦",
+      "Second Class Upper and above 32 years old - restricted to the U.S and Canada ",
     label:
-      "Second Class Upper and above 32 years old - restricted to the U.S and Canada 🇺🇸 🇨🇦",
+      "Second Class Upper and above 32 years old - restricted to the U.S and Canada ",
   },
 
   {
     value:
-      "Second Class Lower and below 32 years old – cannot apply to selected countries 🇨🇦 🇸🇬 🇨🇳 🇦🇺",
+      "Second Class Lower and below 32 years old – cannot apply to selected countries ",
     label:
-      "Second Class Lower and below 32 years old – cannot apply to selected countries 🇨🇦 🇸🇬 🇨🇳 🇦🇺",
+      "Second Class Lower and below 32 years old – cannot apply to selected countries ",
   },
 
   {
     value:
-      "Second Class Lower and above 32 years old – restricted only to the U.S 🇺🇸",
+      "Second Class Lower and above 32 years old – restricted only to the U.S ",
     label:
-      "Second Class Lower and above 32 years old – restricted only to the U.S 🇺🇸",
+      "Second Class Lower and above 32 years old – restricted only to the U.S ",
   },
 
   {
     value:
-      "Third Class and below 32 years old - restricted only to the U.S and U.K 🇺🇸 🇬🇧",
+      "Third Class and below 32 years old - restricted only to the U.S and U.K ",
     label:
-      "Third Class and below 32 years old - restricted only to the U.S and U.K 🇺🇸 🇬🇧",
+      "Third Class and below 32 years old - restricted only to the U.S and U.K ",
   },
 
   {
-    value: "Third Class and above 32 years old - restricted only to the U.S 🇺🇸",
-    label: "Third Class and above 32 years old - restricted only to the U.S 🇺🇸",
+    value: "Third Class and above 32 years old - restricted only to the U.S ",
+    label: "Third Class and above 32 years old - restricted only to the U.S ",
   },
 
   {
@@ -253,7 +253,7 @@ const countriesOfInterestOptions = [
   },
   {
     value: "Germany",
-    label: "GErmany",
+    label: "Germany",
   },
   {
     value: "France",
@@ -285,6 +285,19 @@ const Onboard = () => {
     resolver: zodResolver(onboardSchema2),
     mode: "onBlur",
   });
+
+  // Function to calculate age from date of birth
+  const calculateAge = (birthDate: Date) => {
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    
+    return age;
+  };
 
   const onSubmit = async (data: z.infer<typeof onboardSchema2>) => {
     setIsLoading(true);
@@ -335,26 +348,18 @@ const Onboard = () => {
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-14">
               <div className="border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
-                <h4
-                  className="text-[
-25px] font-bold"
-                >
-                  Personal Information
-                </h4>
-                <div className="gap-4 md:gap-8 flex flex-col">
-                  <FormInput
-                    control={form.control}
-                    name="membershipStatus"
-                    label="Membership Status"
-                    type="select"
-                    placeholder="Select membership status"
-                    options={membershipOptions}
-                    className="md:col-span-2"
-                  />
-                  {/* <span className="text-[10px] ">NEW CANDIDATE (JUST ONBOARDED), REPEAT CANDIDATE (DENIED ADMISSION INITIALLY FOR 1 APPLICATION DONE) or Repeat CANDIDATE (DENIED ADMISSION INITIALLY FOR 2 APPLICATIONS DONE)</span> */}
-                </div>
-
+                <h4 className="text-[25px] font-bold mb-6">Personal Information</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                  <div className="md:col-span-2">
+                    <FormInput
+                      control={form.control}
+                      name="membershipStatus"
+                      label="Membership Status"
+                      type="select"
+                      placeholder="Select membership status"
+                      options={membershipOptions}
+                    />
+                  </div>
                   <div>
                     <FormInput
                       control={form.control}
@@ -425,6 +430,9 @@ const Onboard = () => {
                           onChange={(date: Date | null) => {
                             if (date) {
                               field.onChange(date);
+                              // Calculate and set age when date changes
+                              const age = calculateAge(date);
+                              form.setValue('age', age);
                             }
                           }}
                           placeholderText="Select your date of birth"
@@ -450,18 +458,15 @@ const Onboard = () => {
                     label="How old are you"
                     type="number"
                     placeholder="Enter your age as at today"
-                    // min={18}
-                  />
+                    className="cursor-not-allowed"
+                      />
                 </div>
               </div>
               {/* First Details */}
 
               <div className="flex flex-col gap-y-3 border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
-              <h4
-                  className="text-[
-25px] font-bold"
-                > First Degree</h4>
-                <div className=" grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                <h4 className="text-[25px] font-bold mb-6">First Degree</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                   <FormInput
                     control={form.control}
                     name="graduateOf"
@@ -508,12 +513,9 @@ const Onboard = () => {
 
               {/* Second Degree Details */}
               <div className="flex flex-col gap-y-3 border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
-              <h4
-                  className="text-[
-25px] font-bold"
-                > Second Degree</h4>
+                <h4 className="text-[25px] font-bold mb-6">Second Degree</h4>
 
-                <div className=" grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                   <FormInput
                     control={form.control}
                     name="hasMasters"
@@ -558,10 +560,7 @@ const Onboard = () => {
               </div>
               {/* Other information */}
               <div className="flex flex-col gap-y-3 border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
-              <h4
-                  className="text-[
-25px] font-bold"
-                > Other Information</h4>
+                <h4 className="text-[25px] font-bold mb-6">Other Information</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                   <FormInput
                     control={form.control}
