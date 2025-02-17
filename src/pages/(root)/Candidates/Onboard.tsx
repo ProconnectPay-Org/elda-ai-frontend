@@ -84,16 +84,15 @@ const Onboard = () => {
   return (
     <div className="relative min-h-screen w-full form-bg overflow-hidden">
       <div className="flex items-center justify-center flex-col pt-8 mx-auto max-w-[500px] h-[200px]">
-        <img src={PcpLogo} alt="pcp-logo" className="w-[50%] md:scale-150" />
+        <img src={PcpLogo} alt="pcp-logo" className="w-[50%] md:scale-150 " />
       </div>
       <div className="p-8 md:px-16 md:py-12 xl:px-20 flex flex-col">
-        {/* <div className=""> */}
         <h3 className="font-semibold text-xl sm:text-2xl">
           Candidate Onboarding Form
         </h3>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 pb-8">
             <div className="flex flex-col gap-14">
               <div className="border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
                 <h4 className="text-[25px] font-bold mb-6">Personal Information</h4>
@@ -451,15 +450,26 @@ const Onboard = () => {
                   </div>
                 </div>
               </div>
-              <div className="w-full md:col-span-2">
-                <Button className="bg-red w-full" disabled={isLoading}>
-                  {isLoading ? "Saving..." : "Save"}
+              <div className="mt-6 flex items-center justify-center gap-x-6">
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => form.reset()}
+                  className="px-8 border-[2px] border-[#DB251A] font-bold text-[20px] text-[#DB251A] items-center justify-center"
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  type="submit"
+                  disabled={isLoading}
+                  className="items-center justify-center px-8 bg-[#DB251A] font-bold text-[20px] text-white"
+                >
+                  {isLoading ? "Submitting..." : "Submit"}
                 </Button>
               </div>
             </div>
           </form>
         </Form>
-        {/* </div> */}
       </div>
     </div>
   );
