@@ -1431,3 +1431,266 @@ for (const school of schoolsWithUniqueIds) {
 export const sortedSchools = uniqueSchools.sort((a, b) =>
   a.name.localeCompare(b.name)
 );
+
+// OnBoarding Form
+export const yesNoOptions = [
+  {
+    value: "yes",
+    label: "Yes",
+  },
+  {
+    value: "no",
+    label: "No",
+  },
+];
+
+export const graduateOptions = [
+  {
+    value: "Polytechnic",
+    label: "Polytechnic",
+  },
+  {
+    value: "University",
+    label: "University",
+  },
+];
+export const membershipOptions = [
+  {
+    value: "NEW CANDIDATE - JUST ONBOARDED",
+    label: "NEW CANDIDATE - JUST ONBOARDED",
+  },
+  {
+    value: "REPEAT CANDIDATE DENIED ADMISSION INITIALLY FOR 1 APPLICATION DONE",
+    label: "REPEAT CANDIDATE DENIED ADMISSION INITIALLY FOR 1 APPLICATION DONE",
+  },
+  {
+    value:
+      "REPEAT CANDIDATE DENIED ADMISSION INITIALLY FOR 2 APPLICATIONS DONE",
+    label:
+      "REPEAT CANDIDATE DENIED ADMISSION INITIALLY FOR 2 APPLICATIONS DONE",
+  },
+];
+
+export const degreeTypeOptions = [
+  {
+    value: "Bachelor of Science",
+    label: "Bachelor of Science",
+  },
+  {
+    value: "Bachelor of Education",
+    label: "Bachelor of Education",
+  },
+  {
+    value: "Bachelor of Law",
+    label: "Bachelor of Law",
+  },
+  {
+    value: "Bachelor of Engineering",
+    label: "Bachelor of Engineering",
+  },
+  {
+    value: "Bachelor of Medicine and Surgery",
+    label: "Bachelor of Medicine and Surgery",
+  },
+
+  {
+    value: "Bachelor of Dental Surgery",
+    label: "Bachelor of Dental Surgery",
+  },
+
+  {
+    value: "Bachelor of Pharmacy",
+    label: "Bachelor of Pharmacy",
+  },
+
+  {
+    value: "Bachelor of Nursing",
+    label: "Bachelor of Nursing",
+  },
+
+  {
+    value: "Bachelor of Medical Laboratory Science",
+    label: "Bachelor of Medical Laboratory Science",
+  },
+
+  {
+    value: "Higher National Diploma",
+    label: "Higher National Diploma",
+  },
+
+  {
+    value: "Bachelor of Arts",
+    label: "Bachelor of Arts",
+  },
+
+  {
+    value: "Bachelor of Technology",
+    label: "Bachelor of Technology",
+  },
+];
+
+export const classOfDegreeOptions = [
+  {
+    value: "First Class and below 32 years old – All 17 countries",
+    label: "First Class and below 32 years old – All 17 countries",
+  },
+  {
+    value:
+      "First Class and above 32 years old – restricted to the U.S and Canada ",
+    label:
+      "First Class and above 32 years old – restricted to the U.S and Canada ",
+  },
+  {
+    value: "Second Class Upper and below 32 years old – All 17 Countries",
+    label: "Second Class Upper and below 32 years old – All 17 Countries",
+  },
+
+  {
+    value:
+      "Second Class Upper and above 32 years old - restricted to the U.S and Canada ",
+    label:
+      "Second Class Upper and above 32 years old - restricted to the U.S and Canada ",
+  },
+
+  {
+    value:
+      "Second Class Lower and below 32 years old – cannot apply to selected countries ",
+    label:
+      "Second Class Lower and below 32 years old – cannot apply to selected countries ",
+  },
+
+  {
+    value:
+      "Second Class Lower and above 32 years old – restricted only to the U.S ",
+    label:
+      "Second Class Lower and above 32 years old – restricted only to the U.S ",
+  },
+
+  {
+    value:
+      "Third Class and below 32 years old - restricted only to the U.S and U.K ",
+    label:
+      "Third Class and below 32 years old - restricted only to the U.S and U.K ",
+  },
+
+  {
+    value: "Third Class and above 32 years old - restricted only to the U.S ",
+    label: "Third Class and above 32 years old - restricted only to the U.S ",
+  },
+
+  {
+    value: "Pass and below 32 years old – not eligible",
+    label: "Pass and below 32 years old – not eligible",
+  },
+
+  {
+    value: "Pass and above 32 years old – not eligible",
+    label: "Pass and above 32 years old – not eligible",
+  },
+];
+
+export const classOfDegreeMastersOptions = [
+  {
+    value: "First Class",
+    label: "First Class",
+  },
+  {
+    value: "Second Class Upper",
+    label: "Second Class Upper",
+  },
+  {
+    value: "Second Class Lower",
+    label: "Second Class Lower",
+  },
+  {
+    value: "Third Class",
+    label: "Third Class",
+  },
+  {
+    value: "Pass",
+    label: "Pass",
+  },
+  {
+    value: "Not Applicable",
+    label: "Not Applicable",
+  },
+];
+
+export const typeOfAcademicDegreeOptions = [
+  {
+    value: "MBA",
+    label: "MBA",
+  },
+  {
+    value: "MSc",
+    label: "MSc",
+  },
+  {
+    value: "MRes",
+    label: "MRes",
+  },
+  {
+    value: "LLM",
+    label: "LLM",
+  },
+  {
+    value: "MBA",
+    label: "MBA",
+  },
+  {
+    value: "MENG",
+    label: "MENG",
+  },
+  {
+    value: "MA",
+    label: "MA",
+  },
+  {
+    value: "Open to ANY Suitable Option recommended by the Team",
+    label: "Open to ANY Suitable Option recommended by the Team",
+  },
+];
+
+export const countriesOfInterestOptions = [
+  {
+    value: "United States",
+    label: "United States",
+  },
+  {
+    value: "United Kingdom",
+    label: "United Kingdom",
+  },
+  {
+    value: "Canada",
+    label: "Canada",
+  },
+  {
+    value: "Australia",
+    label: "Australia",
+  },
+  {
+    value: "Germany",
+    label: "Germany",
+  },
+  {
+    value: "France",
+    label: "France",
+  },
+  {
+    value: "Netherlands",
+    label: "Netherlands",
+  },
+  {
+    value: "Singapore",
+    label: "Singapore",
+  },
+  {
+    value: "Japan",
+    label: "Japan",
+  },
+  {
+    value: "Switzerland",
+    label: "Switzerland",
+  },
+];
+
