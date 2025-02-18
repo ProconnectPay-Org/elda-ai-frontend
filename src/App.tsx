@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AdminSignIn, CandidateLogin, CandidateOTP, Home } from "./pages";
 import {
   AssignedCandidates,
@@ -82,8 +82,7 @@ function App() {
         <Route element={<LinkedInMasterclass />} path="/masterclass" />
         <Route element={<Complaints />} path="/complaints" />
         {/* ACADEMIC COUNSELOR */}
-        <Route element={<ACSDashboard />} path="/acs-dashboard/:id?" />
-        <Route path="*" element={<Navigate to="/acs-dashboard" replace />} />
+        <Route element={<ACSDashboard />} path="/acs-dashboard/:id" />
 
       </Routes>
     </BrowserRouter>

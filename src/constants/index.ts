@@ -11,7 +11,6 @@ import SocialIcons3 from "../assets/Social icons3.png";
 import SocialIcons4 from "../assets/Social icons4.png";
 import SocialIcons5 from "../assets/Social icons5.png";
 import SocialIcons6 from "../assets/youtube.png";
-import { OptionType } from "@/types";
 
 export const sidebarLinks = [
   {
@@ -118,54 +117,6 @@ export const genderOptions = [
   { value: "Female", label: "Female" },
 ];
 
-export const careerOptions: OptionType[] = [
-  { value: "Software Engineering", label: "Software Engineering" },
-  { value: "Data Science", label: "Data Science" },
-  { value: "Graphic Design", label: "Graphic Design" },
-  { value: "Marketing", label: "Marketing" },
-  { value: "Artificial Intelligence", label: "Artificial Intelligence" },
-  { value: "Machine Learning", label: "Machine Learning" },
-  { value: "Finance", label: "Finance" },
-  { value: "Healthcare Administration", label: "Healthcare Administration" },
-  { value: "Mechanical Engineering", label: "Mechanical Engineering" },
-  { value: "Law", label: "Law" },
-  { value: "Entrepreneurship", label: "Entrepreneurship" },
-  { value: "Cybersecurity", label: "Cybersecurity" },
-  { value: "Journalism", label: "Journalism" },
-  { value: "Architecture", label: "Architecture" },
-];
-
-export const statusProps = [
-  {
-    title: "Resume",
-    status: "Completed",
-  },
-  {
-    title: "Statement of purpose 1",
-    status: "In Progress",
-  },
-  // {
-  //   title: "Statement of purpose 2",
-  //   status: "Not Started",
-  // },
-  {
-    title: "School application submission 1",
-    status: "Not Started",
-  },
-  // {
-  //   title: "School application submission 2",
-  //   status: "Not Started",
-  // },
-  // {
-  //   title: "Extra Statement of Purpose",
-  //   status: "Not Started",
-  // },
-  // {
-  //   title: "Extra School Application Submission",
-  //   status: "Not Started",
-  // },
-];
-
 export const degreeOptions = [
   "Bachelor of Science (BSC)",
   "Bachelor of Arts (B.A)",
@@ -180,6 +131,7 @@ export const degreeOptions = [
   "Bachelor of Technology",
   "Master of Science (MSC)",
   "Master of Arts (MA)",
+  "Master of Business Administration (MBA)",
   "Master of Engineering (M.ENG)",
   "Master of Law (LLM)",
   "Master of Education (M.ED)",
@@ -187,6 +139,7 @@ export const degreeOptions = [
   "Master of Nursing",
   "Master of Medical Laboratory Science",
   "Master of Technology",
+  "Higher National Diploma",
 ];
 
 export const countryOptions = [
@@ -1529,6 +1482,54 @@ export const degreeTypeOptions = [
   },
 ];
 
+export const advancedDegreeTypeOptions = [
+  {
+    value: "Master of Science (MSC)",
+    label: "Master of Science (MSC)",
+  },
+  {
+    value: "Master of Arts (MA)",
+    label: "Master of Arts (MA)",
+  },
+  {
+    value: "Master of Business Administration (MBA)",
+    label: "Master of Business Administration (MBA)",
+  },
+  {
+    value: "Master of Engineering (M.ENG)",
+    label: "Master of Engineering (M.ENG)",
+  },
+  {
+    value: "Master of Law (LLM)",
+    label: "Master of Law (LLM)",
+  },
+
+  {
+    value: "Master of Education (M.ED)",
+    label: "Master of Education (M.ED)",
+  },
+
+  {
+    value: "Master of Pharmacy",
+    label: "Master of Pharmacy",
+  },
+
+  {
+    value: "Master of Nursing",
+    label: "Master of Nursing",
+  },
+
+  {
+    value: "Master of Medical Laboratory Science",
+    label: "Master of Medical Laboratory Science",
+  },
+
+  {
+    value: "Master of Technology",
+    label: "Master of Technology",
+  },
+];
+
 export const classOfDegreeOptions = [
   {
     value: "First Class and below 32 years old – All 17 countries",
@@ -1634,10 +1635,6 @@ export const typeOfAcademicDegreeOptions = [
     label: "LLM",
   },
   {
-    value: "MBA",
-    label: "MBA",
-  },
-  {
     value: "MENG",
     label: "MENG",
   },
@@ -1693,4 +1690,3 @@ export const countriesOfInterestOptions = [
     label: "Switzerland",
   },
 ];
-

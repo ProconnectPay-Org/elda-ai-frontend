@@ -101,12 +101,12 @@ export const getErrorMessage = (
 ): string | undefined => {
   if (!error) return undefined;
   if (typeof error === "string") return error;
-  
+
   // Type guard to check if error has a message property
-  if ('message' in error && typeof error.message === 'string') {
+  if ("message" in error && typeof error.message === "string") {
     return error.message;
   }
-  
+
   return undefined;
 };
 
@@ -171,7 +171,8 @@ export const step1Schema = z.object({
   cityOfResidence: z.string().nonempty("City of residence is required"),
   postalAddress: z.string().nonempty("Postal address is required"),
   houseAddress: z.string().nonempty("House address is required"),
-  age: z.number()
+  age: z
+    .number()
     .min(18, "You must be at least 18 years old")
     .nonnegative("Age must be a positive number"),
 });
@@ -364,47 +365,36 @@ export const step5Schema = z.object({
     .optional(),
 });
 
-export const onboardSchema = z.object({
-  // ...step4Schema.shape,
-  // ...step1Schema.shape,
-  uploadCV: z.string().optional(), // Allow optional file name or path
-  countriesOfInterest: z.array(z.string()).min(1, "At least one country is required"), // Update to support multiple countries
-  membershipStatus: z.string().optional(),
-  dateOfBirth: z.string().optional(), // Add dateOfBirth field
-  GMATGRE: z.enum(["yes", "no"]).optional(), // Add GMATGRE field
-  specificUniversity: z.string().optional(), // Add specificUniversity field
-  currentStatus: z.string().optional(), // Add currentStatus field
-  degreeType: z.string().optional(), // Add degreeType field
-  countryOfEducation: z.string().optional(), // Add this line
-  courseOfStudy: z.string().optional(), // Add this line
-  gender: z.enum(["Male", "Female", "Other"]).optional(), // Add gender field with specific enum
-  graduateOf: z.string().optional(), // Add graduateOf field
-  institutionName: z.string().optional(), // Add this line
-  degreeClass: z.string().optional(), // Add degreeClass as optional
-  currentCGPA: z.string().optional(), // Add currentCGPA as optional
-  kindOfDegree: z.string().optional(), // Add kindOfDegree field
-  specificCGPA: z.string().optional(),
-});
-
 export const onboardSchema2 = z.object({
-  ...step1Schema.shape,
-  ...step2Schema.shape,
-  ...step3Schema.shape,
-  ...step4Schema.shape,
-  ...step5Schema.shape,
-  gender: z.enum(["Male", "Female", "Other"]).optional(), // Add explicit gender enum
   membershipStatus: z.string().nonempty("Membership status is required"),
-  countriesOfInterest: z.array(z.string()).optional(),
+  ...step1Schema.pick({
+    firstName: true,
+    middleName: true,
+    surname: true,
+    emailAddress: true,
+    phoneNumber: true,
+    gender: true,
+    dateOfBirth: true,
+    age: true,
+  }).shape,
+  whatsappNumber: z.string().nonempty("WhatsApp number is required"),
+  kindOfDegree: z.string().optional(), // Explicitly add kindOfDegree field
+  specificCGPA: z.string().optional(), // Add specificCGPA field
   hasMasters: z.enum(["yes", "no"]).optional(),
   mastersDegree: z.string().optional(),
   mastersCourse: z.string().optional(),
+  ...step2Schema.pick({
+    graduateOf: true,
+    institutionName: true,
+    degreeClass: true,
+    courseOfStudy: true,
+    classOfDegreeMasters: true,
+    specificCGPAMasters: true,
+    typeOfAcademicDegree: true,
+  }).shape,
+  ...step3Schema.pick({ academicProgram: true }).shape,
   specificUniversity: z.string().optional(), // Add specificUniversity field
-  kindOfDegree: z.string().optional(), // Explicitly add kindOfDegree field
-  GMATGRE: z.enum(["yes", "no"]).optional(), // Add GMATGRE field
   uploadCV: z.string().optional(), // Add uploadCV field for file upload
-  specificCGPA: z.string().optional(), // Add specificCGPA field
-  countryOfResidence: z.string().optional(),
-  stateOfResidence: z.string().optional(),
-  cityOfResidence: z.string().optional(),
-  postalAddress: z.string().optional(),
+  GMATGRE: z.enum(["yes", "no"]).optional(), // Add GMATGRE field
+  countriesOfInterest: z.array(z.string()).optional(),
 });

@@ -1,7 +1,12 @@
 import { FormControl, FormField, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
-import { Control, FieldPath, FieldValues, ControllerRenderProps } from "react-hook-form";
+import {
+  Control,
+  FieldPath,
+  FieldValues,
+  ControllerRenderProps,
+} from "react-hook-form";
 import {
   Select,
   SelectContent,
@@ -9,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { toast } from "./ui/use-toast";
 
 interface CustomInputProps<T extends FieldValues> {
   control: Control<T>;
@@ -39,21 +45,29 @@ const FormInput = <T extends FieldValues>({
     <FormField
       control={control}
       name={name}
-      rules={validation ? { validate: (value) => {
-        try {
-          validation.parse(value);
-          return true;
-        } catch (error) {
-          return error instanceof z.ZodError ? error.errors[0].message : "Invalid input";
-        }
-      } } : undefined}
+      rules={
+        validation
+          ? {
+              validate: (value) => {
+                try {
+                  validation.parse(value);
+                  return true;
+                } catch (error) {
+                  return error instanceof z.ZodError
+                    ? error.errors[0].message
+                    : "Invalid input";
+                }
+              },
+            }
+          : undefined
+      }
       render={({ field }) => {
         // Explicitly handle different input types
         const inputProps = {
           ...field,
-          value: type === 'file' ? undefined : field.value,
+          value: type === "file" ? undefined : field.value,
           // For file inputs, remove the value prop entirely
-          ...(type === 'file' && { value: undefined }),
+          ...(type === "file" && { value: undefined }),
         };
 
         return (
@@ -71,20 +85,33 @@ const FormInput = <T extends FieldValues>({
                         if (file) {
                           // Validate file type and size
                           const maxSize = 5 * 1024 * 1024; // 5MB
-                          const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-                          
+                          const allowedTypes = [
+                            "application/pdf",
+                            "application/msword",
+                            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                          ];
+
                           if (!allowedTypes.includes(file.type)) {
-                            alert('Please upload a PDF or Word document.');
-                            e.target.value = ''; // Clear the input
+                            toast({
+                              variant: "destructive",
+                              title: "Error",
+                              description:
+                                "Please upload a PDF or Word document.",
+                            });
+                            e.target.value = ""; // Clear the input
                             return;
                           }
-                          
+
                           if (file.size > maxSize) {
-                            alert('File size should not exceed 5MB.');
-                            e.target.value = ''; // Clear the input
+                            toast({
+                              title: "Error",
+                              variant: "destructive",
+                              description: "File size should not exceed 5MB.",
+                            });
+                            e.target.value = ""; // Clear the input
                             return;
                           }
-                          
+
                           field.onChange(file.name);
                         }
                       }}
@@ -99,8 +126,8 @@ const FormInput = <T extends FieldValues>({
                 </FormControl>
               ) : type === "select" ? (
                 <FormControl>
-                  <Select 
-                    onValueChange={field.onChange} 
+                  <Select
+                    onValueChange={field.onChange}
                     defaultValue={field.value?.toString()}
                   >
                     <SelectTrigger>

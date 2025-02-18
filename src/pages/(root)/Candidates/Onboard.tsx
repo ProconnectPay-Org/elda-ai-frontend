@@ -3,7 +3,18 @@ import PcpLogo from "@/assets/proconnect-logo-new-no-bg.png";
 import PhoneInputField from "@/components/PhoneInputField";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { classOfDegreeMastersOptions, classOfDegreeOptions, countriesOfInterestOptions, degreeTypeOptions, genderOptions, graduateOptions, membershipOptions, typeOfAcademicDegreeOptions, yesNoOptions } from "@/constants";
+import {
+  advancedDegreeTypeOptions,
+  classOfDegreeMastersOptions,
+  classOfDegreeOptions,
+  countriesOfInterestOptions,
+  degreeTypeOptions,
+  genderOptions,
+  graduateOptions,
+  membershipOptions,
+  typeOfAcademicDegreeOptions,
+  yesNoOptions,
+} from "@/constants";
 import { onboardSchema2 } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -15,7 +26,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import axios from "axios";
 
-const BASEURL = "https://elda-ai-drf.onrender.com/api";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Onboard = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -29,28 +40,31 @@ const Onboard = () => {
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
       age--;
     }
-    
+
     return age;
   };
 
   const onSubmit = async (data: z.infer<typeof onboardSchema2>) => {
     setIsLoading(true);
     try {
-      console.log('Form data before submission:', data);
-      
+      console.log("Form data before submission:", data);
+
       const submissionData = {
         ...data,
         dateOfBirth: data.dateOfBirth.toISOString(),
       };
-      
-      console.log('Submission data:', submissionData);
+
+      console.log("Submission data:", submissionData);
 
       const response = await axios.post(
-        `${BASEURL}/onboarding-candidate/`,
+        `${API_URL}onboarding-candidate/`,
         submissionData,
         {
           headers: {
@@ -59,7 +73,7 @@ const Onboard = () => {
         }
       );
 
-      console.log('Response:', response);
+      console.log("Response:", response);
 
       if (response.status === 201 || response.status === 200) {
         // Show success message
@@ -72,7 +86,11 @@ const Onboard = () => {
     } catch (error) {
       console.error("Submission error:", error);
       if (axios.isAxiosError(error)) {
-        alert(`Failed to submit form: ${error.response?.data?.message || error.message}`);
+        alert(
+          `Failed to submit form: ${
+            error.response?.data?.message || error.message
+          }`
+        );
       } else {
         alert("Failed to submit form. Please try again.");
       }
@@ -92,10 +110,15 @@ const Onboard = () => {
         </h3>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 pb-8">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 pb-8"
+          >
             <div className="flex flex-col gap-14">
               <div className="border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
-                <h4 className="text-[25px] font-bold mb-6">Personal Information</h4>
+                <h4 className="text-[25px] font-bold mb-6">
+                  Personal Information
+                </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                   <div className="md:col-span-2">
                     <FormInput
@@ -150,10 +173,17 @@ const Onboard = () => {
                     </span>
                   </div>
 
-                  <PhoneInputField name="phoneNumber" label="Phone Number" />
+                  <PhoneInputField
+                    className="md:w-full"
+                    name="phoneNumber"
+                    label="Phone Number"
+                    labelName="font-medium text-sm"
+                  />
                   <PhoneInputField
                     name="whatsappNumber"
                     label="WhatsApp Number"
+                    className="md:w-full"
+                    labelName="font-medium text-sm"
                   />
 
                   <FormInput
@@ -165,7 +195,7 @@ const Onboard = () => {
                     placeholder="Select your gender"
                   />
                   <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                    <label className="form-label text-sm font-medium mb-2">
                       Date of Birth
                     </label>
                     <Controller
@@ -179,7 +209,7 @@ const Onboard = () => {
                               field.onChange(date);
                               // Calculate and set age when date changes
                               const age = calculateAge(date);
-                              form.setValue('age', age);
+                              form.setValue("age", age);
                             }
                           }}
                           placeholderText="Select your date of birth"
@@ -189,7 +219,7 @@ const Onboard = () => {
                           yearDropdownItemNumber={50}
                           maxDate={new Date()}
                           wrapperClassName="w-full"
-                          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+                          className="w-full px-3 py-[7px] border rounded-md focus:outline-none focus:ring focus:border-blue-300"
                         />
                       )}
                     />
@@ -206,11 +236,11 @@ const Onboard = () => {
                     type="number"
                     placeholder="Enter your age as at today"
                     className="cursor-not-allowed"
-                      />
+                  />
                 </div>
               </div>
-              {/* First Details */}
 
+              {/* FIRST DEGREE */}
               <div className="flex flex-col gap-y-3 border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
                 <h4 className="text-[25px] font-bold mb-6">First Degree</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
@@ -256,7 +286,7 @@ const Onboard = () => {
                     placeholder=""
                   />
 
-<FormInput
+                  <FormInput
                     control={form.control}
                     name="courseOfStudy"
                     label="Course of Study"
@@ -283,8 +313,9 @@ const Onboard = () => {
                     control={form.control}
                     name="mastersDegree"
                     label="If yes, kind of degree"
-                    type="input"
+                    type="select"
                     placeholder=""
+                    options={advancedDegreeTypeOptions}
                   />
 
                   <FormInput
@@ -313,9 +344,12 @@ const Onboard = () => {
                   />
                 </div>
               </div>
-              {/* Other information */}
+
+              {/* OTHER INFORMATION */}
               <div className="flex flex-col gap-y-3 border border-pale-bg py-9 px-5 sm:px-10 rounded-2xl md:rounded-3xl bg-white">
-                <h4 className="text-[25px] font-bold mb-6">Other Information</h4>
+                <h4 className="text-[25px] font-bold mb-6">
+                  Other Information
+                </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                   <FormInput
                     control={form.control}
@@ -455,14 +489,14 @@ const Onboard = () => {
                   variant="outline"
                   type="button"
                   onClick={() => form.reset()}
-                  className="px-8 border-[2px] border-[#DB251A] font-bold text-[20px] text-[#DB251A] items-center justify-center"
+                  className="px-8 border-[2px] border-red font-bold text-[20px] text-red items-center justify-center"
                 >
                   Cancel
                 </Button>
-                <Button 
+                <Button
                   type="submit"
                   disabled={isLoading}
-                  className="items-center justify-center px-8 bg-[#DB251A] font-bold text-[20px] text-white"
+                  className="items-center justify-center px-8 bg-red font-bold text-[20px] text-white"
                 >
                   {isLoading ? "Submitting..." : "Submit"}
                 </Button>
