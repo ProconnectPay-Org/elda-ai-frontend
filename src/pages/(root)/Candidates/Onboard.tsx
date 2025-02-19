@@ -58,7 +58,47 @@ const Onboard = () => {
 
       const submissionData = {
         ...data,
-        dateOfBirth: data.dateOfBirth.toISOString(),
+        full_name: data.firstName,
+        email: data.emailAddress,
+        phone_number: data.phoneNumber,
+        gender: data.gender,
+        graduate_of: data.graduateOf,
+        state_of_residence: "Lagos",
+        date_of_birth: data.dateOfBirth
+          ? new Date(data.dateOfBirth).toISOString().split("T")[0]
+          : null,
+        age: data.age,
+        whatsapp: data.whatsappNumber,
+        specific_cgpa: data.specificCGPA,
+        has_masters_degree: data.hasMasters,
+        class_of_degree: data.degreeClass,
+
+        degree: [
+          {
+            cgpa: data.specificCGPA,
+            cgpa_class: data.degreeClass,
+            course: data.courseOfStudy,
+            degree: data.kindOfDegree,
+            institution: data.institutionName,
+          },
+          {
+            cgpa: data.specificCGPAMasters,
+            cgpa_class: data.classOfDegreeMasters,
+            course: data.mastersCourse,
+            degree: data.mastersDegree,
+            institution: data.mastersInstitution,
+          },
+        ],
+        countries:
+          data.countriesOfInterest?.map((country) => ({
+            name: country,
+          })) || [],
+        interest: {
+          academic_type: data.typeOfAcademicDegree,
+          open_to_gmat: data.GMATGRE,
+          specific_program: data.academicProgram,
+          specific_university: data.specificUniversity,
+        },
       };
 
       console.log("Submission data:", submissionData);
@@ -73,10 +113,24 @@ const Onboard = () => {
         }
       );
 
-      console.log("Response:", response);
-
       if (response.status === 201 || response.status === 200) {
-        // Show success message
+        // Check if a file was uploaded
+        if (data.uploadCV && data.uploadCV.length > 0) {
+          const resumeData = new FormData();
+          resumeData.append("resume", data.uploadCV[0]);
+
+          const resumeResponse = await axios.patch(
+            `${API_URL}onboarding-candidate/s/${data.emailAddress}/`,
+            resumeData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+          console.log("Resume upload response:", resumeResponse);
+        }
+
         alert("Onboarding form submitted successfully!");
         // Reset form
         form.reset();
@@ -213,7 +267,7 @@ const Onboard = () => {
                             }
                           }}
                           placeholderText="Select your date of birth"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="yyyy-MM-dd"
                           showYearDropdown
                           scrollableYearDropdown
                           yearDropdownItemNumber={50}
@@ -339,6 +393,13 @@ const Onboard = () => {
                     control={form.control}
                     name="specificCGPAMasters"
                     label="Specific CGPA Masters"
+                    type="input"
+                    placeholder=""
+                  />
+                  <FormInput
+                    control={form.control}
+                    name="mastersInstitution"
+                    label="Name Of Institution"
                     type="input"
                     placeholder=""
                   />

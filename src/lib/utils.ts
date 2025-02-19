@@ -375,14 +375,16 @@ export const onboardSchema2 = z.object({
     phoneNumber: true,
     gender: true,
     dateOfBirth: true,
-    age: true,
+    // age: true,
   }).shape,
+  age: z.number().optional(),
   whatsappNumber: z.string().nonempty("WhatsApp number is required"),
   kindOfDegree: z.string().optional(), // Explicitly add kindOfDegree field
   specificCGPA: z.string().optional(), // Add specificCGPA field
   hasMasters: z.enum(["yes", "no"]).optional(),
   mastersDegree: z.string().optional(),
   mastersCourse: z.string().optional(),
+  mastersInstitution: z.string().optional(),
   ...step2Schema.pick({
     graduateOf: true,
     institutionName: true,
