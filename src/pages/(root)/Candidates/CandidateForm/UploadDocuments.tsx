@@ -34,7 +34,6 @@ const UploadDocuments: React.FC = () => {
   const [isUploaded, setIsUploaded] = useState<boolean[]>(Array(9).fill(false));
   const verificationDocumentsId = Cookies.get("verification_document_id");
   const candidate_id = Cookies.get("candidate_id");
-  // const [isDocLoading, setIsDocLoading] = useState(false);
 
   const labels = [
     "bsc_hnd_certificate",
@@ -65,7 +64,7 @@ const UploadDocuments: React.FC = () => {
   ];
 
   const { data, isLoading } = useQuery({
-    queryKey: ["verificationDocumentsDatas"],
+    queryKey: ["verificationDocumentsDatas", candidate_id],
     queryFn: fetchVerificationDocument,
     staleTime: 5 * 1000 * 60,
     enabled: !!verificationDocumentsId,

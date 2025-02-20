@@ -1,21 +1,11 @@
+import { ACSCandidateProps } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-declare interface Candidate {
-  id: string;
-  full_name: string;
-  email: string;
-  phone_number: string;
-  age: string;
-  gender: string;
-  graduate_of: string;
-  has_paid: boolean;
-}
-
 declare interface CandidatesResponse {
-  results: Candidate[];
+  results: ACSCandidateProps[];
 }
 
 export const useACSCandidates = () => {

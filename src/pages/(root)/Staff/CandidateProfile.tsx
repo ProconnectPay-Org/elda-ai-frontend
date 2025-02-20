@@ -167,7 +167,7 @@ const CandidateProfile = () => {
             </div>
             <p className="text-xs">Candidate ID: {id}</p>
             <div className="flex items-center gap-4">
-              <button className="text-sm bg-red text-white rounded-lg p-2">
+              <button className="text-sm bg-red hover:bg-transparent border border-red hover:text-red text-white rounded-lg p-2">
                 <Link
                   to={
                     candidate.resume_status === "Completed"
@@ -180,7 +180,7 @@ const CandidateProfile = () => {
                     : "Refine Resume"}
                 </Link>
               </button>
-              <button className="text-sm bg-red text-white rounded-lg p-2">
+              <button className="text-sm bg-red hover:bg-transparent border border-red hover:text-red text-white rounded-lg p-2">
                 <Link
                   to={
                     candidate.sop_status1 === "Completed"
@@ -193,7 +193,7 @@ const CandidateProfile = () => {
                     : "Craft SOP 1"}
                 </Link>
               </button>
-              <button className="text-sm bg-red text-white rounded-lg p-2">
+              <button className="text-sm bg-red hover:bg-transparent border border-red hover:text-red text-white rounded-lg p-2">
                 <Link
                   to={
                     candidate.sop_status2 === "Completed"
@@ -250,10 +250,12 @@ const CandidateProfile = () => {
               <CopyText label="Middle Name" text={candidate?.middle_name} />
               <CopyText label="Last Name" text={candidate?.last_name} />
               <CopyText label="Gender" text={candidate?.gender} />
-              <CopyText
-                label="Birth Date"
-                text={formatMonthDay(String(candidate?.birth_date))}
-              />
+              <div>
+                <CopyText label="Birth Date" text={candidate?.birth_date} />
+                <p className="text-blue-600">
+                  {formatMonthDay(String(candidate?.birth_date))}
+                </p>
+              </div>
               <CopyText
                 label="City of Residence"
                 text={candidate?.city_current_reside}

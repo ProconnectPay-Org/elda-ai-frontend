@@ -39,11 +39,26 @@ export function DataTable<TData, TValue>({
   onRowClick,
   isLoading,
 }: DataTableProps<TData, TValue>) {
+  const LOCAL_STORAGE_KEY = "table-column-visibility";
+  // Load column visibility from localStorage
+  const storedColumnVisibility = React.useMemo(() => {
+    if (typeof window !== "undefined") {
+      const savedState = localStorage.getItem(LOCAL_STORAGE_KEY);
+      return savedState ? JSON.parse(savedState) : {};
+    }
+    return {};
+  }, []);
+
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+    React.useState<VisibilityState>(storedColumnVisibility);
+
+  // Save column visibility changes to localStorage
+  React.useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(columnVisibility));
+  }, [columnVisibility]);
 
   const table = useReactTable({
     data,

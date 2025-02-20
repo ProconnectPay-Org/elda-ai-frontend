@@ -3,16 +3,26 @@ import { Controller, useFormContext } from "react-hook-form";
 import ReactPhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
-const PhoneInputField = ({ name }: { name: string }) => {
+const PhoneInputField = ({
+  name,
+  label,
+  labelName,
+  className,
+}: {
+  name: string;
+  label?: string;
+  labelName?: string;
+  className?: string;
+}) => {
   const {
     control,
     formState: { errors },
   } = useFormContext();
 
   return (
-    <div className="flex flex-col md:w-1/2">
-      <label htmlFor={name}>
-        Phone Number <span className="text-red">*</span>
+    <div className={`flex flex-col md:w-1/2 ${className}`}>
+      <label htmlFor={name} className={`${labelName}`}>
+        {label || "Phone Number"} <span className="text-red">*</span>
       </label>
       <Controller
         name={name}
@@ -24,13 +34,13 @@ const PhoneInputField = ({ name }: { name: string }) => {
               name: { name },
               ref,
             }}
-            containerClass="react-tel-input"
-            inputClass="border border-gray-border rounded-md py-2 px-4"
+            containerClass="border border-[#e2e8f0] shadow-none rounded-md"
+            inputClass=" rounded-md py-2 px-4"
             inputStyle={{ width: "100%", height: "42px" }}
             buttonStyle={{
               backgroundColor: "white",
               borderRadius: "8px 0 0 8px",
-              borderColor: "#66666",
+              borderColor: "#e2e8f0",
             }}
             value={value}
             onChange={(phone) => onChange(phone)}

@@ -12,6 +12,8 @@ import { ResumeStep1, ResumeStep3, ResumeStep4, ResumeStep5 } from ".";
 import RootLayout from "@/layouts/RootLayout";
 import { useNavigate, useParams } from "react-router-dom";
 import Cookies from "js-cookie";
+import { craftCandidateResume } from "@/lib/actions/staff.actions";
+import { toast } from "@/components/ui/use-toast";
 
 const steps = [
   {
@@ -93,7 +95,17 @@ const RefineResume = () => {
       if (currentStep === steps.length - 1) {
         // Final Step: Navigate to Final Resume
 
-        navigate(`/refine-resume/final-resume/${id}`);
+        const resumeStatus = await craftCandidateResume(id);
+
+        if (resumeStatus) {
+          toast({
+            description: "Resume Status Updated Successfully",
+            type: "foreground",
+            variant: "success",
+          });
+          navigate(`/refine-resume/final-resume/${id}`);
+        }
+        
         return; // Prevent further execution
       } else {
         // Other Steps: Save data and proceed

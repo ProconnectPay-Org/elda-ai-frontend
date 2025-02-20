@@ -97,12 +97,18 @@ export const getErrorMessage = (
   error:
     | string
     | FieldError
-    | Merge<FieldError, FieldErrorsImpl<any>>
+    | Merge<FieldError, FieldErrorsImpl<Record<string, FieldError>>>
     | undefined
-): any | undefined => {
+): string | undefined => {
   if (!error) return undefined;
+
   if (typeof error === "string") return error;
-  return error.message;
+  // Type guard to check if error has a message property
+  if ("message" in error && typeof error.message === "string") {
+    return error.message;
+  }
+
+  return undefined;
 };
 
 export const copyToClipboard = async (
@@ -346,8 +352,8 @@ export const step5Schema = z.object({
     .optional(),
 });
 
-export const onboardSchema = z.object({
-  membershipStatus: z.string().nonempty("Status is required"),
+export const onboardSchema2 = z.object({
+  membershipStatus: z.string().nonempty("Membership status is required"),
   firstName: z.string().nonempty("First name is required"),
   middleName: z.string().optional(),
   surname: z.string().nonempty("Surname is required"),
@@ -355,19 +361,23 @@ export const onboardSchema = z.object({
   phoneNumber: z.string().nonempty("Phone number is required"),
   whatsappNumber: z.string().nonempty("Whatsapp number is required"),
   gender: z.enum(["Male", "Female"]),
-  dateOfBirth: z.string().nonempty("Date of birth is required"),
-  age: z.string().nonempty("Age is required"),
+  dateOfBirth: z.date({
+    required_error: "Date of birth is required",
+    invalid_type_error: "That's not a valid date",
+  }),
+  age: z.number().optional(),
   graduateOf: z.enum(["Polytechnic", "University"]),
-  graduatedFrom: z.string().nonempty("School name is required"),
   kindOfDegree: z.string().nonempty("Kind of degree is required"),
 
   courseOfStudy: z.string().optional(),
 
-  classOfDegree: z.string().nonempty("Class of degree is required"),
+  institutionName: z.string().nonempty("Institution is required"),
+  degreeClass: z.string().nonempty("Class of degree is required"),
   specificCGPA: z.string().nonempty("Specific CGPA is required"),
   hasMasters: z.string(),
   mastersDegree: z.string().optional(),
   mastersCourse: z.string().optional(),
+  mastersInstitution: z.string().optional(),
   classOfDegreeMasters: z.string().optional(),
   specificCGPAMasters: z.string().nonempty("Specific CGPA is required"),
   typeOfAcademicDegree: z.string().optional(),
@@ -375,5 +385,5 @@ export const onboardSchema = z.object({
   specificUniversity: z.string().optional(),
   uploadCV: z.string().optional(),
   GMATGRE: z.string().optional(),
-  countryInterestedIn: z.string().optional(),
+  countriesOfInterest: z.array(z.string()).optional(),
 });

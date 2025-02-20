@@ -17,6 +17,16 @@ const useAuth = () => {
       : null;
   });
 
+  const [guestInfo, setGuestInfo] = useState<{
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+  } | null>(() => {
+    // Try to retrieve guest info from localStorage or cookies
+    const storedGuestInfo = localStorage.getItem("guestInfo");
+    return storedGuestInfo ? JSON.parse(storedGuestInfo) : null;
+  });
+
   const navigate = useNavigate();
 
   const userRole = Cookies.get("user_role");
@@ -30,10 +40,27 @@ const useAuth = () => {
       Cookies.remove("user_name");
       Cookies.remove("user_email");
       setLoggedInUser(null);
+      setGuestInfo(null);
+      localStorage.removeItem("guestInfo");
       navigate("/sign-in");
     } else {
       console.error("No user role found for logout");
     }
+  };
+
+  const setGuestDetails = (details: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  }) => {
+    const guestDetails = {
+      firstName: details.firstName,
+      lastName: details.lastName,
+      email: details.email,
+    };
+
+    setGuestInfo(guestDetails);
+    localStorage.setItem("guestInfo", JSON.stringify(guestDetails));
   };
 
   const { data, isLoading } = useQuery({
@@ -41,7 +68,7 @@ const useAuth = () => {
     queryFn: () =>
       getLoggedInUser(userRole as "staff" | "admin" | "candidate" | "analyst"),
     enabled: !!userRole,
-    staleTime: 10 * 1000 * 60,
+    staleTime: 5 * 1000 * 60,
   });
 
   useEffect(() => {
@@ -55,8 +82,11 @@ const useAuth = () => {
 
   return {
     loggedInUser,
+    guestInfo,
+    setGuestDetails,
     handleLogout,
     isLoading,
+    userRole,
   };
 };
 

@@ -1,22 +1,12 @@
 import { getInitials } from "@/lib/utils";
+import { ACSCandidateProps } from "@/types";
 import React from "react";
 import { Link } from "react-router-dom";
 
-declare interface Candidate {
-  id: string;
-  full_name: string;
-  email: string;
-  phone_number: string;
-  age: string;
-  gender: string;
-  graduate_of: string;
-  has_paid: boolean;
-}
-
 interface SidebarProps {
-  candidates: Candidate[];
-  selectedCandidate: Candidate | null;
-  setSelectedCandidate: (candidate: Candidate) => void;
+  candidates: ACSCandidateProps[];
+  selectedCandidate: ACSCandidateProps | null;
+  setSelectedCandidate: (candidate: ACSCandidateProps) => void;
 }
 
 const AcsSidebar: React.FC<SidebarProps> = ({
@@ -67,9 +57,7 @@ const AcsSidebar: React.FC<SidebarProps> = ({
         )}
       </ul>
 
-      <h3 className="text-md font-semibold text-red-600 mb-2">
-        Unpaid Candidates
-      </h3>
+      <h3 className="text-md font-semibold text-red mb-2">Unpaid Candidates</h3>
       <ul className="flex flex-col gap-2">
         {unPaidCandidates.length > 0 ? (
           unPaidCandidates.map((candidate) => (

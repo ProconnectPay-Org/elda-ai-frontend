@@ -8,7 +8,6 @@ import {
   ResumeStep5Schema,
 } from "@/lib/resumeSchema";
 import {
-  onboardSchema,
   step1Schema,
   step2Schema,
   step3Schema,
@@ -481,3 +480,41 @@ export type ResumeStep2FormData = z.infer<typeof ResumeStep2Schema>;
 export type ResumeStep3FormData = z.infer<typeof ResumeStep3Schema>;
 export type ResumeStep4FormData = z.infer<typeof ResumeStep4Schema>;
 export type ResumeStep5FormData = z.infer<typeof ResumeStep5Schema>;
+
+type Interest = {
+  academic_type?: string;
+  specific_program?: string;
+  open_to_gmat?: string;
+  specific_university?: string;
+} | null;
+
+type Degree = {
+  institution?: string;
+  course?: string;
+  degree?: string;
+  cgpa?: string;
+  cgpa_class?: string;
+};
+
+type Country = {
+  name: string;
+};
+
+declare interface ACSCandidateProps {
+  id: string;
+  full_name: string;
+  email: string;
+  phone_number: string;
+  date_of_birth: string;
+  age: string;
+  gender: string;
+  graduate_of: string;
+  has_paid: boolean;
+  whatsapp: string;
+  has_masters_degree: boolean;
+  resume: string;
+  class_of_degree: string;
+  countries: Country[];
+  degree: Degree[];
+  interest: Interest;
+}

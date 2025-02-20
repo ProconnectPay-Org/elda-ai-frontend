@@ -1,32 +1,28 @@
 import AcsCandidateDetails from "@/components/AcsCandidateDetails";
 import AcsSidebar from "@/components/AcsSidebar";
 import { useACSCandidates } from "@/hooks/useACSCandidates";
+import { ACSCandidateProps } from "@/types";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
-
-declare interface Candidate {
-  id: string;
-  full_name: string;
-  email: string;
-  phone_number: string;
-  age: string;
-  gender: string;
-  graduate_of: string;
-  has_paid: boolean;
-}
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const ACSLayout = () => {
   const { data: candidates, isLoading, error } = useACSCandidates();
-  const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(
-    null
-  );
+  const { id } = useParams<{ id: string }>();
+  const [selectedCandidate, setSelectedCandidate] =
+    useState<ACSCandidateProps | null>(null);
 
   // Set first candidate as default on first load
-  useState(() => {
-    if (candidates && candidates.results.length > 0) {
-      setSelectedCandidate(candidates.results[0]);
+  useEffect(() => {
+    if (candidates?.results && candidates?.results?.length > 0) {
+      // Find the candidate with the matching ID
+      const candidate = id
+        ? candidates.results.find((c) => c.id == id)
+        : candidates.results[0];
+
+      setSelectedCandidate(candidate || candidates.results[0]);
     }
-  });
+  }, [candidates]);
 
   if (isLoading)
     return (

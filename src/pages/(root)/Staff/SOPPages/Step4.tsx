@@ -141,7 +141,9 @@ const Step4 = ({
                   : "Type your SOP here."
               }
               value={candidateSop}
-              disabled={!isEditing || isLoading || singleCandidateLoading || sopLoading}
+              disabled={
+                !isEditing || isLoading || singleCandidateLoading || sopLoading
+              }
               className="text-lg p-4 leading-[32px] min-h-80 text-black"
               onChange={(e) => setCandidateSop(e.target.value)}
             />
@@ -205,6 +207,16 @@ const Step4 = ({
             </DialogHeader>
             <img src={SuccessImage} alt="" />
             <div className="flex items-center flex-col justify-center gap-6">
+              <Link
+                to={`/craft-sop/${candidateId}?type=${
+                  prefix === "2" ? "school1" : "school2"
+                }`}
+                target="_blank"
+              >
+                <Button className="bg-red">
+                  Create SOP {prefix === "2" ? "1" : "2"}
+                </Button>
+              </Link>
               <Link
                 to={`/sop/${candidateId}?type=${
                   prefix === "2" ? "school2" : "school1"

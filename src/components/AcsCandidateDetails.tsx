@@ -19,19 +19,11 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./ui/input";
-
-declare interface Candidate {
-  id: string;
-  full_name: string;
-  email: string;
-  phone_number: string;
-  age: string;
-  gender: string;
-  graduate_of: string;
-}
+import { ACSCandidateProps } from "@/types";
+import { Link } from "react-router-dom";
 
 interface CandidateDetailsProps {
-  candidate: Candidate | null;
+  candidate: ACSCandidateProps | null;
 }
 
 const SmallComponent = ({ label, value }: { label: string; value: string }) => {
@@ -51,7 +43,9 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
   if (!candidate) {
     return (
       <div className="p-6">
-        <p className="text-gray-500 font-semibold text-xl">Welcome to your ACS Dashboard</p>
+        <p className="text-gray-500 font-semibold text-xl">
+          Welcome to your ACS Dashboard
+        </p>
         <p className="text-gray-500">Select a candidate to view details</p>
       </div>
     );
@@ -116,6 +110,7 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
         </div>
       </div>
 
+      {/* PERSONAL DATA */}
       <div className="p-6 md:max-w-[760px]">
         <p className="text-xl font-semibold">Personal Data</p>
         <div className="space-y-4">
@@ -129,25 +124,30 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
           />
           <SmallComponent
             label="Personal Phone Number"
-            value={candidate.phone_number || "No name"}
+            value={candidate.phone_number || "No number"}
           />
           <SmallComponent
             label="Personal Whatsapp Number"
-            value={candidate.phone_number || "No name"}
+            value={candidate.whatsapp || "No number"}
           />
           <SmallComponent
             label="Gender"
-            value={candidate.gender || "No name"}
+            value={candidate.gender || "No gender"}
           />
           <SmallComponent
             label="Age"
-            value={`${candidate.age} years old` || "No name"}
+            value={`${candidate.age} years old` || "No age"}
+          />
+          <SmallComponent
+            label="Date Of Birth"
+            value={`${candidate.date_of_birth}` || "No DOB"}
           />
         </div>
       </div>
 
       <hr className="h-[1px] w-full my-4 bg-gray-text" />
 
+      {/* EDUCATIONAL DATA */}
       <div className="p-6 md:max-w-[760px]">
         <p className="text-xl font-semibold">Educational Data</p>
         <div className="space-y-4">
@@ -157,63 +157,70 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
           />
           <SmallComponent
             label="Name of University"
-            value={candidate.email || "No mail"}
+            value={candidate.degree?.[0]?.institution || "N/A"}
           />
           <SmallComponent
             label="Kind of Degree"
-            value={candidate.phone_number || "No name"}
+            value={candidate.degree?.[0]?.degree || "N/A"}
           />
           <SmallComponent
             label="Course of Study Graduated from"
-            value={candidate.phone_number || "No name"}
+            value={candidate.degree?.[0]?.course || "N/A"}
           />
           <SmallComponent
             label="Class of Degree"
-            value={candidate.gender || "No name"}
+            value={candidate.class_of_degree || "No degree"}
           />
           <SmallComponent
             label="Specific CGPA"
-            value={`${candidate.age} years old` || "No name"}
+            value={candidate.degree?.[0]?.cgpa || "N/A"}
           />
           <SmallComponent
             label="Do you have a masters degree?"
-            value={`${candidate.age} years old` || "No name"}
+            value={`${candidate.has_masters_degree ? "Yes" : "No"}` || "N/A"}
+          />
+          <SmallComponent
+            label="School of masters degree?"
+            value={candidate.degree?.[1]?.institution || "N/A"}
           />
           <SmallComponent
             label="Kind of degree?"
-            value={`${candidate.age} years old` || "No name"}
+            value={candidate.degree?.[1]?.degree || "N/A"}
           />
           <SmallComponent
             label="Course of Study Graduated from with master"
-            value={`${candidate.age} years old` || "No name"}
+            value={candidate.degree?.[1]?.course || "N/A"}
           />
-          <SmallComponent
-            label="Class of Degree"
-            value={`${candidate.age} years old` || "No name"}
-          />
+          {/* <SmallComponent
+            label="Class of Degree (Masters)"
+            value={`${candidate.age}` || "N/A"}
+          /> */}
           <SmallComponent
             label="Specific CGPA for Masters"
-            value={`${candidate.age} years old` || "No name"}
+            value={candidate.degree?.[1]?.cgpa || "N/A"}
           />
           <SmallComponent
-            label="Country you are INTERESTED In"
-            value={`${candidate.age} years old` || "No name"}
+            label="Country(ies) you are INTERESTED In"
+            value={
+              `${candidate.countries?.map((country) => country.name)}` ||
+              "No selected country"
+            }
           />
           <SmallComponent
             label="Type of Academic Degree Interested in Abroad"
-            value={`${candidate.age} years old` || "No name"}
+            value={`${candidate.interest?.academic_type}` || "N/A"}
           />
           <SmallComponent
             label="Academic program or course in mind that aligns with your professional experience"
-            value={`${candidate.age} years old` || "No name"}
+            value={`${candidate.interest?.specific_program}` || "N/A"}
           />
           <SmallComponent
             label="Are you opened to taking the GMAT or GRE if it is required"
-            value={`${candidate.age} years old` || "No name"}
+            value={`${candidate.interest?.open_to_gmat}` || "N/A"}
           />
           <SmallComponent
             label="Preferred Universities"
-            value={`${candidate.age} years old` || "No name"}
+            value={`${candidate.interest?.specific_university}` || "N/A"}
           />
         </div>
       </div>
@@ -225,9 +232,13 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
         <div className="p-4 rounded-lg border border-[#CFD3D4] flex justify-between items-center">
           <div>
             <img src="" alt="" />
-            <p className="text-[#667085] font-medium">Nwakaego Joy cv.pdf</p>
+            {`${decodeURIComponent(
+              candidate.resume.split("/").pop()?.split("?")[0] ?? ""
+            )}` || "No document uploaded yet"}
           </div>
-          <Button className="bg-red w-18">View</Button>
+          <Button className="bg-red w-18">
+            <Link to={candidate?.resume}>View</Link>
+          </Button>
         </div>
       </div>
 
