@@ -31,6 +31,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const Onboard = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const form = useForm<z.infer<typeof onboardSchema2>>({
     resolver: zodResolver(onboardSchema2),
     mode: "onBlur",
@@ -46,7 +47,6 @@ const Onboard = () => {
         const { data } = await axios.get(
           `${API_URL}onboarding-candidate/s/${email}/`
         );
-console.log(data);
 
         const nameParts = data.full_name?.split(" ") || [];
         const [first_name, middle_name, surname] =
@@ -172,30 +172,8 @@ console.log(data);
           },
         }
       );
-
-      if (response.status === 201 || response.status === 200) {
-        // Check if a file was uploaded
-        if (data.uploadCV && data.uploadCV.length > 0) {
-          const resumeData = new FormData();
-          resumeData.append("resume", data.uploadCV[0]);
-
-          const resumeResponse = await axios.patch(
-            `${API_URL}onboarding-candidate/s/${data.emailAddress}/`,
-            resumeData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            }
-          );
-          console.log("Resume upload response:", resumeResponse);
-        }
-
+      if (response) {
         alert("Onboarding form submitted successfully!");
-        // Reset form
-        form.reset();
-      } else {
-        throw new Error("Submission failed");
       }
     } catch (error) {
       console.error("Submission error:", error);
@@ -210,6 +188,31 @@ console.log(data);
       }
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const uploadCV = async (data: any) => {
+    setIsUploading(true);
+    try {
+      if (data.uploadCV && data.uploadCV.length > 0) {
+        const resumeData = new FormData();
+        resumeData.append("resume", data.uploadCV[0]);
+
+        const resumeResponse = await axios.patch(
+          `${API_URL}onboarding-candidate/s/${data.emailAddress}/`,
+          resumeData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log("Resume upload response:", resumeResponse);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -496,51 +499,60 @@ console.log(data);
                     placeholder=""
                   />
 
-                  <FormInput
-                    control={form.control}
-                    name="uploadCV"
-                    label="Upload your updated CV"
-                    type="file"
-                    placeholder=""
-                    className="w-auto"
-                  >
-                    {(field) => (
-                      <div className="flex items-center space-x-2">
-                        <input
-                          type="file"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              field.onChange(file.name);
-                            }
-                          }}
-                          className="hidden"
-                          id="cv-upload"
-                          accept=".pdf,.doc,.docx"
-                        />
-                        <label
-                          htmlFor="cv-upload"
-                          className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-md cursor-pointer hover:bg-gray-200 text-sm"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="w-4 h-4 mr-2"
+                  <div className="space-y-3">
+                    <FormInput
+                      control={form.control}
+                      name="uploadCV"
+                      label="Upload your updated CV"
+                      type="file"
+                      placeholder=""
+                      className="w-auto"
+                    >
+                      {(field) => (
+                        <div className="flex items-center space-x-2">
+                          <input
+                            type="file"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                field.onChange(file.name);
+                              }
+                            }}
+                            className="hidden"
+                            id="cv-upload"
+                            accept=".pdf,.doc,.docx"
+                          />
+                          <label
+                            htmlFor="cv-upload"
+                            className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-md cursor-pointer hover:bg-gray-200 text-sm"
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-                            />
-                          </svg>
-                          Upload CV
-                        </label>
-                      </div>
-                    )}
-                  </FormInput>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-4 h-4 mr-2"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+                              />
+                            </svg>
+                            Upload CV
+                          </label>
+                        </div>
+                      )}
+                    </FormInput>
+                    <Button
+                      disabled={isUploading}
+                      className="bg-red"
+                      onClick={uploadCV}
+                    >
+                      {isUploading ? "Uploading..." : "Upload"}
+                    </Button>
+                  </div>
 
                   <FormInput
                     control={form.control}
