@@ -9,7 +9,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { postOTP } from "@/lib/actions/candidate.actions";
+import { postOTP, resendOTP } from "@/lib/actions/candidate.actions";
 import { toast } from "@/components/ui/use-toast";
 import { AxiosError } from "axios";
 
@@ -57,6 +57,40 @@ const CandidateOTP = () => {
     }
   };
 
+  const resendOTPButton = async () => {
+    if (!email) {
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Missing email",
+      });
+      return;
+    }
+
+    try {
+      const response = await resendOTP({ email });
+      console.log(response);
+      toast({
+        title: "Success",
+        description: response?.message || "Check your email",
+        variant: "success",
+      });
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ message?: string }>;
+      const errorMessage =
+        err.response?.data?.message || "Something went wrong";
+
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: errorMessage,
+      });
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <section className="relative min-h-screen w-full form-bg">
       <div className="flex items-center justify-center flex-col pt-8">
@@ -85,7 +119,12 @@ const CandidateOTP = () => {
           </InputOTP>
           <div className="text-center text-sm my-5">
             Didn't receive a code?{" "}
-            <span className="text-red underline cursor-pointer">Resend</span>
+            <span
+              className="text-red underline cursor-pointer"
+              onClick={resendOTPButton}
+            >
+              Resend OTP
+            </span>
           </div>
         </div>
 
@@ -108,7 +147,7 @@ const CandidateOTP = () => {
           </div>
         </div>
 
-        <div className="flex w-full">
+        <div className="flex w-full my-5">
           <Button
             type="button"
             onClick={onSubmit}
@@ -120,7 +159,7 @@ const CandidateOTP = () => {
                 <Loader2 size={20} className="animate-spin" /> &nbsp; Loading...
               </>
             ) : (
-              "Sign In"
+              "Submit"
             )}
           </Button>
         </div>

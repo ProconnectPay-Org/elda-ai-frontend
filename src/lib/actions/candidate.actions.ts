@@ -525,3 +525,10 @@ export const postOTP = async ({
   );
   return data;
 };
+
+export const resendOTP = async ({ email }: { email: string }) => {
+  const { data } = await axios.post(
+    `${API_URL}onboarding-candidate/s/${email}/`
+  );
+  return data;
+};
