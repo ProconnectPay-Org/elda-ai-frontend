@@ -237,10 +237,10 @@ const ResumePdf = () => {
                   </p>
                   <p className="font-semibold">|</p>
                   <p className="font-medium text-sm">
-                    📅 Duration: {experience.year_started} -{" "}
+                    📅 Duration: {formatDate(experience.year_started)} -{" "}
                     {experience.year_ended === "1960-01-01"
                       ? "Till Date"
-                      : experience.year_ended || "Till Date"}
+                      : formatDate(experience.year_ended) || "Till Date"}
                   </p>
                 </div>
               </div>
@@ -265,7 +265,9 @@ const ResumePdf = () => {
             <div className="text-sm flex-items-center-gap-3">
               {item.school_name}, {getCountryNameFromISO(item.country)}{" "}
               <p className="font-semibold">|</p>
-              <p className="font-semibold">Graduated {item.graduation_date}</p>
+              <p className="font-semibold">
+                Graduated {formatDate(String(item.graduation_date))}
+              </p>
             </div>
           </div>
         ))}
