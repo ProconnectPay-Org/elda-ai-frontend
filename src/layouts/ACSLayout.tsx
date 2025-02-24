@@ -40,7 +40,7 @@ const ACSLayout = () => {
         setSelectedCandidate={setSelectedCandidate}
       />
       {/* Main content */}
-      <main className="flex-1 ml-64 pb-20 overflow-y-auto h-screen">
+      <main className="flex-1 ml-80 pb-20 overflow-y-auto h-screen">
         <AcsCandidateDetails candidate={selectedCandidate} />
       </main>
     </div>

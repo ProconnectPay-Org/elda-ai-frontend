@@ -142,7 +142,7 @@ export const calculateYearsOfExperience = (
 
 export const getInitials = (name: string) => {
   const nameParts = name.split(" ");
-  const initials = nameParts.map((part) => part[0]).join("");
+  const initials = nameParts.slice(0, 2).map((part) => part[0]).join("");
   return initials.toUpperCase();
 };
 
@@ -379,7 +379,7 @@ export const onboardSchema2 = z.object({
   mastersCourse: z.string().optional(),
   mastersInstitution: z.string().optional(),
   classOfDegreeMasters: z.string().optional(),
-  specificCGPAMasters: z.string().nonempty("Specific CGPA is required"),
+  specificCGPAMasters: z.string().optional(),
   typeOfAcademicDegree: z.string().optional(),
   academicProgram: z.string().optional(),
   specificUniversity: z.string().optional(),

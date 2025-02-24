@@ -108,6 +108,11 @@ const AuthForm = () => {
           } else {
             navigate("/register");
           }
+        } else if (userRole === "acs") {
+          console.log(response);
+          
+          Cookies.set("acs_access_token", response.access, { expires: 7 });
+          navigate("/acs-dashboard");
         } else {
           navigate("/");
         }

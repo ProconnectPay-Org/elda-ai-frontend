@@ -17,7 +17,7 @@ import {
 } from "@/constants";
 import { onboardSchema2 } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import FormInput from "@/components/FormInput";
 import ReactDatePicker from "react-datepicker";
@@ -25,6 +25,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import axios from "axios";
+import { useSearchParams } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -34,6 +35,63 @@ const Onboard = () => {
     resolver: zodResolver(onboardSchema2),
     mode: "onBlur",
   });
+  const [searchParams] = useSearchParams();
+  const email = searchParams.get("email");
+
+  useEffect(() => {
+    const fetchCandidateDetails = async () => {
+      if (!email) return;
+      try {
+        setIsLoading(true);
+        const { data } = await axios.get(
+          `${API_URL}onboarding-candidate/s/${email}/`
+        );
+console.log(data);
+
+        const nameParts = data.full_name?.split(" ") || [];
+        const [first_name, middle_name, surname] =
+          nameParts.length === 3
+            ? nameParts
+            : [nameParts[0], "", nameParts[1] || ""];
+        form.reset({
+          emailAddress: data.email,
+          firstName: first_name || "",
+          middleName: middle_name || "",
+          surname: surname || "",
+          phoneNumber: data.phone_number,
+          whatsappNumber: data.whatsapp,
+          gender: data.gender,
+          graduateOf: data.graduate_of,
+          dateOfBirth: data.date_of_birth
+            ? new Date(data.date_of_birth)
+            : undefined,
+          age: data.age,
+          specificCGPA: data.specific_cgpa,
+          hasMasters: data.has_masters_degree ? "true" : "false",
+          degreeClass: data.class_of_degree,
+          courseOfStudy: data.degree?.[0]?.course || "",
+          kindOfDegree: data.degree?.[0]?.degree || "",
+          institutionName: data.degree?.[0]?.institution || "",
+          specificCGPAMasters: data.degree?.[1]?.cgpa || "",
+          classOfDegreeMasters: data.degree?.[1]?.cgpa_class || "",
+          mastersCourse: data.degree?.[1]?.course || "",
+          mastersDegree: data.degree?.[1]?.degree || "",
+          mastersInstitution: data.degree?.[1]?.institution || "",
+          countriesOfInterest: data.countries?.map((c: any) => c.name) || [],
+          typeOfAcademicDegree: data.interest?.academic_type || "",
+          GMATGRE: data.interest?.open_to_gmat || "",
+          academicProgram: data.interest?.specific_program || "",
+          specificUniversity: data.interest?.specific_university || "",
+        });
+      } catch (error) {
+        console.error("Error fetching candidate details:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCandidateDetails();
+  }, [email]);
 
   // Function to calculate age from date of birth
   const calculateAge = (birthDate: Date) => {
@@ -58,7 +116,9 @@ const Onboard = () => {
 
       const submissionData = {
         ...data,
-        full_name: data.firstName,
+        full_name: [data.firstName, data.middleName, data.surname]
+          .filter(Boolean)
+          .join(" "),
         email: data.emailAddress,
         phone_number: data.phoneNumber,
         gender: data.gender,
@@ -70,7 +130,7 @@ const Onboard = () => {
         age: data.age,
         whatsapp: data.whatsappNumber,
         specific_cgpa: data.specificCGPA,
-        has_masters_degree: data.hasMasters,
+        has_masters_degree: data.hasMasters === "true",
         class_of_degree: data.degreeClass,
 
         degree: [
@@ -95,7 +155,7 @@ const Onboard = () => {
           })) || [],
         interest: {
           academic_type: data.typeOfAcademicDegree,
-          open_to_gmat: data.GMATGRE,
+          open_to_gmat: data.GMATGRE === "true" ? "Yes" : "No",
           specific_program: data.academicProgram,
           specific_university: data.specificUniversity,
         },
@@ -103,8 +163,8 @@ const Onboard = () => {
 
       console.log("Submission data:", submissionData);
 
-      const response = await axios.post(
-        `${API_URL}onboarding-candidate/`,
+      const response = await axios.put(
+        `${API_URL}onboarding-candidate/s/${data.emailAddress}/`,
         submissionData,
         {
           headers: {

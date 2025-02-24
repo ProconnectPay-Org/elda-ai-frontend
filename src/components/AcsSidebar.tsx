@@ -2,6 +2,7 @@ import { getInitials } from "@/lib/utils";
 import { ACSCandidateProps } from "@/types";
 import React from "react";
 import { Link } from "react-router-dom";
+import Logo from "@/assets/elda-new-logo.png";
 
 interface SidebarProps {
   candidates: ACSCandidateProps[];
@@ -20,12 +21,14 @@ const AcsSidebar: React.FC<SidebarProps> = ({
   );
 
   return (
-    <aside className="w-64 bg-gray h-screen p-4 fixed left-0 top-0 overflow-y-auto">
-      <h2 className="text-lg font-bold mb-4">Candidates</h2>
-      <h3 className="text-md font-semibold text-green-600 mb-2">
-        Paid Candidates
+    <aside className="w-80 bg-gray h-screen p-4 fixed left-0 top-0 overflow-y-auto">
+      <div className="flex items-center justify-center h-36">
+        <img src={Logo} alt="logo" className="object-contain" />
+      </div>
+      <h3 className="text-base font-semibold text-[#323232] mb-2">
+        Candidates without recommendation
       </h3>
-      <ul className="flex flex-col gap-2 mb-4">
+      <ul className="flex flex-col gap-2 mb-20">
         {paidCandidates.length > 0 ? (
           paidCandidates.map((candidate) => (
             <li
@@ -57,7 +60,7 @@ const AcsSidebar: React.FC<SidebarProps> = ({
         )}
       </ul>
 
-      <h3 className="text-md font-semibold text-red mb-2">Unpaid Candidates</h3>
+      <h3 className="text-md font-semibold text-[#323232] mb-2">Candidates with recommendations</h3>
       <ul className="flex flex-col gap-2">
         {unPaidCandidates.length > 0 ? (
           unPaidCandidates.map((candidate) => (

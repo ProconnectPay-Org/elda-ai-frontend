@@ -1388,11 +1388,11 @@ export const sortedSchools = uniqueSchools.sort((a, b) =>
 // OnBoarding Form
 export const yesNoOptions = [
   {
-    value: "yes",
+    value: "true",
     label: "Yes",
   },
   {
-    value: "no",
+    value: "false",
     label: "No",
   },
 ];
