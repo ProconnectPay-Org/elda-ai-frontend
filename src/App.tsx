@@ -49,7 +49,7 @@ function App() {
         <Route element={<AdminDashboard />} path="/admin-dashboard" />
         <Route
           element={<CreateCandidateProfile />}
-          path="/admin/create-candidate-profile"
+          path="/admin/create-candidate-profile/:id?"
         />
         <Route element={<CandidatePage />} path="/candidates/:id" />
         <Route element={<InviteEmployee />} path="/admin/invite-employee" />

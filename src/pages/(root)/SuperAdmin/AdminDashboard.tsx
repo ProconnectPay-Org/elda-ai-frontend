@@ -23,6 +23,7 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "@/components/ui/use-toast";
 import { AxiosError } from "axios";
 import Cookies from "js-cookie";
+import { BellRingIcon } from "lucide-react";
 
 interface staticCardProps {
   title: string;
@@ -141,9 +142,15 @@ const AdminDashboard = () => {
 
   return (
     <AdminLayout>
-      <h1 className="text-red text-3xl font-bold">
-        Welcome to the Super Admin Dashboard
-      </h1>
+      <div className="flex justify-between w-full items-center">
+        <h1 className="text-red text-3xl font-bold">
+          Welcome to the Super Admin Dashboard
+        </h1>
+
+        <Button className="border-red" variant={"outline"}>
+          <BellRingIcon stroke="red" />
+        </Button>
+      </div>
 
       <div className="flex flex-col-reverse gap-5 md:gap-0 md:flex-row items-start md:items-center justify-between my-8 md:my-10">
         <div className="flex items-center gap-2 lg:gap-4">

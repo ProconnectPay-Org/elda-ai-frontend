@@ -10,7 +10,7 @@ declare interface CandidatesResponse {
 
 export const useACSCandidates = () => {
   return useQuery<CandidatesResponse, Error>({
-    queryKey: ["candidates"],
+    queryKey: ["onboardedCandidates"],
     queryFn: async () => {
       const { data } = await axios.get(`${API_URL}onboarding-candidate/`);
       return data;

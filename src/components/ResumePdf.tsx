@@ -174,7 +174,7 @@ const ResumePdf = () => {
 
       <div className="resume-inner-container">
         <h2 className="resume-title-text">CAREER STRATEGIC PURPOSE</h2>
-        <p className="text-sm">
+        <p className="text-sm text-justify">
           {formData?.career_strategic_purpose || "Not Generated yet"}
         </p>
       </div>
@@ -248,7 +248,7 @@ const ResumePdf = () => {
                 <p className="text-red font-bold text-sm">
                   Job Description and Key Achievements
                 </p>
-                <p className="text-sm">{experience.job_summary}</p>
+                <p className="text-sm text-justify">{experience.job_summary}</p>
               </div>
             </div>
           ) : null
