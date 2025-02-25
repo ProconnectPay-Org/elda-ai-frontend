@@ -26,6 +26,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
+import { ICountry } from "country-state-city";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -77,7 +78,7 @@ const Onboard = () => {
           mastersCourse: data.degree?.[1]?.course || "",
           mastersDegree: data.degree?.[1]?.degree || "",
           mastersInstitution: data.degree?.[1]?.institution || "",
-          countriesOfInterest: data.countries?.map((c: any) => c.name) || [],
+          countriesOfInterest: data.countries?.map((c: ICountry) => c.name) || [],
           typeOfAcademicDegree: data.interest?.academic_type || "",
           GMATGRE: data.interest?.open_to_gmat || "",
           academicProgram: data.interest?.specific_program || "",
@@ -191,15 +192,17 @@ const Onboard = () => {
     }
   };
 
-  const uploadCV = async (data: any) => {
+  const uploadCV = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const formData = form.getValues();
     setIsUploading(true);
     try {
-      if (data.uploadCV && data.uploadCV.length > 0) {
+      if (formData.uploadCV && formData.uploadCV.length > 0) {
         const resumeData = new FormData();
-        resumeData.append("resume", data.uploadCV[0]);
+        resumeData.append("resume", formData.uploadCV[0]);
 
         const resumeResponse = await axios.patch(
-          `${API_URL}onboarding-candidate/s/${data.emailAddress}/`,
+          `${API_URL}onboarding-candidate/s/${formData.emailAddress}/`,
           resumeData,
           {
             headers: {
@@ -207,10 +210,16 @@ const Onboard = () => {
             },
           }
         );
-        console.log("Resume upload response:", resumeResponse);
+
+        if (resumeResponse.status === 200) {
+          alert("CV uploaded successfully!");
+        } else {
+          alert("Failed to upload CV. Please try again.");
+        }
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error uploading CV:", error);
+      alert("Error uploading CV. Please try again.");
     } finally {
       setIsUploading(false);
     }
@@ -500,6 +509,70 @@ const Onboard = () => {
                   />
 
                   <div className="space-y-3">
+                    <Label className="text-sm font-medium">
+                      Countries of Interest (Select up to 2)
+                    </Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {countriesOfInterestOptions.map((country) => (
+                        <div
+                          key={country.value}
+                          className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-50"
+                        >
+                          <Controller
+                            name="countriesOfInterest"
+                            control={form.control}
+                            render={({ field }) => (
+                              <div className="flex items-center space-x-2">
+                                <Checkbox
+                                  id={country.value}
+                                  checked={(field.value || []).includes(country.value)}
+                                  onCheckedChange={(checked) => {
+                                    const currentValue = field.value || [];
+                                    if (checked) {
+                                      if (currentValue.length < 2) {
+                                        field.onChange([...currentValue, country.value]);
+                                      }
+                                    } else {
+                                      field.onChange(
+                                        currentValue.filter((value) => value !== country.value)
+                                      );
+                                    }
+                                  }}
+                                  disabled={(field.value || []).length >= 2 && !(field.value || []).includes(country.value)}
+                                />
+                                <div className="flex items-center space-x-2">
+                                  <img
+                                    src={`https://flagcdn.com/24x18/${country.value.toLowerCase() === 'united states' ? 'us' : 
+                                         country.value.toLowerCase() === 'united kingdom' ? 'gb' : 
+                                         country.value.slice(0, 2).toLowerCase()}.png`}
+                                    alt={`${country.label} flag`}
+                                    className="w-6 h-4 object-cover rounded-sm"
+                                  />
+                                  <label
+                                    htmlFor={country.value}
+                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                  >
+                                    {country.label}
+                                  </label>
+                                </div>
+                              </div>
+                            )}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <FormInput
+                    control={form.control}
+                    name="GMATGRE"
+                    label="Are you open to taking the GMAT or GRE if it is required by your selected country (or countries)?"
+                    type="select"
+                    options={yesNoOptions}
+                    placeholder="--Select--"
+                  />
+
+                  <div className="space-y-2">
                     <FormInput
                       control={form.control}
                       name="uploadCV"
@@ -552,68 +625,6 @@ const Onboard = () => {
                     >
                       {isUploading ? "Uploading..." : "Upload"}
                     </Button>
-                  </div>
-
-                  <FormInput
-                    control={form.control}
-                    name="GMATGRE"
-                    label="Are you open to taking the GMAT or GRE if it is required by your selected country (or countries)?"
-                    type="select"
-                    options={yesNoOptions}
-                    placeholder="--Select--"
-                  />
-
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium">
-                      Countries of Interest
-                    </Label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {countriesOfInterestOptions.map((country) => (
-                        <div
-                          key={country.value}
-                          className="flex items-center space-x-2"
-                        >
-                          <Controller
-                            name="countriesOfInterest"
-                            control={form.control}
-                            render={({ field }) => (
-                              <div className="flex items-center space-x-2">
-                                <Checkbox
-                                  id={country.value}
-                                  checked={
-                                    Array.isArray(field.value)
-                                      ? field.value.includes(country.value)
-                                      : false
-                                  }
-                                  onCheckedChange={(checked) => {
-                                    const currentValue = field.value || [];
-                                    const newValue = checked
-                                      ? [
-                                          ...(Array.isArray(currentValue)
-                                            ? currentValue
-                                            : []),
-                                          country.value,
-                                        ]
-                                      : Array.isArray(currentValue)
-                                      ? currentValue.filter(
-                                          (val) => val !== country.value
-                                        )
-                                      : [];
-                                    field.onChange(newValue);
-                                  }}
-                                />
-                                <Label
-                                  htmlFor={country.value}
-                                  className="text-sm font-normal cursor-pointer"
-                                >
-                                  {country.label}
-                                </Label>
-                              </div>
-                            )}
-                          />
-                        </div>
-                      ))}
-                    </div>
                   </div>
                 </div>
               </div>
