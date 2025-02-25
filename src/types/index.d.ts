@@ -8,6 +8,8 @@ import {
   ResumeStep5Schema,
 } from "@/lib/resumeSchema";
 import {
+  acsform1Schema,
+  acsform2Schema,
   step1Schema,
   step2Schema,
   step3Schema,
@@ -481,6 +483,10 @@ export type ResumeStep3FormData = z.infer<typeof ResumeStep3Schema>;
 export type ResumeStep4FormData = z.infer<typeof ResumeStep4Schema>;
 export type ResumeStep5FormData = z.infer<typeof ResumeStep5Schema>;
 
+  // Infer types from schema
+export type Form1Type = z.infer<typeof acsform1Schema>;
+export type Form2Type = z.infer<typeof acsform2Schema>;
+
 type Interest = {
   academic_type?: string;
   specific_program?: string;
@@ -513,6 +519,14 @@ declare interface ACSCandidateProps {
   whatsapp: string;
   has_masters_degree: boolean;
   resume: string;
+  first_country: string;
+  second_country: string;
+  assigned_course1: string;
+  assigned_course2: string;
+  assigned_university1: string;
+  assigned_university2: string;
+  program_type1: string;
+  program_type2: string;
   class_of_degree: string;
   countries: Country[];
   degree: Degree[];

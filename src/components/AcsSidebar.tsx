@@ -1,6 +1,6 @@
 import { getInitials } from "@/lib/utils";
 import { ACSCandidateProps } from "@/types";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "@/assets/elda-new-logo.png";
 
@@ -15,10 +15,34 @@ const AcsSidebar: React.FC<SidebarProps> = ({
   selectedCandidate,
   setSelectedCandidate,
 }) => {
-  const paidCandidates = candidates.filter((candidate) => candidate.has_paid);
-  const unPaidCandidates = candidates.filter(
-    (candidate) => !candidate.has_paid
-  );
+  // Check if candidate has all recommendation fields filled
+  const [recommendedCandidates, setRecommendedCandidates] = useState<ACSCandidateProps[]>([]);
+  const [notRecommendedCandidates, setNotRecommendedCandidates] = useState<ACSCandidateProps[]>([]);
+
+  // Function to check if a candidate has all required fields filled
+  const isRecommended = (candidate: ACSCandidateProps) => {
+    return (
+      candidate.first_country &&
+      candidate.assigned_course1 &&
+      candidate.assigned_university1 &&
+      candidate.program_type1 &&
+      candidate.second_country &&
+      candidate.assigned_course2 &&
+      candidate.assigned_university2 &&
+      candidate.program_type2
+    );
+  };
+
+  // Update candidate lists when candidates change
+  useEffect(() => {
+    const recommended = candidates.filter(isRecommended);
+    const notRecommended = candidates.filter(
+      (candidate) => !isRecommended(candidate)
+    );
+
+    setRecommendedCandidates(recommended);
+    setNotRecommendedCandidates(notRecommended);
+  }, [candidates]);
 
   return (
     <aside className="w-80 bg-gray h-screen p-4 fixed left-0 top-0 overflow-y-auto">
@@ -28,9 +52,9 @@ const AcsSidebar: React.FC<SidebarProps> = ({
       <h3 className="text-base font-semibold text-[#323232] mb-2">
         Candidates without recommendation
       </h3>
-      <ul className="flex flex-col gap-2 mb-20">
-        {paidCandidates.length > 0 ? (
-          paidCandidates.map((candidate) => (
+      <ul className="flex flex-col gap-2 mb-10">
+        {notRecommendedCandidates.length > 0 ? (
+          notRecommendedCandidates.map((candidate) => (
             <li
               key={candidate.id}
               className={`cursor-pointer p-3 rounded-md ${
@@ -56,14 +80,16 @@ const AcsSidebar: React.FC<SidebarProps> = ({
             </li>
           ))
         ) : (
-          <p className="text-sm text-gray-500">No paid candidates</p>
+          <p className="text-sm text-gray-500">No candidates without recommendations</p>
         )}
       </ul>
 
-      <h3 className="text-md font-semibold text-[#323232] mb-2">Candidates with recommendations</h3>
+      <h3 className="text-md font-semibold text-[#323232] mb-2">
+        Candidates with recommendations
+      </h3>
       <ul className="flex flex-col gap-2">
-        {unPaidCandidates.length > 0 ? (
-          unPaidCandidates.map((candidate) => (
+        {recommendedCandidates.length > 0 ? (
+          recommendedCandidates.map((candidate) => (
             <li
               key={candidate.id}
               className={`cursor-pointer p-3 rounded-md ${
@@ -89,7 +115,7 @@ const AcsSidebar: React.FC<SidebarProps> = ({
             </li>
           ))
         ) : (
-          <p className="text-sm text-gray-500">No unpaid candidates</p>
+          <p className="text-sm text-gray-500">No candidates with recommendations</p>
         )}
       </ul>
     </aside>

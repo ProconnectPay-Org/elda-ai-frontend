@@ -34,7 +34,7 @@ const useAuth = () => {
   const handleLogout = async () => {
     if (userRole) {
       await logoutAccount(
-        userRole as "staff" | "admin" | "candidate" | "analyst"
+        userRole as "staff" | "admin" | "candidate" | "analyst" | "acs"
       );
       Cookies.remove("user_role");
       Cookies.remove("user_name");
@@ -66,7 +66,7 @@ const useAuth = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["loggedInUser", userRole],
     queryFn: () =>
-      getLoggedInUser(userRole as "staff" | "admin" | "candidate" | "analyst"),
+      getLoggedInUser(userRole as "staff" | "admin" | "candidate" | "analyst" | "acs"),
     enabled: !!userRole,
     staleTime: 5 * 1000 * 60,
   });

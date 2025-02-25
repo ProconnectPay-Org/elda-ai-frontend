@@ -10,7 +10,6 @@ import { Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import CustomInput from "./CustomInput";
 import { adminSignIn } from "@/lib/actions/user.actions";
-// import GoogleIcon from "@/assets/google-logo.svg";
 import { toast } from "./ui/use-toast";
 import { CustomAxiosError } from "@/types";
 import Cookies from "js-cookie";

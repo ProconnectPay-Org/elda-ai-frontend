@@ -24,11 +24,14 @@ export const adminSignIn = async ({ email, password }: signInProps) => {
 };
 
 export const logoutAccount = async (
-  role: "candidate" | "staff" | "admin" | "analyst"
+  role: "candidate" | "staff" | "admin" | "analyst" | "acs"
 ) => {
   switch (role) {
     case "admin":
       Cookies.remove("access_token");
+      break;
+    case "acs":
+      Cookies.remove("acs_access_token");
       break;
     case "analyst":
       Cookies.remove("access_token");
@@ -376,7 +379,7 @@ export const unassignCandidateFromStaff = async ({
 };
 
 export const getLoggedInUser = async (
-  role: "staff" | "admin" | "candidate" | "analyst"
+  role: "staff" | "admin" | "candidate" | "analyst" | "acs"
 ) => {
   try {
     let token;
@@ -388,6 +391,8 @@ export const getLoggedInUser = async (
       token = Cookies.get("access_token"); // Fetch from cookies
     } else if (role === "candidate") {
       token = Cookies.get("candidate_access_token"); // Fetch from cookies
+    } else if (role === "acs") {
+      token = Cookies.get("acs_access_token"); // Fetch from cookies
     }
 
     if (!token) return null;

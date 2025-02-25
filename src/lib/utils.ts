@@ -142,7 +142,10 @@ export const calculateYearsOfExperience = (
 
 export const getInitials = (name: string) => {
   const nameParts = name.split(" ");
-  const initials = nameParts.slice(0, 2).map((part) => part[0]).join("");
+  const initials = nameParts
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("");
   return initials.toUpperCase();
 };
 
@@ -386,4 +389,18 @@ export const onboardSchema2 = z.object({
   uploadCV: z.string().optional(),
   GMATGRE: z.string().optional(),
   countriesOfInterest: z.array(z.string()).optional(),
+});
+
+export const acsform1Schema = z.object({
+  programType1: z.string().min(1, "Program Type 1 is required"),
+  assignedSchool1: z.string().min(1, "Assigned School 1 is required"),
+  assignedCourse1: z.string().min(1, "Assigned Course 1 is required"),
+  country1: z.string().min(1, "Country is required"),
+});
+
+export const acsform2Schema = z.object({
+  programType2: z.string().min(1, "Program Type 2 is required"),
+  assignedSchool2: z.string().min(1, "Assigned School 2 is required"),
+  assignedCourse2: z.string().min(1, "Assigned Course 2 is required"),
+  country2: z.string().min(1, "Country is required"),
 });
