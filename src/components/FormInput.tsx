@@ -27,6 +27,7 @@ interface CustomInputProps<T extends FieldValues> {
   validation?: z.ZodType;
   renderInput?: (inputProps: ControllerRenderProps<T>) => React.ReactElement;
   children?: (field: ControllerRenderProps<T>) => React.ReactNode;
+  required?: boolean;
 }
 
 const FormInput = <T extends FieldValues>({
