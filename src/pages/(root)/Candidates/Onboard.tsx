@@ -26,18 +26,22 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
+import { ICountry } from "country-state-city";
+import { useToast } from "@/components/ui/use-toast";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const Onboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const form = useForm<z.infer<typeof onboardSchema2>>({
     resolver: zodResolver(onboardSchema2),
     mode: "onBlur",
   });
   const [searchParams] = useSearchParams();
   const email = searchParams.get("email");
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchCandidateDetails = async () => {
@@ -77,7 +81,8 @@ const Onboard = () => {
           mastersCourse: data.degree?.[1]?.course || "",
           mastersDegree: data.degree?.[1]?.degree || "",
           mastersInstitution: data.degree?.[1]?.institution || "",
-          countriesOfInterest: data.countries?.map((c: any) => c.name) || [],
+          countriesOfInterest:
+            data.countries?.map((c: ICountry) => c.name) || [],
           typeOfAcademicDegree: data.interest?.academic_type || "",
           GMATGRE: data.interest?.open_to_gmat || "",
           academicProgram: data.interest?.specific_program || "",
@@ -110,62 +115,56 @@ const Onboard = () => {
   };
 
   const onSubmit = async (data: z.infer<typeof onboardSchema2>) => {
-    setIsLoading(true);
     try {
-      console.log("Form data before submission:", data);
-
-      const submissionData = {
-        ...data,
-        full_name: [data.firstName, data.middleName, data.surname]
-          .filter(Boolean)
-          .join(" "),
-        email: data.emailAddress,
-        phone_number: data.phoneNumber,
-        gender: data.gender,
-        graduate_of: data.graduateOf,
-        state_of_residence: "Lagos",
-        date_of_birth: data.dateOfBirth
-          ? new Date(data.dateOfBirth).toISOString().split("T")[0]
-          : null,
-        age: data.age,
-        whatsapp: data.whatsappNumber,
-        specific_cgpa: data.specificCGPA,
-        has_masters_degree: data.hasMasters === "true",
-        class_of_degree: data.degreeClass,
-
-        degree: [
-          {
-            cgpa: data.specificCGPA,
-            cgpa_class: data.degreeClass,
-            course: data.courseOfStudy,
-            degree: data.kindOfDegree,
-            institution: data.institutionName,
-          },
-          {
-            cgpa: data.specificCGPAMasters,
-            cgpa_class: data.classOfDegreeMasters,
-            course: data.mastersCourse,
-            degree: data.mastersDegree,
-            institution: data.mastersInstitution,
-          },
-        ],
-        countries:
-          data.countriesOfInterest?.map((country) => ({
-            name: country,
-          })) || [],
-        interest: {
-          academic_type: data.typeOfAcademicDegree,
-          open_to_gmat: data.GMATGRE === "true" ? "Yes" : "No",
-          specific_program: data.academicProgram,
-          specific_university: data.specificUniversity,
-        },
-      };
-
-      console.log("Submission data:", submissionData);
-
+      setIsLoading(true);
       const response = await axios.put(
         `${API_URL}onboarding-candidate/s/${data.emailAddress}/`,
-        submissionData,
+        {
+          ...data,
+          full_name: [data.firstName, data.middleName, data.surname]
+            .filter(Boolean)
+            .join(" "),
+          email: data.emailAddress,
+          phone_number: data.phoneNumber,
+          gender: data.gender,
+          graduate_of: data.graduateOf,
+          state_of_residence: "Lagos",
+          date_of_birth: data.dateOfBirth
+            ? new Date(data.dateOfBirth).toISOString().split("T")[0]
+            : null,
+          age: data.age,
+          whatsapp: data.whatsappNumber,
+          specific_cgpa: data.specificCGPA,
+          has_masters_degree: data.hasMasters === "true",
+          class_of_degree: data.degreeClass,
+
+          degree: [
+            {
+              cgpa: data.specificCGPA,
+              cgpa_class: data.degreeClass,
+              course: data.courseOfStudy,
+              degree: data.kindOfDegree,
+              institution: data.institutionName,
+            },
+            {
+              cgpa: data.specificCGPAMasters,
+              cgpa_class: data.classOfDegreeMasters,
+              course: data.mastersCourse,
+              degree: data.mastersDegree,
+              institution: data.mastersInstitution,
+            },
+          ],
+          countries:
+            data.countriesOfInterest?.map((country) => ({
+              name: country,
+            })) || [],
+          interest: {
+            academic_type: data.typeOfAcademicDegree,
+            open_to_gmat: data.GMATGRE === "true" ? "Yes" : "No",
+            specific_program: data.academicProgram,
+            specific_university: data.specificUniversity,
+          },
+        },
         {
           headers: {
             "Content-Type": "application/json",
@@ -173,44 +172,99 @@ const Onboard = () => {
         }
       );
       if (response) {
-        alert("Onboarding form submitted successfully!");
+        toast({
+          title: "Success",
+          description: "Your form has been submitted successfully.",
+          variant: "default",
+          className: "bg-green-500 text-white",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to submit form. Please try again.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("Submission error:", error);
       if (axios.isAxiosError(error)) {
-        alert(
-          `Failed to submit form: ${
+        toast({
+          title: "Error",
+          description: `Failed to submit form: ${
             error.response?.data?.message || error.message
-          }`
-        );
+          }`,
+          variant: "destructive",
+        });
       } else {
-        alert("Failed to submit form. Please try again.");
+        toast({
+          title: "Error",
+          description: "Failed to submit form. Please try again.",
+          variant: "destructive",
+        });
       }
     } finally {
       setIsLoading(false);
     }
   };
 
-  const uploadCV = async (data: any) => {
+  const uploadCV = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (!selectedFile) {
+      toast({
+        title: "Error",
+        description: "Please select a file to upload",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsUploading(true);
     try {
-      if (data.uploadCV && data.uploadCV.length > 0) {
-        const resumeData = new FormData();
-        resumeData.append("resume", data.uploadCV[0]);
+      const formData = new FormData();
+      formData.append("resume", selectedFile);
+      const email = form.getValues("emailAddress");
 
-        const resumeResponse = await axios.patch(
-          `${API_URL}onboarding-candidate/s/${data.emailAddress}/`,
-          resumeData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        console.log("Resume upload response:", resumeResponse);
+      if (!email) {
+        toast({
+          title: "Error",
+          description: "Email address is required",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const response = await axios.patch(
+        `${API_URL}onboarding-candidate/s/${email}/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast({
+          title: "Success",
+          description: "CV uploaded successfully!",
+          variant: "default",
+          className: "bg-green-500 text-white",
+        });
+        setSelectedFile(null);
+        form.setValue("uploadCV", "");
+      } else {
+        throw new Error("Upload failed");
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error uploading CV:", error);
+      toast({
+        title: "Error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Error uploading CV. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsUploading(false);
     }
@@ -433,6 +487,7 @@ const Onboard = () => {
                     type="select"
                     placeholder=""
                     options={advancedDegreeTypeOptions}
+                    required={form.watch("hasMasters") === "true"}
                   />
 
                   <FormInput
@@ -441,6 +496,7 @@ const Onboard = () => {
                     label="Course of Study Graduated from with master's if applicable"
                     type="input"
                     placeholder=""
+                    required={form.watch("hasMasters") === "true"}
                   />
 
                   <FormInput
@@ -450,6 +506,7 @@ const Onboard = () => {
                     type="select"
                     placeholder="-- Select --"
                     options={classOfDegreeMastersOptions}
+                    required={form.watch("hasMasters") === "true"}
                   />
 
                   <FormInput
@@ -458,6 +515,7 @@ const Onboard = () => {
                     label="Specific CGPA Masters"
                     type="input"
                     placeholder=""
+                    required={form.watch("hasMasters") === "true"}
                   />
                   <FormInput
                     control={form.control}
@@ -465,6 +523,7 @@ const Onboard = () => {
                     label="Name Of Institution"
                     type="input"
                     placeholder=""
+                    required={form.watch("hasMasters") === "true"}
                   />
                 </div>
               </div>
@@ -500,6 +559,103 @@ const Onboard = () => {
                   />
 
                   <div className="space-y-3">
+                    <Label className="text-sm font-medium">
+                      Countries of Interest (Select up to 2)
+                    </Label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {countriesOfInterestOptions.map((country) => (
+                        <div
+                          key={country.value}
+                          className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-50"
+                        >
+                          <Controller
+                            name="countriesOfInterest"
+                            control={form.control}
+                            render={({ field }) => (
+                              <div className="flex items-center space-x-2">
+                                <Checkbox
+                                  id={country.value}
+                                  checked={(field.value || []).includes(
+                                    country.value
+                                  )}
+                                  onCheckedChange={(checked) => {
+                                    const currentValue = field.value || [];
+                                    if (checked) {
+                                      if (currentValue.length < 2) {
+                                        field.onChange([
+                                          ...currentValue,
+                                          country.value,
+                                        ]);
+                                      }
+                                    } else {
+                                      field.onChange(
+                                        currentValue.filter(
+                                          (value) => value !== country.value
+                                        )
+                                      );
+                                    }
+                                  }}
+                                  disabled={
+                                    (field.value || []).length >= 2 &&
+                                    !(field.value || []).includes(country.value)
+                                  }
+                                />
+                                <div className="flex items-center space-x-2">
+                                  <img
+                                    src={`https://flagcdn.com/24x18/${
+                                      {
+                                        "United States": "us",
+                                        "United Kingdom": "gb",
+                                        Canada: "ca",
+                                        Australia: "au",
+                                        Germany: "de",
+                                        Switzerland: "ch",
+                                        Netherlands: "nl",
+                                        France: "fr",
+                                        Singapore: "sg",
+                                        "South Africa": "za",
+                                        Portugal: "pt",
+                                        China: "cn",
+                                        Spain: "es",
+                                        Italy: "it",
+                                        Japan: "jp",
+                                        Belgium: "be",
+                                        Denmark: "dk",
+                                        "Hong Kong": "hk",
+                                      }[country.value] ||
+                                      country.value.toLowerCase()
+                                    }.png`}
+                                    alt={`${country.label} flag`}
+                                    className="w-6 h-4 object-cover rounded-sm"
+                                    onError={(e) => {
+                                      e.currentTarget.style.display = "none";
+                                    }}
+                                  />
+                                  <label
+                                    htmlFor={country.value}
+                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                  >
+                                    {country.label}
+                                  </label>
+                                </div>
+                              </div>
+                            )}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <FormInput
+                    control={form.control}
+                    name="GMATGRE"
+                    label="Are you open to taking the GMAT or GRE if it is required by your selected country (or countries)?"
+                    type="select"
+                    options={yesNoOptions}
+                    placeholder="--Select--"
+                  />
+
+                  <div className="space-y-2">
                     <FormInput
                       control={form.control}
                       name="uploadCV"
@@ -515,6 +671,7 @@ const Onboard = () => {
                             onChange={(e) => {
                               const file = e.target.files?.[0];
                               if (file) {
+                                setSelectedFile(file);
                                 field.onChange(file.name);
                               }
                             }}
@@ -540,7 +697,7 @@ const Onboard = () => {
                                 d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
                               />
                             </svg>
-                            Upload CV
+                            {selectedFile ? selectedFile.name : "Upload CV"}
                           </label>
                         </div>
                       )}
@@ -552,68 +709,6 @@ const Onboard = () => {
                     >
                       {isUploading ? "Uploading..." : "Upload"}
                     </Button>
-                  </div>
-
-                  <FormInput
-                    control={form.control}
-                    name="GMATGRE"
-                    label="Are you open to taking the GMAT or GRE if it is required by your selected country (or countries)?"
-                    type="select"
-                    options={yesNoOptions}
-                    placeholder="--Select--"
-                  />
-
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium">
-                      Countries of Interest
-                    </Label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {countriesOfInterestOptions.map((country) => (
-                        <div
-                          key={country.value}
-                          className="flex items-center space-x-2"
-                        >
-                          <Controller
-                            name="countriesOfInterest"
-                            control={form.control}
-                            render={({ field }) => (
-                              <div className="flex items-center space-x-2">
-                                <Checkbox
-                                  id={country.value}
-                                  checked={
-                                    Array.isArray(field.value)
-                                      ? field.value.includes(country.value)
-                                      : false
-                                  }
-                                  onCheckedChange={(checked) => {
-                                    const currentValue = field.value || [];
-                                    const newValue = checked
-                                      ? [
-                                          ...(Array.isArray(currentValue)
-                                            ? currentValue
-                                            : []),
-                                          country.value,
-                                        ]
-                                      : Array.isArray(currentValue)
-                                      ? currentValue.filter(
-                                          (val) => val !== country.value
-                                        )
-                                      : [];
-                                    field.onChange(newValue);
-                                  }}
-                                />
-                                <Label
-                                  htmlFor={country.value}
-                                  className="text-sm font-normal cursor-pointer"
-                                >
-                                  {country.label}
-                                </Label>
-                              </div>
-                            )}
-                          />
-                        </div>
-                      ))}
-                    </div>
                   </div>
                 </div>
               </div>

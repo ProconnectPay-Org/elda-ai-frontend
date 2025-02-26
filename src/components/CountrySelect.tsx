@@ -8,53 +8,99 @@ interface CountrySelectProps {
   label: string;
   name: string;
   smallText?: string;
+  maxSelections?: number;
 }
 
 const CountrySelect: React.FC<CountrySelectProps> = ({
   label,
   name,
   smallText,
+  maxSelections = 2,
 }) => {
   const {
     control,
     setValue,
+    watch,
     formState: { errors },
   } = useFormContext();
   const [countries, setCountries] = useState<ICountry[]>([]);
+  const selectedCountries = watch(name) || [];
 
   useEffect(() => {
     const allCountries = Country.getAllCountries();
     setCountries(allCountries);
   }, []);
 
+  const handleCountryChange = (countryIsoCode: string) => {
+    const country = countries.find((c) => c.isoCode === countryIsoCode);
+    if (!country) return;
+
+    const newSelection = [...selectedCountries];
+    const countryIndex = newSelection.findIndex((c) => c.isoCode === countryIsoCode);
+
+    if (countryIndex > -1) {
+      // Remove country if already selected
+      newSelection.splice(countryIndex, 1);
+    } else if (newSelection.length < maxSelections) {
+      // Add country if under max limit
+      newSelection.push(country);
+    }
+
+    setValue(name, newSelection);
+  };
+
   return (
-    <div className="flex flex-col md:w-1/2">
+    <div className="flex flex-col w-full">
       <label htmlFor={name}>
         {label} <span className="text-red">*</span>
       </label>
       <Controller
         name={name}
         control={control}
-        render={({ field: { onChange, value } }) => (
-          <div className="relative w-full">
+        render={() => (
+          <div className="relative">
+            <div className="flex flex-wrap gap-2 mb-2">
+              {selectedCountries.map((country: ICountry) => (
+                <div
+                  key={country.isoCode}
+                  className="flex items-center gap-2 bg-gray-100 rounded-md px-3 py-1"
+                >
+                  <img
+                    src={`https://flagcdn.com/24x18/${country.isoCode.toLowerCase()}.png`}
+                    alt={`${country.name} flag`}
+                    className="w-6 h-4 object-cover"
+                  />
+                  <span>{country.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleCountryChange(country.isoCode)}
+                    className="ml-2 text-gray-500 hover:text-red-500"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
             <select
               id={name}
-              value={value}
-              onChange={(e) => {
-                const selectedIsoCode = e.target.value;
-                const selectedCountry = countries.find(
-                  (country) => country.isoCode === selectedIsoCode
-                );
-                setValue(name, selectedCountry?.name || "");
-                onChange(selectedIsoCode);
-              }}
+              onChange={(e) => handleCountryChange(e.target.value)}
+              value=""
               className={`border border-gray-border w-full h-[42px] shadow-none bg-white rounded-md py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 ${
                 errors[name] ? "border-red-500" : ""
               }`}
+              disabled={selectedCountries.length >= maxSelections}
             >
-              <option value="">Select your country</option>
+              <option value="">
+                {selectedCountries.length >= maxSelections
+                  ? "Max countries selected"
+                  : "Select a country"}
+              </option>
               {countries.map((country) => (
-                <option key={country.isoCode} value={country.isoCode}>
+                <option
+                  key={country.isoCode}
+                  value={country.isoCode}
+                  disabled={selectedCountries.some((c: ICountry) => c.isoCode === country.isoCode)}
+                >
                   {country.name}
                 </option>
               ))}
@@ -80,10 +126,11 @@ const CountrySelect: React.FC<CountrySelectProps> = ({
         )}
       />
 
-      <p className="text-xs text-gray-text">{smallText && smallText}</p>
-      {/* Error message */}
+      <p className="text-xs text-gray-text mt-1">
+        {smallText || `Select up to ${maxSelections} countries`}
+      </p>
       {errors[name] && (
-        <span className="text-red text-sm">{getErrorMessage(errors.name)}</span>
+        <span className="text-red text-sm">{getErrorMessage(errors[name])}</span>
       )}
     </div>
   );

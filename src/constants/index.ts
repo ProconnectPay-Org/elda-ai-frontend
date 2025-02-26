@@ -1683,11 +1683,39 @@ export const countriesOfInterestOptions = [
     label: "Singapore",
   },
   {
-    value: "Japan",
-    label: "Japan",
+    value: "Belgium",
+    label: "Belgium",
   },
   {
     value: "Switzerland",
     label: "Switzerland",
+  },
+  {
+    value: "South Africa",
+    label: "South Africa",
+  },
+  {
+    value: "Portugal",
+    label: "Portugal",
+  },
+  {
+    value: "China",
+    label: "China",
+  },
+  {
+    value: "Spain",
+    label: "Spain",
+  },
+  {
+    value: "Italy",
+    label: "Italy",
+  },
+  {
+    value: "Denmark",
+    label: "Denmark",
+  },
+  {
+    value: "Hong Kong",
+    label: "Hong Kong",
   },
 ];
