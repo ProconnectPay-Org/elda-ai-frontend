@@ -47,10 +47,10 @@ const Onboard = () => {
     const fetchCandidateDetails = async () => {
       if (!email) return;
       try {
-        setIsLoading(true);
         const { data } = await axios.get(
           `${API_URL}onboarding-candidate/s/${email}/`
         );
+        console.log(data);
 
         const nameParts = data.full_name?.split(" ") || [];
         const [first_name, middle_name, surname] =
@@ -58,6 +58,7 @@ const Onboard = () => {
             ? nameParts
             : [nameParts[0], "", nameParts[1] || ""];
         form.reset({
+          membershipStatus: data.membership,
           emailAddress: data.email,
           firstName: first_name || "",
           middleName: middle_name || "",
@@ -65,11 +66,11 @@ const Onboard = () => {
           phoneNumber: data.phone_number,
           whatsappNumber: data.whatsapp,
           gender: data.gender,
-          graduateOf: data.graduate_of,
           dateOfBirth: data.date_of_birth
             ? new Date(data.date_of_birth)
             : undefined,
           age: data.age,
+          graduateOf: data.graduate_of,
           specificCGPA: data.specific_cgpa,
           hasMasters: data.has_masters_degree ? "true" : "false",
           degreeClass: data.class_of_degree,
@@ -84,14 +85,14 @@ const Onboard = () => {
           countriesOfInterest:
             data.countries?.map((c: ICountry) => c.name) || [],
           typeOfAcademicDegree: data.interest?.academic_type || "",
-          GMATGRE: data.interest?.open_to_gmat || "",
+          GMATGRE: data.interest?.open_to_gmat == "Yes" ? "true" : "false",
           academicProgram: data.interest?.specific_program || "",
           specificUniversity: data.interest?.specific_university || "",
         });
+        const trimmedResume = data.resume.split("/").pop()?.split("?")[0];
+        setSelectedFile(trimmedResume);
       } catch (error) {
         console.error("Error fetching candidate details:", error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -121,6 +122,7 @@ const Onboard = () => {
         `${API_URL}onboarding-candidate/s/${data.emailAddress}/`,
         {
           ...data,
+          membership: data.membershipStatus,
           full_name: [data.firstName, data.middleName, data.surname]
             .filter(Boolean)
             .join(" "),
@@ -128,7 +130,7 @@ const Onboard = () => {
           phone_number: data.phoneNumber,
           gender: data.gender,
           graduate_of: data.graduateOf,
-          state_of_residence: "Lagos",
+          // state_of_residence: "Lagos",
           date_of_birth: data.dateOfBirth
             ? new Date(data.dateOfBirth).toISOString().split("T")[0]
             : null,
@@ -217,21 +219,21 @@ const Onboard = () => {
       });
       return;
     }
+    
+    if (!email) {
+      toast({
+        title: "Error",
+        description: "Email address is required",
+        variant: "destructive",
+      });
+      return;
+    }
 
     setIsUploading(true);
     try {
       const formData = new FormData();
       formData.append("resume", selectedFile);
       const email = form.getValues("emailAddress");
-
-      if (!email) {
-        toast({
-          title: "Error",
-          description: "Email address is required",
-          variant: "destructive",
-        });
-        return;
-      }
 
       const response = await axios.patch(
         `${API_URL}onboarding-candidate/s/${email}/`,
@@ -250,8 +252,6 @@ const Onboard = () => {
           variant: "default",
           className: "bg-green-500 text-white",
         });
-        setSelectedFile(null);
-        form.setValue("uploadCV", "");
       } else {
         throw new Error("Upload failed");
       }
@@ -655,56 +655,46 @@ const Onboard = () => {
                     placeholder="--Select--"
                   />
 
-                  <div className="space-y-2">
-                    <FormInput
-                      control={form.control}
-                      name="uploadCV"
-                      label="Upload your updated CV"
-                      type="file"
-                      placeholder=""
-                      className="w-auto"
-                    >
-                      {(field) => (
-                        <div className="flex items-center space-x-2">
-                          <input
-                            type="file"
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) {
-                                setSelectedFile(file);
-                                field.onChange(file.name);
-                              }
-                            }}
-                            className="hidden"
-                            id="cv-upload"
-                            accept=".pdf,.doc,.docx"
+                  <div className="space-y-2 w-full">
+                    <div className="flex items-center space-x-2 w-full">
+                      <input
+                        type="file"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0] || null;
+                          setSelectedFile(file);
+                        }}
+                        className="hidden"
+                        id="cv-upload"
+                        accept=".pdf,.doc,.docx"
+                      />
+                      <label
+                        htmlFor="cv-upload"
+                        className="inline-flex w-full font-semibold text-[14px] items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-md cursor-pointer hover:bg-gray-200 border"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-4 h-4 mr-2"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
                           />
-                          <label
-                            htmlFor="cv-upload"
-                            className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-md cursor-pointer hover:bg-gray-200 text-sm"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="w-4 h-4 mr-2"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-                              />
-                            </svg>
-                            {selectedFile ? selectedFile.name : "Upload CV"}
-                          </label>
-                        </div>
-                      )}
-                    </FormInput>
+                        </svg>
+                        {selectedFile
+                          ? typeof selectedFile === "string"
+                            ? selectedFile
+                            : selectedFile.name
+                          : "Upload CV"}
+                      </label>
+                    </div>
                     <Button
                       disabled={isUploading}
-                      className="bg-red"
+                      className="bg-red ml-2"
                       onClick={uploadCV}
                     >
                       {isUploading ? "Uploading..." : "Upload"}
