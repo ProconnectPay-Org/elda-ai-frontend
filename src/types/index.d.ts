@@ -528,6 +528,8 @@ declare interface ACSCandidateProps {
   program_type1: string;
   program_type2: string;
   class_of_degree: string;
+  created_at: string;
+  updated_at: string;
   countries: Country[];
   degree: Degree[];
   interest: Interest;

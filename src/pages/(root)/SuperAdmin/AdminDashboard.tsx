@@ -24,6 +24,14 @@ import { toast } from "@/components/ui/use-toast";
 import { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import { BellRingIcon } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface staticCardProps {
   title: string;
@@ -146,10 +154,26 @@ const AdminDashboard = () => {
         <h1 className="text-red text-3xl font-bold">
           Welcome to the Super Admin Dashboard
         </h1>
-
-        <Button className="border-red" variant={"outline"}>
-          <BellRingIcon stroke="red" />
-        </Button>
+        <div className="flex gap-2 items-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger className="border border-red rounded-md px-3 py-1 text-red">
+              View Tables
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Tables</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <Link to={"/admin/tables/onboard"} target="_blank">
+                <DropdownMenuItem>Onboarded Candidates Table</DropdownMenuItem>
+              </Link>
+              <Link to={"/admin/tables/interest"} target="_blank">
+                <DropdownMenuItem>Interested Candidates Table</DropdownMenuItem>
+              </Link>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button className="border-red" variant={"outline"}>
+            <BellRingIcon stroke="red" />
+          </Button>
+        </div>
       </div>
 
       <div className="flex flex-col-reverse gap-5 md:gap-0 md:flex-row items-start md:items-center justify-between my-8 md:my-10">

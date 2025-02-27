@@ -8,3 +8,5 @@ export { default as CreateCandidateProfile } from "./CreateCandidateProfile";
 export { default as InviteEmployee } from "./InviteEmployee";
 export { default as ViewComplaints } from "./ViewComplaints";
 export { default as CandidatePage } from "./CandidatePage";
+export { default as OnboardedCandidates } from "./Tables/OnboardedCandidates";
+export { default as InterestedCandidates } from "./Tables/InterestedCandidates";

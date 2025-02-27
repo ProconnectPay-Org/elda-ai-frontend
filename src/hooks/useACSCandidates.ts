@@ -6,6 +6,9 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 declare interface CandidatesResponse {
   results: ACSCandidateProps[];
+  count: number;
+  next: string | null;
+  previous: string | null;
 }
 
 export const useACSCandidates = () => {

@@ -16,7 +16,9 @@ import {
   CandidatePage,
   Candidates,
   CreateCandidateProfile,
+  InterestedCandidates,
   InviteEmployee,
+  OnboardedCandidates,
   Staff,
   ViewComplaints,
 } from "./pages/(root)/SuperAdmin";
@@ -47,6 +49,8 @@ function App() {
         {/* SUPER ADMIN */}
         <Route element={<AdminSignIn />} path="/sign-in" />
         <Route element={<AdminDashboard />} path="/admin-dashboard" />
+        <Route element={<OnboardedCandidates />} path="/admin/tables/onboard" />
+        <Route element={<InterestedCandidates />} path="/admin/tables/interest" />
         <Route
           element={<CreateCandidateProfile />}
           path="/admin/create-candidate-profile/:id?"
