@@ -20,7 +20,7 @@ const AdminSideBar = () => {
     isError: error,
   } = useQuery<{ results: ACSCandidateProps[] }>({
     queryKey: ["onboardedCandidates"],
-    queryFn: getAllOnboardedCandidateData,
+    queryFn: () => getAllOnboardedCandidateData(),
     staleTime: 5 * 60 * 10,
   });
 
