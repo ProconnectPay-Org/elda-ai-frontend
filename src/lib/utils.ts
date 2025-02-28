@@ -372,7 +372,7 @@ export const onboardSchema2 = z.object({
   graduateOf: z.enum(["Polytechnic", "University"]),
   kindOfDegree: z.string().nonempty("Kind of degree is required"),
 
-  courseOfStudy: z.string().optional(),
+  courseOfStudy: z.string().nonempty("This is required"),
 
   institutionName: z.string().nonempty("Institution is required"),
   degreeClass: z.string().nonempty("Class of degree is required"),

@@ -28,6 +28,7 @@ interface CustomInputProps<T extends FieldValues> {
   renderInput?: (inputProps: ControllerRenderProps<T>) => React.ReactElement;
   children?: (field: ControllerRenderProps<T>) => React.ReactNode;
   required?: boolean;
+  disabled?: boolean;
 }
 
 const FormInput = <T extends FieldValues>({
@@ -41,6 +42,7 @@ const FormInput = <T extends FieldValues>({
   validation,
   renderInput,
   children,
+  disabled,
 }: CustomInputProps<T>) => {
   return (
     <FormField
@@ -129,7 +131,7 @@ const FormInput = <T extends FieldValues>({
                 <FormControl>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value?.toString()}
+                    value={field.value?.toString()}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder={placeholder} />
@@ -154,6 +156,7 @@ const FormInput = <T extends FieldValues>({
                       {...inputProps}
                       type={type === "number" ? "number" : "text"}
                       placeholder={placeholder}
+                      disabled={disabled}
                     />
                   )}
                 </FormControl>

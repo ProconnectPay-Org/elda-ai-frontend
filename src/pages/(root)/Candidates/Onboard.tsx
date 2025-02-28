@@ -50,7 +50,6 @@ const Onboard = () => {
         const { data } = await axios.get(
           `${API_URL}onboarding-candidate/s/${email}/`
         );
-        console.log(data);
 
         const nameParts = data.full_name?.split(" ") || [];
         const [first_name, middle_name, surname] =
@@ -58,22 +57,22 @@ const Onboard = () => {
             ? nameParts
             : [nameParts[0], "", nameParts[1] || ""];
         form.reset({
-          membershipStatus: data.membership,
+          membershipStatus: data.membership || "",
           emailAddress: data.email,
           firstName: first_name || "",
           middleName: middle_name || "",
           surname: surname || "",
           phoneNumber: data.phone_number,
           whatsappNumber: data.whatsapp,
-          gender: data.gender,
+          gender: data.gender || "Male",
           dateOfBirth: data.date_of_birth
             ? new Date(data.date_of_birth)
             : undefined,
           age: data.age,
-          graduateOf: data.graduate_of,
-          specificCGPA: data.specific_cgpa,
+          graduateOf: data.graduate_of || "Polytechnic",
+          specificCGPA: data.specific_cgpa || "",
           hasMasters: data.has_masters_degree ? "true" : "false",
-          degreeClass: data.class_of_degree,
+          degreeClass: data.class_of_degree || "",
           courseOfStudy: data.degree?.[0]?.course || "",
           kindOfDegree: data.degree?.[0]?.degree || "",
           institutionName: data.degree?.[0]?.institution || "",
@@ -219,7 +218,7 @@ const Onboard = () => {
       });
       return;
     }
-    
+
     if (!email) {
       toast({
         title: "Error",
@@ -337,6 +336,7 @@ const Onboard = () => {
                       label="Email"
                       type="input"
                       placeholder="Enter your personal email address"
+                      disabled
                     />
                     <span className="text-[12px] text-[#667085]">
                       This will be used for the entire application process so
@@ -562,7 +562,7 @@ const Onboard = () => {
                     <Label className="text-sm font-medium">
                       Countries of Interest (Select up to 2)
                     </Label>
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-2">
                       {countriesOfInterestOptions.map((country) => (
                         <div
                           key={country.value}
@@ -656,7 +656,10 @@ const Onboard = () => {
                   />
 
                   <div className="space-y-2 w-full">
-                    <div className="flex items-center space-x-2 w-full">
+                    <label htmlFor="cv-upload" className="font-medium text-sm">
+                      Upload CV
+                    </label>
+                    <div className="flex items-center w-full">
                       <input
                         type="file"
                         onChange={(e) => {
@@ -694,7 +697,7 @@ const Onboard = () => {
                     </div>
                     <Button
                       disabled={isUploading}
-                      className="bg-red ml-2"
+                      className="bg-red"
                       onClick={uploadCV}
                     >
                       {isUploading ? "Uploading..." : "Upload"}
