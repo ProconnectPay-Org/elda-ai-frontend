@@ -244,6 +244,7 @@ const AssignedCandidates = () => {
                   <DialogDescription></DialogDescription>
                   <Link
                     to={`/assigned-candidates/${selectedRowData.id}`}
+                    target="_blank"
                     className="underline text-sm text-red font-medium"
                   >
                     View All

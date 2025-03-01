@@ -8,7 +8,10 @@ import { toast } from "@/components/ui/use-toast";
 import AdminLayout from "@/layouts/AdminLayout";
 import { useACSCandidates } from "@/hooks/useACSCandidates";
 import { onboardColumns } from "@/components/OnboardColumns";
-import { deleteACSCandidate, getAllOnboardedCandidateData } from "@/lib/actions/acs.actions";
+import {
+  deleteACSCandidate,
+  getAllOnboardedCandidateData,
+} from "@/lib/actions/acs.actions";
 
 const OnboardedCandidates = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -81,8 +84,8 @@ const OnboardedCandidates = () => {
   const handleTabChange = (tabValue: string) => {
     setCurrentTab(tabValue);
     setSearchParams({
-      assigned: tabValue === "assigned" ? "true" : "false",
-      page: "1",
+      paid: tabValue === "paid" ? "true" : "false",
+      page: page.toString(),
     });
   };
 
@@ -92,7 +95,7 @@ const OnboardedCandidates = () => {
         const nextPage = new URL(allCandidates.next).searchParams.get("page");
         if (nextPage)
           setSearchParams({
-            assigned: currentTab === "assigned" ? "true" : "false",
+            assigned: currentTab === "paid" ? "true" : "false",
             page: nextPage,
           });
       } catch (error) {
@@ -106,7 +109,7 @@ const OnboardedCandidates = () => {
       const previousUrl = new URL(allCandidates.previous);
       const previousPage = previousUrl.searchParams.get("page") || "1";
       setSearchParams({
-        assigned: currentTab === "assigned" ? "true" : "false",
+        assigned: currentTab === "paid" ? "true" : "false",
         page: previousPage,
       });
     } else {
@@ -133,21 +136,15 @@ const OnboardedCandidates = () => {
       })
     ) || [];
 
-  const recommendedData = tableData
-    .filter(
-      (candidate) =>
-        candidate.assigned_university1 || candidate.assigned_course1
-    )
+  const paidCandidates = tableData
+    .filter((candidate) => candidate.has_paid)
     .map((candidate, index) => ({
       ...candidate,
       serialNumber: index + 1,
     }));
 
-  const unRecommendedData = tableData
-    .filter(
-      (candidate) =>
-        !candidate.assigned_university1 && !candidate.assigned_course1
-    )
+  const unpaidCandidates = tableData
+    .filter((candidate) => !candidate.has_paid)
     .map((candidate, index) => ({
       ...candidate,
       serialNumber: index + 1,
@@ -170,16 +167,16 @@ const OnboardedCandidates = () => {
             All
           </TabsTrigger>
           <TabsTrigger
-            value="assigned"
+            value="paid"
             className="data-[state=active]:border-b-4 rounded-none shadow-none font-bold text-base border-red"
           >
-            Recommended
+            Paid
           </TabsTrigger>
           <TabsTrigger
-            value="unassigned"
+            value="unpaid"
             className="data-[state=active]:border-b-4 rounded-none shadow-none font-bold text-base border-red"
           >
-            Not Recommended
+            Unpaid
           </TabsTrigger>
         </TabsList>
         <div className="w-full relative">
@@ -198,20 +195,18 @@ const OnboardedCandidates = () => {
             />
           </TabsContent>
 
-          {/* Display only assigned candidates */}
-          <TabsContent value="assigned">
+          <TabsContent value="paid">
             <DataTable
               columns={onboardColumns(handleDeleteCandidate)}
-              data={recommendedData}
+              data={paidCandidates}
               isLoading={allCandidatesLoading}
             />
           </TabsContent>
 
-          {/* Display only unassigned candidates */}
-          <TabsContent value="unassigned">
+          <TabsContent value="unpaid">
             <DataTable
               columns={onboardColumns(handleDeleteCandidate)}
-              data={unRecommendedData}
+              data={unpaidCandidates}
               isLoading={allCandidatesLoading}
             />
           </TabsContent>

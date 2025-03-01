@@ -33,10 +33,12 @@ const AcsSidebar: React.FC<SidebarProps> = ({
     );
   };
 
+  const paidCandidates = candidates.filter((candidate) => candidate.has_paid);
+
   // Update candidate lists when candidates change
   useEffect(() => {
-    const recommended = candidates.filter(isRecommended);
-    const notRecommended = candidates.filter(
+    const recommended = paidCandidates.filter(isRecommended);
+    const notRecommended = paidCandidates.filter(
       (candidate) => !isRecommended(candidate)
     );
 

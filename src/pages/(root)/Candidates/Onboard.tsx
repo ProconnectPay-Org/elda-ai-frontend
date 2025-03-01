@@ -668,7 +668,7 @@ const Onboard = () => {
                         }}
                         className="hidden"
                         id="cv-upload"
-                        accept=".pdf,.doc,.docx"
+                        accept=".pdf"
                       />
                       <label
                         htmlFor="cv-upload"

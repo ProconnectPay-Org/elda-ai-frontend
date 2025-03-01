@@ -64,11 +64,6 @@ export const deleteACSCandidate = async (id: number | string) => {
   try {
     const response = await axios.delete(
       `${API_URL}onboarding-candidate/${id}/`
-      // {
-      //   headers: {
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // }
     );
     return response.data;
   } catch (error) {

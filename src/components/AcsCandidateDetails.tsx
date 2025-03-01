@@ -6,11 +6,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ACSCandidateProps, Form1Type, Form2Type } from "@/types";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "./ui/use-toast";
-import { updateCandidateData } from "@/lib/actions/acs.actions";
+import {
+  deleteACSCandidate,
+  updateCandidateData,
+} from "@/lib/actions/acs.actions";
 import AcsRecommendationForm from "./AcsRecommendationForm";
 import useAuth from "@/hooks/useAuth";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface CandidateDetailsProps {
   candidate: ACSCandidateProps | null;
@@ -41,6 +45,8 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
     );
   }
 
+  const queryClient = useQueryClient();
+
   const { handleLogout, loggedInUser } = useAuth();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -48,22 +54,39 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
   const form1 = useForm<Form1Type>({
     resolver: zodResolver(acsform1Schema),
     defaultValues: {
-      programType1: "",
-      assignedSchool1: "",
-      assignedCourse1: "",
-      country1: "",
+      programType1: candidate?.program_type1 || "",
+      assignedSchool1: candidate?.assigned_university1 || "",
+      assignedCourse1: candidate?.assigned_course1 || "",
+      country1: candidate?.first_country || "",
     },
   });
 
   const form2 = useForm<Form2Type>({
     resolver: zodResolver(acsform2Schema),
     defaultValues: {
-      programType2: "",
-      assignedSchool2: "",
-      assignedCourse2: "",
-      country2: "",
+      programType2: candidate?.program_type2 || "",
+      assignedSchool2: candidate?.assigned_university2 || "",
+      assignedCourse2: candidate?.assigned_course2 || "",
+      country2: candidate?.second_country || "",
     },
   });
+
+  // Use useEffect to reset form values when the candidate changes
+  useEffect(() => {
+    form1.reset({
+      programType1: candidate?.program_type1 || "",
+      assignedSchool1: candidate?.assigned_university1 || "",
+      assignedCourse1: candidate?.assigned_course1 || "",
+      country1: candidate?.first_country || "",
+    });
+
+    form2.reset({
+      programType2: candidate?.program_type2 || "",
+      assignedSchool2: candidate?.assigned_university2 || "",
+      assignedCourse2: candidate?.assigned_course2 || "",
+      country2: candidate?.second_country || "",
+    });
+  }, [candidate, form1.reset, form2.reset]);
 
   const onSubmitForm = async (
     data: Form1Type | Form2Type,
@@ -119,6 +142,34 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
     }
   };
 
+  const deleteCandidateMutation = useMutation({
+    mutationFn: deleteACSCandidate,
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Candidate deleted successfully.",
+        variant: "success",
+      });
+      queryClient.invalidateQueries({ queryKey: ["onboardedCandidates"] });
+    },
+    onError: () => {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to delete candidate. Please try again.",
+      });
+    },
+  });
+
+  const handleDeleteCandidate = async () => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete ${candidate?.full_name}'s account?`
+    );
+    if (confirmed) {
+      deleteCandidateMutation.mutate(candidate?.id || "");
+    }
+  };
+
   return (
     <div>
       <div className="border-b border-x-gray-text p-6 flex justify-between items-center">
@@ -153,37 +204,45 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
       </div>
 
       {/* PERSONAL DATA */}
-      <div className="p-6 md:max-w-[760px]">
-        <p className="text-xl font-semibold">Personal Data</p>
-        <div className="space-y-4">
-          <SmallComponent
-            label="Full Name"
-            value={candidate.full_name || "No name"}
-          />
-          <SmallComponent
-            label="Personal Email Address"
-            value={candidate.email || "No mail"}
-          />
-          <SmallComponent
-            label="Personal Phone Number"
-            value={candidate.phone_number || "No number"}
-          />
-          <SmallComponent
-            label="Personal Whatsapp Number"
-            value={candidate.whatsapp || "No number"}
-          />
-          <SmallComponent
-            label="Gender"
-            value={candidate.gender || "No gender"}
-          />
-          <SmallComponent
-            label="Age"
-            value={`${candidate.age} years old` || "No age"}
-          />
-          <SmallComponent
-            label="Date Of Birth"
-            value={`${candidate.date_of_birth}` || "No DOB"}
-          />
+      <div className="flex items-start justify-between">
+        <div className="p-6 md:max-w-[760px]">
+          <p className="text-xl font-semibold">Personal Data</p>
+          <div className="space-y-4">
+            <SmallComponent
+              label="Full Name"
+              value={candidate.full_name || "No name"}
+            />
+            <SmallComponent
+              label="Personal Email Address"
+              value={candidate.email || "No mail"}
+            />
+            <SmallComponent
+              label="Personal Phone Number"
+              value={candidate.phone_number || "No number"}
+            />
+            <SmallComponent
+              label="Personal Whatsapp Number"
+              value={candidate.whatsapp || "No number"}
+            />
+            <SmallComponent
+              label="Gender"
+              value={candidate.gender || "No gender"}
+            />
+            <SmallComponent
+              label="Age"
+              value={`${candidate.age} years old` || "No age"}
+            />
+            <SmallComponent
+              label="Date Of Birth"
+              value={`${candidate.date_of_birth}` || "No DOB"}
+            />
+          </div>
+        </div>
+
+        <div className="p-6">
+          <Button onClick={handleDeleteCandidate} className="">
+            Delete Candidate
+          </Button>
         </div>
       </div>
 
@@ -279,7 +338,9 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
             )}` || "No document uploaded yet"}
           </div>
           <Button className="bg-red w-18">
-            <Link to={candidate?.resume}>View</Link>
+            <Link to={candidate?.resume} target="_blank">
+              View
+            </Link>
           </Button>
         </div>
       </div>

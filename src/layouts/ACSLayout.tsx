@@ -15,10 +15,11 @@ const ACSLayout = () => {
   // Set first candidate as default on first load
   useEffect(() => {
     if (candidates?.results && candidates?.results?.length > 0) {
+      const paidCandidate = candidates.results.find((c) => c.has_paid);
       // Find the candidate with the matching ID
       const candidate = id
         ? candidates.results.find((c) => c.id == id)
-        : candidates.results[0];
+        : paidCandidate || candidates.results[0];
 
       setSelectedCandidate(candidate || candidates.results[0]);
     }
