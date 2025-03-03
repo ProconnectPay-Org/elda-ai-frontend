@@ -168,12 +168,40 @@ const OnboardedCandidates = () => {
         value={currentTab}
         onValueChange={handleTabChange}
       >
-        <TabsList className="w-full md:w-[500px] bg-transparent justify-between">
+        <TabsList className="w-full md:w-[400px] bg-transparent justify-between">
+          <TabsTrigger
+            value="all"
+            className="data-[state=active]:border-b-4 rounded-none shadow-none font-bold text-base border-red"
+          >
+            All
+          </TabsTrigger>
+          <TabsTrigger
+            value="paid"
+            className="data-[state=active]:border-b-4 rounded-none shadow-none font-bold text-base border-red"
+          >
+            Paid
+          </TabsTrigger>
+          <TabsTrigger
+            value="unpaid"
+            className="data-[state=active]:border-b-4 rounded-none shadow-none font-bold text-base border-red"
+          >
+            Unpaid
+          </TabsTrigger>
+
+          <TabsTrigger
+            value="bank"
+            className="data-[state=active]:border-b-4 rounded-none shadow-none font-bold text-base border-red"
+          >
+            Banks
+          </TabsTrigger>
+        </TabsList>
+
+        {/* <TabsList className="w-full md:w-[500px] bg-transparent justify-between">
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="paid">Paid</TabsTrigger>
           <TabsTrigger value="unpaid">Unpaid</TabsTrigger>
           <TabsTrigger value="bank">Banks</TabsTrigger>
-        </TabsList>
+        </TabsList> */}
         <div className="w-full relative">
           <div className="flex gap-4 mb-4">
             <input
