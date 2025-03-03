@@ -13,7 +13,11 @@ import EmployeeMail from "@/assets/invite-employee.svg";
 import CandidateIcon from "@/assets/candidate-profile.svg";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getAdminInfo, getAllActivities } from "@/lib/actions/user.actions";
+import {
+  getAdminInfo,
+  getAllActivities,
+  sendReminder,
+} from "@/lib/actions/user.actions";
 import messageIcon from "@/assets/message-icon.png";
 import shieldIcon from "@/assets/shield-icon.png";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -23,7 +27,7 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "@/components/ui/use-toast";
 import { AxiosError } from "axios";
 import Cookies from "js-cookie";
-import { BellRingIcon } from "lucide-react";
+import { BellRingIcon, Loader2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -71,6 +75,7 @@ const AdminDashboard = () => {
   const [pendingJobs, setPendingJobs] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isSendingReminder, setIsSendingReminder] = useState(false);
   const isAnalyst = Cookies.get("user_role") === "analyst";
 
   const {
@@ -92,6 +97,22 @@ const AdminDashboard = () => {
     queryFn: () => getAllActivities(),
     staleTime: 5 * 60 * 1000,
   });
+
+  const handleReminders = async () => {
+    setIsSendingReminder(true);
+    try {
+      const response = await sendReminder();
+      toast({
+        title: "Success",
+        description: response,
+        variant: "success",
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSendingReminder(false);
+    }
+  };
 
   useEffect(() => {
     const handleAxiosError = (error: unknown) => {
@@ -170,8 +191,16 @@ const AdminDashboard = () => {
               </Link>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button className="border-red" variant={"outline"}>
-            <BellRingIcon stroke="red" />
+          <Button
+            className="border-red"
+            variant={"outline"}
+            onClick={handleReminders}
+          >
+            {isSendingReminder ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              <BellRingIcon stroke="red" />
+            )}
           </Button>
         </div>
       </div>

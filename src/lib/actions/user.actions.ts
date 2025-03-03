@@ -619,3 +619,24 @@ export const toggleSchoolApplicationStatus2 = async (id?: string) => {
     return null;
   }
 };
+
+export const sendReminder = async () => {
+  try {
+    const token =
+      Cookies.get("access_token");
+    if (!token) return null;
+
+    const response = await axios.get(
+      `${API_URL}remind-candidates/`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
