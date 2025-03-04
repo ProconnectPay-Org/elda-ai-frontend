@@ -535,3 +535,15 @@ declare interface ACSCandidateProps {
   degree: Degree[];
   interest: Interest;
 }
+
+declare interface InterestedCandidatesProps {
+  id: string;
+  full_name: string;
+  email: string;
+  phone: string;
+  residence_country: string;
+  country_interested_in: string;
+  enquiries: string;
+  product: string;
+  gender: string;
+}

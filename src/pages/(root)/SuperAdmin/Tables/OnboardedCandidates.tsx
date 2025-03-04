@@ -198,13 +198,13 @@ const OnboardedCandidates = () => {
         </TabsList>
 
         <div className="w-full relative">
-          <div className="flex gap-4 mb-4">
+          <div className="flex gap-4 absolute top-6 min-w-[600px]">
             <input
               type="text"
               placeholder="Search candidates by name"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full md:w-1/3 p-2 border rounded-md bg-white"
+              className="w-full md:w-1/2 p-2 border rounded-md bg-white z-10 "
             />
             {currentTab === "bank" && (
               <select

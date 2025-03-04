@@ -622,21 +622,44 @@ export const toggleSchoolApplicationStatus2 = async (id?: string) => {
 
 export const sendReminder = async () => {
   try {
-    const token =
-      Cookies.get("access_token");
+    const token = Cookies.get("access_token");
     if (!token) return null;
 
-    const response = await axios.get(
-      `${API_URL}remind-candidates/`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await axios.get(`${API_URL}remind-candidates/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error(error);
     return null;
+  }
+};
+
+export const getAllInterestedCandidates = async () => {
+  let url = `${API_URL}interested-candidates/`;
+
+  try {
+    const response = await axios.get(`${url}`, {
+      headers: { "Content-Type": "application/json" },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error);
+    throw error;
+  }
+};
+
+export const deleteInterestedCandidate = async (email: string) => {
+  try {
+    const response = await axios.delete(
+      `${API_URL}interested-candidates/s/${email}/`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting candidate:", error);
+    throw error;
   }
 };
