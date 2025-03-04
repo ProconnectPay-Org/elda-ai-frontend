@@ -56,6 +56,16 @@ const OnboardedCandidates = () => {
   const [currentTab, setCurrentTab] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [selectedBank, setSelectedBank] = useState<string>("");
+
+  const bankOptions = [
+    { value: "", label: "All Banks" },
+    { value: "GTBank", label: "GTBank" },
+    { value: "FirstBank", label: "First Bank" },
+    { value: "UBA", label: "UBA" },
+    { value: "Paid through website", label: "Paid through website" },
+  ];
+
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       setSearchParams({ page: "1" });
@@ -178,15 +188,38 @@ const OnboardedCandidates = () => {
           >
             Unpaid
           </TabsTrigger>
+
+          <TabsTrigger
+            value="bank"
+            className="data-[state=active]:border-b-4 rounded-none shadow-none font-bold text-base border-red"
+          >
+            Banks
+          </TabsTrigger>
         </TabsList>
+
         <div className="w-full relative">
-          <input
-            type="text"
-            placeholder="Search candidates by name"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full md:w-1/3 p-2 border rounded-md bg-white z-10 mb-4 absolute top-6"
-          />
+          <div className="flex gap-4 mb-4">
+            <input
+              type="text"
+              placeholder="Search candidates by name"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full md:w-1/3 p-2 border rounded-md bg-white"
+            />
+            {currentTab === "bank" && (
+              <select
+                value={selectedBank}
+                onChange={(e) => setSelectedBank(e.target.value)}
+                className="w-full md:w-1/3 p-2 border rounded-md bg-white"
+              >
+                {bankOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
           <TabsContent value="all">
             <DataTable
               columns={onboardColumns(handleDeleteCandidate)}
@@ -207,6 +240,16 @@ const OnboardedCandidates = () => {
             <DataTable
               columns={onboardColumns(handleDeleteCandidate)}
               data={unpaidCandidates}
+              isLoading={allCandidatesLoading}
+            />
+          </TabsContent>
+
+          <TabsContent value="bank">
+            <DataTable
+              columns={onboardColumns(handleDeleteCandidate)}
+              data={tableData.filter((candidate) =>
+                selectedBank ? candidate.bank === selectedBank : true
+              )}
               isLoading={allCandidatesLoading}
             />
           </TabsContent>

@@ -483,7 +483,7 @@ export type ResumeStep3FormData = z.infer<typeof ResumeStep3Schema>;
 export type ResumeStep4FormData = z.infer<typeof ResumeStep4Schema>;
 export type ResumeStep5FormData = z.infer<typeof ResumeStep5Schema>;
 
-  // Infer types from schema
+// Infer types from schema
 export type Form1Type = z.infer<typeof acsform1Schema>;
 export type Form2Type = z.infer<typeof acsform2Schema>;
 
@@ -508,6 +508,7 @@ type Country = {
 
 declare interface ACSCandidateProps {
   id: string;
+  bank?: string;
   full_name: string;
   email: string;
   phone_number: string;
