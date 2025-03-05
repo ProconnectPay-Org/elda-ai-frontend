@@ -1,31 +1,8 @@
 // hooks/useCandidates.ts
 import { useQuery } from "@tanstack/react-query";
-import {
-  getAllCandidates,
-  getSingleCandidate,
-} from "@/lib/actions/user.actions";
-import Cookies from "js-cookie";
+import { getSingleCandidate } from "@/lib/actions/user.actions";
 
-const getToken = () =>
-  Cookies.get("staff_access_token") || Cookies.get("access_token");
-
-export const useCandidates = (candidateId?: string, count: number = 50) => {
-  const {
-    data: allCandidates,
-    error: allCandidatesError,
-    isLoading: allCandidatesLoading,
-    refetch: refetchAllCandidates,
-  } = useQuery({
-    queryKey: ["allCandidates"],
-    queryFn: async () => {
-      const token = getToken();
-      if (!token)
-        throw new Error("Access token is missing. Please sign in again.");
-      return getAllCandidates(token, undefined, count);
-    },
-    enabled: !!getToken(),
-  });
-
+export const useCandidates = (candidateId?: string) => {
   const {
     data: singleCandidate,
     error: singleCandidateError,
@@ -38,10 +15,6 @@ export const useCandidates = (candidateId?: string, count: number = 50) => {
   });
 
   return {
-    allCandidates,
-    allCandidatesError,
-    allCandidatesLoading,
-    refetchAllCandidates,
     singleCandidate,
     singleCandidateError,
     singleCandidateLoading,

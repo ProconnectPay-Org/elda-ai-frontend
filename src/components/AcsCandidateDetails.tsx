@@ -270,7 +270,7 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
           />
           <SmallComponent
             label="Class of Degree"
-            value={candidate.class_of_degree || "No degree"}
+            value={candidate.degree?.[0]?.cgpa_class || "No degree"}
           />
           <SmallComponent
             label="Specific CGPA"
@@ -292,10 +292,10 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
             label="Course of Study Graduated from with master"
             value={candidate.degree?.[1]?.course || "N/A"}
           />
-          {/* <SmallComponent
+          <SmallComponent
             label="Class of Degree (Masters)"
-            value={`${candidate.age}` || "N/A"}
-          /> */}
+            value={`${candidate.degree?.[1]?.cgpa_class}` || "N/A"}
+          />
           <SmallComponent
             label="Specific CGPA for Masters"
             value={candidate.degree?.[1]?.cgpa || "N/A"}

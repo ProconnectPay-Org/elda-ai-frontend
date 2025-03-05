@@ -71,7 +71,9 @@ const StatusBox = ({
         </p>
         <div className="border border-red px-2 h-6 flex items-center gap-1 rounded-md">
           {icon}
-          <p className="text-[10px] text-center text-gray-text">{status}</p>
+          <p className="text-[10px] text-center text-gray-text">
+            {status === "True" ? "Completed" : status}
+          </p>
         </div>
       </div>
       {/* <ChevronRight color="red" size={20} /> */}
@@ -156,16 +158,27 @@ const CandidateStatus = () => {
         <h1 className="font-bold text-4xl">
           Welcome, {loggedInUser?.full_name}
         </h1>
+        <div>
+          <b>ASSIGNED MANAGER</b>
+          <p className="italic">
+            {singleCandidate?.assigned_manager[0]?.user?.full_name ||
+              "Not yet assigned"}
+          </p>
+          <p className="font-medium">
+            For issues and support, email{" "}
+            <a className="text-blue-500 underline" href="mailto:info@proconnectpay.com">info@proconnectpay.com</a>
+          </p>
+        </div>
 
         <div
-          className={`h-[80px] rounded-2xl w-full p-5 bg-gradient-to-r ${
+          className={`md:h-[80px] rounded-2xl w-full p-5 bg-gradient-to-r ${
             isAtLeastOneSchoolApplicationCompleted()
               ? "from-green-400"
               : "from-red"
           }  to-[#919293] gap-2 flex items-center`}
         >
           <img src={ExclamationWhite} alt="exclamation mark" />
-          <p className="text-white font-medium text-2xl">
+          <p className="text-white font-medium text-sm md:text-2xl">
             {isAtLeastOneSchoolApplicationCompleted()
               ? "At Least One Application Completed"
               : "Not Completed"}

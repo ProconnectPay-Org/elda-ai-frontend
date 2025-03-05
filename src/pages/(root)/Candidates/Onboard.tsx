@@ -28,12 +28,17 @@ import axios from "axios";
 import { useSearchParams } from "react-router-dom";
 import { ICountry } from "country-state-city";
 import { useToast } from "@/components/ui/use-toast";
+import Cookies from "js-cookie";
+import { Loader2 } from "lucide-react";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const Onboard = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isFirstDegreeLoading, setIsFirstDegreeLoading] = useState(false);
+  const [isSecondDegreeLoading, setIsSecondDegreeLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isCountryLoading, setIsCountryLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const form = useForm<z.infer<typeof onboardSchema2>>({
     resolver: zodResolver(onboardSchema2),
@@ -50,6 +55,35 @@ const Onboard = () => {
         const { data } = await axios.get(
           `${API_URL}onboarding-candidate/s/${email}/`
         );
+
+        if (Array.isArray(data.degree) && data.degree.length > 0) {
+          // Sort degrees by id in ascending order
+          const sortedDegrees = [...data.degree].sort((a, b) => a.id - b.id);
+
+          // Store the first two IDs in cookies if they exist
+          if (sortedDegrees[0]?.id) {
+            Cookies.set("first_degree_id", String(sortedDegrees[0].id));
+          }
+          if (sortedDegrees[1]?.id) {
+            Cookies.set("second_degree_id", String(sortedDegrees[1].id));
+          }
+        }
+
+        // for countries
+        if (Array.isArray(data.countries) && data.countries.length > 0) {
+          // Sort countries by id in ascending order
+          const sortedCountries = [...data.countries].sort(
+            (a, b) => a.id - b.id
+          );
+
+          // Store the first two IDs in cookies if they exist
+          if (sortedCountries[0]?.id) {
+            Cookies.set("first_country_id", String(sortedCountries[0].id));
+          }
+          if (sortedCountries[1]?.id) {
+            Cookies.set("second_country_id", String(sortedCountries[1].id));
+          }
+        }
 
         const nameParts = data.full_name?.split(" ") || [];
         const [first_name, middle_name, surname] =
@@ -69,20 +103,26 @@ const Onboard = () => {
             ? new Date(data.date_of_birth)
             : undefined,
           age: data.age,
+          // First degree
           graduateOf: data.graduate_of || "Polytechnic",
-          specificCGPA: data.specific_cgpa || "",
-          hasMasters: data.has_masters_degree ? "true" : "false",
-          degreeClass: data.class_of_degree || "",
+          specificCGPA: data.degree?.[0]?.cgpa || "",
+          degreeClass: data.degree?.[0]?.cgpa_class || "",
           courseOfStudy: data.degree?.[0]?.course || "",
           kindOfDegree: data.degree?.[0]?.degree || "",
           institutionName: data.degree?.[0]?.institution || "",
+
+          // Second degree
+          hasMasters: data.has_masters_degree ? "true" : "false",
           specificCGPAMasters: data.degree?.[1]?.cgpa || "",
           classOfDegreeMasters: data.degree?.[1]?.cgpa_class || "",
           mastersCourse: data.degree?.[1]?.course || "",
           mastersDegree: data.degree?.[1]?.degree || "",
           mastersInstitution: data.degree?.[1]?.institution || "",
+
+          // Countries of Interest
           countriesOfInterest:
             data.countries?.map((c: ICountry) => c.name) || [],
+
           typeOfAcademicDegree: data.interest?.academic_type || "",
           GMATGRE: data.interest?.open_to_gmat == "Yes" ? "true" : "false",
           academicProgram: data.interest?.specific_program || "",
@@ -114,6 +154,162 @@ const Onboard = () => {
     return age;
   };
 
+  const saveDegree = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    degreeType: "first" | "second"
+  ) => {
+    e.preventDefault();
+    const email = form.getValues("emailAddress");
+    if (!email) {
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Email is required to save degree details!",
+      });
+      return;
+    }
+
+    // Determine degree ID and form values dynamically
+    const degreeId = Cookies.get(`${degreeType}_degree_id`);
+    const url = degreeId
+      ? `https://elda-ai-drf.onrender.com/api/onboarding-candidate/s/${email}/degrees/${degreeId}`
+      : `https://elda-ai-drf.onrender.com/api/onboarding-candidate/s/${email}/degrees/${
+          degreeType === "first" ? 1 : 2
+        }`;
+
+    const degreeData =
+      degreeType === "first"
+        ? {
+            institution: form.getValues("institutionName"),
+            course: form.getValues("courseOfStudy"),
+            degree: form.getValues("kindOfDegree"),
+            cgpa_class: form.getValues("degreeClass"),
+            cgpa: form.getValues("specificCGPA"),
+          }
+        : {
+            degree: form.getValues("mastersDegree"),
+            course: form.getValues("mastersCourse"),
+            cgpa_class: form.getValues("classOfDegreeMasters"),
+            cgpa: form.getValues("specificCGPAMasters"),
+            institution: form.getValues("mastersInstitution"),
+          };
+
+    degreeType === "first"
+      ? setIsFirstDegreeLoading(true)
+      : setIsSecondDegreeLoading(true);
+
+    try {
+      const response = await axios.post(url, degreeData);
+      toast({
+        variant: "success",
+        description: `${
+          degreeType === "first" ? "First" : "Second"
+        } Degree details saved successfully!`,
+      });
+
+      // Update the stored ID if it was just created
+      if (!degreeId) {
+        Cookies.set(`${degreeType}_degree_id`, String(response.data.id));
+      }
+    } catch (error) {
+      console.error(`Error saving ${degreeType} Degree:`, error);
+      toast({
+        variant: "destructive",
+        description: `Failed to save ${
+          degreeType === "first" ? "First" : "Second"
+        } Degree details.`,
+      });
+    } finally {
+      degreeType === "first"
+        ? setIsFirstDegreeLoading(false)
+        : setIsSecondDegreeLoading(false);
+    }
+  };
+
+  const handleSaveCountries = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    const email = form.getValues("emailAddress");
+
+    if (!email) {
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Email is required to save country details!",
+      });
+      return;
+    }
+
+    // Retrieve selected countries from the form
+    const selectedCountries: string[] =
+      form.getValues("countriesOfInterest") || [];
+
+    if (selectedCountries.length === 0) {
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Please select at least one country!",
+      });
+      return;
+    }
+
+    // Get stored country IDs from cookies
+    const first_country_id = Cookies.get("first_country_id");
+    const second_country_id = Cookies.get("second_country_id");
+
+    setIsCountryLoading(true);
+
+    try {
+      if (
+        first_country_id &&
+        second_country_id &&
+        selectedCountries.length === 2
+      ) {
+        // Case 1: Both IDs exist and two countries are selected -> Send each to respective ID
+        await axios.post(
+          `https://elda-ai-drf.onrender.com/api/onboarding-candidate/s/${email}/countries/${first_country_id}`,
+          { name: selectedCountries[0] }
+        );
+
+        await axios.post(
+          `https://elda-ai-drf.onrender.com/api/onboarding-candidate/s/${email}/countries/${second_country_id}`,
+          { name: selectedCountries[1] }
+        );
+      } else if (first_country_id && selectedCountries.length === 1) {
+        // Case 2: Only one ID exists -> Send first country to first_country_id
+        await axios.post(
+          `https://elda-ai-drf.onrender.com/api/onboarding-candidate/s/${email}/countries/${first_country_id}`,
+          { name: selectedCountries[0] }
+        );
+      } else {
+        // Case 3: No IDs exist -> Send all selected countries to default IDs (1 and 2)
+        for (let i = 0; i < selectedCountries.length; i++) {
+          const id = i + 1; // Use default IDs (1, 2)
+          await axios.post(
+            `https://elda-ai-drf.onrender.com/api/onboarding-candidate/s/${email}/countries/${id}`,
+            { name: selectedCountries[i] }
+          );
+        }
+      }
+
+      toast({
+        title: "Success",
+        variant: "success",
+        description: "Country selection saved successfully!",
+      });
+    } catch (error) {
+      console.error("Error saving countries:", error);
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Failed to save selected countries.",
+      });
+    } finally {
+      setIsCountryLoading(false);
+    }
+  };
+
   const onSubmit = async (data: z.infer<typeof onboardSchema2>) => {
     try {
       setIsLoading(true);
@@ -129,7 +325,6 @@ const Onboard = () => {
           phone_number: data.phoneNumber,
           gender: data.gender,
           graduate_of: data.graduateOf,
-          // state_of_residence: "Lagos",
           date_of_birth: data.dateOfBirth
             ? new Date(data.dateOfBirth).toISOString().split("T")[0]
             : null,
@@ -138,27 +333,6 @@ const Onboard = () => {
           specific_cgpa: data.specificCGPA,
           has_masters_degree: data.hasMasters === "true",
           class_of_degree: data.degreeClass,
-
-          degree: [
-            {
-              cgpa: data.specificCGPA,
-              cgpa_class: data.degreeClass,
-              course: data.courseOfStudy,
-              degree: data.kindOfDegree,
-              institution: data.institutionName,
-            },
-            {
-              cgpa: data.specificCGPAMasters,
-              cgpa_class: data.classOfDegreeMasters,
-              course: data.mastersCourse,
-              degree: data.mastersDegree,
-              institution: data.mastersInstitution,
-            },
-          ],
-          countries:
-            data.countriesOfInterest?.map((country) => ({
-              name: country,
-            })) || [],
           interest: {
             academic_type: data.typeOfAcademicDegree,
             open_to_gmat: data.GMATGRE === "true" ? "Yes" : "No",
@@ -178,12 +352,6 @@ const Onboard = () => {
           description: "Your form has been submitted successfully.",
           variant: "default",
           className: "bg-green-500 text-white",
-        });
-      } else {
-        toast({
-          title: "Error",
-          description: "Failed to submit form. Please try again.",
-          variant: "destructive",
         });
       }
     } catch (error) {
@@ -465,6 +633,19 @@ const Onboard = () => {
                     placeholder="Enter your course of study"
                   />
                 </div>
+                <Button
+                  disabled={isFirstDegreeLoading}
+                  className="bg-red mt-5"
+                  onClick={(e) => saveDegree(e, "first")}
+                >
+                  {isFirstDegreeLoading ? (
+                    <div className="flex items-center justify-center gap-1">
+                      Saving <Loader2 className="animate-spin" />
+                    </div>
+                  ) : (
+                    "Save Degree"
+                  )}
+                </Button>
               </div>
 
               {/* Second Degree Details */}
@@ -526,6 +707,19 @@ const Onboard = () => {
                     required={form.watch("hasMasters") === "true"}
                   />
                 </div>
+                <Button
+                  disabled={isSecondDegreeLoading}
+                  className="bg-red mt-5"
+                  onClick={(e) => saveDegree(e, "second")}
+                >
+                  {isSecondDegreeLoading ? (
+                    <div className="flex items-center justify-center gap-1">
+                      Saving <Loader2 className="animate-spin" />
+                    </div>
+                  ) : (
+                    "Save Degree"
+                  )}
+                </Button>
               </div>
 
               {/* OTHER INFORMATION */}
@@ -644,6 +838,19 @@ const Onboard = () => {
                         </div>
                       ))}
                     </div>
+                    <Button
+                      onClick={handleSaveCountries}
+                      className="bg-red"
+                      disabled={isCountryLoading}
+                    >
+                      {isCountryLoading ? (
+                        <div className="flex items-center justify-center gap-1">
+                          Saving <Loader2 className="animate-spin" />
+                        </div>
+                      ) : (
+                        "Save Countries"
+                      )}
+                    </Button>
                   </div>
 
                   <FormInput
@@ -705,6 +912,7 @@ const Onboard = () => {
                   </div>
                 </div>
               </div>
+
               <div className="mt-6 flex items-center justify-center gap-x-6">
                 <Button
                   variant="outline"

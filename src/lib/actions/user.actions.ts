@@ -167,29 +167,6 @@ export const deleteStaff = async (id: number | string) => {
   }
 };
 
-export const getAllCandidates = async (
-  token: string,
-  page?: number,
-  count: number = 50
-) => {
-  if (!token) throw new Error("Access token is missing. Please sign in again.");
-  const url = !page
-    ? `${API_URL}all-candidates/?count=${count}`
-    : `${API_URL}all-candidates/?page=${page}&count=${count}`;
-  try {
-    const response = await axios.get(`${url}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching all candidates info:", error);
-    throw error;
-  }
-};
-
 export const getAllTableCandidates = async (page?: number, query?: string) => {
   const token = Cookies.get("access_token");
 
@@ -406,40 +383,6 @@ export const getLoggedInUser = async (
     return response.data;
   } catch (error) {
     console.error("Failed to get logged-in user", error);
-    return null;
-  }
-};
-
-export const updateLoggedUser = async ({
-  email,
-  full_name,
-  role,
-}: {
-  email: string;
-  full_name: string;
-  role: string;
-}) => {
-  try {
-    const token = Cookies.get("access_token"); // Fetch from cookies
-    if (!token) return null;
-
-    const response = await axios.patch(
-      `${API_URL}auth/update-user/`,
-      {
-        email,
-        full_name,
-        role,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    return response.data;
-  } catch (error) {
-    console.error(error);
     return null;
   }
 };
