@@ -38,7 +38,7 @@ const navbarLinks = [
   },
   {
     route: "/register",
-    label: "Registeration Form"
+    label: "Registration Form"
   },
 ];
 

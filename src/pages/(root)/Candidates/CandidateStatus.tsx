@@ -186,29 +186,30 @@ const CandidateStatus = () => {
         </div>
 
         <div className="flex flex-col gap-5">
-          <div className="px-5">
-            <div className="mb-5">
-              <h3 className="font-semibold text-lg">Recommended Schools</h3>
-              <ul className="list-decimal">
-                <li>{singleCandidate?.assigned_university1}</li>
-                <li>{singleCandidate?.assigned_university2}</li>
-              </ul>
-            </div>
-            <div className="mb-5">
-              <h3 className="font-semibold text-lg">Program Types</h3>
-              <ul className="list-decimal">
-                <li>{singleCandidate?.program_type1}</li>
-                <li>{singleCandidate?.program_type2}</li>
-              </ul>
-            </div>
-            <div className="mb-5">
-              <h3 className="font-semibold text-lg">Recommended Courses</h3>
-              <ul className="list-decimal">
-                <li>{singleCandidate?.assigned_course1}</li>
-                <li>{singleCandidate?.assigned_course2}</li>
-              </ul>
-            </div>
-          </div>
+
+         <div className="px-5">
+           <table className="w-full border-collapse">
+             <thead>
+               <tr>
+                 <th className="text-left font-semibold text-lg pb-4">Recommended Schools</th>
+                 <th className="text-left font-semibold text-lg pb-4">Program Types</th>
+                 <th className="text-left font-semibold text-lg pb-4">Recommended Courses</th>
+               </tr>
+             </thead>
+             <tbody>
+               <tr>
+                 <td className="pr-4 pb-4">{singleCandidate?.assigned_university1}</td>
+                 <td className="pr-4 pb-4">{singleCandidate?.program_type1}</td>
+                 <td className="pb-4">{singleCandidate?.assigned_course1}</td>
+               </tr>
+               <tr>
+                 <td className="pr-4 pb-4">{singleCandidate?.assigned_university2}</td>
+                 <td className="pr-4 pb-4">{singleCandidate?.program_type2}</td>
+                 <td className="pb-4">{singleCandidate?.assigned_course2}</td>
+               </tr>
+             </tbody>
+           </table>
+         </div>
           {singleCandidateLoading
             ? Array(3)
                 .fill(null)
