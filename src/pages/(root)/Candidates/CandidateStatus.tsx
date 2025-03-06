@@ -144,9 +144,27 @@ const CandidateStatus = () => {
     },
   ];
 
-  const isAtLeastOneSchoolApplicationCompleted = () =>
-    singleCandidate?.school_application_status1 === "True" ||
-    singleCandidate?.school_application_status2 === "True";
+  const getApplicationStatus = () => {
+    const app1Complete = singleCandidate?.school_application_status1 === "True";
+    const app2Complete = singleCandidate?.school_application_status2 === "True";
+    
+    if (app1Complete && app2Complete) {
+      return {
+        message: "All Applications Completed",
+        color: "from-green-500"
+      };
+    } else if (app1Complete || app2Complete) {
+      return {
+        message: "One Application Completed",
+        color: "from-yellow-500"
+      };
+    } else {
+      return {
+        message: "Not Completed",
+        color: "from-red"
+      };
+    }
+  };
 
   const areAllDocumentsUploaded = Object.keys(documents).every(
     (key) => data?.[key]
@@ -172,40 +190,36 @@ const CandidateStatus = () => {
 
         <div
           className={`md:h-[80px] rounded-2xl w-full p-5 bg-gradient-to-r ${
-            isAtLeastOneSchoolApplicationCompleted()
-              ? "from-green-400"
-              : "from-red"
+            getApplicationStatus().color
           }  to-[#919293] gap-2 flex items-center`}
         >
           <img src={ExclamationWhite} alt="exclamation mark" />
           <p className="text-white font-medium text-sm md:text-2xl">
-            {isAtLeastOneSchoolApplicationCompleted()
-              ? "At Least One Application Completed"
-              : "Not Completed"}
+            {getApplicationStatus().message}
           </p>
         </div>
 
         <div className="flex flex-col gap-5">
 
-         <div className="px-5">
-           <table className="w-full border-collapse">
+         <div className="px-5 overflow-x-auto">
+           <table className="w-full border-collapse min-w-[640px]">
              <thead>
                <tr>
-                 <th className="text-left font-semibold text-lg pb-4">Recommended Schools</th>
-                 <th className="text-left font-semibold text-lg pb-4">Program Types</th>
-                 <th className="text-left font-semibold text-lg pb-4">Recommended Courses</th>
+                 <th className="text-left font-semibold text-sm md:text-lg pb-4 pr-4">Recommended Schools</th>
+                 <th className="text-left font-semibold text-sm md:text-lg pb-4 pr-4">Program Types</th>
+                 <th className="text-left font-semibold text-sm md:text-lg pb-4">Recommended Courses</th>
                </tr>
              </thead>
              <tbody>
-               <tr>
-                 <td className="pr-4 pb-4">{singleCandidate?.assigned_university1}</td>
-                 <td className="pr-4 pb-4">{singleCandidate?.program_type1}</td>
-                 <td className="pb-4">{singleCandidate?.assigned_course1}</td>
+               <tr className="hover:bg-gray-50">
+                 <td className="pr-4 pb-4 text-sm md:text-base">{singleCandidate?.assigned_university1}</td>
+                 <td className="pr-4 pb-4 text-sm md:text-base">{singleCandidate?.program_type1}</td>
+                 <td className="pb-4 text-sm md:text-base">{singleCandidate?.assigned_course1}</td>
                </tr>
-               <tr>
-                 <td className="pr-4 pb-4">{singleCandidate?.assigned_university2}</td>
-                 <td className="pr-4 pb-4">{singleCandidate?.program_type2}</td>
-                 <td className="pb-4">{singleCandidate?.assigned_course2}</td>
+               <tr className="hover:bg-gray-50">
+                 <td className="pr-4 pb-4 text-sm md:text-base">{singleCandidate?.assigned_university2}</td>
+                 <td className="pr-4 pb-4 text-sm md:text-base">{singleCandidate?.program_type2}</td>
+                 <td className="pb-4 text-sm md:text-base">{singleCandidate?.assigned_course2}</td>
                </tr>
              </tbody>
            </table>
