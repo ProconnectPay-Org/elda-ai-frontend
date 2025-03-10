@@ -99,6 +99,7 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
       if (type === "first") {
         const formData = data as Form1Type;
         submissionData = {
+          interest: {},
           first_country: formData.country1,
           assigned_course1: formData.assignedCourse1,
           assigned_university1: formData.assignedSchool1,
@@ -107,6 +108,7 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
       } else {
         const formData = data as Form2Type;
         submissionData = {
+          interest: {},
           second_country: formData.country2,
           assigned_course2: formData.assignedCourse2,
           assigned_university2: formData.assignedSchool2,

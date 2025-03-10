@@ -9,7 +9,7 @@ export const updateCandidateData = async (
   try {
     const response = await axios.put(
       `${API_URL}onboarding-candidate/s/${email}/`,
-      { ...submissionData, degree: [], countries: [], interest: {} },
+      { ...submissionData },
       { headers: { "Content-Type": "application/json" } }
     );
 
