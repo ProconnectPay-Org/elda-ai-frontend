@@ -60,10 +60,12 @@ const OnboardedCandidates = () => {
 
   const bankOptions = [
     { value: "", label: "All Banks" },
-    { value: "GTBank", label: "GTBank" },
-    { value: "FirstBank", label: "First Bank" },
-    { value: "UBA", label: "UBA" },
-    { value: "Paid through website", label: "Paid through website" },
+    { value: "Sycamore", label: "Sycamore" },
+    { value: "Union Bank", label: "Union Bank" },
+    { value: "EcoBank", label: "EcoBank" },
+    { value: "Wema Bank", label: "Wema Bank" },
+    { value: "Polaris Bank", label: "Polaris Bank" },
+    { value: "NIM", label: "NIM" },
   ];
 
   useEffect(() => {
