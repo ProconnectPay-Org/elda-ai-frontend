@@ -49,7 +49,10 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
 
   const { handleLogout, loggedInUser } = useAuth();
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState({
+    first: false,
+    second: false,
+  });
 
   const form1 = useForm<Form1Type>({
     resolver: zodResolver(acsform1Schema),
@@ -92,7 +95,7 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
     data: Form1Type | Form2Type,
     type: "first" | "second"
   ) => {
-    setIsLoading(true);
+    setIsLoading((prev) => ({ ...prev, [type]: true }));
     try {
       let submissionData;
 
@@ -140,7 +143,7 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
           : "Failed to submit form. Please try again.",
       });
     } finally {
-      setIsLoading(false);
+      setIsLoading((prev) => ({ ...prev, [type]: false }));
     }
   };
 
@@ -359,13 +362,13 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
             formInstance={form1}
             onSubmit={(data) => onSubmitForm(data, "first")}
             formType="first"
-            isLoading={isLoading}
+            isLoading={isLoading.first}
           />
           <AcsRecommendationForm
             formInstance={form2}
             onSubmit={(data) => onSubmitForm(data, "second")}
             formType="second"
-            isLoading={isLoading}
+            isLoading={isLoading.second}
           />
         </div>
       </div>
