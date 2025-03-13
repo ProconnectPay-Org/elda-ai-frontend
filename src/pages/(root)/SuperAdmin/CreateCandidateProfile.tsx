@@ -3,7 +3,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import CandidateProfileSuccess from "@/components/CandidateProfileSuccess";
 import { useEffect, useState } from "react";
-import { ArrowLeftIcon, Loader2 } from "lucide-react";
+import { ArrowLeftIcon, Loader2, CheckCircle2 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { createCandidateProfile } from "@/lib/actions/user.actions";
 import { toast } from "@/components/ui/use-toast";
@@ -67,6 +67,7 @@ const CreateCandidateProfile = () => {
 
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showNameTick, setShowNameTick] = useState(false);
 
   const {
     data: candidate,
@@ -136,8 +137,11 @@ const CreateCandidateProfile = () => {
       });
 
       if (response) {
-        setSuccess(true);
-        Cookies.set("user_password", data.password);
+        setShowNameTick(true);
+        setTimeout(() => {
+          setSuccess(true);
+          Cookies.set("user_password", data.password);
+        }, 1000);
       }
     } catch (error) {
       const axiosError = error as CustomAxiosError;
@@ -257,14 +261,21 @@ const CreateCandidateProfile = () => {
                   <div className="">
                     <FormLabel className="form-label">Full Name *</FormLabel>
                     <div className="flex w-full flex-col relative">
-                      <FormControl>
-                        <Input
-                          id={"fullname"}
-                          placeholder="Enter the full name of candidate"
-                          className=""
-                          {...field}
-                        />
-                      </FormControl>
+                      <div className="relative w-full">
+                        <FormControl>
+                          <Input
+                            id={"fullname"}
+                            placeholder="Enter the full name of candidate"
+                            className=""
+                            {...field}
+                          />
+                        </FormControl>
+                        {showNameTick && (
+                          <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                            <CheckCircle2 className="w-5 h-5 text-green-500 animate-bounce" />
+                          </div>
+                        )}
+                      </div>
                       <FormMessage className="form-message mt-2" />
                     </div>
                   </div>

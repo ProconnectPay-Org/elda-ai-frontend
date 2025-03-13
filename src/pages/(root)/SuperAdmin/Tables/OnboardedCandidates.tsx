@@ -66,6 +66,7 @@ const OnboardedCandidates = () => {
     { value: "Wema Bank", label: "Wema Bank" },
     { value: "Polaris Bank", label: "Polaris Bank" },
     { value: "NIM", label: "NIM" },
+    { value: "Paid through website", label: "Paid through website" },
   ];
 
   useEffect(() => {

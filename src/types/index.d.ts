@@ -199,6 +199,17 @@ export type Step1FormData = z.infer<typeof step1Schema>;
 export type Step2FormData = z.infer<typeof step2Schema>;
 export type Step3FormData = z.infer<typeof step3Schema>;
 export type Step4FormData = z.infer<typeof step4Schema>;
+
+// School Form Types
+declare interface SchoolFormData {
+  username: string;
+  password: string;
+  applicationFee: "Yes" | "No";
+  applicationFeeAmount?: string;
+  schoolApplicationUrl: string;
+  dateApplicationSubmittal: string;
+  sessionTimeline: string;
+}
 export type Step5FormData = z.infer<typeof step5Schema>;
 
 export type FormData = Step1FormData &

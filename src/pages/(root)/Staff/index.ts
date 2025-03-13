@@ -12,3 +12,4 @@ export { default as SopStep1 } from "./SOPPages/Step1";
 export { default as SopStep2 } from "./SOPPages/Step2";
 export { default as SopStep3 } from "./SOPPages/Step3";
 export { default as SopStep4 } from "./SOPPages/Step4";
+export { default as SchoolOne } from "./SchoolOne";
