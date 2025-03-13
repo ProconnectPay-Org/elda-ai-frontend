@@ -174,6 +174,15 @@ const OnboardedCandidates = () => {
       serialNumber: i + 1,
     }));
 
+  const bankCandidates = tableData
+    .filter((candidate) =>
+      selectedBank ? candidate.bank === selectedBank : true
+    )
+    .map((candidate, i) => ({
+      ...candidate,
+      serialNumber: i + 1,
+    }));
+
   if (allCandidatesError) return <p>Error: {allCandidatesError.message}</p>;
 
   return (
@@ -212,7 +221,7 @@ const OnboardedCandidates = () => {
         </TabsList>
 
         <div className="w-full relative">
-          <div className="flex gap-4 absolute top-6 min-w-[600px]">
+          <div className="flex gap-4 absolute top-6 md:min-w-[600px]">
             <input
               type="text"
               placeholder="Search candidates by name"
@@ -261,9 +270,7 @@ const OnboardedCandidates = () => {
           <TabsContent value="bank">
             <DataTable
               columns={onboardColumns(handleDeleteCandidate)}
-              data={tableData.filter((candidate) =>
-                selectedBank ? candidate.bank === selectedBank : true
-              )}
+              data={bankCandidates}
               isLoading={allCandidatesLoading}
             />
           </TabsContent>

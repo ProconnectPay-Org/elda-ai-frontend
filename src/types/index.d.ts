@@ -522,6 +522,7 @@ declare interface ACSCandidateProps {
   bank?: string;
   full_name: string;
   email: string;
+  email_address: string;
   phone_number: string;
   date_of_birth: string;
   age: string;

@@ -70,7 +70,7 @@ const AdminLayout = ({ children }: AuthLayoutProps) => {
 
   return (
     <div>
-      <nav className="flex items-center justify-between bg-pale-bg h-28 p-4 lg:p-12 gap-16 overflow-y-hidden">
+      <nav className="sticky shadow-sm top-0 z-20 flex items-center justify-between bg-pale-bg h-28 p-4 lg:p-12 gap-16 overflow-y-hidden">
         <div className="flex items-center justify-center w-[200px] overflow-hidden">
           <img src={Logo} alt="logo" className="w-fit scale-150" />
         </div>

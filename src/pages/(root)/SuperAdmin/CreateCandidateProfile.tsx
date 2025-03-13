@@ -3,7 +3,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import CandidateProfileSuccess from "@/components/CandidateProfileSuccess";
 import { useEffect, useState } from "react";
-import { ArrowLeftIcon, Loader2, CheckCircle2 } from "lucide-react";
+import { ArrowLeftIcon, Loader2 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { createCandidateProfile } from "@/lib/actions/user.actions";
 import { toast } from "@/components/ui/use-toast";
@@ -31,6 +31,8 @@ import AdminSideBar from "@/components/AdminSideBar";
 import { useQuery } from "@tanstack/react-query";
 import { getSingleOnboardedCandidateData } from "@/lib/actions/acs.actions";
 import { Skeleton } from "@/components/ui/skeleton";
+import { generatePassword } from "@/lib/utils";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 const createCandidateSchema = () =>
   z.object({
@@ -67,7 +69,10 @@ const CreateCandidateProfile = () => {
 
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [showNameTick, setShowNameTick] = useState(false);
+  const [isPasswordLoading, setIsPasswordLoading] = useState(false);
+  const [generatedPassword, setGeneratedPassword] = useState(
+    generatePassword()
+  );
 
   const {
     data: candidate,
@@ -88,6 +93,7 @@ const CreateCandidateProfile = () => {
       form.reset({
         email: candidate.email || "",
         fullname: candidate.full_name || "",
+        password: generatedPassword,
         programType1: candidate.program_type1 || "",
         country1: candidate.first_country || "",
         assignedSchool1: candidate.assigned_university1 || "",
@@ -98,7 +104,17 @@ const CreateCandidateProfile = () => {
         assignedCourse2: candidate.assigned_course2 || "",
       });
     }
-  }, [candidate]);
+  }, [candidate, generatedPassword]);
+
+  const regeneratePassword = () => {
+    setIsPasswordLoading(true);
+    setTimeout(() => {
+      const newPassword = generatePassword();
+      setGeneratedPassword(newPassword);
+      form.setValue("password", newPassword);
+      setIsPasswordLoading(false);
+    }, 1000);
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -137,11 +153,10 @@ const CreateCandidateProfile = () => {
       });
 
       if (response) {
-        setShowNameTick(true);
         setTimeout(() => {
           setSuccess(true);
           Cookies.set("user_password", data.password);
-        }, 1000);
+        }, 2000);
       }
     } catch (error) {
       const axiosError = error as CustomAxiosError;
@@ -248,6 +263,16 @@ const CreateCandidateProfile = () => {
                           {...field}
                         />
                       </FormControl>
+                      <Button
+                        type="button"
+                        variant={"outline"}
+                        onClick={regeneratePassword}
+                        className={`absolute right-2 px-2 bg-transparent border-none rounded-full ${
+                          isPasswordLoading ? "animate-spin" : ""
+                        }`}
+                      >
+                        <ReloadIcon />
+                      </Button>
                       <FormMessage className="form-message mt-2" />
                     </div>
                   </div>
@@ -270,11 +295,6 @@ const CreateCandidateProfile = () => {
                             {...field}
                           />
                         </FormControl>
-                        {showNameTick && (
-                          <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                            <CheckCircle2 className="w-5 h-5 text-green-500 animate-bounce" />
-                          </div>
-                        )}
                       </div>
                       <FormMessage className="form-message mt-2" />
                     </div>

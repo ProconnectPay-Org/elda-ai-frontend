@@ -122,7 +122,7 @@ export function DataTable<TData, TValue>({
               Columns
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="overflow-y-scroll max-h-96">
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())

@@ -11,6 +11,16 @@ import { countriesData } from "@/constants";
  * @returns {string} - The full country name or "Unknown" if not found.
  */
 
+export const generatePassword = (length = 8) => {
+  const chars =
+    "ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz123456789!@#$%&";
+  let password = "";
+  for (let i = 0; i < length; i++) {
+    password += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return password;
+};
+
 export function getCountryNameFromISO(isoCode: string) {
   const country = Country.getCountryByCode(isoCode);
   return country ? country.name : "Unknown";
