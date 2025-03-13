@@ -6,6 +6,7 @@ import {
   FinalResume,
   Profile,
   RefineResume,
+  SchoolOne,
 } from "./pages/(root)/Staff";
 import RegistrationForm from "./pages/(root)/Candidates/CandidateForm/RegistrationForm";
 import {
@@ -69,6 +70,7 @@ function App() {
         <Route element={<CraftSOP />} path="/craft-sop/:id" />
         <Route path="/refine-resume" element={<CandidateSelection />} />
         <Route path="/craft-sop" element={<CandidateSelection />} />
+        <Route path="/school-one" element={<SchoolOne />} />
         <Route
           element={<FinalResume />}
           path="/refine-resume/final-resume/:id"

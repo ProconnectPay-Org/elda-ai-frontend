@@ -21,6 +21,7 @@ const bankOptions = [
   { value: "Wema", label: "Wema Bank" },
   { value: "Polaris", label: "Polaris Bank" },
   { value: "NIM", label: "NIM" },
+  { value: "Paid through website", label: "Paid through website" },
 ];
 
 const OnboardedCandidates = () => {
