@@ -24,15 +24,15 @@ export const getAllOnboardedCandidateData = async (
   page?: number,
   query?: string
 ) => {
-  let url = `${API_URL}onboarding-candidate`;
+  let url = `${API_URL}onboarding-candidate/`;
+  const params = new URLSearchParams();
+  if (query) params.append("query", query);
+  if (page) params.append("page", page.toString());
 
-  if (query) {
-    url += `&query=${encodeURIComponent(query)}`;
+  if (params.toString()) {
+    url += `?${params.toString()}`;
   }
 
-  if (page && (!query || page > 1)) {
-    url += `&page=${page}`;
-  }
   try {
     const response = await axios.get(`${url}`, {
       headers: { "Content-Type": "application/json" },

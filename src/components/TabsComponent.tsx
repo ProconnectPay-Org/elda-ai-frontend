@@ -13,8 +13,13 @@ const TabsComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = parseInt(searchParams.get("page") || "1", 10);
   const pageSize = 50;
-
+  
+  const [currentTab, setCurrentTab] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  
   const queryClient = useQueryClient();
+  
+  const token = Cookies.get("access_token");
 
   const deleteCandidateMutation = useMutation({
     mutationFn: deleteStaff,
@@ -43,11 +48,6 @@ const TabsComponent = () => {
       deleteCandidateMutation.mutate(userId);
     }
   };
-
-  const token = Cookies.get("access_token");
-
-  const [currentTab, setCurrentTab] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
 
   const {
     data: allCandidates,

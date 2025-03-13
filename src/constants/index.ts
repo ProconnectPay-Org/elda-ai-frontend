@@ -41,6 +41,10 @@ export const sidebarLinks = [
 
 export const businessLinks = [
   {
+    url: "https://proconnectpay.com/blog",
+    name: "Blog",
+  },
+  {
     url: "https://proconnectpay.com/pricing",
     name: "Service Fee Pricing",
   },
@@ -57,8 +61,8 @@ export const businessLinks = [
     name: "FAQs",
   },
   {
-    url: "https://proconnectpay.com/study-abroad-financing-services",
-    name: "Study Abroad Financing Services",
+    url: "https://proconnectpay.com/global-financing",
+    name: "Global Financing",
   },
   {
     url: "https://proconnectpay.com/privacy-policy",
@@ -67,6 +71,18 @@ export const businessLinks = [
   {
     url: "https://proconnectpay.com/global-loan#terms-conditions",
     name: "Terms and Conditions",
+  },
+  {
+    url: "https://proconnectpay.com/university-admission",
+    name: "University Admission",
+  },
+  {
+    url: "https://proconnectpay.com/calculator",
+    name: "Use our Calculator",
+  },
+  {
+    url: "https://proconnectpay.com/nelfund-financing",
+    name: "Nelfund Financing",
   },
 ];
 
@@ -98,6 +114,33 @@ export const locationLinks = [
   {
     url: "https://proconnectpay.com/contact",
     name: "Toronto Office",
+  },
+];
+
+export const bankPartners = [
+  {
+    url: "https://proconnectpay.com/banks/union",
+    name: "Union Bank",
+  },
+  {
+    url: "https://proconnectpay.com/banks/wema",
+    name: "Wema Bank",
+  },
+  {
+    url: "https://proconnectpay.com/banks/ecobank",
+    name: "EcoBank",
+  },
+  {
+    url: "https://proconnectpay.com/banks/sycamore",
+    name: "Sycamore",
+  },
+  {
+    url: "https://proconnectpay.com/banks/polaris",
+    name: "Polaris Bank",
+  },
+  {
+    url: "https://proconnectpay.com/banks/nim",
+    name: "Nigerian Institute of Management",
   },
 ];
 

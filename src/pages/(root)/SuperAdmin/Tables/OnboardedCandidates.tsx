@@ -1,30 +1,52 @@
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import AdminLayout from "@/layouts/AdminLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTable } from "@/components/DataTable";
 import { ACSCandidateProps } from "@/types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
-import AdminLayout from "@/layouts/AdminLayout";
-import { useACSCandidates } from "@/hooks/useACSCandidates";
 import { onboardColumns } from "@/components/OnboardColumns";
 import {
   deleteACSCandidate,
   getAllOnboardedCandidateData,
 } from "@/lib/actions/acs.actions";
 
+const bankOptions = [
+  { value: "", label: "All Banks" },
+  { value: "Sycamore", label: "Sycamore" },
+  { value: "Union", label: "Union Bank" },
+  { value: "EcoBank", label: "EcoBank" },
+  { value: "Wema", label: "Wema Bank" },
+  { value: "Polaris", label: "Polaris Bank" },
+  { value: "NIM", label: "NIM" },
+];
+
 const OnboardedCandidates = () => {
+  // State and Router Hooks
   const [searchParams, setSearchParams] = useSearchParams();
+  const [currentTab, setCurrentTab] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedBank, setSelectedBank] = useState<string>("");
+
+  // Pagination
   const page = parseInt(searchParams.get("page") || "1", 10);
   const pageSize = 50;
-  const {
-    data: allCandidates,
-    isLoading: allCandidatesLoading,
-    error: allCandidatesError,
-  } = useACSCandidates();
-
   const queryClient = useQueryClient();
 
+  // Query: Fetch candidates
+  const {
+    data: allCandidates,
+    error: allCandidatesError,
+    isLoading: allCandidatesLoading,
+  } = useQuery({
+    queryKey: ["onboardedCandidates", page, searchQuery],
+    queryFn: async () => getAllOnboardedCandidateData(page, searchQuery),
+    staleTime: 5 * 1000 * 60,
+  });
+
+  // Mutation: Delete candidate
   const deleteCandidateMutation = useMutation({
     mutationFn: deleteACSCandidate,
     onSuccess: () => {
@@ -44,6 +66,7 @@ const OnboardedCandidates = () => {
     },
   });
 
+  // Handlers
   const handleDeleteCandidate = async (userId: string, fullName: string) => {
     const confirmed = window.confirm(
       `Are you sure you want to delete ${fullName}'s account?`
@@ -53,20 +76,45 @@ const OnboardedCandidates = () => {
     }
   };
 
-  const [currentTab, setCurrentTab] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const handleTabChange = (tabValue: string) => {
+    setCurrentTab(tabValue);
+    setSearchParams({
+      paid: tabValue === "paid" ? "true" : "false",
+      page: page.toString(),
+    });
+  };
 
-  const [selectedBank, setSelectedBank] = useState<string>("");
+  const handleNextPage = () => {
+    if (!allCandidates?.next) return;
+    try {
+      const nextPage = new URL(
+        allCandidates.next,
+        window.location.origin
+      ).searchParams.get("page");
 
-  const bankOptions = [
-    { value: "", label: "All Banks" },
-    { value: "Sycamore", label: "Sycamore" },
-    { value: "Union Bank", label: "Union Bank" },
-    { value: "EcoBank", label: "EcoBank" },
-    { value: "Wema Bank", label: "Wema Bank" },
-    { value: "Polaris Bank", label: "Polaris Bank" },
-    { value: "NIM", label: "NIM" },
-  ];
+      if (nextPage) {
+        setSearchParams({
+          assigned: currentTab === "paid" ? "true" : "false",
+          page: nextPage,
+        });
+      }
+    } catch (error) {
+      console.error("Error parsing next page URL:", error);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (allCandidates?.previous) {
+      const previousUrl = new URL(allCandidates.previous);
+      const previousPage = previousUrl.searchParams.get("page") || "1";
+      setSearchParams({
+        assigned: currentTab === "paid" ? "true" : "false",
+        page: previousPage,
+      });
+    } else {
+      setSearchParams({ assigned: "false", page: "1" });
+    }
+  };
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -84,7 +132,7 @@ const OnboardedCandidates = () => {
         10
       );
       queryClient.prefetchQuery({
-        queryKey: ["allCandidates", nextPage],
+        queryKey: ["onboardedCandidates", nextPage],
         queryFn: () => getAllOnboardedCandidateData(nextPage),
       });
     }
@@ -92,43 +140,6 @@ const OnboardedCandidates = () => {
 
   const totalCandidates = allCandidates?.count || 0;
   const totalPages = Math.max(1, Math.ceil(totalCandidates / pageSize));
-
-  const handleTabChange = (tabValue: string) => {
-    setCurrentTab(tabValue);
-    setSearchParams({
-      paid: tabValue === "paid" ? "true" : "false",
-      page: page.toString(),
-    });
-  };
-
-  const handleNextPage = () => {
-    if (allCandidates?.next) {
-      try {
-        const nextPage = new URL(allCandidates.next).searchParams.get("page");
-        if (nextPage)
-          setSearchParams({
-            assigned: currentTab === "paid" ? "true" : "false",
-            page: nextPage,
-          });
-      } catch (error) {
-        console.error("Error parsing next page URL:", error);
-      }
-    }
-  };
-
-  const handlePreviousPage = () => {
-    if (allCandidates?.previous) {
-      const previousUrl = new URL(allCandidates.previous);
-      const previousPage = previousUrl.searchParams.get("page") || "1";
-      setSearchParams({
-        assigned: currentTab === "paid" ? "true" : "false",
-        page: previousPage,
-      });
-    } else {
-      setSearchParams({ assigned: "false", page: "1" });
-    }
-  };
-
   const startingIndex = (page - 1) * pageSize;
 
   const tableData: ACSCandidateProps[] =
@@ -149,17 +160,17 @@ const OnboardedCandidates = () => {
     ) || [];
 
   const paidCandidates = tableData
-    .filter((candidate) => candidate.has_paid)
-    .map((candidate, index) => ({
-      ...candidate,
-      serialNumber: index + 1,
+    .filter((c) => c.has_paid)
+    .map((c, i) => ({
+      ...c,
+      serialNumber: i + 1,
     }));
 
   const unpaidCandidates = tableData
-    .filter((candidate) => !candidate.has_paid)
-    .map((candidate, index) => ({
-      ...candidate,
-      serialNumber: index + 1,
+    .filter((c) => !c.has_paid)
+    .map((c, i) => ({
+      ...c,
+      serialNumber: i + 1,
     }));
 
   if (allCandidatesError) return <p>Error: {allCandidatesError.message}</p>;
