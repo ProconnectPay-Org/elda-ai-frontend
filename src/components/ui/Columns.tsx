@@ -251,8 +251,13 @@ export const columns: ColumnDef<CandidateData>[] = [
               <DropdownMenuItem className="z-20" onClick={openSchoolModal}>
                 School Application Status
               </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link target="_blank" to={`/school-one`}>Fill Details</Link>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          {/* Modals */}
           {isSchoolModalOpen && (
             <SchoolApplicationModal onClose={closeSchoolModal} id={id} />
           )}
