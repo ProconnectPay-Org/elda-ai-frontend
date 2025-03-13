@@ -53,15 +53,6 @@ const AdminSideBar = () => {
     setProfileCreatedCandidates(filteredCandidates);
   }, [candidates, tableCandidates]);
 
-  if (isLoading || loadingTable)
-    return (
-      <div className="flex items-center gap-2 justify-center">
-        Loading candidates <Loader2 className="animate-spin" />
-      </div>
-    );
-
-  if (error || errorTable) return <p>Error loading candidates</p>;
-
   useEffect(() => {
     if (!candidates || !candidates.results) return;
 
@@ -97,14 +88,14 @@ const AdminSideBar = () => {
     setRecommendedCandidates(recommended);
   }, [candidates]);
 
-  if (isLoading)
+  if (isLoading || loadingTable)
     return (
       <div className="flex items-center gap-2 justify-center">
         Loading candidates <Loader2 className="animate-spin" />
       </div>
     );
 
-  if (error) return <p>Error loading candidates</p>;
+  if (error || errorTable) return <p>Error loading candidates</p>;
 
   return (
     <aside className="w-72 bg-gray h-screen p-4 fixed left-0 top-28 overflow-y-auto">
