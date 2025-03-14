@@ -21,6 +21,7 @@ const AcsSidebar: React.FC<SidebarProps> = ({
   const [notRecommendedCandidates, setNotRecommendedCandidates] = useState<
     ACSCandidateProps[]
   >([]);
+  const [allCandidates, setAllCandidates] = useState<ACSCandidateProps[]>([]);
 
   // Function to check if a candidate has all required fields filled
   const isRecommended = (candidate: ACSCandidateProps) => {
@@ -47,6 +48,20 @@ const AcsSidebar: React.FC<SidebarProps> = ({
 
     setRecommendedCandidates(recommended);
     setNotRecommendedCandidates(notRecommended);
+
+    // Exclude candidates already in recommended or not recommended lists
+    const recommendedIds = new Set(recommended.map((c) => c.id));
+    const notRecommendedIds = new Set(notRecommended.map((c) => c.id));
+
+    const uniqueAllCandidates = candidates
+      .filter(
+        (candidate) =>
+          !recommendedIds.has(candidate.id) &&
+          !notRecommendedIds.has(candidate.id)
+      )
+      .sort((a, b) => a.full_name.localeCompare(b.full_name));
+
+    setAllCandidates(uniqueAllCandidates);
   }, [candidates]);
 
   return (
@@ -71,6 +86,17 @@ const AcsSidebar: React.FC<SidebarProps> = ({
           onSelect={setSelectedCandidate}
           type="acs"
           showCheckmark={true}
+        />
+      </div>
+
+      <div className="my-5">
+        <CandidateLists
+          title="All Candidates"
+          candidates={allCandidates}
+          selectedCandidate={selectedCandidate}
+          onSelect={setSelectedCandidate}
+          type="acs"
+          showCheckmark={false}
         />
       </div>
     </aside>

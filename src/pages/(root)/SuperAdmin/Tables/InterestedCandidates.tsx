@@ -18,6 +18,18 @@ const InterestedCandidates = () => {
 
   const queryClient = useQueryClient();
 
+  const {
+    data: allCandidates,
+    error: allCandidatesError,
+    isLoading: allCandidatesLoading,
+  } = useQuery({
+    queryKey: ["allInterestedCandidates", page],
+    queryFn: async () => {
+      return getAllInterestedCandidates(page);
+    },
+    staleTime: 5 * 1000 * 60,
+  });
+
   const deleteCandidateMutation = useMutation({
     mutationFn: deleteInterestedCandidate,
     onSuccess: () => {
@@ -46,43 +58,6 @@ const InterestedCandidates = () => {
     }
   };
 
-  const {
-    data: allCandidates,
-    error: allCandidatesError,
-    isLoading: allCandidatesLoading,
-  } = useQuery({
-    queryKey: ["allInterestedCandidates"],
-    queryFn: async () => {
-      return getAllInterestedCandidates();
-    },
-    staleTime: 5 * 1000 * 60,
-  });
-
-  useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      setSearchParams({ page: "1" });
-      queryClient.invalidateQueries({ queryKey: ["allInterestedCandidates"] });
-    }, 500);
-
-    return () => clearTimeout(delayDebounce);
-  }, [queryClient]);
-
-  useEffect(() => {
-    if (allCandidates?.next) {
-      const nextPage = parseInt(
-        new URL(allCandidates.next).searchParams.get("page") || "1",
-        10
-      );
-      queryClient.prefetchQuery({
-        queryKey: ["allInterestedCandidates", nextPage],
-        queryFn: () => getAllInterestedCandidates(),
-      });
-    }
-  }, [page, allCandidates, queryClient]);
-
-  const totalCandidates = allCandidates?.count || 0;
-  const totalPages = Math.ceil(totalCandidates / pageSize);
-
   const handleNextPage = () => {
     if (allCandidates?.next) {
       const nextPage = new URL(allCandidates.next).searchParams.get("page");
@@ -101,10 +76,25 @@ const InterestedCandidates = () => {
         page: previousPage,
       });
     } else {
-      setSearchParams({  page: "1" });
+      setSearchParams({ page: "1" });
     }
   };
 
+  useEffect(() => {
+    if (allCandidates?.next) {
+      const nextPage = parseInt(
+        new URL(allCandidates.next).searchParams.get("page") || "1",
+        10
+      );
+      queryClient.prefetchQuery({
+        queryKey: ["allInterestedCandidates", nextPage],
+        queryFn: () => getAllInterestedCandidates(nextPage),
+      });
+    }
+  }, [page, allCandidates, queryClient]);
+
+  const totalCandidates = allCandidates?.count || 0;
+  const totalPages = Math.ceil(totalCandidates / pageSize);
   const startingIndex = (page - 1) * pageSize;
 
   const tableData: InterestedCandidatesProps[] =

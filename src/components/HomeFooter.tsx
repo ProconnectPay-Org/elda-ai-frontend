@@ -87,16 +87,16 @@ const HomeFooter = () => {
 
         <div>
           <p className="text-lg font-medium capitalize my-6 flex items-center gap-2">
-            <img src={Buisness} alt="business" /> BANK PARTNERS
+            <img src={Buisness} alt="business" /> PARTNERS
           </p>
           <ul className="flex gap-5 flex-col">
             {bankPartners.map((footerLink) => {
               return (
-                <Link to={footerLink.url} key={footerLink.url} target="_blank">
-                  <li className="font-medium lg:font-semibold hover:font-normal hover:text-red">
-                    {footerLink.name}
-                  </li>
-                </Link>
+                // <Link to={footerLink.url} key={footerLink.url} target="_blank">
+                <li className="font-medium lg:font-semibold hover:font-normal hover:text-red">
+                  {footerLink.name}
+                </li>
+                // {/* </Link> */}
               );
             })}
           </ul>
@@ -109,7 +109,11 @@ const HomeFooter = () => {
           <ul className="flex gap-5 flex-col">
             {locationLinks.map((locationLink) => {
               return (
-                <Link key={locationLink.name} to={locationLink.url} target="_blank">
+                <Link
+                  key={locationLink.name}
+                  to={locationLink.url}
+                  target="_blank"
+                >
                   <li className="font-medium lg:font-semibold hover:font-normal hover:text-red">
                     {locationLink.name}
                   </li>

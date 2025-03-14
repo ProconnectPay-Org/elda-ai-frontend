@@ -580,8 +580,18 @@ export const sendReminder = async () => {
   }
 };
 
-export const getAllInterestedCandidates = async () => {
+export const getAllInterestedCandidates = async (
+  page?: number,
+  query?: string
+) => {
   let url = `${API_URL}interested-candidates/`;
+  const params = new URLSearchParams();
+  if (query) params.append("query", query);
+  if (page) params.append("page", page.toString());
+
+  if (params.toString()) {
+    url += `?${params.toString()}`;
+  }
 
   try {
     const response = await axios.get(`${url}`, {

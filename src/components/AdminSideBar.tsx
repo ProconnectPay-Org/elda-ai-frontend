@@ -17,16 +17,30 @@ const AdminSideBar = () => {
   const [profileCreatedCandidates, setProfileCreatedCandidates] = useState<
     ACSCandidateProps[]
   >([]);
+  const [allCandidates, setAllCandidates] = useState<ACSCandidateProps[]>([]);
 
-  const {
-    data: candidates,
-    isLoading,
-    isError: error,
-  } = useQuery<{ results: ACSCandidateProps[] }>({
-    queryKey: ["onboardedCandidates"],
-    queryFn: () => getAllOnboardedCandidateData(),
-    staleTime: 5 * 60 * 10,
-  });
+  const fetchAllCandidates = async () => {
+    let page = 1;
+    let allResults: ACSCandidateProps[] = [];
+    let hasNextPage = true;
+
+    while (hasNextPage) {
+      const response = await getAllOnboardedCandidateData(page);
+      if (response?.results) {
+        allResults = [...allResults, ...response.results];
+        page++;
+        hasNextPage = !!response.next;
+      } else {
+        hasNextPage = false;
+      }
+    }
+
+    setAllCandidates(allResults);
+  };
+
+  useEffect(() => {
+    fetchAllCandidates();
+  }, []);
 
   // Fetch all table candidates
   const {
@@ -40,14 +54,14 @@ const AdminSideBar = () => {
   });
 
   useEffect(() => {
-    if (!candidates || !candidates.results) return;
+    if (!allCandidates) return;
 
     const candidate = id
-      ? candidates.results.find((c) => c.id == id)
-      : candidates.results[0];
+      ? allCandidates.find((c) => c.id == id)
+      : allCandidates[0];
 
     setSelectedCandidate(candidate || null);
-  }, [candidates, id]);
+  }, [allCandidates, id]);
 
   // Function to check if a candidate has all required fields filled
   const isRecommended = (candidate: ACSCandidateProps) => {
@@ -64,10 +78,10 @@ const AdminSideBar = () => {
   };
 
   useEffect(() => {
-    if (!candidates || !tableCandidates) return;
+    if (!allCandidates || !tableCandidates) return;
 
     // Extract onboarded emails into a Set
-    const onboardedEmails = new Set(candidates.results.map((c) => c.email));
+    const onboardedEmails = new Set(allCandidates.map((c) => c.email));
 
     // Candidates who have created profiles
     const filteredProfileCandidates = tableCandidates.results.filter((c) =>
@@ -76,23 +90,23 @@ const AdminSideBar = () => {
     setProfileCreatedCandidates(filteredProfileCandidates);
 
     // Recommended candidates who haven't created profiles
-    const filteredRecommendedCandidates = candidates.results
+    const filteredRecommendedCandidates = allCandidates
       .filter(isRecommended)
       .filter(
         (c) => !tableCandidates.results.some((t) => t.email_address === c.email)
       );
 
     setRecommendedCandidates(filteredRecommendedCandidates);
-  }, [candidates, tableCandidates]);
+  }, [allCandidates, tableCandidates]);
 
-  if (isLoading || loadingTable)
+  if (loadingTable)
     return (
       <div className="flex items-center gap-2 justify-center">
         Loading candidates <Loader2 className="animate-spin" />
       </div>
     );
 
-  if (error || errorTable) return <p>Error loading candidates</p>;
+  if (errorTable) return <p>Error loading candidates</p>;
 
   return (
     <aside className="w-72 bg-gray h-screen p-4 fixed left-0 top-28 overflow-y-auto">
