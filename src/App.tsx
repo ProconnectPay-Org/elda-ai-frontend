@@ -71,6 +71,7 @@ function App() {
         <Route path="/refine-resume" element={<CandidateSelection />} />
         <Route path="/craft-sop" element={<CandidateSelection />} />
         <Route path="/school-one" element={<SchoolOne />} />
+        <Route path="/school-two" element={<SchoolOne />} />
         <Route
           element={<FinalResume />}
           path="/refine-resume/final-resume/:id"

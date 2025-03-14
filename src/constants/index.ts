@@ -1470,6 +1470,7 @@ const supportedSchools = [
   { id: 61, name: "University of St. Thomas (Houston)" },
   { id: 62, name: "University of Washington-Bothell Campus" },
   { id: 63, name: "University of Washington-Tacoma Campus" },
+  { id: 64, name: "Mercer University" },
 ];
 
 const schoolsWithUniqueIds = supportedSchools.map((school, index) => ({
