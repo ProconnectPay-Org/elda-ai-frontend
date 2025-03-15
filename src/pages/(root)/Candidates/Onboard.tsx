@@ -838,6 +838,7 @@ const Onboard = () => {
                         </div>
                       ))}
                     </div>
+                    <div className="flex items-center gap-2">
                     <Button
                       onClick={handleSaveCountries}
                       className="bg-red"
@@ -851,6 +852,8 @@ const Onboard = () => {
                         "Save Countries"
                       )}
                     </Button>
+                    <span className="text-red animate-bounce">Click <span className="font-bold">Save Countries</span> to save the countries selected</span>
+                    </div>
                   </div>
 
                   <FormInput
@@ -902,6 +905,7 @@ const Onboard = () => {
                           : "Upload CV"}
                       </label>
                     </div>
+                    <div className="flex items-center gap-2">
                     <Button
                       disabled={isUploading}
                       className="bg-red"
@@ -909,6 +913,8 @@ const Onboard = () => {
                     >
                       {isUploading ? "Uploading..." : "Upload"}
                     </Button>
+                    <span className="text-red animate-bounce">Click <span className="font-bold">upload</span> to make sure CV is uploaded</span>
+                    </div>
                   </div>
                 </div>
               </div>
