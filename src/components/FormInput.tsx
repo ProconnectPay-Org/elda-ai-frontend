@@ -20,6 +20,7 @@ interface CustomInputProps<T extends FieldValues> {
   control: Control<T>;
   name: FieldPath<T>;
   label: string;
+  asterisks?: string,
   placeholder: string;
   className?: string;
   type: "input" | "select" | "number" | "file";
@@ -33,6 +34,7 @@ interface CustomInputProps<T extends FieldValues> {
 
 const FormInput = <T extends FieldValues>({
   control,
+  asterisks,
   name,
   label,
   placeholder,
@@ -75,7 +77,10 @@ const FormInput = <T extends FieldValues>({
 
         return (
           <div className={className}>
+            <div className="flex items-center gap-1 mb-2">
             <FormLabel className="form-label">{label}</FormLabel>
+            <span className="text-red">{asterisks}</span>
+            </div>
             <div className="flex w-full flex-col">
               {type === "file" ? (
                 <FormControl>

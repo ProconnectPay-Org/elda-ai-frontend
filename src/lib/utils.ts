@@ -396,9 +396,9 @@ export const onboardSchema2 = z.object({
   typeOfAcademicDegree: z.string().optional(),
   academicProgram: z.string().optional(),
   specificUniversity: z.string().optional(),
-  uploadCV: z.string().optional(),
+  uploadCV: z.string().nonempty("CV upload is required"),
   GMATGRE: z.string().optional(),
-  countriesOfInterest: z.array(z.string()).optional(),
+  countriesOfInterest: z.array(z.string()).min(1, "Please select at least one country of interest"),
 });
 
 export const acsform1Schema = z.object({
