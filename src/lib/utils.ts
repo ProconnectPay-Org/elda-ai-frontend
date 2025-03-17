@@ -365,97 +365,41 @@ export const step5Schema = z.object({
     .optional(),
 });
 
-export const onboardSchema2 = z
-  .object({
-    membershipStatus: z.string().nonempty("Membership status is required"),
-    firstName: z.string().nonempty("First name is required"),
-    middleName: z.string().optional(),
-    surname: z.string().nonempty("Surname is required"),
-    emailAddress: z.string().email("Invalid email address"),
-    phoneNumber: z.string().nonempty("Phone number is required"),
-    whatsappNumber: z.string().nonempty("Whatsapp number is required"),
-    gender: z.enum(["Male", "Female"]),
-    dateOfBirth: z.date({
-      required_error: "Date of birth is required",
-      invalid_type_error: "That's not a valid date",
-    }),
-    age: z.number().optional(),
-    graduateOf: z.enum(["Polytechnic", "University"]),
-    kindOfDegree: z.string().nonempty("Kind of degree is required"),
-    courseOfStudy: z.string().nonempty("This is required"),
-    institutionName: z.string().nonempty("Institution is required"),
-    degreeClass: z.string().nonempty("Class of degree is required"),
-    specificCGPA: z.string().nonempty("Specific CGPA is required"),
-    hasMasters: z.enum(["true", "false"]),
-    mastersDegree: z.string(),
-    mastersCourse: z.string(),
-    mastersInstitution: z.string(),
-    classOfDegreeMasters: z.string(),
-    specificCGPAMasters: z.string(),
-    typeOfAcademicDegree: z.string().optional(),
-    academicProgram: z.string().optional(),
-    specificUniversity: z.string().optional(),
-    uploadCV: z.string().optional(),
-    GMATGRE: z.string().optional(),
-    countriesOfInterest: z.array(z.string()).optional(),
-  })
-  .refine(
-    (data) => {
-      if (data.hasMasters === "false") return true;
+export const onboardSchema2 = z.object({
+  membershipStatus: z.string().nonempty("Membership status is required"),
+  firstName: z.string().nonempty("First name is required"),
+  middleName: z.string().optional(),
+  surname: z.string().nonempty("Surname is required"),
+  emailAddress: z.string().email("Invalid email address"),
+  phoneNumber: z.string().nonempty("Phone number is required"),
+  whatsappNumber: z.string().nonempty("Whatsapp number is required"),
+  gender: z.enum(["Male", "Female"]),
+  dateOfBirth: z.date({
+    required_error: "Date of birth is required",
+    invalid_type_error: "That's not a valid date",
+  }),
+  age: z.number().optional(),
+  graduateOf: z.enum(["Polytechnic", "University"]),
+  kindOfDegree: z.string().nonempty("Kind of degree is required"),
 
-      return (
-        data.mastersDegree.length > 0 &&
-        data.mastersCourse.length > 0 &&
-        data.mastersInstitution.length > 0 &&
-        data.classOfDegreeMasters.length > 0 &&
-        data.specificCGPAMasters.length > 0
-      );
-    },
-    {
-      message: "This field is required when you select Yes for Masters Degree",
-      path: ["mastersDegree"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.hasMasters === "false") return true;
-      return data.mastersCourse.length > 0;
-    },
-    {
-      message: "This field is required when you select Yes for Masters Degree",
-      path: ["mastersCourse"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.hasMasters === "false") return true;
-      return data.mastersInstitution.length > 0;
-    },
-    {
-      message: "This field is required when you select Yes for Masters Degree",
-      path: ["mastersInstitution"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.hasMasters === "false") return true;
-      return data.classOfDegreeMasters.length > 0;
-    },
-    {
-      message: "This field is required when you select Yes for Masters Degree",
-      path: ["classOfDegreeMasters"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.hasMasters === "false") return true;
-      return data.specificCGPAMasters.length > 0;
-    },
-    {
-      message: "This field is required when you select Yes for Masters Degree",
-      path: ["specificCGPAMasters"],
-    }
-  );
+  courseOfStudy: z.string().nonempty("This is required"),
+
+  institutionName: z.string().nonempty("Institution is required"),
+  degreeClass: z.string().nonempty("Class of degree is required"),
+  specificCGPA: z.string().nonempty("Specific CGPA is required"),
+  hasMasters: z.string(),
+  mastersDegree: z.string().optional(),
+  mastersCourse: z.string().optional(),
+  mastersInstitution: z.string().optional(),
+  classOfDegreeMasters: z.string().optional(),
+  specificCGPAMasters: z.string().optional(),
+  typeOfAcademicDegree: z.string().optional(),
+  academicProgram: z.string().optional(),
+  specificUniversity: z.string().optional(),
+  uploadCV: z.string().nonempty("CV upload is required"),
+  GMATGRE: z.string().optional(),
+  countriesOfInterest: z.array(z.string()).min(1, "Please select at least one country of interest"),
+});
 
 export const acsform1Schema = z.object({
   programType1: z.string().min(1, "Program Type 1 is required"),

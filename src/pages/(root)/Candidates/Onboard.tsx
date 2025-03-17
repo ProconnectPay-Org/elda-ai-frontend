@@ -466,6 +466,7 @@ const Onboard = () => {
                       type="select"
                       placeholder="Select membership status"
                       options={membershipOptions}
+                      asterisks="*"
                     />
                   </div>
                   <div>
@@ -475,6 +476,7 @@ const Onboard = () => {
                       label="First Name"
                       type="input"
                       placeholder="Enter your first name"
+                      asterisks="*"
                     />
                     <span className="text-[12px] text-[#667085]">
                       as on international passport
@@ -495,6 +497,7 @@ const Onboard = () => {
                     label="Surname"
                     type="input"
                     placeholder="Enter your surname"
+                    asterisks="*"
                   />
 
                   <div>
@@ -504,7 +507,8 @@ const Onboard = () => {
                       label="Email"
                       type="input"
                       placeholder="Enter your personal email address"
-                      disabled
+                      // disabled
+                      asterisks="*"
                     />
                     <span className="text-[12px] text-[#667085]">
                       This will be used for the entire application process so
@@ -532,6 +536,7 @@ const Onboard = () => {
                     type="select"
                     options={genderOptions}
                     placeholder="Select your gender"
+                    asterisks="*"
                   />
                   <div className="mb-4">
                     <label className="form-label text-sm font-medium mb-2">
@@ -575,6 +580,7 @@ const Onboard = () => {
                     type="number"
                     placeholder="Enter your age as at today"
                     className="cursor-not-allowed"
+                    asterisks="*"
                   />
                 </div>
               </div>
@@ -590,6 +596,7 @@ const Onboard = () => {
                     type="select"
                     options={graduateOptions}
                     placeholder="--Select--"
+                    asterisks="*"
                   />
                   <FormInput
                     control={form.control}
@@ -597,6 +604,7 @@ const Onboard = () => {
                     label="Name of University or Polytechnic Graduated from"
                     type="input"
                     placeholder=""
+                    asterisks="*"
                   />
                   <FormInput
                     control={form.control}
@@ -605,6 +613,7 @@ const Onboard = () => {
                     type="select"
                     placeholder="-- Select --"
                     options={degreeTypeOptions}
+                    asterisks="*"
                   />
 
                   {/* Class of degree */}
@@ -615,6 +624,7 @@ const Onboard = () => {
                     type="select"
                     placeholder="-- Select --"
                     options={classOfDegreeOptions}
+                    asterisks="*"
                   />
 
                   <FormInput
@@ -623,6 +633,7 @@ const Onboard = () => {
                     label="Specific CGPA"
                     type="input"
                     placeholder=""
+                    asterisks="*"
                   />
 
                   <FormInput
@@ -631,6 +642,7 @@ const Onboard = () => {
                     label="Course of Study"
                     type="input"
                     placeholder="Enter your course of study"
+                    asterisks="*"
                   />
                 </div>
                 <Button
@@ -660,6 +672,7 @@ const Onboard = () => {
                     type="select"
                     options={yesNoOptions}
                     placeholder="--Select--"
+                    asterisks="*"
                   />
                   <FormInput
                     control={form.control}
@@ -735,6 +748,7 @@ const Onboard = () => {
                     type="select"
                     placeholder="-- Select --"
                     options={typeOfAcademicDegreeOptions}
+                    asterisks="*"
                   />
 
                   <FormInput
@@ -743,6 +757,7 @@ const Onboard = () => {
                     label="Do you have a specific academic program or course in mind that aligns with your professional experience, whether as an employee, entrepreneur, intern, or recent graduate?"
                     type="input"
                     placeholder=""
+                    asterisks="*"
                   />
                   <FormInput
                     control={form.control}
@@ -750,17 +765,18 @@ const Onboard = () => {
                     label="Do you have a specific University in mind?"
                     type="input"
                     placeholder=""
+                    asterisks="*"
                   />
 
                   <div className="space-y-3">
                     <Label className="text-sm font-medium">
-                      Countries of Interest (Select up to 2)
+                      Countries of Interest (Select up to 2) <span className="text-red">*</span>
                     </Label>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-2">
                       {countriesOfInterestOptions.map((country) => (
                         <div
                           key={country.value}
-                          className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-50"
+                          className="flex items-center space-x-2"
                         >
                           <Controller
                             name="countriesOfInterest"
@@ -838,7 +854,11 @@ const Onboard = () => {
                         </div>
                       ))}
                     </div>
-                    <div className="flex items-center gap-2">
+                    {form.formState.errors.countriesOfInterest && (
+                      <p className="text-sm text-red">
+                        {form.formState.errors.countriesOfInterest.message}
+                      </p>
+                    )}
                     <Button
                       onClick={handleSaveCountries}
                       className="bg-red"
@@ -852,8 +872,6 @@ const Onboard = () => {
                         "Save Countries"
                       )}
                     </Button>
-                    <span className="text-red animate-bounce">Click <span className="font-bold">Save Countries</span> to save the countries selected</span>
-                    </div>
                   </div>
 
                   <FormInput
@@ -866,8 +884,8 @@ const Onboard = () => {
                   />
 
                   <div className="space-y-2 w-full">
-                    <label htmlFor="cv-upload" className="font-medium text-sm">
-                      Upload CV
+                    <label htmlFor="cv-upload" className={`font-medium text-sm ${form.formState.errors.uploadCV ? 'text-red' : ''}`}>
+                      Upload CV <span className="text-red">*</span>
                     </label>
                     <div className="flex items-center w-full">
                       <input
@@ -905,6 +923,11 @@ const Onboard = () => {
                           : "Upload CV"}
                       </label>
                     </div>
+                    {form.formState.errors.uploadCV && (
+                      <p className="text-sm text-red">
+                        {form.formState.errors.uploadCV.message}
+                      </p>
+                    )}
                     <div className="flex items-center gap-2">
                     <Button
                       disabled={isUploading}
@@ -914,7 +937,7 @@ const Onboard = () => {
                       {isUploading ? "Uploading..." : "Upload"}
                     </Button>
                     <span className="text-red animate-bounce">Click <span className="font-bold">upload</span> to make sure CV is uploaded</span>
-                    </div>
+                  </div>
                   </div>
                 </div>
               </div>
