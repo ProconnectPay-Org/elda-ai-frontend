@@ -507,7 +507,7 @@ const Onboard = () => {
                       label="Email"
                       type="input"
                       placeholder="Enter your personal email address"
-                      // disabled
+                      disabled
                       asterisks="*"
                     />
                     <span className="text-[12px] text-[#667085]">
