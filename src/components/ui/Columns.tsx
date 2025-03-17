@@ -257,6 +257,9 @@ export const columns: ColumnDef<CandidateData>[] = [
               <DropdownMenuItem>
                 <Link target="_blank" to={`/school-two`}>Fill Details for School Two</Link>
               </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link target="_blank" to={`/admission-status`}>Admission Status</Link>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
