@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AdminSignIn, CandidateLogin, CandidateOTP, Home } from "./pages";
 import {
+  AdmissionStatus,
   AssignedCandidates,
   CandidateProfile,
   FinalResume,
@@ -73,6 +74,7 @@ function App() {
         <Route path="/craft-sop" element={<CandidateSelection />} />
         <Route path="/school-one" element={<SchoolOne />} />
         <Route path="/school-two" element={<SchoolTwo/>} />
+        <Route path="/admission-status" element={<AdmissionStatus/>} />
         <Route
           element={<FinalResume />}
           path="/refine-resume/final-resume/:id"
