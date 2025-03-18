@@ -14,3 +14,4 @@ export { default as SopStep3 } from "./SOPPages/Step3";
 export { default as SopStep4 } from "./SOPPages/Step4";
 export { default as SchoolOne } from "./SchoolOne";
 export { default as SchoolTwo } from "./SchoolTwo";
+export { default as AdmissionStatus } from "./AdmissionStatus";

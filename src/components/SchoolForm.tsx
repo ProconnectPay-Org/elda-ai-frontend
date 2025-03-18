@@ -31,6 +31,22 @@ interface SchoolFormProps {
   initialValues?: Partial<SchoolFormData>;
 }
 
+const sessionTimelineOptions = [
+  { value: "summer_2025", label: "Summer (May/June) 2025", year: "2025/2026" },
+  { value: "fall_2025", label: "Fall (September) 2025", year: "2025/2026" },
+  { value: "spring_2026", label: "Spring (Between Jan-Mar) 2026", year: "2026/2027" },
+  { value: "summer_2026", label: "Summer (May/June) 2026", year: "2026/2027" },
+  { value: "fall_2026", label: "Fall (September) 2026", year: "2026/2027" },
+  { value: "spring_2027", label: "Spring (Between Jan-Mar) 2027", year: "2027/2028" },
+  { value: "summer_2027", label: "Summer (May/June) 2027", year: "2027/2028" },
+  { value: "fall_2027", label: "Fall (September) 2027", year: "2027/2028" },
+  { value: "spring_2028", label: "Spring (Between Jan-Mar) 2028", year: "2028/2029" },
+  { value: "summer_2028", label: "Summer (May/June) 2028", year: "2028/2029" },
+  { value: "fall_2028", label: "Fall (September) 2028", year: "2028/2029" },
+  { value: "spring_2029", label: "Spring (Between Jan-Mar) 2029", year: "2029/2030" },
+  { value: "summer_2029", label: "Summer (May/June) 2029", year: "2029/2030" }
+];
+
 export function SchoolForm({ onSubmit, initialValues = {} }: SchoolFormProps) {
   const {
     register,
@@ -158,8 +174,11 @@ export function SchoolForm({ onSubmit, initialValues = {} }: SchoolFormProps) {
             <SelectValue placeholder="Select session timeline" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="2023/2024">2023/2024</SelectItem>
-            <SelectItem value="2024/2025">2024/2025</SelectItem>
+            {sessionTimelineOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         {errors.sessionTimeline && (

@@ -1,12 +1,14 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AdminSignIn, CandidateLogin, CandidateOTP, Home } from "./pages";
 import {
+  AdmissionStatus,
   AssignedCandidates,
   CandidateProfile,
   FinalResume,
   Profile,
   RefineResume,
   SchoolOne,
+  SchoolTwo,
 } from "./pages/(root)/Staff";
 import RegistrationForm from "./pages/(root)/Candidates/CandidateForm/RegistrationForm";
 import {
@@ -71,7 +73,8 @@ function App() {
         <Route path="/refine-resume" element={<CandidateSelection />} />
         <Route path="/craft-sop" element={<CandidateSelection />} />
         <Route path="/school-one" element={<SchoolOne />} />
-        <Route path="/school-two" element={<SchoolOne />} />
+        <Route path="/school-two" element={<SchoolTwo/>} />
+        <Route path="/admission-status" element={<AdmissionStatus/>} />
         <Route
           element={<FinalResume />}
           path="/refine-resume/final-resume/:id"
