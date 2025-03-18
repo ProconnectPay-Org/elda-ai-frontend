@@ -34,7 +34,6 @@ const CandidateOTP = () => {
 
     try {
       const response = await postOTP({ email, otp: value });
-      console.log(response);
       toast({
         title: "Success",
         description: response?.message,

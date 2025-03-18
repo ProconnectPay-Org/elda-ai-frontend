@@ -258,9 +258,8 @@ const Onboard = () => {
     const first_country_id = Cookies.get("first_country_id");
     const second_country_id = Cookies.get("second_country_id");
 
-    setIsCountryLoading(true);
-
     try {
+      setIsCountryLoading(true);
       if (
         first_country_id &&
         second_country_id &&
@@ -770,7 +769,8 @@ const Onboard = () => {
 
                   <div className="space-y-3">
                     <Label className="text-sm font-medium">
-                      Countries of Interest (Select up to 2) <span className="text-red">*</span>
+                      Countries of Interest (Select up to 2){" "}
+                      <span className="text-red">*</span>
                     </Label>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-2">
                       {countriesOfInterestOptions.map((country) => (
@@ -884,7 +884,12 @@ const Onboard = () => {
                   />
 
                   <div className="space-y-2 w-full">
-                    <label htmlFor="cv-upload" className={`font-medium text-sm ${form.formState.errors.uploadCV ? 'text-red' : ''}`}>
+                    <label
+                      htmlFor="cv-upload"
+                      className={`font-medium text-sm ${
+                        form.formState.errors.uploadCV ? "text-red" : ""
+                      }`}
+                    >
                       Upload CV <span className="text-red">*</span>
                     </label>
                     <div className="flex items-center w-full">
@@ -929,15 +934,18 @@ const Onboard = () => {
                       </p>
                     )}
                     <div className="flex items-center gap-2">
-                    <Button
-                      disabled={isUploading}
-                      className="bg-red"
-                      onClick={uploadCV}
-                    >
-                      {isUploading ? "Uploading..." : "Upload"}
-                    </Button>
-                    <span className="text-red animate-bounce">Click <span className="font-bold">upload</span> to make sure CV is uploaded</span>
-                  </div>
+                      <Button
+                        disabled={isUploading}
+                        className="bg-red"
+                        onClick={uploadCV}
+                      >
+                        {isUploading ? "Uploading..." : "Upload"}
+                      </Button>
+                      <span className="text-red animate-bounce">
+                        Click <span className="font-bold">upload</span> to make
+                        sure CV is uploaded
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
