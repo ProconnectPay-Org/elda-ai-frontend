@@ -531,6 +531,8 @@ declare interface ACSCandidateProps {
   has_paid: boolean;
   whatsapp: string;
   has_masters_degree: boolean;
+  has_profile: boolean;
+  recommended: boolean;
   resume: string;
   first_country: string;
   second_country: string;

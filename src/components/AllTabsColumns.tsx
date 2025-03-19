@@ -74,6 +74,14 @@ export const allTabsColumns = (
     header: "Recommended Course 2",
   },
   {
+    accessorKey: "program_type1",
+    header: "Program Type 1",
+  },
+  {
+    accessorKey: "program_type2",
+    header: "Program Type 2",
+  },
+  {
     accessorKey: "school_application_status1",
     header: () => (
       <div className="text-center">School Application Status 1</div>

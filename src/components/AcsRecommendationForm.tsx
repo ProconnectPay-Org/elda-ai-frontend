@@ -16,6 +16,7 @@ import {
 } from "./ui/select";
 import { countryOptions, programTypes, sortedSchools } from "@/constants";
 import { Button } from "./ui/button";
+import SaveBtn from "./SaveBtn";
 
 const AcsRecommendationForm = ({
   formInstance,
@@ -158,7 +159,7 @@ const AcsRecommendationForm = ({
             className="form-btn bg-red"
             disabled={isLoading}
           >
-            {isLoading ? "Submitting..." : "Save"}
+            {isLoading ? <SaveBtn text="Saving" /> : "Save"}
           </Button>
           <Button
             type="button"

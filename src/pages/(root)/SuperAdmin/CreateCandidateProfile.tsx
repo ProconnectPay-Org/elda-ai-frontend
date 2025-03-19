@@ -28,8 +28,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import AdminSideBar from "@/components/AdminSideBar";
-import { useQuery } from "@tanstack/react-query";
-import { getSingleOnboardedCandidateData } from "@/lib/actions/acs.actions";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  getSingleOnboardedCandidateData,
+  updateCandidateData,
+} from "@/lib/actions/acs.actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { generatePassword } from "@/lib/utils";
 import { ReloadIcon } from "@radix-ui/react-icons";
@@ -73,6 +76,8 @@ const CreateCandidateProfile = () => {
   const [generatedPassword, setGeneratedPassword] = useState(
     generatePassword()
   );
+
+  const queryClient = useQueryClient();
 
   const {
     data: candidate,
@@ -153,6 +158,7 @@ const CreateCandidateProfile = () => {
       });
 
       if (response) {
+        await handleRecommendations();
         setTimeout(() => {
           setSuccess(true);
           Cookies.set("user_password", data.password);
@@ -184,6 +190,19 @@ const CreateCandidateProfile = () => {
       }
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleRecommendations = async () => {
+    try {
+      await updateCandidateData(candidate?.email || "", {
+        has_profile: true,
+        interest: null,
+      });
+      queryClient.invalidateQueries({ queryKey: ["onboardedCandidates"] });
+    } catch (error) {
+      console.error(error);
+    } finally {
     }
   };
 

@@ -1,41 +1,40 @@
 import AcsCandidateDetails from "@/components/AcsCandidateDetails";
 import AcsSidebar from "@/components/AcsSidebar";
+import SaveBtn from "@/components/SaveBtn";
 import { getAllOnboardedCandidateData } from "@/lib/actions/acs.actions";
 import { ACSCandidateProps } from "@/types";
-import { Loader2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 const ACSLayout = () => {
-  const [allCandidates, setAllCandidates] = useState<ACSCandidateProps[]>([]);
   const [selectedCandidate, setSelectedCandidate] =
     useState<ACSCandidateProps | null>(null);
   const { id } = useParams<{ id: string }>();
 
-  // Function to fetch all pages of candidates
-  const fetchAllCandidates = async () => {
-    let page = 1;
-    let allResults: ACSCandidateProps[] = [];
-    let hasNextPage = true;
+  // Function to fetch all pages of candidates  // Fetch all candidates using React Query
+  const { data: allCandidates = [], isLoading } = useQuery({
+    queryKey: ["onboardedCandidates"],
+    queryFn: async () => {
+      let page = 1;
+      let allResults: ACSCandidateProps[] = [];
+      let hasNextPage = true;
 
-    while (hasNextPage) {
-      const response = await getAllOnboardedCandidateData(page);
-      if (response?.results) {
-        allResults = [...allResults, ...response.results];
-        page++;
-        hasNextPage = !!response.next;
-      } else {
-        hasNextPage = false;
+      while (hasNextPage) {
+        const response = await getAllOnboardedCandidateData(page);
+        if (response?.results) {
+          allResults = [...allResults, ...response.results];
+          page++;
+          hasNextPage = !!response.next;
+        } else {
+          hasNextPage = false;
+        }
       }
-    }
 
-    setAllCandidates(allResults);
-  };
-
-  // Fetch all candidates on component mount
-  useEffect(() => {
-    fetchAllCandidates();
-  }, []);
+      return allResults;
+    },
+    staleTime: 5 * 1 * 60,
+  });
 
   useEffect(() => {
     if (allCandidates.length > 0) {
@@ -50,9 +49,9 @@ const ACSLayout = () => {
 
   return (
     <div className="flex">
-      {allCandidates.length === 0 ? (
+      {allCandidates.length === 0 || isLoading ? (
         <div className="flex items-center gap-2 p-4 justify-center w-80 bg-gray">
-          Loading candidates <Loader2 className="animate-spin" />
+          <SaveBtn text="Loading Candidates" />
         </div>
       ) : (
         <>

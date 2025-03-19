@@ -24,23 +24,12 @@ const AcsSidebar: React.FC<SidebarProps> = ({
   const [allCandidates, setAllCandidates] = useState<ACSCandidateProps[]>([]);
 
   // Function to check if a candidate has all required fields filled
-  const isRecommended = (candidate: ACSCandidateProps) => {
-    return (
-      candidate.first_country &&
-      candidate.assigned_course1 &&
-      candidate.assigned_university1 &&
-      candidate.program_type1 &&
-      candidate.second_country &&
-      candidate.assigned_course2 &&
-      candidate.assigned_university2 &&
-      candidate.program_type2
-    );
-  };
-
-  const paidCandidates = candidates.filter((candidate) => candidate.has_paid);
+  const isRecommended = (candidate: ACSCandidateProps) => candidate.recommended;
 
   // Update candidate lists when candidates change
   useEffect(() => {
+    const paidCandidates = candidates.filter((candidate) => candidate.has_paid);
+
     const recommended = paidCandidates.filter(isRecommended);
     const notRecommended = paidCandidates.filter(
       (candidate) => !isRecommended(candidate)

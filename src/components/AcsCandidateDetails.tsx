@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ACSCandidateProps, Form1Type, Form2Type } from "@/types";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "./ui/use-toast";
 import {
@@ -14,7 +14,10 @@ import {
 } from "@/lib/actions/acs.actions";
 import AcsRecommendationForm from "./AcsRecommendationForm";
 import useAuth from "@/hooks/useAuth";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { resendOTP } from "@/lib/actions/candidate.actions";
+import { Loader2 } from "lucide-react";
+import useDeleteCandidate from "@/hooks/useDeleteCandidate";
 
 interface CandidateDetailsProps {
   candidate: ACSCandidateProps | null;
@@ -53,6 +56,7 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
     first: false,
     second: false,
   });
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
 
   const form1 = useForm<Form1Type>({
     resolver: zodResolver(acsform1Schema),
@@ -73,6 +77,8 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
       country2: candidate?.second_country || "",
     },
   });
+
+  const candidateEmail = candidate.email;
 
   // Use useEffect to reset form values when the candidate changes
   useEffect(() => {
@@ -130,6 +136,13 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
           variant: "success",
           description: "Submitted successfully!",
         });
+
+        const isForm1Filled = Object.values(form1.getValues()).every(Boolean);
+        const isForm2Filled = Object.values(form2.getValues()).every(Boolean);
+
+        if (isForm1Filled && isForm2Filled) {
+          await handleRecommendations();
+        }
       }
     } catch (error) {
       console.error("Submission error:", error);
@@ -147,37 +160,76 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
     }
   };
 
-  const deleteCandidateMutation = useMutation({
-    mutationFn: deleteACSCandidate,
-    onSuccess: () => {
+  // Delete Candidates
+  const { handleDeleteCandidate } = useDeleteCandidate(
+    deleteACSCandidate,
+    "onboardedCandidates"
+  );
+
+  const resendOTPButton = async () => {
+    if (!candidateEmail) {
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Missing email",
+      });
+      return;
+    }
+
+    try {
+      setIsSendingOtp(true);
+      const response = await resendOTP({ email: candidateEmail });
       toast({
         title: "Success",
-        description: "Candidate deleted successfully.",
+        description: response?.message || "Check your email",
         variant: "success",
       });
-      queryClient.invalidateQueries({ queryKey: ["onboardedCandidates"] });
-    },
-    onError: () => {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to delete candidate. Please try again.",
-      });
-    },
-  });
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ message?: string }>;
+      const errorMessage =
+        err.response?.data?.message || "Something went wrong";
 
-  const handleDeleteCandidate = async () => {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete ${candidate?.full_name}'s account?`
-    );
-    if (confirmed) {
-      deleteCandidateMutation.mutate(candidate?.id || "");
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: errorMessage,
+      });
+      console.error(error);
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
+
+  const handleRecommendations = async () => {
+    try {
+      // Optimistically update the UI
+      queryClient.setQueryData(
+        ["onboardedCandidates"],
+        (oldData: ACSCandidateProps[] | undefined) => {
+          if (!oldData) return [];
+
+          return oldData.map((c) =>
+            c.email === candidate?.email
+              ? { ...c, recommended: true, interest: null }
+              : c
+          );
+        }
+      );
+
+      await updateCandidateData(candidate?.email || "", {
+        recommended: true,
+        interest: null,
+      });
+      queryClient.invalidateQueries({ queryKey: ["onboardedCandidates"] });
+    } catch (error) {
+      console.error(error);
+    } finally {
     }
   };
 
   return (
     <div>
-      <div className="border-b border-x-gray-text p-6 flex justify-between items-center">
+      <div className="border-b sticky top-0 bg-white border-x-gray-text p-6 flex justify-between items-center">
         <p className="text-[#1F384C] font-semibold text-xl">
           Candidate Profile
         </p>
@@ -244,8 +296,16 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
           </div>
         </div>
 
-        <div className="p-6">
-          <Button onClick={handleDeleteCandidate} className="">
+        <div className="p-6 flex gap-3">
+          <Button onClick={resendOTPButton} className="bg-red">
+            {isSendingOtp ? <Loader2 className="animate-spin" /> : "Send Otp"}
+          </Button>
+          <Button
+            onClick={() =>
+              handleDeleteCandidate(candidate?.id, candidate?.full_name)
+            }
+            className=""
+          >
             Delete Candidate
           </Button>
         </div>

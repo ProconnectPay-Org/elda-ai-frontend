@@ -167,7 +167,12 @@ export const deleteStaff = async (id: number | string) => {
   }
 };
 
-export const getAllTableCandidates = async (page?: number, query?: string) => {
+export const getAllTableCandidates = async (
+  page?: number,
+  query?: string,
+  course?: string,
+  assigned?: boolean
+) => {
   const token = Cookies.get("access_token");
 
   if (!token) throw new Error("Access token is missing. Please sign in again.");
@@ -175,6 +180,14 @@ export const getAllTableCandidates = async (page?: number, query?: string) => {
 
   if (query) {
     url += `&query=${encodeURIComponent(query)}`;
+  }
+
+  if (course) {
+    url += `&course=${encodeURIComponent(course)}`;
+  }
+
+  if (assigned) {
+    url += `&assigned=${assigned}`;
   }
 
   if (page && (!query || page > 1)) {

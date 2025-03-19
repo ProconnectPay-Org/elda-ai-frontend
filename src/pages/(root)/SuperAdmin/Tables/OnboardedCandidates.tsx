@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import AdminLayout from "@/layouts/AdminLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTable } from "@/components/DataTable";
 import { ACSCandidateProps } from "@/types";
-import { toast } from "@/components/ui/use-toast";
 import { onboardColumns } from "@/components/OnboardColumns";
 import {
   deleteACSCandidate,
   getAllOnboardedCandidateData,
 } from "@/lib/actions/acs.actions";
+import usePagination from "@/hooks/usePagination";
+import Pagination from "@/components/Pagination";
+import useDeleteCandidate from "@/hooks/useDeleteCandidate";
 
 const bankOptions = [
   { value: "", label: "All Banks" },
@@ -22,6 +24,7 @@ const bankOptions = [
   { value: "Polaris", label: "Polaris Bank" },
   { value: "NIM", label: "NIM" },
   { value: "Paid through website", label: "Paid through website" },
+  { value: "Manually Onboarded", label: "Manually Onboarded" },
 ];
 
 const OnboardedCandidates = () => {
@@ -47,74 +50,27 @@ const OnboardedCandidates = () => {
     staleTime: 5 * 1000 * 60,
   });
 
-  // Mutation: Delete candidate
-  const deleteCandidateMutation = useMutation({
-    mutationFn: deleteACSCandidate,
-    onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "Candidate deleted successfully.",
-        variant: "success",
-      });
-      queryClient.invalidateQueries({ queryKey: ["onboardedCandidates"] });
-    },
-    onError: () => {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to delete candidate. Please try again.",
-      });
-    },
-  });
+  // Delete Candidates
+  const { handleDeleteCandidate } = useDeleteCandidate(
+    deleteACSCandidate,
+    "onboardedCandidates"
+  );
 
-  // Handlers
-  const handleDeleteCandidate = async (userId: string, fullName: string) => {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete ${fullName}'s account?`
-    );
-    if (confirmed) {
-      deleteCandidateMutation.mutate(userId);
-    }
-  };
+  // Pagination Controls
+  const { handleNextPage, handlePreviousPage } = usePagination(
+    allCandidates,
+    currentTab,
+    "paid",
+    setSearchParams
+  );
 
+  // Tab Controls
   const handleTabChange = (tabValue: string) => {
     setCurrentTab(tabValue);
     setSearchParams({
       paid: tabValue === "paid" ? "true" : "false",
       page: page.toString(),
     });
-  };
-
-  const handleNextPage = () => {
-    if (!allCandidates?.next) return;
-    try {
-      const nextPage = new URL(
-        allCandidates.next,
-        window.location.origin
-      ).searchParams.get("page");
-
-      if (nextPage) {
-        setSearchParams({
-          assigned: currentTab === "paid" ? "true" : "false",
-          page: nextPage,
-        });
-      }
-    } catch (error) {
-      console.error("Error parsing next page URL:", error);
-    }
-  };
-
-  const handlePreviousPage = () => {
-    if (allCandidates?.previous) {
-      const previousUrl = new URL(allCandidates.previous);
-      const previousPage = previousUrl.searchParams.get("page") || "1";
-      setSearchParams({
-        assigned: currentTab === "paid" ? "true" : "false",
-        page: previousPage,
-      });
-    } else {
-      setSearchParams({ assigned: "false", page: "1" });
-    }
   };
 
   useEffect(() => {
@@ -276,25 +232,14 @@ const OnboardedCandidates = () => {
           </TabsContent>
         </div>
 
-        <div className="flex justify-center items-center gap-4 mt-4">
-          <button
-            onClick={handlePreviousPage}
-            disabled={!allCandidates?.previous}
-            className="px-4 py-2 bg-red text-white rounded disabled:opacity-50"
-          >
-            Previous
-          </button>
-          <span>
-            Page {page} of {totalPages}
-          </span>
-          <button
-            onClick={handleNextPage}
-            disabled={!allCandidates?.next}
-            className="px-4 py-2 bg-red text-white rounded disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          handlePreviousPage={handlePreviousPage}
+          handleNextPage={handleNextPage}
+          hasNext={!!allCandidates?.next}
+          hasPrevious={!!allCandidates?.previous}
+        />
       </Tabs>
     </AdminLayout>
   );
