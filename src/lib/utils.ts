@@ -35,6 +35,22 @@ export function getDemonymFromISO(isoCode: string) {
   return country ? country.demonym : "Unknown";
 }
 
+// Function to calculate age from date of birth
+export const calculateAge = (birthDate: Date) => {
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < birthDate.getDate())
+  ) {
+    age--;
+  }
+
+  return age;
+};
+
 interface ToastConfig {
   variant: "success" | "destructive";
   title: string;
@@ -393,11 +409,11 @@ export const onboardSchema2 = z.object({
   mastersInstitution: z.string().optional(),
   classOfDegreeMasters: z.string().optional(),
   specificCGPAMasters: z.string().optional(),
-  typeOfAcademicDegree: z.string().optional(),
-  academicProgram: z.string().optional(),
-  specificUniversity: z.string().optional(),
+  typeOfAcademicDegree: z.string().nonempty("This is required"),
+  academicProgram: z.string().nonempty("This is required"),
+  specificUniversity: z.string().nonempty("This is required"),
   uploadCV: z.string().nonempty("CV upload is required"),
-  GMATGRE: z.string().optional(),
+  GMATGRE: z.string().nonempty("This is required"),
   countriesOfInterest: z.array(z.string()).min(1, "Please select at least one country of interest"),
 });
 

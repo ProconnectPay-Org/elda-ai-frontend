@@ -361,7 +361,7 @@ const ReuseableJobs = ({
               htmlFor={`jobExperiences.${index}.stateLocation`}
               className="form-label"
             >
-              State/Province Location of Job <span className="text-red">*</span>
+             City, State/Province Location of Job <span className="text-red">*</span>
             </label>
             <input
               id={`jobExperiences.${index}.stateLocation`}
