@@ -1,10 +1,8 @@
-import { acsform1Schema, acsform2Schema, getInitials } from "@/lib/utils";
-import { Button } from "./ui/button";
+import { acsform1Schema, acsform2Schema } from "@/lib/utils";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ACSCandidateProps, Form1Type, Form2Type } from "@/types";
-import { Link } from "react-router-dom";
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "./ui/use-toast";
@@ -16,36 +14,24 @@ import AcsRecommendationForm from "./AcsRecommendationForm";
 import useAuth from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { resendOTP } from "@/lib/actions/candidate.actions";
-import { Loader2 } from "lucide-react";
 import useDeleteCandidate from "@/hooks/useDeleteCandidate";
+import DashboardHeader from "./acs-components/DashboardHeader";
+import PersonalData from "./acs-components/PersonalData";
+import EducationData from "./acs-components/EducationData";
+import ResumeComponent from "./acs-components/ResumeComponent";
+import AcsLoading from "./acs-components/AcsLoading";
 
 interface CandidateDetailsProps {
   candidate: ACSCandidateProps | null;
+  handleSearch: (query: string) => void;
 }
 
-const SmallComponent = ({ label, value }: { label: string; value: string }) => {
-  return (
-    <div className="flex justify-between w-full items-center">
-      <p className="w-[350px] font-medium text-sm">{label}</p>
-      <div className="border border-x-gray-text rounded-md p-2 w-[320px]">
-        <p className="text-[#323232] text-sm">{value}</p>
-      </div>
-    </div>
-  );
-};
-
-const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
+const AcsCandidateDetails = ({
   candidate,
-}) => {
+  handleSearch,
+}: CandidateDetailsProps) => {
   if (!candidate) {
-    return (
-      <div className="p-6">
-        <p className="text-gray-500 font-semibold text-xl">
-          Welcome to your ACS Dashboard
-        </p>
-        <p className="text-gray-500">Select a candidate to view details</p>
-      </div>
-    );
+    return <AcsLoading />;
   }
 
   const queryClient = useQueryClient();
@@ -229,186 +215,26 @@ const AcsCandidateDetails: React.FC<CandidateDetailsProps> = ({
 
   return (
     <div>
-      <div className="border-b sticky top-0 bg-white border-x-gray-text p-6 flex justify-between items-center">
-        <p className="text-[#1F384C] font-semibold text-xl">
-          Candidate Profile
-        </p>
-        <div className="flex items-center gap-2">
-          <div className="text-red bg-pale-bg rounded-full font-bold w-10 h-10 flex items-center justify-center">
-            {getInitials("Academic counsellor")}
-          </div>
-          <div>
-            <p className="font-semibold">Academic Counsellor</p>
-            <p>{loggedInUser?.full_name}</p>
-          </div>
-          <Button
-            className="h-10 w-10 bg-red hover:bg-rose-900 rounded-full flex items-center justify-center"
-            onClick={handleLogout}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="1em"
-              height="1em"
-              fill="white"
-              viewBox="0 0 256 256"
-              aria-hidden="true"
-              focusable="false"
-            >
-              <path d="M124,216a12,12,0,0,1-12,12H48a12,12,0,0,1-12-12V40A12,12,0,0,1,48,28h64a12,12,0,0,1,0,24H60V204h52A12,12,0,0,1,124,216Zm108.49-96.49-40-40a12,12,0,0,0-17,17L195,116H112a12,12,0,0,0,0,24h83l-19.52,19.51a12,12,0,0,0,17,17l40-40A12,12,0,0,0,232.49,119.51Z"></path>
-            </svg>
-          </Button>
-        </div>
-      </div>
+      <DashboardHeader
+        getLoggedInUser={loggedInUser}
+        handleSearch={handleSearch}
+        handleLogout={handleLogout}
+      />
 
-      {/* PERSONAL DATA */}
-      <div className="flex items-start justify-between">
-        <div className="p-6 md:max-w-[760px]">
-          <p className="text-xl font-semibold">Personal Data</p>
-          <div className="space-y-4">
-            <SmallComponent
-              label="Full Name"
-              value={candidate.full_name || "No name"}
-            />
-            <SmallComponent
-              label="Personal Email Address"
-              value={candidate.email || "No mail"}
-            />
-            <SmallComponent
-              label="Personal Phone Number"
-              value={candidate.phone_number || "No number"}
-            />
-            <SmallComponent
-              label="Personal Whatsapp Number"
-              value={candidate.whatsapp || "No number"}
-            />
-            <SmallComponent
-              label="Gender"
-              value={candidate.gender || "No gender"}
-            />
-            <SmallComponent
-              label="Age"
-              value={`${candidate.age} years old` || "No age"}
-            />
-            <SmallComponent
-              label="Date Of Birth"
-              value={`${candidate.date_of_birth}` || "No DOB"}
-            />
-          </div>
-        </div>
-
-        <div className="p-6 flex gap-3">
-          <Button onClick={resendOTPButton} className="bg-red">
-            {isSendingOtp ? <Loader2 className="animate-spin" /> : "Send Otp"}
-          </Button>
-          <Button
-            onClick={() =>
-              handleDeleteCandidate(candidate?.id, candidate?.full_name)
-            }
-            className=""
-          >
-            Delete Candidate
-          </Button>
-        </div>
-      </div>
+      <PersonalData
+        candidate={candidate}
+        resendOTPButton={resendOTPButton}
+        handleDeleteCandidate={handleDeleteCandidate}
+        isSendingOtp={isSendingOtp}
+      />
 
       <hr className="h-[1px] w-full my-4 bg-gray-text" />
 
-      {/* EDUCATIONAL DATA */}
-      <div className="p-6 md:max-w-[760px]">
-        <p className="text-xl font-semibold">Educational Data</p>
-        <div className="space-y-4">
-          <SmallComponent
-            label="Graduate Of"
-            value={candidate.graduate_of || "No name"}
-          />
-          <SmallComponent
-            label="Name of University"
-            value={candidate.degree?.[0]?.institution || "N/A"}
-          />
-          <SmallComponent
-            label="Kind of Degree"
-            value={candidate.degree?.[0]?.degree || "N/A"}
-          />
-          <SmallComponent
-            label="Course of Study Graduated from"
-            value={candidate.degree?.[0]?.course || "N/A"}
-          />
-          <SmallComponent
-            label="Class of Degree"
-            value={candidate.degree?.[0]?.cgpa_class || "No degree"}
-          />
-          <SmallComponent
-            label="Specific CGPA"
-            value={candidate.degree?.[0]?.cgpa || "N/A"}
-          />
-          <SmallComponent
-            label="Do you have a masters degree?"
-            value={`${candidate.has_masters_degree ? "Yes" : "No"}` || "N/A"}
-          />
-          <SmallComponent
-            label="School of masters degree?"
-            value={candidate.degree?.[1]?.institution || "N/A"}
-          />
-          <SmallComponent
-            label="Kind of degree?"
-            value={candidate.degree?.[1]?.degree || "N/A"}
-          />
-          <SmallComponent
-            label="Course of Study Graduated from with master"
-            value={candidate.degree?.[1]?.course || "N/A"}
-          />
-          <SmallComponent
-            label="Class of Degree (Masters)"
-            value={`${candidate.degree?.[1]?.cgpa_class}` || "N/A"}
-          />
-          <SmallComponent
-            label="Specific CGPA for Masters"
-            value={candidate.degree?.[1]?.cgpa || "N/A"}
-          />
-          <SmallComponent
-            label="Country(ies) you are INTERESTED In"
-            value={
-              `${candidate.countries?.map((country) => country.name)}` ||
-              "No selected country"
-            }
-          />
-          <SmallComponent
-            label="Type of Academic Degree Interested in Abroad"
-            value={`${candidate.interest?.academic_type}` || "N/A"}
-          />
-          <SmallComponent
-            label="Academic program or course in mind that aligns with your professional experience"
-            value={`${candidate.interest?.specific_program}` || "N/A"}
-          />
-          <SmallComponent
-            label="Are you opened to taking the GMAT or GRE if it is required"
-            value={`${candidate.interest?.open_to_gmat}` || "N/A"}
-          />
-          <SmallComponent
-            label="Preferred Universities"
-            value={`${candidate.interest?.specific_university}` || "N/A"}
-          />
-        </div>
-      </div>
+      <EducationData candidate={candidate} />
 
       <hr className="h-[1px] w-full my-4 bg-gray-text" />
 
-      <div className="p-6 md:max-w-[760px]">
-        <p className="text-xl font-semibold">Uploaded resume</p>
-        <div className="p-4 rounded-lg border border-[#CFD3D4] flex justify-between items-center">
-          <div>
-            <img src="" alt="" />
-            {`${decodeURIComponent(
-              candidate.resume.split("/").pop()?.split("?")[0] ?? ""
-            )}` || "No document uploaded yet"}
-          </div>
-          <Button className="bg-red w-18">
-            <Link to={candidate?.resume} target="_blank">
-              View
-            </Link>
-          </Button>
-        </div>
-      </div>
+      <ResumeComponent candidate={candidate} />
 
       <hr className="h-[1px] w-full my-4 bg-gray-text" />
 

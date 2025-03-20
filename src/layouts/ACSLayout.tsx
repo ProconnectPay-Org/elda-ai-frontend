@@ -10,9 +10,9 @@ import { useParams } from "react-router-dom";
 const ACSLayout = () => {
   const [selectedCandidate, setSelectedCandidate] =
     useState<ACSCandidateProps | null>(null);
+  const [searchResults, setSearchResults] = useState<ACSCandidateProps[]>([]);
   const { id } = useParams<{ id: string }>();
 
-  // Function to fetch all pages of candidates  // Fetch all candidates using React Query
   const { data: allCandidates = [], isLoading } = useQuery({
     queryKey: ["onboardedCandidates"],
     queryFn: async () => {
@@ -33,19 +33,34 @@ const ACSLayout = () => {
 
       return allResults;
     },
-    staleTime: 5 * 1 * 60,
+    staleTime: 5 * 60 * 1000,
   });
 
   useEffect(() => {
-    if (allCandidates.length > 0) {
-      const paidCandidate = allCandidates.find((c) => c.has_paid);
-      const candidate = id
-        ? allCandidates.find((c) => c.id == id)
-        : paidCandidate || allCandidates[0];
+    const candidatesToConsider =
+      searchResults.length > 0 ? searchResults : allCandidates;
 
-      setSelectedCandidate(candidate || allCandidates[0]);
+    if (candidatesToConsider.length > 0) {
+      const paidCandidate = candidatesToConsider.find((c) => c.has_paid);
+      const candidate = id
+        ? candidatesToConsider.find((c) => c.id == id)
+        : paidCandidate || candidatesToConsider[0];
+
+      setSelectedCandidate(candidate || candidatesToConsider[0]);
     }
-  }, [allCandidates]);
+  }, [allCandidates, searchResults]);
+
+  const handleSearch = async (query: string) => {
+    if (!query) {
+      setSearchResults([]);
+      return;
+    }
+
+    const filteredResults = allCandidates.filter((candidate) =>
+      candidate.full_name.toLowerCase().includes(query.toLowerCase())
+    );
+    setSearchResults(filteredResults);
+  };
 
   return (
     <div className="flex">
@@ -56,7 +71,9 @@ const ACSLayout = () => {
       ) : (
         <>
           <AcsSidebar
-            candidates={allCandidates}
+            candidates={
+              searchResults.length > 0 ? searchResults : allCandidates
+            }
             selectedCandidate={selectedCandidate}
             setSelectedCandidate={setSelectedCandidate}
           />
@@ -64,7 +81,10 @@ const ACSLayout = () => {
       )}
       {/* Main content */}
       <main className="flex-1 ml-80 pb-20 min-h-screen">
-        <AcsCandidateDetails candidate={selectedCandidate} />
+        <AcsCandidateDetails
+          handleSearch={handleSearch}
+          candidate={selectedCandidate}
+        />
       </main>
     </div>
   );
