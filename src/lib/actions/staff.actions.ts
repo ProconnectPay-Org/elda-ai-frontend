@@ -143,7 +143,7 @@ export const generateSop = async (id: string, number: string) => {
 };
 
 export const updateSop = async (id: string, text: SopType) => {
-  const staffToken = Cookies.get("staff_access_token");
+  const staffToken = Cookies.get("staff_access_token") || Cookies.get("access_token");
 
   const { data } = await axios.patch(
     `${API_URL}staff-dashboard/update-sop/${id}/`,

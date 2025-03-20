@@ -386,6 +386,7 @@ export type CandidateData = {
   duplicate?: string;
   email_address: string;
   first_name?: string;
+  first_sop?: SopType;
   first_country: string;
   full_name?: string;
   last_name?: string;
@@ -405,6 +406,7 @@ export type CandidateData = {
   sop_status?: string;
   sop_status1?: string;
   sop_status2?: string;
+  second_sop?: SopType;
   school_application_status: "Pending" | "Complete" | "Started" | "True";
   school_application_status1: "Pending" | "Complete" | "Started" | "True";
   school_application_status2: "Pending" | "Complete" | "Started" | "True";
