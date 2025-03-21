@@ -39,6 +39,7 @@ import DownloadResume from "./pages/(root)/DownloadResume";
 import SopTemplate from "./components/SopTemplate";
 import GeneratePDF from "./components/GeneratePDF";
 import { ACSDashboard } from "./pages/(root)/ACS";
+import { CandidateStatusPage } from "./pages/(root)/CandidatesNew";
 
 function App() {
   return (
@@ -93,6 +94,9 @@ function App() {
         <Route element={<Complaints />} path="/complaints" />
         {/* ACADEMIC COUNSELOR */}
         <Route element={<ACSDashboard />} path="/acs-dashboard/:id?" />
+
+        {/* New Candidate Page UI */}
+        <Route element={<CandidateStatusPage />} path="/candidate-status" />
 
       </Routes>
     </BrowserRouter>
