@@ -27,6 +27,10 @@ const PersonalData = ({
         <p className="text-xl font-semibold">Personal Data</p>
         <div className="space-y-4">
           <SmallComponent
+            label="Membership Status"
+            value={candidate.membership || "No status selected"}
+          />
+          <SmallComponent
             label="Full Name"
             value={candidate.full_name || "No name"}
           />

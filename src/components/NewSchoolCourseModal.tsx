@@ -97,7 +97,7 @@ const NewSchoolCourseModal = ({ onClose, id }: ModalProps) => {
       await postEditedCandidate(
         id,
         {
-          formValues,
+          ...formValues,
           sop_status1: updatedSOPStatus1,
           sop_status2: updatedSOPStatus2,
         },
