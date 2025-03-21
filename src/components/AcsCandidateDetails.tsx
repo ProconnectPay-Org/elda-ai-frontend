@@ -24,11 +24,15 @@ import AcsLoading from "./acs-components/AcsLoading";
 interface CandidateDetailsProps {
   candidate: ACSCandidateProps | null;
   handleSearch: (query: string) => void;
+  openMenu: boolean;
+  setOpenMenu: (open: boolean) => void;
 }
 
 const AcsCandidateDetails = ({
   candidate,
   handleSearch,
+  openMenu = false,
+  setOpenMenu,
 }: CandidateDetailsProps) => {
   if (!candidate) {
     return <AcsLoading />;
@@ -216,6 +220,8 @@ const AcsCandidateDetails = ({
   return (
     <div>
       <DashboardHeader
+        openMenu={openMenu}
+        setOpenMenu={setOpenMenu}
         getLoggedInUser={loggedInUser}
         handleSearch={handleSearch}
         handleLogout={handleLogout}
@@ -243,7 +249,7 @@ const AcsCandidateDetails = ({
         <p className="text-xl font-semibold mb-5">
           Recommend courses, schools and country
         </p>
-        <div className="flex w-full gap-10">
+        <div className="flex flex-col md:flex-row w-full gap-10">
           <AcsRecommendationForm
             formInstance={form1}
             onSubmit={(data) => onSubmitForm(data, "first")}

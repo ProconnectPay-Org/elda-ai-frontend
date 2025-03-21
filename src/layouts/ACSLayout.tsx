@@ -11,6 +11,7 @@ const ACSLayout = () => {
   const [selectedCandidate, setSelectedCandidate] =
     useState<ACSCandidateProps | null>(null);
   const [searchResults, setSearchResults] = useState<ACSCandidateProps[]>([]);
+  const [openMenu, setOpenMenu] = useState(false);
   const { id } = useParams<{ id: string }>();
 
   const { data: allCandidates = [], isLoading } = useQuery({
@@ -76,14 +77,17 @@ const ACSLayout = () => {
             }
             selectedCandidate={selectedCandidate}
             setSelectedCandidate={setSelectedCandidate}
+            openMenu={openMenu}
           />
         </>
       )}
       {/* Main content */}
-      <main className="flex-1 ml-80 pb-20 min-h-screen">
+      <main className="flex-1 md:ml-80 pb-20 min-h-screen">
         <AcsCandidateDetails
           handleSearch={handleSearch}
           candidate={selectedCandidate}
+          openMenu={openMenu}
+          setOpenMenu={setOpenMenu}
         />
       </main>
     </div>

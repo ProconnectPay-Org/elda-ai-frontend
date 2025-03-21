@@ -7,12 +7,14 @@ interface SidebarProps {
   candidates: ACSCandidateProps[];
   selectedCandidate: ACSCandidateProps | null;
   setSelectedCandidate: (candidate: ACSCandidateProps) => void;
+  openMenu: boolean;
 }
 
 const AcsSidebar: React.FC<SidebarProps> = ({
   candidates,
   selectedCandidate,
   setSelectedCandidate,
+  openMenu,
 }) => {
   // Check if candidate has all recommendation fields filled
   const [recommendedCandidates, setRecommendedCandidates] = useState<
@@ -54,7 +56,11 @@ const AcsSidebar: React.FC<SidebarProps> = ({
   }, [candidates]);
 
   return (
-    <aside className="w-80 bg-gray h-screen p-4 fixed left-0 top-0 overflow-y-auto">
+    <aside
+      className={`transition-all duration-300 ${
+        openMenu ? "w-80 p-4" : "w-0 p-0"
+      } z-20 md:w-80 bg-gray h-screen md:p-4 fixed left-0 top-0 overflow-y-auto`}
+    >
       <div className="flex items-center justify-center h-36">
         <img src={Logo} alt="logo" className="object-contain" />
       </div>

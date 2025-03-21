@@ -21,9 +21,9 @@ const PersonalData = ({
     return <AcsLoading />;
   }
   return (
-    <div className="flex items-start justify-between">
+    <div className="flex flex-col-reverse md:flex-row items-start md:justify-between">
       {/* PERSONAL DATA */}
-      <div className="p-6 md:max-w-[760px]">
+      <div className="p-6 w-full md:max-w-[760px]">
         <p className="text-xl font-semibold">Personal Data</p>
         <div className="space-y-4">
           <SmallComponent
@@ -57,7 +57,7 @@ const PersonalData = ({
         </div>
       </div>
 
-      <div className="p-6 flex gap-3">
+      <div className="p-6 flex gap-3 flex-wrap">
         <Button onClick={resendOTPButton} className="bg-red">
           {isSendingOtp ? <Loader2 className="animate-spin" /> : "Send Otp"}
         </Button>
