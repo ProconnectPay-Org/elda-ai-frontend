@@ -1,5 +1,4 @@
 import { useFormContext } from "react-hook-form";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useToast } from "../ui/use-toast";
 import { useSearchParams } from "react-router-dom";
@@ -9,28 +8,19 @@ import SaveBtn from "../SaveBtn";
 const API_URL = import.meta.env.VITE_API_URL;
 
 interface FileUploadProps {
-  selectedFile: File | null | string; // Allow string for initial file name
+  selectedFile: File | null | string;
   setSelectedFile: (file: File | null) => void;
 }
 
 const FileUpload = ({ selectedFile, setSelectedFile }: FileUploadProps) => {
-  const { formState, getValues, setValue } = useFormContext();
+  const { formState, setValue } = useFormContext();
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
   const email = searchParams.get("email");
 
-  const uploadCV = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    if (!selectedFile) {
-      toast({
-        title: "Error",
-        description: "Please select a file to upload",
-        variant: "destructive",
-      });
-      return;
-    }
-
+  const uploadCV = async (file: File | null) => {
+    if (!file) return;
     if (!email) {
       toast({
         title: "Error",
@@ -43,16 +33,13 @@ const FileUpload = ({ selectedFile, setSelectedFile }: FileUploadProps) => {
     setIsUploading(true);
     try {
       const formData = new FormData();
-      formData.append("resume", selectedFile);
-      const email = getValues("emailAddress");
+      formData.append("resume", file);
 
       const response = await axios.patch(
         `${API_URL}onboarding-candidate/s/${email}/`,
         formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { "Content-Type": "multipart/form-data" },
         }
       );
 
@@ -70,10 +57,7 @@ const FileUpload = ({ selectedFile, setSelectedFile }: FileUploadProps) => {
       console.error("Error uploading CV:", error);
       toast({
         title: "Error",
-        description:
-          error instanceof Error
-            ? error.message
-            : "Error uploading CV. Please try again.",
+        description: "Error uploading CV. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -91,13 +75,14 @@ const FileUpload = ({ selectedFile, setSelectedFile }: FileUploadProps) => {
       >
         Upload CV <span className="text-red">*</span>
       </label>
-      <div className="flex items-center w-full">
+      <div className="flex items-center relative w-full">
         <input
           type="file"
           onChange={(e) => {
             const file = e.target.files?.[0] || null;
             setSelectedFile(file);
             setValue("uploadCV", file?.name);
+            uploadCV(file);
           }}
           className="hidden"
           id="cv-upload"
@@ -127,6 +112,12 @@ const FileUpload = ({ selectedFile, setSelectedFile }: FileUploadProps) => {
               : selectedFile.name
             : "Upload CV"}
         </label>
+
+        {isUploading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-60 rounded-md">
+            <SaveBtn text="" />
+          </div>
+        )}
       </div>
       {formState.errors.uploadCV &&
       typeof formState.errors.uploadCV.message === "string" ? (
@@ -134,13 +125,9 @@ const FileUpload = ({ selectedFile, setSelectedFile }: FileUploadProps) => {
       ) : (
         ""
       )}
-      <div className="flex items-center gap-2">
-        <Button disabled={isUploading} className="bg-red" onClick={uploadCV}>
-          {isUploading ? <SaveBtn text="Uploading" /> : "Upload"}
-        </Button>
+      <div className="flex items-center">
         <span className="text-red animate-bounce">
-          Click <span className="font-bold">upload</span> to make sure CV is
-          uploaded
+          Make sure <span className="font-bold">CV</span> is uploaded
         </span>
       </div>
     </div>
