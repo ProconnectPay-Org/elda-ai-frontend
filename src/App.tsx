@@ -39,6 +39,12 @@ import DownloadResume from "./pages/(root)/DownloadResume";
 import SopTemplate from "./components/SopTemplate";
 import GeneratePDF from "./components/GeneratePDF";
 import { ACSDashboard } from "./pages/(root)/ACS";
+import { CandidateInformation, CandidateStatusPage } from "./pages/(root)/CandidatesNew";
+import LinkedInMasterClass from "./pages/(root)/CandidatesNew/LinkedInMasterClass";
+import UsingPortal from "./pages/(root)/CandidatesNew/UsingPortal";
+import TownHall from "./pages/(root)/CandidatesNew/TownHall";
+import OtherInformation from "./pages/(root)/CandidatesNew/OtherInformation";
+import AdmissionStatusPrompt from "./pages/(root)/CandidatesNew/AdmissionStatusPrompt";
 
 function App() {
   return (
@@ -94,6 +100,14 @@ function App() {
         {/* ACADEMIC COUNSELOR */}
         <Route element={<ACSDashboard />} path="/acs-dashboard/:id?" />
 
+        {/* New Candidate Page UI */}
+        <Route element={<CandidateStatusPage />} path="/candidate-status" />
+        <Route element={<LinkedInMasterClass/>} path="/linkedin-masterclass" />
+        <Route element={<UsingPortal/>} path="/portal-usage" />
+        <Route element={<TownHall/>} path="/weekly-downhall" />
+        <Route element={<OtherInformation/>} path="/other-info" />
+        <Route element={<AdmissionStatusPrompt/>} path="/admission-status-prompt" />
+        <Route element={<CandidateInformation/>} path="/candidate-info" />
       </Routes>
     </BrowserRouter>
   );
