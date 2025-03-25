@@ -24,17 +24,21 @@ interface SidebarItemProps {
 }
 
 const SidebarItem = ({ icon: Icon, text, active = false, onClick }: SidebarItemProps) => (
-  <div 
-    className={`rounded-lg flex items-center gap-3 px-4 py-3 cursor-pointer ${active ? 'bg-red text-white' : 'text-[#424242] hover:bg-gray-100'}`}
-    onClick={onClick}
+  <button 
+    type="button"
+    className={`w-full rounded-lg flex items-center gap-3 px-4 py-3 cursor-pointer ${active ? 'bg-red text-white' : 'text-[#424242] hover:bg-gray-100'}`}
+    onClick={(e) => {
+      e.preventDefault();
+      onClick?.();
+    }}
   >
     {typeof Icon === 'string' ? (
-      <img src={Icon} alt={text} className="w-5 h-5" />
+      <img src={Icon} alt={text} className={`w-5 h-5 ${active ? 'brightness-0 invert' : ''}`} />
     ) : (
       <Icon size={20} className={active ? 'text-white' : 'text-[#424242]'} />
     )}
     <span className="text-base font-medium">{text}</span>
-  </div>
+  </button>
 );
 
 export default function CandidateNewLayout({ children, title }: CandidateNewLayoutProps) {
@@ -46,7 +50,7 @@ export default function CandidateNewLayout({ children, title }: CandidateNewLayo
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const handleNavigation = (path: string) => {
-    navigate(path);
+    navigate(path, { replace: true });
     setIsSidebarOpen(false);
   };
 
@@ -105,38 +109,38 @@ export default function CandidateNewLayout({ children, title }: CandidateNewLayo
           <SidebarItem 
             icon={linkedIn} 
             text="LinkedIn Masterclass" 
-            active={isActive('/masterclass')} 
-            onClick={() => setIsSidebarOpen(false)}
+            active={isActive('/linkedin-masterclass')} 
+            onClick={() => handleNavigation('/linkedin-masterclass')}
           />
           <SidebarItem 
             icon={monitor} 
             text="Using the Portal" 
             active={isActive('/portal-usage')} 
-            onClick={() => setIsSidebarOpen(false)}
+            onClick={() => handleNavigation('/portal-usage')}
           />
           <SidebarItem 
             icon={zoom} 
             text="Weekly Downhall" 
             active={isActive('/weekly-downhall')} 
-            onClick={() => setIsSidebarOpen(false)}
+            onClick={() => handleNavigation('/weekly-downhall')}
           />
           <SidebarItem 
             icon={product} 
             text="Other Information" 
             active={isActive('/other-info')} 
-            onClick={() => setIsSidebarOpen(false)}
+            onClick={() => handleNavigation('/other-info')}
           />
           <SidebarItem 
             icon={admission} 
             text="Admission Status Prompt" 
-            active={isActive('/admission-status')} 
-            onClick={() => setIsSidebarOpen(false)}
+            active={isActive('/admission-status-prompt')} 
+            onClick={() => handleNavigation('/admission-status-prompt')}
           />
           <SidebarItem 
             icon={student} 
             text="Candidate Information" 
             active={isActive('/candidate-info')} 
-            onClick={() => setIsSidebarOpen(false)}
+            onClick={() => handleNavigation('/candidate-info')}
           />
         </nav>
       </aside>

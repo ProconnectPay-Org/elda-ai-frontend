@@ -130,21 +130,29 @@ export default function CandidateStatusPage() {
       route: `/download-resume/${candidate_id}`,
     },
     {
-      title: "SOP 1 Status",
+      title: "Statement of Purpose 1",
       status: singleCandidate?.sop_status1,
       route: `/sop/${candidate_id}?type=school1`,
     },
     {
-      title: "SOP 2 Status",
+      title: "Statement of Purpose 2",
       status: singleCandidate?.sop_status2,
       route: `/sop/${candidate_id}?type=school2`,
     },
     {
-      title: "1st School Application Status",
+      title: "School application submission 1",
       status: singleCandidate?.school_application_status1,
     },
     {
-      title: "2nd School Application Status",
+      title: "School application submission 2",
+      status: singleCandidate?.school_application_status2,
+    },
+    {
+      title: "Extra Statement of Purpose",
+       status: singleCandidate?.school_application_status2,
+    },
+    {
+      title: "Extra School Application Submission ",
       status: singleCandidate?.school_application_status2,
     },
   ];
