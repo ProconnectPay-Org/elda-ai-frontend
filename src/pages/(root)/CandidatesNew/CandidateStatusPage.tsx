@@ -1,4 +1,4 @@
-import CandidateNewLayout from "@/layouts/CandidateNewLayout";
+// import CandidateNewLayout from "@/layouts/CandidateNewLayout";
 // import CandidateLayout from "@/layouts/CandidateLayout";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import IconCheck from "@/assets/icon-check.svg";
@@ -16,6 +16,7 @@ import Bulb from "../../../assets/bulb.svg";
 import progress from "../../../assets/progress.svg";
 import globe from "../../../assets/red-globe.svg";
 import eldaLogo from "../../../assets/eldaLogo.png";
+import TestingLayout from "@/layouts/TestingLayout";
 
 const SkeletonStatusBox = () => {
   return (
@@ -184,22 +185,27 @@ export default function CandidateStatusPage() {
   );
 
   return (
-    <CandidateNewLayout>
-      <section className="max-w-[1200px] mx-auto space-y-8">
-        <div className="flex gap-3">
-          <img src={eldaLogo} alt="Logo" />
-          <h1 className="text-[#2D44A8] text-5xl font-bold">
-            AI <span className="text-[black]">Recommendation</span>
-          </h1>
+    <TestingLayout>
+     <section className="max-w-[1200px] mx-auto space-y-8 pt-10 md:pt-0">
+     <div className="flex gap-3 items-center xs:items-start">
+          <img src={eldaLogo} alt="Logo" className="w-20 xs:w-2 object-contain" />
+          <div className="flex gap-1 xs:gap-2 items-center">
+            <h1 className="text-[#2D44A8] text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold">
+              AI
+            </h1>
+            <h1 className="text-black text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold">
+              Recommendation
+            </h1>
+          </div>
         </div>
-        <div className="flex flex-col gap-10">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div className="space-y-2">
-              <h1 className="font-bold text-3xl text-gray-900">
-                Welcome, {loggedInUser?.full_name}
+        <div className="flex flex-col gap-6 md:gap-10">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6">
+            <div className="space-y-1 md:space-y-2">
+              <h1 className="font-bold text-xl md:text-3xl text-gray-900">
+                Welcome, {loggedInUser?.full_name} 👋
               </h1>
               <p className="font-semibold text-lg">
-                to the <span className="text-red">Pro</span>connect Global
+                to the <span className="text-red">Pro</span><span className="text-[#2D44A8]">connect</span> Global
                 Education Community!
               </p>
             </div>
@@ -285,7 +291,7 @@ export default function CandidateStatusPage() {
                     <>
                       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 6a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 6zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                      </svg>
+                    </svg>
                       Pending Assignment
                     </>
                   )}
@@ -433,6 +439,6 @@ export default function CandidateStatusPage() {
           )}
         </div>
       </section>
-    </CandidateNewLayout>
+    </TestingLayout>
   );
 }

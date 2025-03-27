@@ -92,6 +92,7 @@ const CandidateLogin = () => {
         });
         if (response.candidate.has_completed_application) {
           navigate("/candidate/status");
+          // navigate("/candidate-status")
         } else {
           navigate("/register");
         }

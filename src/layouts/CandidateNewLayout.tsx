@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { LucideIcon, Menu, X } from 'lucide-react';
+import { LucideIcon, Menu, X, LogOut } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import useAuth from '@/hooks/useAuth';
 import Logo from "../assets/elda-new-logo.png";
 import RedEnvelope from "../assets/red-envelop.png";
 import status from "../assets/status.png";
@@ -44,6 +45,7 @@ const SidebarItem = ({ icon: Icon, text, active = false, onClick }: SidebarItemP
 export default function CandidateNewLayout({ children, title }: CandidateNewLayoutProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { handleLogout } = useAuth();
   const isActive = (path: string) => location.pathname === path;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -143,6 +145,16 @@ export default function CandidateNewLayout({ children, title }: CandidateNewLayo
             onClick={() => handleNavigation('/candidate-info')}
           />
         </nav>
+        {/* Logout button with increased spacing from nav items */}
+        <div className="mt-auto border-t border-gray-200">
+          <div className="px-4 py-6">
+            <SidebarItem
+              icon={LogOut}
+              text="Log Out"
+              onClick={handleLogout}
+            />
+          </div>
+        </div>
       </aside>
 
       {/* Main Content */}
