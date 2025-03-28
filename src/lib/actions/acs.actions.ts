@@ -60,6 +60,21 @@ export const getSingleOnboardedCandidateData = async (id: string) => {
   }
 };
 
+export const getSingleOnboardedCandidateInfo = async (email: string) => {
+  if (!email) return null;
+
+  try {
+    const response = await axios.get(`${API_URL}onboarding-candidate/s/${email}`, {
+      headers: { "Content-Type": "application/json" },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error);
+    throw error;
+  }
+};
+
 export const deleteACSCandidate = async (id: number | string) => {
   try {
     const response = await axios.delete(

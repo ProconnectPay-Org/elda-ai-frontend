@@ -1,14 +1,14 @@
-import CandidateNewLayout from '@/layouts/CandidateNewLayout'
 import staff from "../../../assets/staff.png";
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import CandidateNewLayout from "@/layouts/CandidateNewLayout";
 
 export default function OtherInformation() {
   return (
     <CandidateNewLayout>
       <section className='flex flex-col gap-6'>
         <h1>Other Information</h1>
-        <img src={staff} alt="" />
+        <img src={staff} alt="" className="w-full object-contain" />
         <h1>Connect with other candidates and industry professionals.</h1>
         <Link to={"#"}>
         <Button className='bg-transparent border-red text-red border'>Join our LinkedIn group</Button>

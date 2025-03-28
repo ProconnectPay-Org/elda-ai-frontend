@@ -59,6 +59,7 @@ const AuthForm = () => {
             expires: 7,
           });
           Cookies.set("candidate_id", response.candidate.id, { expires: 7 });
+          Cookies.set("candidate_email", response.candidate.email, { expires: 7 });
           Cookies.set("education_id", response.candidate.education[0], {
             expires: 7,
           });
