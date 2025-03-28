@@ -16,7 +16,7 @@ import Bulb from "../../../assets/bulb.svg";
 import progress from "../../../assets/progress.svg";
 import globe from "../../../assets/red-globe.svg";
 import eldaLogo from "../../../assets/eldaLogo.png";
-import TestingLayout from "@/layouts/TestingLayout";
+import CandidateNewLayout from "@/layouts/CandidateNewLayout";
 
 const SkeletonStatusBox = () => {
   return (
@@ -185,7 +185,7 @@ export default function CandidateStatusPage() {
   );
 
   return (
-    <TestingLayout>
+    <CandidateNewLayout>
      <section className="max-w-[1200px] mx-auto space-y-8 pt-10 md:pt-0">
      <div className="flex gap-3 items-center xs:items-start">
           <img src={eldaLogo} alt="Logo" className="w-20 xs:w-2 object-contain" />
@@ -439,6 +439,6 @@ export default function CandidateStatusPage() {
           )}
         </div>
       </section>
-    </TestingLayout>
+    </CandidateNewLayout>
   );
 }

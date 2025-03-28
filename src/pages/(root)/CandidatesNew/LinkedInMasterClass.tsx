@@ -1,9 +1,8 @@
-// import CandidateNewLayout from '@/layouts/CandidateNewLayout'
-import TestingLayout from '@/layouts/TestingLayout'
+import CandidateNewLayout from '@/layouts/CandidateNewLayout'
 
 export default function LinkedInMasterClass() {
   return (
-    <TestingLayout>
+    <CandidateNewLayout>
       <section className="max-w-[1200px] mx-auto space-y-8">
         <div className="w-full max-w-4xl mx-auto space-y-8">
           <h2 className="text-[#1F384C] text-2xl md:text-3xl font-bold text-center">
@@ -30,6 +29,6 @@ export default function LinkedInMasterClass() {
           </div>
         </div>
       </section>
-    </TestingLayout>
+    </CandidateNewLayout>
   )
 }

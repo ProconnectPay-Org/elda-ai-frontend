@@ -1,11 +1,11 @@
 // import CandidateNewLayout from '@/layouts/CandidateNewLayout';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from '@/components/ui/button';
-import TestingLayout from '@/layouts/TestingLayout';
+import CandidateNewLayout from "@/layouts/CandidateNewLayout";
 
 export default function AdmissionStatusPrompt() {
   return (
-    <TestingLayout>
+    <CandidateNewLayout>
         <section className=" pt-16 lg:pt-0 px-4 pb-4 md:px-6 md:pb-6 space-y-6 md:space-y-8">
             <h1 className="text-2xl font-semibold">Admission Status</h1>
             <div className="space-y-8">
@@ -74,6 +74,6 @@ export default function AdmissionStatusPrompt() {
                 </div>
             </div>
         </section>
-    </TestingLayout>
+    </CandidateNewLayout>
   )
 }

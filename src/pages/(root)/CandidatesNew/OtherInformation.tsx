@@ -1,11 +1,11 @@
 import staff from "../../../assets/staff.png";
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import TestingLayout from '@/layouts/TestingLayout';
+import CandidateNewLayout from "@/layouts/CandidateNewLayout";
 
 export default function OtherInformation() {
   return (
-    <TestingLayout>
+    <CandidateNewLayout>
       <section className='flex flex-col gap-6'>
         <h1>Other Information</h1>
         <img src={staff} alt="" className="w-full object-contain" />
@@ -204,6 +204,6 @@ export default function OtherInformation() {
           </div>
         </div>
       </section>
-    </TestingLayout>
+    </CandidateNewLayout>
   )
 }

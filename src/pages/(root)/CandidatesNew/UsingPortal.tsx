@@ -1,8 +1,8 @@
-import TestingLayout from "@/layouts/TestingLayout";
+import CandidateNewLayout from "@/layouts/CandidateNewLayout";
 
 export default function UsingPortal() {
   return (
-    <TestingLayout>
+    <CandidateNewLayout>
       <div className="flex flex-col gap-6">
         <h1 className="text-[#1F384C] text-2xl md:text-3xl font-bold">Using the Portal</h1>
 
@@ -30,6 +30,6 @@ export default function UsingPortal() {
         <h3 className="text-red font-medium">Watch the explainer video</h3>
         </div>
       </div>
-    </TestingLayout>
+    </CandidateNewLayout>
   );
 }

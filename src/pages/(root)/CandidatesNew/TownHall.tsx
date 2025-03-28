@@ -1,11 +1,9 @@
-// import CandidateNewLayout from '@/layouts/CandidateNewLayout'
-import TestingLayout from '@/layouts/TestingLayout'
-import React from 'react'
+import CandidateNewLayout from '@/layouts/CandidateNewLayout'
 
 export default function TownHall() {
   return (
-    <TestingLayout>
+    <CandidateNewLayout>
         <div>Weekly Town Hall</div>
-    </TestingLayout>
+    </CandidateNewLayout>
   )
 }

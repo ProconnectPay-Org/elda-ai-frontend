@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
-import { LucideIcon, Menu, X, LogOut } from 'lucide-react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import useAuth from '@/hooks/useAuth';
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { MenuIcon, LogOut, Menu, X } from "lucide-react";
+import { useState } from "react";
+// import EldaLogo from "../assets/elda-new-logo.png";
+import { useNavigate, useLocation } from "react-router-dom";
+import Cookies from "js-cookie";
 import Logo from "../assets/elda-new-logo.png";
 import RedEnvelope from "../assets/red-envelop.png";
 import status from "../assets/status.png";
@@ -12,77 +16,104 @@ import linkedIn from "../assets/linkedin.png";
 import monitor from "../assets/monitor.png";
 import admission from "../assets/admission-status.png";
 
-interface CandidateNewLayoutProps {
+interface TestingLayoutProps {
   children: React.ReactNode;
-  title?: string;
 }
 
-interface SidebarItemProps {
-  icon: LucideIcon | string;
-  text: string;
-  active?: boolean;
-  onClick?: () => void;
-}
-
-const SidebarItem = ({ icon: Icon, text, active = false, onClick }: SidebarItemProps) => (
-  <button 
-    type="button"
-    className={`w-full rounded-lg flex items-center gap-3 px-4 py-3 cursor-pointer ${active ? 'bg-red text-white' : 'text-[#424242] hover:bg-gray-100'}`}
-    onClick={(e) => {
-      e.preventDefault();
-      onClick?.();
-    }}
-  >
-    {typeof Icon === 'string' ? (
-      <img src={Icon} alt={text} className={`w-5 h-5 ${active ? 'brightness-0 invert' : ''}`} />
-    ) : (
-      <Icon size={20} className={active ? 'text-white' : 'text-[#424242]'} />
-    )}
-    <span className="text-base font-medium">{text}</span>
-  </button>
-);
-
-export default function CandidateNewLayout({ children, title }: CandidateNewLayoutProps) {
-  const location = useLocation();
+const CandidateNewLayout = ({ children }: TestingLayoutProps) => {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
-  const { handleLogout } = useAuth();
-  const isActive = (path: string) => location.pathname === path;
+  const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const handleLogout = () => {
+    Cookies.remove("staff_access_token");
+    navigate("/sign-in");
+  };
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-  const handleNavigation = (path: string) => {
-    navigate(path, { replace: true });
-    setIsSidebarOpen(false);
-  };
+  const sidebarItems = [
+    {
+      title: "Status",
+      icon: status,
+      href: "/candidate-status",
+    },
+    {
+      title: "LinkedIn Masterclass",
+      icon: linkedIn,
+      href: "/linkedin-masterclass",
+    },
+    {
+      title: "Using this portal",
+      icon: monitor,
+      href: "/portal-usage",
+    },
+    {
+      title: "Weekly Town Hall",
+      icon: zoom,
+      href: "/weekly-downhall",
+    },
+    {
+      title: "Other Information",
+      icon: product,
+      href: "/other-info",
+    },
+    {
+      title: "Admission Status Prompt",
+      icon: admission,
+      href: "/admission-status-prompt",
+    },
+    {
+      title: "Candidate Information",
+      icon: student,
+      href: "/candidate-info",
+    },
+  ];
 
   return (
-    <div className='min-h-screen relative text-black'>
+    <div className="flex h-screen overflow-hidden relative">
       {/* Support banner - hidden on mobile */}
-      <div className="absolute top-0 left-0 right-0 bg-[#F8D3D1] py-2 px-4 w-full hidden lg:flex items-center justify-center gap-2 z-50">
+      <div className="absolute top-0 left-0 right-0 bg-[#F8D3D1] py-2 px-4 w-full hidden lg:flex items-center justify-center gap-2 z-50 mb-4">
         <div className="flex items-center justify-center gap-2">
           <span className="text-black font-medium">For Support</span>
-          <img src={RedEnvelope} alt="Support Icon" className="h-4 w-4 object-contain" />
-          <span className='text-red-600 font-bold'>info@proconnectpay.com</span>
+          <img
+            src={RedEnvelope}
+            alt="Support Icon"
+            className="h-4 w-4 object-contain"
+          />
+          <span className="text-red-600 font-bold">info@proconnectpay.com</span>
         </div>
-        <div><span className='text-[#323232]'>|</span></div>
+        <div>
+          <span className="text-[#323232]">|</span>
+        </div>
         <div className="flex items-center justify-center gap-2">
           <span className="text-black font-medium">Recommendation Issues</span>
-          <img src={RedEnvelope} alt="Support Icon" className="h-4 w-4 object-contain" />
-          <span className='text-red-600 font-bold'>acs@proconnectpay.com</span>
+          <img
+            src={RedEnvelope}
+            alt="Support Icon"
+            className="h-4 w-4 object-contain"
+          />
+          <span className="text-red-600 font-bold">acs@proconnectpay.com</span>
         </div>
-        <div><span className='text-[#323232]'>|</span></div>
+        <div>
+          <span className="text-[#323232]">|</span>
+        </div>
         <div className="flex items-center justify-center gap-2">
           <span className="text-black font-medium">Loan Issues</span>
-          <img src={RedEnvelope} alt="Support Icon" className="h-4 w-4 object-contain" />
-          <span className='text-red-600 font-bold'>loan@proconnectpay.com</span>
+          <img
+            src={RedEnvelope}
+            alt="Support Icon"
+            className="h-4 w-4 object-contain"
+          />
+          <span className="text-red-600 font-bold">loan@proconnectpay.com</span>
         </div>
       </div>
 
       {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 bg-white py-2 px-4 flex justify-between items-center z-40 border-b">
         <img src={Logo} alt="logo" className="h-20 w-20 object-contain" />
-        <button 
+        <button
           className="p-2 rounded-md hover:bg-red text-red"
           onClick={toggleSidebar}
         >
@@ -90,92 +121,100 @@ export default function CandidateNewLayout({ children, title }: CandidateNewLayo
         </button>
       </div>
 
-      {/* Sidebar */}
-      <aside 
-        className={`
-          fixed top-0 left-0 h-full w-72 bg-[#F5F7F9] border-r z-30 flex flex-col
-          transform transition-transform duration-300 ease-in-out pt-10 lg:pt-0
-          lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        `}
-      >
-        <div className="p-1 pb-0 hidden lg:block">
-          <img src={Logo} alt="logo" className="w-full h-full scale-150" />
-        </div>
-        <nav className="mt-0 text-black p-2 flex flex-col gap-2">
-          <SidebarItem 
-            icon={status} 
-            text="Status" 
-            active={isActive('/candidate-status')} 
-            onClick={() => handleNavigation('/candidate-status')}
-          />
-          <SidebarItem 
-            icon={linkedIn} 
-            text="LinkedIn Masterclass" 
-            active={isActive('/linkedin-masterclass')} 
-            onClick={() => handleNavigation('/linkedin-masterclass')}
-          />
-          <SidebarItem 
-            icon={monitor} 
-            text="Using the Portal" 
-            active={isActive('/portal-usage')} 
-            onClick={() => handleNavigation('/portal-usage')}
-          />
-          <SidebarItem 
-            icon={zoom} 
-            text="Weekly Downhall" 
-            active={isActive('/weekly-downhall')} 
-            onClick={() => handleNavigation('/weekly-downhall')}
-          />
-          <SidebarItem 
-            icon={product} 
-            text="Other Information" 
-            active={isActive('/other-info')} 
-            onClick={() => handleNavigation('/other-info')}
-          />
-          <SidebarItem 
-            icon={admission} 
-            text="Admission Status Prompt" 
-            active={isActive('/admission-status-prompt')} 
-            onClick={() => handleNavigation('/admission-status-prompt')}
-          />
-          <SidebarItem 
-            icon={student} 
-            text="Candidate Information" 
-            active={isActive('/candidate-info')} 
-            onClick={() => handleNavigation('/candidate-info')}
-          />
-        </nav>
-        {/* Logout button with increased spacing from nav items */}
-        <div className="mt-auto border-t border-gray-200">
-          <div className="px-4 py-6">
-            <SidebarItem
-              icon={LogOut}
-              text="Log Out"
-              onClick={handleLogout}
-            />
-          </div>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="lg:pl-72 min-h-screen">
-        <div className="p-4 lg:p-8 pt-16 lg:pt-20">
-          {title && (
-            <h1 className="text-2xl lg:text-3xl font-bold mb-4">
-              {title}
-            </h1>
+      {/* Add margin-top to main container to account for banner */}
+      <div className="flex w-full mt-10">
+        {/* Sidebar */}
+        <aside
+          className={cn(
+            "fixed lg:static lg:flex bg-[#F5F7F9] border-r transition-all duration-300 flex-col h-full",
+            "z-40 top-[60px]", // Position below mobile header
+            isSidebarOpen ? "left-0" : "-left-72", // Slide in/out on mobile
+            sidebarOpen ? "w-72" : "w-16"
           )}
-          {children}
-        </div>
-      </main>
+        >
+          {/* Logo section */}
+          <div className="flex items-center justify-between px-4">
+            <div
+              className={cn(
+                " transition-all duration-300 overflow-hidden mt-3",
+                sidebarOpen ? "w-36" : "w-8"
+              )}
+            >
+              <img
+                src={Logo}
+                alt="Elda Logo"
+                className="w-full h-full scale-150"
+              />
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className={cn("", !sidebarOpen && "absolute right-0")}
+            >
+              <MenuIcon className="h-5 w-5" />
+            </Button>
+          </div>
 
-      {/* Overlay */}
-      {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
+          {/* Navigation items */}
+          <ScrollArea className="flex-1 mt-8">
+            <nav className="space-y-2 px-4 flex flex-col justify-center">
+              {sidebarItems.map((item) => (
+                <a
+                  key={item.title}
+                  href={item.href}
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-3 text-gray-500 transition-all",
+                    location.pathname === item.href
+                      ? "bg-red font-bold text-white hover:bg-red"
+                      : "hover:text-gray hover:bg-gray-border",
+                    !sidebarOpen && "justify-center"
+                  )}
+                  title={!sidebarOpen ? item.title : undefined}
+                >
+                  <img
+                    src={item.icon}
+                    alt=""
+                    className={cn(
+                      location.pathname === item.href && "brightness-0 invert"
+                    )}
+                  />
+                  {sidebarOpen && <span>{item.title}</span>}
+                </a>
+              ))}
+            </nav>
+          </ScrollArea>
+
+          {/* Logout button */}
+          <div className="border-t p-4">
+            <button
+              onClick={handleLogout}
+              className={cn(
+                "flex items-center gap-3 w-full rounded-lg px-3 py-2 text-red-500 hover:bg-red-50 transition-all",
+                !sidebarOpen && "justify-center"
+              )}
+            >
+              <LogOut className="h-5 w-5" />
+              {sidebarOpen && <span>Logout</span>}
+            </button>
+          </div>
+        </aside>
+
+        {/* Overlay for mobile */}
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 lg:hidden z-30"
+            onClick={toggleSidebar}
+          />
+        )}
+
+        {/* Main content */}
+        <div className="flex-1 overflow-auto">
+          <main className="p-6">{children}</main>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default CandidateNewLayout;
