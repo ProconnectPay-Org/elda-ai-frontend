@@ -6,6 +6,10 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import Flag from 'react-world-flags'
 import { X } from "lucide-react"
 import TestingLayout from '@/layouts/TestingLayout'
+import { useCandidates } from '@/hooks/useCandidiates'
+import Cookies from 'js-cookie'
+import { useQuery } from '@tanstack/react-query'
+import { getSingleOnboardedCandidateInfo } from '@/lib/actions/acs.actions'
 
 const initialCountries = [
     { code: 'US', name: 'United States' },
@@ -18,8 +22,14 @@ export default function CandidateInformation() {
 
     const removeCountry = (codeToRemove: string) => {
         setCountries(countries.filter(country => country.code !== codeToRemove))
-    }
-
+    };
+    
+    const { data: allCandidates, isLoading } = useQuery({
+        queryKey: ["onboardedCandidates"],
+        queryFn: ()=>getSingleOnboardedCandidateInfo("daramoladayo2030@gmail.com"),
+        staleTime: 5 * 60 * 1000,
+      });
+console.log(allCandidates)
     return (
         <TestingLayout>
             <section className="pt-16 lg:pt-0 px-4 pb-4 md:px-6 md:pb-6 space-y-6 md:space-y-8">
