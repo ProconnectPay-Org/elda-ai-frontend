@@ -1,102 +1,114 @@
-import { useState } from 'react'
-import CandidateNewLayout from '@/layouts/CandidateNewLayout'
+import { useEffect, useState } from 'react'
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import Flag from 'react-world-flags'
-import { X } from "lucide-react"
-
-const initialCountries = [
-    { code: 'US', name: 'United States' },
-    { code: 'GB', name: 'United Kingdom' },
-    { code: 'CA', name: 'Canada' }
-]
-
+// import Cookies from 'js-cookie'
+import { useQuery } from '@tanstack/react-query'
+import { getSingleOnboardedCandidateInfo } from '@/lib/actions/acs.actions'
+import CandidateNewLayout from '@/layouts/CandidateNewLayout'
 export default function CandidateInformation() {
-    const [countries, setCountries] = useState(initialCountries)
+    // const email = Cookies.get("candidate_email");
+    const { data: allCandidates, isLoading } = useQuery({
+        queryKey: ["onboardedCandidates"],
+        queryFn: ()=>getSingleOnboardedCandidateInfo("daramoladayo2030@gmail.com"),
+        staleTime: 5 * 60 * 1000,
+    });
+   
+    const [displayedCountries, setDisplayedCountries] = useState<Array<{code: string, name: string}>>([]);
 
-    const removeCountry = (codeToRemove: string) => {
-        setCountries(countries.filter(country => country.code !== codeToRemove))
+useEffect(() => {
+    if (allCandidates?.countries) {
+        const formattedCountries = allCandidates.countries.map((country: any) => ({
+            code: country[0],  // The first element appears to be the country code
+            name: country.name || ''  // The name property from the country object
+        }));
+        setDisplayedCountries(formattedCountries);
     }
+}, [allCandidates?.countries]);
 
+    if (isLoading){
+        return <div>Loading...</div>
+    }
+    console.log(allCandidates)
     return (
         <CandidateNewLayout>
-            <section className="p-6 space-y-8">
+            <section className="pt-16 lg:pt-0 px-4 pb-4 md:px-6 md:pb-6 space-y-6 md:space-y-8">
                 {/* Personal Data Section */}
-                <div className="space-y-6">
-                    <h2 className="text-2xl font-semibold">Personal Data</h2>
+                <div className="space-y-4 md:space-y-6">
+                    <h2 className="text-xl md:text-2xl font-semibold">Personal Data</h2>
                     <div className="space-y-4">
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-4">
-                            <Label>Full Name</Label>
-                            <Input placeholder="Desire" />
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-4">
+                            <Label className="font-medium">Full Name</Label>
+                            <Input value={allCandidates?.full_name || ""} readOnly />
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-4">
-                            <Label>Personal Email Address</Label>
-                            <Input placeholder="desire@gmail.com" type="email" />
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-4">
+                            <Label className="font-medium">Personal Email Address</Label>
+                            <Input value={allCandidates?.email} type="email" />
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-4">
-                            <Label>Personal Phone Number</Label>
-                            <Input placeholder="+234 704 437 8863" />
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-4">
+                            <Label className="font-medium">Personal Phone Number</Label>
+                            <Input value={allCandidates?.phone_number} />
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-4">
-                            <Label>Personal WhatsApp Number</Label>
-                            <Input placeholder="+234 704 437 8863" />
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-4">
+                            <Label className="font-medium">Personal WhatsApp Number</Label>
+                            <Input value={allCandidates?.whatsapp}/>
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-4">
-                            <Label>Gender</Label>
-                            <Select>
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-4">
+                            <Label className="font-medium">Gender</Label>
+                            <Select value={allCandidates?.gender || ''} >
                                 <SelectTrigger>
-                                    <SelectValue placeholder="Female" />
+                                    <SelectValue placeholder="female" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="female">Female</SelectItem>
+                                    <SelectItem value={allCandidates?.gender}>Female</SelectItem>
                                     <SelectItem value="male">Male</SelectItem>
                                     <SelectItem value="other">Other</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-4">
-                            <Label>Age</Label>
-                            <Input placeholder="41 Years old" />
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-4">
+                            <Label className="font-medium">Age</Label>
+                            <Input placeholder={allCandidates?.age} />
                         </div>
                     </div>
                 </div>
 
                 {/* Educational Data Section */}
-                <div className="space-y-6">
-                    <h2 className="text-2xl font-semibold">Educational Data</h2>
+                <div className="space-y-4 md:space-y-6">
+                    <h2 className="text-xl md:text-2xl font-semibold">Educational Data</h2>
                     <div className="space-y-4">
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-8">
-                            <Label>Graduate of</Label>
-                            <Input placeholder="A University" />
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-8">
+                            <Label className="font-medium">Graduate of</Label>
+                            <Input value={allCandidates?.graduate_of}/>
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-8">
-                            <Label>Name of University</Label>
-                            <Input placeholder="Kwame Nkrumah University of Science and Technology" />
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-8">
+                            <Label className="font-medium">Name of University</Label>
+                            <Input value={allCandidates?.degree[0]?.institution || ''} readOnly />
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-8">
-                            <Label>Kind of Degree</Label>
-                            <Input placeholder="Bachelor of Arts" />
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-8">
+                            <Label className="font-medium">Kind of Degree</Label>
+                            <Input value={allCandidates?.degree[0]?.degree}/>
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-8">
-                            <Label>Course of Study Graduated from</Label>
-                            <Input placeholder="Chemical Engineering" />
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-8">
+                            <Label className="font-medium">Course of Study Graduated from</Label>
+                            <Input value={allCandidates?.degree[0]?.course || ''} />
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-8">
-                            <Label>Class of Degree</Label>
-                            <Input placeholder="First Class" />
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-8">
+                            <Label className="font-medium">Class of Degree</Label>
+                            <Input value={allCandidates?.degree[0]?.cgpa_class || ''} />
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-8">
-                            <Label>Specific CGPA</Label>
-                            <Input placeholder="3.55/4" />
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-8">
+                            <Label className="font-medium">Specific CGPA</Label>
+                            <Input value={allCandidates?.degree[0]?.cgpa || ''} />
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-8">
-                            <Label>Do you have a masters degree?</Label>
-                            <RadioGroup defaultValue="yes" className="flex gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-8">
+                            <Label className="font-medium">Do you have a masters degree?</Label>
+                            <RadioGroup defaultValue='yes' className="flex gap-4" value={allCandidates?.has_masters_degree}>
                                 <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="yes" id="yes" />
-                                    <Label htmlFor="yes">Yes</Label>
+                                    <RadioGroupItem value={allCandidates?.has_masters_degree} id="yes" />
+                                    <Label htmlFor="yes" >Yes</Label>
                                 </div>
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="no" id="no" />
@@ -104,51 +116,47 @@ export default function CandidateInformation() {
                                 </div>
                             </RadioGroup>
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-8">
-                            <Label>Kind of degree</Label>
-                            <Input placeholder="Master of Science" />
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-8">
+                            <Label className="font-medium">Kind of degree</Label>
+                            <Input value={allCandidates?.masters_degree_type || ''} />
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-8">
-                            <Label>Course of Study Graduated from with master</Label>
-                            <Input placeholder="Mass Communication" />
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-8">
+                            <Label className="font-medium">Course of Study Graduated from with master</Label>
+                            <Input value={allCandidates?.masters_course_of_study || ''} />
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-8">
-                            <Label>Class of Degree</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-8">
+                            <Label className="font-medium">Class of Degree</Label>
                             <Input placeholder="First Class" />
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-8">
-                            <Label>Specific CGPA for Masters</Label>
-                            <Input placeholder="3.55/4" />
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-8">
+                            <Label className="font-medium">Specific CGPA for Masters</Label>
+                            <Input value={allCandidates?.specific_cgpa}/>
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-8">
-                            <Label>Country you are INTERESTED in</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-8">
+                            <Label className="font-medium">Countries you are INTERESTED in</Label>
                             <div className="flex flex-wrap gap-2 min-h-10 w-full rounded-md border border-input bg-background px-3 py-2">
-                                {countries.map((country) => (
-                                    <div 
-                                        key={country.code} 
-                                        className="flex items-center gap-1.5 bg-secondary px-2 py-1 rounded-md text-sm"
-                                    >
-                                        <Flag code={country.code} className="w-4 h-3" />
-                                        <span>{country.name}</span>
-                                        <X 
-                                            className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" 
-                                            onClick={() => removeCountry(country.code)}
-                                        />
-                                    </div>
-                                ))}
+                            {displayedCountries.map((country) => (
+                                <div 
+                                    key={country.code} 
+                                    className="flex items-center gap-1.5 bg-secondary px-2 py-1 rounded-md text-sm"
+                                >
+                                    <Flag code={country.code} className="w-4 h-3" />
+                                    <span>{country.name}</span>
+                                </div>
+                            ))}
                             </div>
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-8">
-                            <Label>Type of Academic Degree Interested in Abroad</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-8">
+                            <Label className="font-medium">Type of Academic Degree Interested in Abroad</Label>
                             <Input placeholder="MBA" />
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-8">
-                            <Label>Academic program or course in mind that aligns with your professional experience</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-8">
+                            <Label className="font-medium">Academic program or course in mind that aligns with your professional experience</Label>
                             <Input placeholder="Open to Recommendation" />
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-8">
-                            <Label>Are you opened to taking the GMAT or GRE if it is required</Label>
-                            <RadioGroup defaultValue="yes" className="flex gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-8">
+                            <Label className="font-medium">Are you opened to taking the GMAT or GRE if it is required</Label>
+                            <RadioGroup defaultValue="yes" className="flex gap-4" value={allCandidates?.interest?.open_to_gmate}>
                                 <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="yes" id="gmat-yes" />
                                     <Label htmlFor="gmat-yes">Yes</Label>
@@ -159,8 +167,8 @@ export default function CandidateInformation() {
                                 </div>
                             </RadioGroup>
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] items-center gap-8">
-                            <Label>Preferred Universities</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-2 md:items-center md:gap-8">
+                            <Label className="font-medium">Preferred Universities</Label>
                             <Input placeholder="Enter preferred universities" />
                         </div>
                     </div>

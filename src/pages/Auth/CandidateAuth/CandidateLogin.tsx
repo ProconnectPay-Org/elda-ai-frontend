@@ -47,6 +47,7 @@ const CandidateLogin = () => {
         Cookies.set("user_role", userRole, { expires: 7 });
         Cookies.set("candidate_access_token", response.access, { expires: 7 });
         Cookies.set("candidate_id", response.candidate.id, { expires: 7 });
+        Cookies.set("candidate_email", response.candidate.email, { expires: 7 });
         Cookies.set("education_id", response.candidate.education[0], {
           expires: 7,
         });
@@ -92,6 +93,7 @@ const CandidateLogin = () => {
         });
         if (response.candidate.has_completed_application) {
           navigate("/candidate/status");
+          // navigate("/candidate-status")
         } else {
           navigate("/register");
         }

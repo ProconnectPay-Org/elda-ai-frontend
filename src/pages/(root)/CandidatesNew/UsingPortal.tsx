@@ -7,14 +7,14 @@ export default function UsingPortal() {
         <h1 className="text-[#1F384C] text-2xl md:text-3xl font-bold">Using the Portal</h1>
 
         <div>
-          <p>
+          <p className="text-justify">
             eLDA AI is our proprietary school application platform, providing
             academic counseling, resume refinement, and personalized Statement
             of Purpose (SOP) creation. It serves as the central hub for
             submitting your applications to two universities.
           </p>
         </div>
-        <div>
+        <div className="flex items-center flex-col space-y-6">
         <div className="aspect-video w-full max-w-3xl mx-auto rounded-xl shadow-lg overflow-hidden">
               <iframe
                 width="100%"
@@ -27,7 +27,7 @@ export default function UsingPortal() {
                 allowFullScreen
               ></iframe>
             </div>
-        <h3 className="text-red ">Watch the explainer video</h3>
+        <h3 className="text-red font-medium">Watch the explainer video</h3>
         </div>
       </div>
     </CandidateNewLayout>
