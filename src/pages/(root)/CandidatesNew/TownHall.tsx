@@ -1,5 +1,4 @@
 import CandidateNewLayout from '@/layouts/CandidateNewLayout'
-import React from 'react'
 
 export default function TownHall() {
   return (

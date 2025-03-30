@@ -1,14 +1,12 @@
 import AdminLayout from "@/layouts/AdminLayout";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import CandidateProfileSuccess from "@/components/CandidateProfileSuccess";
 import { useEffect, useState } from "react";
 import { ArrowLeftIcon, Loader2 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { createCandidateProfile } from "@/lib/actions/user.actions";
 import { toast } from "@/components/ui/use-toast";
 import { CustomAxiosError } from "@/types";
-import Cookies from "js-cookie";
 import { countryOptions, programTypes, sortedSchools } from "@/constants";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -70,7 +68,6 @@ const SkeletonLoader = () => {
 const CreateCandidateProfile = () => {
   const { id } = useParams<{ id: string }>();
 
-  const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isPasswordLoading, setIsPasswordLoading] = useState(false);
   const [generatedPassword, setGeneratedPassword] = useState(
@@ -159,10 +156,12 @@ const CreateCandidateProfile = () => {
 
       if (response) {
         await handleRecommendations();
-        setTimeout(() => {
-          setSuccess(true);
-          Cookies.set("user_password", data.password);
-        }, 2000);
+        toast({
+          title: "Success",
+          description: "Candidate profile created successfully.",
+          variant: "success",
+        });
+        form.reset();
       }
     } catch (error) {
       const axiosError = error as CustomAxiosError;
@@ -228,8 +227,6 @@ const CreateCandidateProfile = () => {
 
   return (
     <AdminLayout>
-      {success && <CandidateProfileSuccess text="Registration Successful" />}
-
       <div className="flex items-start justify-start">
         {/* RECOMMENDED CANDIDATES SIDEBAR */}
         <AdminSideBar />

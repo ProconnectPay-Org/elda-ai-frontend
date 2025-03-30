@@ -89,13 +89,16 @@ const HeaderDetails = () => {
       }
       const foundCandidate = singleCandidate;
 
+      console.log(foundCandidate);
+      
+
       setValue("email", foundCandidate.email_address || foundCandidate.user?.email || "");
       setValue("firstName", foundCandidate.first_name || "");
       setValue("middleName", foundCandidate.middle_name || "");
       setValue("lastName", foundCandidate.last_name || "");
       setValue("phoneNumber", foundCandidate.phone_number || "");
-      setValue("city", foundCandidate.city_of_birth || "");
-      setValue("state", foundCandidate.state_of_birth || "");
+      setValue("city", foundCandidate.city_current_reside || "");
+      setValue("state", foundCandidate.state_current_reside || "");
       setValue("gender", foundCandidate.gender || "");
       setValue("dateOfBirth", foundCandidate.birth_date || "");
       setValue("nationality", foundCandidate.country_of_birth || "");
@@ -113,8 +116,8 @@ const HeaderDetails = () => {
         middleName: singleCandidate.middle_name || "",
         lastName: singleCandidate.last_name || "",
         phoneNumber: singleCandidate.phone_number || "",
-        city: singleCandidate.city_of_birth || "",
-        state: singleCandidate.state_of_birth || "",
+        city: singleCandidate.city_current_reside || "",
+        state: singleCandidate.state_current_reside || "",
         gender: singleCandidate.gender || "",
         dateOfBirth: singleCandidate.birth_date || "",
         nationality: singleCandidate.country_of_birth || "",
@@ -142,8 +145,8 @@ const HeaderDetails = () => {
       gender: getValues("gender"),
       birth_date: getValues("dateOfBirth"),
       country_of_birth: getValues("nationality"),
-      city_of_birth: getValues("city"),
-      state_of_birth: getValues("state"),
+      city_current_reside: getValues("city"),
+      state_current_reside: getValues("state"),
       phone_number: getValues("phoneNumber"),
       email_address: getValues("email"),
     } as updateCandidateProfile;

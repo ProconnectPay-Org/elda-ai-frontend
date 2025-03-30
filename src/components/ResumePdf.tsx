@@ -157,7 +157,7 @@ const ResumePdf = () => {
           <div className="flex items-center justify-center gap-1">
             🌎
             <p className="text-sm">
-              {formData?.city_of_birth}, {formData?.state_of_birth} State,{" "}
+              {formData?.city_current_reside}, {formData?.state_current_reside} State,{" "}
               {getCountryNameFromISO(formData?.country_of_birth)}
             </p>
           </div>
