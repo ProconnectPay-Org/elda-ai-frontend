@@ -5,7 +5,13 @@ import {
   CandidateData,
   VerificationDocument,
 } from "@/types";
-import { ChevronDown, MailIcon, PhoneCallIcon } from "lucide-react";
+import {
+  BellRingIcon,
+  ChevronDown,
+  Loader2,
+  MailIcon,
+  PhoneCallIcon,
+} from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   formatDate,
@@ -17,14 +23,20 @@ import useAuth from "@/hooks/useAuth";
 
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getSingleCandidate } from "@/lib/actions/user.actions";
+import {
+  getSingleCandidate,
+  singleCandidateReminder,
+} from "@/lib/actions/user.actions";
 import CopyText from "@/components/CopyText";
 import { useState } from "react";
+import { toast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 
 const CandidateProfile = () => {
   const { id } = useParams<{ id: string }>();
   const { loggedInUser } = useAuth();
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
+  const [isSendingReminder, setIsSendingReminder] = useState(false);
 
   const toggleAccordion = () => {
     setIsAccordionOpen((prev) => !prev);
@@ -40,6 +52,22 @@ const CandidateProfile = () => {
     queryFn: () => getSingleCandidate(id),
     staleTime: 5 * 1000 * 60,
   });
+
+  const handleReminders = async () => {
+    setIsSendingReminder(true);
+    try {
+      const response = await singleCandidateReminder(id);
+      toast({
+        title: "Success",
+        description: response?.success,
+        variant: "success",
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSendingReminder(false);
+    }
+  };
 
   if (isLoading || !candidate) {
     return (
@@ -93,6 +121,8 @@ const CandidateProfile = () => {
     post_graduate_transcript: "Post Graduate Transcript",
     admission_letter: "Admission Letter",
     gre_document: "GRE or GMAT result",
+    passport_photograph: "Passport Photograph",
+    change_of_name_document: "Change of name document",
   };
 
   return (
@@ -216,6 +246,19 @@ const CandidateProfile = () => {
               loggedInUser?.full_name ||
               "Manager not found"}
           </p>
+          <Button
+            className="border-red my-5 w-40"
+            variant={"outline"}
+            onClick={handleReminders}
+          >
+            {isSendingReminder ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              <div className="flex text-red gap-3 items-center">
+                Send Reminder <BellRingIcon stroke="red" />
+              </div>
+            )}
+          </Button>
         </div>
       </div>
 

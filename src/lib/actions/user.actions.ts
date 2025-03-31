@@ -51,6 +51,7 @@ export const logoutAccount = async (
       Cookies.remove("candidate_access_token");
       Cookies.remove("user_role");
       Cookies.remove("candidate_id");
+      Cookies.remove("candidate_email");
       Cookies.remove("education_id");
       Cookies.remove("career_id");
       Cookies.remove("verification_document_id");
@@ -586,6 +587,27 @@ export const sendReminder = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const singleCandidateReminder = async (id: string) => {
+  try {
+    const token =
+      Cookies.get("access_token") || Cookies.get("staff_access_token");
+    if (!token) return null;
+
+    const response = await axios.get(
+      `${API_URL}remind-single-candidate?candidate=${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error(error);

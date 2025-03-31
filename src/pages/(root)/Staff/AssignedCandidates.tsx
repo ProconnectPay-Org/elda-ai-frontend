@@ -11,7 +11,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import useAuth from "@/hooks/useAuth";
 import DottedBox from "@/components/DottedBox";
 import { Link, useSearchParams } from "react-router-dom";
-import { CopyIcon, MailIcon, PhoneCallIcon } from "lucide-react";
+import {
+  BellRingIcon,
+  CopyIcon,
+  Loader2,
+  MailIcon,
+  PhoneCallIcon,
+} from "lucide-react";
 import { copyToClipboard } from "@/lib/utils";
 import {
   Dialog,
@@ -26,12 +32,15 @@ import {
   getStaffAccountDetails,
   getStaffDetails,
 } from "@/lib/actions/staff.actions";
+import { singleCandidateReminder } from "@/lib/actions/user.actions";
+import { Button } from "@/components/ui/button";
 const AssignedCandidates = () => {
   const { loggedInUser } = useAuth();
   const [selectedRowData, setSelectedRowData] = useState<CandidateData | null>(
     null
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isSendingReminder, setIsSendingReminder] = useState(false);
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const page = parseInt(searchParams.get("page") || "1", 10);
@@ -54,6 +63,22 @@ const AssignedCandidates = () => {
     staleTime: 5 * 60 * 1000,
     enabled: debouncedSearch.length >= 2 || debouncedSearch === "",
   });
+
+  const handleReminders = async (id: string) => {
+    setIsSendingReminder(true);
+    try {
+      const response = await singleCandidateReminder(id);
+      toast({
+        title: "Success",
+        description: response?.success,
+        variant: "success",
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSendingReminder(false);
+    }
+  };
 
   useEffect(() => {
     localStorage.setItem("resumeCurrentPage", "0");
@@ -261,15 +286,34 @@ const AssignedCandidates = () => {
                   </div>
                   <div className="w-1/2 flex flex-col items-start">
                     <label>Status</label>
-                    <p
-                      className={`${
-                        selectedRowData.status === "completed"
-                          ? "bg-green-200 text-green-800"
-                          : "text-red bg-pale-bg"
-                      } text-[10px] p-1 rounded-xl`}
-                    >
-                      {selectedRowData.status}
-                    </p>
+                    <div className="flex gap-3 items-center justify-center">
+                      <p
+                        className={`${
+                          selectedRowData.status === "completed"
+                            ? "bg-green-200 text-green-800"
+                            : "text-red bg-pale-bg"
+                        } text-[10px] p-1 rounded-xl`}
+                      >
+                        {selectedRowData.status}{" "}
+                      </p>
+                      <Button
+                        className="border-red my-5"
+                        variant={"outline"}
+                        onClick={() => {
+                          if (selectedRowData?.id) {
+                            handleReminders(selectedRowData.id);
+                          }
+                        }}
+                      >
+                        {isSendingReminder ? (
+                          <Loader2 className="animate-spin" />
+                        ) : (
+                          <div className="flex text-red gap-3 items-center">
+                            <BellRingIcon stroke="red" />
+                          </div>
+                        )}
+                      </Button>
+                    </div>
                   </div>
                 </div>
                 <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">

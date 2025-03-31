@@ -65,6 +65,8 @@ const CandidatePage = () => {
     post_graduate_transcript: "Post Graduate Transcript",
     admission_letter: "Admission Letter",
     gre_document: "GRE or GMAT result",
+    passport_photograph: "Passport Photograph",
+    change_of_name_document: "Change of name document",
   };
 
   if (isLoading || !candidate) {

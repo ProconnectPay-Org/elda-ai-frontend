@@ -198,6 +198,7 @@ export const step1Schema = z.object({
   cityOfResidence: z.string().nonempty("City of residence is required"),
   postalAddress: z.string().nonempty("Postal address is required"),
   houseAddress: z.string().nonempty("House address is required"),
+  maidenName: z.string().nonempty("Fill N/A if not applicable"),
 });
 
 export const step2Schema = z.object({

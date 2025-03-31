@@ -59,7 +59,9 @@ const AuthForm = () => {
             expires: 7,
           });
           Cookies.set("candidate_id", response.candidate.id, { expires: 7 });
-          Cookies.set("candidate_email", response.candidate.email, { expires: 7 });
+          Cookies.set("candidate_email", response.candidate.user.email, {
+            expires: 7,
+          });
           Cookies.set("education_id", response.candidate.education[0], {
             expires: 7,
           });
@@ -104,13 +106,13 @@ const AuthForm = () => {
           Cookies.set("AcademicRecommender", response.recommenders[1]);
           Cookies.set("otherRecommender", response.recommenders[2]);
           if (response.candidate.has_completed_application) {
-            navigate("/candidate/status");
+            navigate("/candidate-status");
           } else {
             navigate("/register");
           }
         } else if (userRole === "acs") {
           console.log(response);
-          
+
           Cookies.set("acs_access_token", response.access, { expires: 7 });
           navigate("/acs-dashboard");
         } else {

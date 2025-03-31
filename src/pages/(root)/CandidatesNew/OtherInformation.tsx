@@ -7,9 +7,9 @@ export default function OtherInformation() {
   return (
     <CandidateNewLayout>
       <section className='flex flex-col gap-6'>
-        <h1>Other Information</h1>
+        <h1 className="text-[#1F384C] text-xl md:text-3xl font-bold">Other Information</h1>
         <img src={staff} alt="" className="w-full object-contain" />
-        <h1>Connect with other candidates and industry professionals.</h1>
+        <p className="font-semibold">Connect with other candidates and industry professionals.</p>
         <Link to={"#"}>
         <Button className='bg-transparent border-red text-red border'>Join our LinkedIn group</Button>
         </Link>

@@ -24,7 +24,7 @@ const CandidateFormLayout = ({ children }: CandidateLayoutProps) => {
           <img src={EldaLogo} alt="elda-logo" className="w-[50%] md:scale-150" />
         </div>
         <Button className="z-40 bg-red">
-          <Link to="/candidate/status">My Portal</Link>
+          <Link to="/candidate-status">My Portal</Link>
         </Button>
         <h1 className="font-semibold mt-8 sm:font-bold text-4xl leading-tight">
           Registration Form

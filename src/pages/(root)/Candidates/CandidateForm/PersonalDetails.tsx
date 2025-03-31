@@ -409,6 +409,29 @@ const PersonalDetails = () => {
             )}
           </div>
         </div>
+        {/* MAIDEN NAME */}
+        <div className="flex flex-col sm:flex-row sm:justify-between gap-4 md:gap-8">
+          <div className="flex flex-col sm:w-1/2">
+            <label htmlFor="maidenName">
+              Maiden Name (Married Candidates){" "}
+              <span className="text-red">*</span>
+            </label>
+            <input
+              className="border border-gray-border rounded-md py-2 px-4"
+              id="maidenName"
+              {...register("maidenName")}
+              placeholder="Enter your maiden name if applicable"
+            />
+            <p className="text-xs text-gray-text">
+              write N/A if not married or applicable
+            </p>
+            {errors.maidenName && (
+              <span className="text-red text-sm">
+                {getErrorMessage(errors.maidenName)}
+              </span>
+            )}
+          </div>
+        </div>
         <div className="w-full">
           <Button
             className={`bg-red w-full ${

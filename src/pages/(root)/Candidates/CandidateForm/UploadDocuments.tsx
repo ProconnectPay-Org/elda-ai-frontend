@@ -31,7 +31,7 @@ const UploadDocuments: React.FC = () => {
   const [uploadStates, setUploadStates] = useState<{
     [key: number]: UploadState;
   }>({});
-  const [isUploaded, setIsUploaded] = useState<boolean[]>(Array(9).fill(false));
+  const [isUploaded, setIsUploaded] = useState<boolean[]>(Array(13).fill(false));
   const verificationDocumentsId = Cookies.get("verification_document_id");
   const candidate_id = Cookies.get("candidate_id");
 
@@ -47,6 +47,8 @@ const UploadDocuments: React.FC = () => {
     "utility_bill",
     "admission_letter",
     "gre_document",
+    "change_of_name_document",
+    "passport_photograph",
   ];
 
   const beLabels = [
@@ -61,6 +63,8 @@ const UploadDocuments: React.FC = () => {
     "Utility bill",
     "Letter of admission",
     "GRE or GMAT result",
+    "Change of name document",
+    "Passport Photograph",
   ];
 
   const { data, isLoading } = useQuery({
@@ -204,7 +208,7 @@ const UploadDocuments: React.FC = () => {
           </div>
         </div>
       )}
-      {Array.from({ length: 11 }, (_, i) => (
+      {Array.from({ length: 13 }, (_, i) => (
         <div key={i} className="mb-4">
           <label className="block text-sm capitalize font-medium text-gray-700">
             Upload {i + 1} - {beLabels[i] || `Other Document ${i - 1}`}

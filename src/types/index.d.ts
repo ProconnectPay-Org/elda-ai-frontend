@@ -325,6 +325,8 @@ export type VerificationDocument = {
   gre_document: string | null;
   post_graduate_certificate: string | null;
   post_graduate_transcript: string | null;
+  passport_photograph: string | null;
+  change_of_name_document: string | null;
   candidate: string | undefined;
 };
 
