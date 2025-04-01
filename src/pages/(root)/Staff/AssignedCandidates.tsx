@@ -34,6 +34,7 @@ import {
 } from "@/lib/actions/staff.actions";
 import { singleCandidateReminder } from "@/lib/actions/user.actions";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 const AssignedCandidates = () => {
   const { loggedInUser } = useAuth();
   const [selectedRowData, setSelectedRowData] = useState<CandidateData | null>(
@@ -167,6 +168,18 @@ const AssignedCandidates = () => {
         candidate.school_application_status2 || "Not available",
     })) || [];
 
+  const completedData = candidateTableData.filter(
+    (candidate) =>
+      candidate.school_application_status1 === "True" &&
+      candidate.school_application_status2 === "True"
+  );
+
+  const inCompleteData = candidateTableData.filter(
+    (candidate) =>
+      candidate.school_application_status1 !== "True" &&
+      candidate.school_application_status2 !== "True"
+  );
+
   const handleRowClick = (row: CandidateData) => {
     setSelectedRowData(row);
     setIsDialogOpen(true);
@@ -228,35 +241,74 @@ const AssignedCandidates = () => {
               : `${assignedCandidates} new candidates`}
           </span>
         </div>
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search candidates by name"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full md:w-1/3 bg-white z-10 p-2 border rounded-md mb-4 absolute top-3 left-4"
-          />
-          {isStaffLoading ? (
-            <div className="p-4">
-              {[1, 2, 3, 4].map((_, i) => (
-                <div key={i} className="flex justify-between mt-16 mb-4">
-                  <Skeleton className="h-6 w-1/12" />
-                  <Skeleton className="h-6 w-1/3" />
-                  <Skeleton className="h-6 w-1/4" />
-                  <Skeleton className="h-6 w-1/4" />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <DataTable
-                columns={columns}
-                data={candidateTableData}
-                onRowClick={handleRowClick}
-              />
-            </div>
-          )}
-        </div>
+
+        <Tabs>
+          <TabsList className="w-full md:w-[400px] bg-transparent justify-between">
+            <TabsTrigger
+              value="all"
+              className="data-[state=active]:border-b-4 rounded-none shadow-none font-bold text-base border-red"
+            >
+              All
+            </TabsTrigger>
+            <TabsTrigger
+              value="completed"
+              className="data-[state=active]:border-b-4 rounded-none shadow-none font-bold text-base border-red"
+            >
+              Completed Jobs
+            </TabsTrigger>
+            <TabsTrigger
+              value="not-completed"
+              className="data-[state=active]:border-b-4 rounded-none shadow-none font-bold text-base border-red"
+            >
+              Not Completed
+            </TabsTrigger>
+          </TabsList>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search candidates by name"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full md:w-1/3 bg-white z-10 p-2 border rounded-md mb-4 absolute top-3 left-4"
+            />
+            {isStaffLoading ? (
+              <div className="p-4">
+                {[1, 2, 3, 4].map((_, i) => (
+                  <div key={i} className="flex justify-between mt-16 mb-4">
+                    <Skeleton className="h-6 w-1/12" />
+                    <Skeleton className="h-6 w-1/3" />
+                    <Skeleton className="h-6 w-1/4" />
+                    <Skeleton className="h-6 w-1/4" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <TabsContent value="all">
+                  <DataTable
+                    columns={columns}
+                    data={candidateTableData}
+                    onRowClick={handleRowClick}
+                  />
+                </TabsContent>
+                <TabsContent value="completed">
+                  <DataTable
+                    columns={columns}
+                    data={completedData}
+                    onRowClick={handleRowClick}
+                  />
+                </TabsContent>
+                <TabsContent value="not-completed">
+                  <DataTable
+                    columns={columns}
+                    data={inCompleteData}
+                    onRowClick={handleRowClick}
+                  />
+                </TabsContent>
+              </div>
+            )}
+          </div>
+        </Tabs>
 
         {selectedRowData && (
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

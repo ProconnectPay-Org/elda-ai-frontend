@@ -178,8 +178,9 @@ const Staff = () => {
             <SheetContent className="overflow-y-scroll">
               <SheetHeader>
                 <SheetTitle>Staff Name</SheetTitle>
-                <SheetDescription className="text-base">
-                  {selectedRowData.user.full_name}
+                <SheetDescription className="text-base flex flex-col">
+                  <span>{selectedRowData.user.full_name}</span>
+                  <span className="text-black underline">Email: {selectedRowData.user.email}</span>
                 </SheetDescription>
               </SheetHeader>
               <div className="grid gap-4 py-4">

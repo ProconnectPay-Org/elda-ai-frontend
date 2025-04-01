@@ -40,7 +40,7 @@ const CandidateSideBar = () => {
     {
       title: "Weekly Town Hall",
       icon: zoom,
-      href: "/weekly-downhall",
+      href: "/weekly-townhall",
     },
     {
       title: "Other Information",
@@ -68,7 +68,7 @@ const CandidateSideBar = () => {
       {/* Sidebar */}
       <aside
         className={cn(
-          "hidden fixed lg:static lg:flex bg-[#F5F7F9] border-r transition-all duration-300 flex-col h-full",
+          "hidden fixed lg:static lg:flex max-w-xs bg-[#F5F7F9] border-r transition-all duration-300 flex-col h-full",
           "z-40 top-[60px] left-0"
         )}
       >

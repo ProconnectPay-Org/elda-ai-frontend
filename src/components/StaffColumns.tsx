@@ -44,6 +44,13 @@ export const StaffColumns: ColumnDef<AllStaff>[] = [
     ),
   },
   {
+    accessorKey: "email",
+    header: "Email",
+    cell: ({ row }) => (
+      <p className="capitalize">{row.original.user?.email || "No email"}</p>
+    ),
+  },
+  {
     accessorKey: "status",
     header: "Staff Status",
   },

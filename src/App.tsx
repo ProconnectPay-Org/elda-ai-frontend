@@ -104,7 +104,7 @@ function App() {
         <Route element={<CandidateStatusPage />} path="/candidate-status" />
         <Route element={<LinkedInMasterClass/>} path="/linkedin-masterclass" />
         <Route element={<UsingPortal/>} path="/portal-usage" />
-        <Route element={<TownHall/>} path="/weekly-downhall" />
+        <Route element={<TownHall/>} path="/weekly-townhall" />
         <Route element={<OtherInformation/>} path="/other-info" />
         <Route element={<AdmissionStatusPrompt/>} path="/admission-status-prompt" />
         <Route element={<CandidateInformation/>} path="/candidate-info" />
