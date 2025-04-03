@@ -60,7 +60,7 @@ export const getSingleOnboardedCandidateData = async (id: string) => {
   }
 };
 
-export const getSingleOnboardedCandidateInfo = async (email: string) => {
+export const getSingleOnboardedCandidateByEmail = async (email: string) => {
   if (!email) return null;
 
   try {
