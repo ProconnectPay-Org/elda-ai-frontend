@@ -75,7 +75,7 @@ const MultiStepForm = () => {
         await toggleApplicationStatus();
         localStorage.setItem("currentPage", "0");
         setTimeout(() => {
-          navigate("/candidate/status");
+          navigate("/candidate-status");
         }, 3000);
       }
       if (currentStep < steps.length - 1) {

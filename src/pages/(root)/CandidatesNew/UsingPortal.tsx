@@ -22,11 +22,9 @@ export default function UsingPortal() {
             <iframe
               width="100%"
               height="100%"
-              src="https://www.youtube.com/embed/CRLHIYt-N5o?si=XU90oXNl7x08-WJ3"
-              title="YouTube video player"
-              // frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
+              src="https://drive.google.com/file/d/15Qu70WNSlWQtwSsdePwvsQ6kpcxRI3LU/preview"
+              title="Google Drive video player"
+              allow="autoplay"
               allowFullScreen
             ></iframe>
           </div>

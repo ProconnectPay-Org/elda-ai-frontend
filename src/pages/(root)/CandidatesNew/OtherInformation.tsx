@@ -10,7 +10,7 @@ export default function OtherInformation() {
         <h1 className="text-[#1F384C] text-xl md:text-3xl font-bold">Other Information</h1>
         <img src={staff} alt="" className="w-full object-contain" />
         <p className="font-semibold">Connect with other candidates and industry professionals.</p>
-        <Link to={"#"}>
+        <Link to={"https://www.linkedin.com/groups/9562922/"} target="_blank" >
         <Button className='bg-transparent border-red text-red border'>Join our LinkedIn group</Button>
         </Link>
         <div className='bg-[#F5F7F9] p-8 rounded-lg'>
@@ -126,9 +126,9 @@ export default function OtherInformation() {
                 </div>
                 <div>
                   <h3 className="font-semibold flex items-center gap-2">
-                    <span>📄</span> Support Letter
+                    <span>🛂</span> Visa Processing
                   </h3>
-                  <p className="text-gray-600">Receive your support letter.</p>
+                  <p className="text-gray-600"> Manage your visa application independently.</p>
                 </div>
               </div>
             </div>
