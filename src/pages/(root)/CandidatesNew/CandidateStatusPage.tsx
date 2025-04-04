@@ -9,9 +9,9 @@ import { useNavigate } from "react-router-dom";
 import Bulb from "../../../assets/bulb.svg";
 import progress from "../../../assets/progress.svg";
 import globe from "../../../assets/red-globe.svg";
-import eldaLogo from "../../../assets/eldaLogo.png";
 import CandidateNewLayout from "@/layouts/CandidateNewLayout";
 import DocumentList from "@/components/DocumentList";
+// import eldaLogo from "../../../assets/eldaLogo.png"
 
 const SkeletonStatusBox = () => {
   return (
@@ -149,13 +149,6 @@ export default function CandidateStatusPage() {
   return (
     <CandidateNewLayout>
       <section className="max-w-[1200px] mx-auto space-y-8 pt-10 md:pt-0">
-        <div className="flex gap-3 items-end">
-          <img src={eldaLogo} alt="Logo" className="w-20 object-contain" />
-          <div className="flex gap-1 xs:gap-2 items-center">
-            <h1 className="text-[#2D44A8] text-2xl font-bold">AI</h1>
-            <h1 className="text-black text-2xl font-bold">Recommendation</h1>
-          </div>
-        </div>
         <div className="flex flex-col gap-6 md:gap-10">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6">
             <div className="space-y-1 md:space-y-2">
