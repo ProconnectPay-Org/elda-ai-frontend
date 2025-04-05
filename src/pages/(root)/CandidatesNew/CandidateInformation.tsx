@@ -2,18 +2,18 @@ import CandidateNewLayout from "@/layouts/CandidateNewLayout";
 import { useCandidates } from "@/hooks/useCandidiates";
 import Cookies from "js-cookie";
 import SmallComponent from "@/components/acs-components/SmallComponent";
-import { useQuery } from "@tanstack/react-query";
-import { getSingleOnboardedCandidateByEmail } from "@/lib/actions/acs.actions";
+import { AdvancedEducation } from "@/types";
+import { getCountryNameFromISO } from "@/lib/utils";
 
 export default function CandidateInformation() {
   const candidate_id = Cookies.get("candidate_id");
-  const candidate_email = Cookies.get("candidate_email") || "";
+  const advancedEducationId = Cookies.get("advanced_education1_id");
   const { singleCandidate } = useCandidates(candidate_id);
 
-  const { data: candidate } = useQuery({
-    queryKey: ["singleOnboardedCandidate", candidate_id],
-    queryFn: () => getSingleOnboardedCandidateByEmail(candidate_email),
-  });
+  // Get the matching advanced education object
+  const matchingAdvancedEducation = singleCandidate?.advanced_education?.find(
+    (edu: AdvancedEducation) => edu?.id?.toString() === advancedEducationId
+  );
 
   return (
     <CandidateNewLayout>
@@ -31,23 +31,69 @@ export default function CandidateInformation() {
             />
             <SmallComponent
               label="Personal Email Address"
-              value={`${singleCandidate?.user?.email}` || "No mail"}
+              value={`${singleCandidate?.user?.email}` || "Not filled yet"}
+            />
+            <SmallComponent
+              label="Preferred Call Name"
+              value={
+                `${singleCandidate?.preferred_call_name}` || "No name set yet"
+              }
             />
             <SmallComponent
               label="Personal Phone Number"
-              value={singleCandidate?.phone_number || "No number"}
-            />
-            <SmallComponent
-              label="Personal Whatsapp Number"
-              value={singleCandidate?.whatsapp || "No number"}
+              value={singleCandidate?.phone_number || "Not filled yet"}
             />
             <SmallComponent
               label="Gender"
               value={singleCandidate?.gender || "No gender"}
             />
             <SmallComponent
-              label="Age"
-              value={`${candidate?.age} years old` || "No age"}
+              label="Date of birth"
+              value={`${singleCandidate?.birth_date}` || "Not filled yet"}
+            />
+            <SmallComponent
+              label="Maiden Name"
+              value={`${singleCandidate?.maiden_name}` || "N/A"}
+            />
+            <SmallComponent
+              label="City of birth"
+              value={`${singleCandidate?.city_of_birth}` || "Not filled yet"}
+            />
+            <SmallComponent
+              label="State of birth"
+              value={`${singleCandidate?.state_of_birth}` || "Not filled yet"}
+            />
+            <SmallComponent
+              label="Country of birth"
+              value={`${singleCandidate?.country_of_birth}` || "Not filled yet"}
+            />
+            <SmallComponent
+              label="Country of Residence"
+              value={
+                `${singleCandidate?.country_current_reside}` || "Not filled yet"
+              }
+            />
+            <SmallComponent
+              label="State of Residence"
+              value={
+                `${singleCandidate?.state_current_reside}` || "Not filled yet"
+              }
+            />
+            <SmallComponent
+              label="City of residence"
+              value={
+                `${singleCandidate?.city_current_reside}` || "Not filled yet"
+              }
+            />
+            <SmallComponent
+              label="House Address"
+              value={
+                `${singleCandidate?.current_house_address}` || "Not filled yet"
+              }
+            />
+            <SmallComponent
+              label="Postal Address"
+              value={`${singleCandidate?.postal_code}` || "Not filled yet"}
             />
           </div>
         </div>
@@ -57,34 +103,45 @@ export default function CandidateInformation() {
           <h2 className="text-2xl font-semibold">Educational Data</h2>
           <div className="space-y-4 max-w-3xl">
             <SmallComponent
-              label="Graduate Of"
-              value={singleCandidate?.education?.graduate_of || "Not filled"}
-            />
-            <SmallComponent
-              label="Name of University"
-              value={singleCandidate?.education?.[0]?.school_name || "N/A"}
+              label="Current Status"
+              value={
+                singleCandidate?.education[0]?.current_status || "Not filled"
+              }
             />
             <SmallComponent
               label="Kind of Degree"
-              value={singleCandidate?.education?.[0]?.degree_type || "N/A"}
+              value={singleCandidate?.education[0]?.degree_type || "Not filled"}
             />
             <SmallComponent
-              label="Course of Study Graduated from"
+              label="Country of Education"
+              value={singleCandidate?.education?.[0]?.country || "Not filled"}
+            />
+            <SmallComponent
+              label="Course of Study"
               value={
                 singleCandidate?.education?.[0]?.specific_course_of_study ||
-                "N/A"
+                "Not filled"
               }
             />
             <SmallComponent
               label="Class of Degree"
               value={
-                singleCandidate?.education?.[0]?.class_of_degree || "No degree"
+                singleCandidate?.education?.[0]?.class_of_degree || "Not filled"
               }
             />
             <SmallComponent
               label="Specific CGPA"
-              value={singleCandidate?.education?.[0]?.specific_cgpa || "N/A"}
+              value={
+                singleCandidate?.education?.[0]?.specific_cgpa || "Not filled"
+              }
             />
+            <SmallComponent
+              label="Name of Institution"
+              value={
+                singleCandidate?.education?.[0]?.school_name || "Not filled"
+              }
+            />
+
             <SmallComponent
               label="Do you have a masters degree?"
               value={
@@ -94,44 +151,39 @@ export default function CandidateInformation() {
               }
             />
             <SmallComponent
-              label="Kind of degree?"
-              value={candidate?.degree?.[1]?.degree || "N/A"}
+              label="Kind of degree (Masters)"
+              value={matchingAdvancedEducation?.advanced_degree_type || "N/A"}
             />
             <SmallComponent
-              label="Course of Study Graduated from with master"
-              value={candidate?.degree?.[1]?.course || "N/A"}
+              label="Graduate Type (Masters)"
+              value={matchingAdvancedEducation?.graduate_type || "N/A"}
             />
             <SmallComponent
               label="Class of Degree (Masters)"
-              value={`${candidate?.degree?.[1]?.cgpa_class}` || "N/A"}
+              value={`${matchingAdvancedEducation?.class_of_degree}` || "N/A"}
             />
             <SmallComponent
-              label="Specific CGPA for Masters"
-              value={candidate?.degree?.[1]?.cgpa || "N/A"}
+              label="Specific CGPA (Masters)"
+              value={matchingAdvancedEducation?.specific_cgpa || "N/A"}
             />
             <SmallComponent
-              label="Country(ies) you are INTERESTED In"
+              label="Country of Study (Masters)"
               value={
-                `${candidate?.countries?.map(
-                  (country: any) => country.name
-                )}` || "No selected country"
+                getCountryNameFromISO(matchingAdvancedEducation?.country) ||
+                "N/A"
               }
             />
             <SmallComponent
-              label="Type of Academic Degree Interested in Abroad"
-              value={`${candidate?.interest?.academic_type}` || "N/A"}
+              label="Name of School (Masters)"
+              value={matchingAdvancedEducation?.school_name || "N/A"}
             />
             <SmallComponent
-              label="Academic program or course in mind that aligns with your professional experience"
-              value={`${candidate?.interest?.specific_program}` || "N/A"}
+              label="Year Admitted (Masters)"
+              value={matchingAdvancedEducation?.admission_date || "N/A"}
             />
             <SmallComponent
-              label="Are you opened to taking the GMAT or GRE if it is required"
-              value={`${candidate?.interest?.open_to_gmat}` || "N/A"}
-            />
-            <SmallComponent
-              label="Preferred Universities"
-              value={`${candidate?.interest?.specific_university}` || "N/A"}
+              label="Year Graduated (Masters)"
+              value={matchingAdvancedEducation?.graduation_date || "N/A"}
             />
           </div>
         </div>
