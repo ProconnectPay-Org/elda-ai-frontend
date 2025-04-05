@@ -23,7 +23,7 @@ const RegisterSuccessModal: React.FC<SuccessModalProps> = ({
         </p>
         <p>
           Meanwhile you can check out your status{" "}
-          <a target="_blank" href="/candidate/status" className="underline text-blue-400">
+          <a target="_blank" href="/candidate-status" className="underline text-blue-400">
             here
           </a>
         </p>

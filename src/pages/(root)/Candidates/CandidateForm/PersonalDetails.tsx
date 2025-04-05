@@ -41,7 +41,7 @@ const PersonalDetails = () => {
   const watchedValues = useWatch({ control });
 
   useEffect(() => {
-    if (candidateData) {
+    if (candidateData) {       
       setValue("firstName", candidateData.data.first_name || "");
       setValue("middleName", candidateData.data.middle_name || "");
       setValue("surname", candidateData.data.last_name || "");
@@ -64,6 +64,7 @@ const PersonalDetails = () => {
       setValue("cityOfResidence", candidateData.data.city_current_reside || "");
       setValue("houseAddress", candidateData.data.current_house_address || "");
       setValue("postalAddress", candidateData.data.postal_code || "");
+      setValue("maidenName", candidateData.data.maiden_name || "N/A");
     }
   }, [candidateData, setValue]);
 
@@ -87,6 +88,7 @@ const PersonalDetails = () => {
         cityOfResidence: candidateData.data.city_current_reside || "",
         houseAddress: candidateData.data.current_house_address || "",
         postalAddress: candidateData.data.postal_code || "",
+        maidenName: candidateData.data.maiden_name || "",
       };
 
       // Ensure keys match the watchedValues keys
@@ -118,6 +120,7 @@ const PersonalDetails = () => {
       city_current_reside: getValues("cityOfResidence"),
       current_house_address: getValues("houseAddress"),
       postal_code: getValues("postalAddress"),
+      maiden_name: getValues("maidenName"),
     } as updateCandidateProfile;
 
     try {

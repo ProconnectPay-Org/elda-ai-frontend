@@ -161,6 +161,7 @@ const CreateCandidateProfile = () => {
           description: "Candidate profile created successfully.",
           variant: "success",
         });
+        queryClient.invalidateQueries({ queryKey: ["onboardedCandidates"] });
         form.reset();
       }
     } catch (error) {

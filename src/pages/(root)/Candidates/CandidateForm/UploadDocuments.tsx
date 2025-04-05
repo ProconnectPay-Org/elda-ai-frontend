@@ -47,7 +47,7 @@ const UploadDocuments: React.FC = () => {
     "utility_bill",
     "admission_letter",
     "gre_document",
-    "change_of_name_document",
+    "change_of_name",
     "passport_photograph",
   ];
 
@@ -152,7 +152,7 @@ const UploadDocuments: React.FC = () => {
         });
         toast({
           title: "Success",
-          description: `${labels[index]} uploaded successfully.`,
+          description: `${beLabels[index]} uploaded successfully.`,
           variant: "success",
         });
       })

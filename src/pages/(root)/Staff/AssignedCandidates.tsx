@@ -242,7 +242,7 @@ const AssignedCandidates = () => {
           </span>
         </div>
 
-        <Tabs>
+        <Tabs defaultValue="all">
           <TabsList className="w-full md:w-[400px] bg-transparent justify-between">
             <TabsTrigger
               value="all"

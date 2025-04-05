@@ -159,7 +159,7 @@ export default function OtherInformation() {
               <h3 className="font-semibold flex items-center gap-2">
                 <span>📚</span> Course Concerns
               </h3>
-              <p className="text-gray-600">Email aca@proconnectpay.com for any concerns regarding your course.</p>
+              <p className="text-gray-600">Email acs@proconnectpay.com for any concerns regarding your course.</p>
             </div>
             <div className="border-l-4 border-red-500 pl-4">
               <h3 className="font-semibold flex items-center gap-2">

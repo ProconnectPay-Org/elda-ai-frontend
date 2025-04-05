@@ -41,7 +41,7 @@ const AdminSideBar = () => {
 
       return allResults;
     },
-    staleTime: 5 * 60 * 10,
+    staleTime: 5 * 60 * 1000,
   });
 
   useEffect(() => {

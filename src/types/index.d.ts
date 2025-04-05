@@ -326,7 +326,7 @@ export type VerificationDocument = {
   post_graduate_certificate: string | null;
   post_graduate_transcript: string | null;
   passport_photograph: string | null;
-  change_of_name_document: string | null;
+  change_of_name: string | null;
   candidate: string | undefined;
 };
 
@@ -393,6 +393,7 @@ export type CandidateData = {
   full_name?: string;
   last_name?: string;
   middle_name?: string;
+  maiden_name?: string;
   name: string;
   preferred_call_name: string;
   program_type1: string;

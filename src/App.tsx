@@ -39,12 +39,16 @@ import DownloadResume from "./pages/(root)/DownloadResume";
 import SopTemplate from "./components/SopTemplate";
 import GeneratePDF from "./components/GeneratePDF";
 import { ACSDashboard } from "./pages/(root)/ACS";
-import { CandidateInformation, CandidateStatusPage } from "./pages/(root)/CandidatesNew";
+import {
+  CandidateInformation,
+  CandidateStatusPage,
+} from "./pages/(root)/CandidatesNew";
 import LinkedInMasterClass from "./pages/(root)/CandidatesNew/LinkedInMasterClass";
 import UsingPortal from "./pages/(root)/CandidatesNew/UsingPortal";
 import TownHall from "./pages/(root)/CandidatesNew/TownHall";
 import OtherInformation from "./pages/(root)/CandidatesNew/OtherInformation";
 import AdmissionStatusPrompt from "./pages/(root)/CandidatesNew/AdmissionStatusPrompt";
+import Error404 from "./pages/(root)/Error404";
 
 function App() {
   return (
@@ -59,7 +63,10 @@ function App() {
         <Route element={<AdminSignIn />} path="/sign-in" />
         <Route element={<AdminDashboard />} path="/admin-dashboard" />
         <Route element={<OnboardedCandidates />} path="/admin/tables/onboard" />
-        <Route element={<InterestedCandidates />} path="/admin/tables/interest" />
+        <Route
+          element={<InterestedCandidates />}
+          path="/admin/tables/interest"
+        />
         <Route
           element={<CreateCandidateProfile />}
           path="/admin/create-candidate-profile/:id?"
@@ -79,8 +86,8 @@ function App() {
         <Route path="/refine-resume" element={<CandidateSelection />} />
         <Route path="/craft-sop" element={<CandidateSelection />} />
         <Route path="/school-one" element={<SchoolOne />} />
-        <Route path="/school-two" element={<SchoolTwo/>} />
-        <Route path="/admission-status" element={<AdmissionStatus/>} />
+        <Route path="/school-two" element={<SchoolTwo />} />
+        <Route path="/admission-status" element={<AdmissionStatus />} />
         <Route
           element={<FinalResume />}
           path="/refine-resume/final-resume/:id"
@@ -102,12 +109,17 @@ function App() {
 
         {/* New Candidate Page UI */}
         <Route element={<CandidateStatusPage />} path="/candidate-status" />
-        <Route element={<LinkedInMasterClass/>} path="/linkedin-masterclass" />
-        <Route element={<UsingPortal/>} path="/portal-usage" />
-        <Route element={<TownHall/>} path="/weekly-townhall" />
-        <Route element={<OtherInformation/>} path="/other-info" />
-        <Route element={<AdmissionStatusPrompt/>} path="/admission-status-prompt" />
-        <Route element={<CandidateInformation/>} path="/candidate-info" />
+        <Route element={<LinkedInMasterClass />} path="/linkedin-masterclass" />
+        <Route element={<UsingPortal />} path="/portal-usage" />
+        <Route element={<TownHall />} path="/weekly-townhall" />
+        <Route element={<OtherInformation />} path="/other-info" />
+        <Route
+          element={<AdmissionStatusPrompt />}
+          path="/admission-status-prompt"
+        />
+        <Route element={<CandidateInformation />} path="/candidate-info" />
+
+        <Route element={<Error404 />} path="*" />
       </Routes>
     </BrowserRouter>
   );

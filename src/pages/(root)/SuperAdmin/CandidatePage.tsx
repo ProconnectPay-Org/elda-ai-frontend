@@ -66,7 +66,7 @@ const CandidatePage = () => {
     admission_letter: "Admission Letter",
     gre_document: "GRE or GMAT result",
     passport_photograph: "Passport Photograph",
-    change_of_name_document: "Change of name document",
+    change_of_name: "Change of name document",
   };
 
   if (isLoading || !candidate) {
@@ -258,6 +258,7 @@ const CandidatePage = () => {
         <div className="flex flex-col gap-2">
           <CopyText label="First Name" text={candidate?.first_name} />
           <CopyText label="Middle Name" text={candidate?.middle_name} />
+          <CopyText label="Maiden Name" text={candidate?.maiden_name || "N/A"} />
           <CopyText label="Last Name" text={candidate?.last_name} />
           <CopyText label="Gender" text={candidate?.gender} />
           <CopyText label="Birth Date" text={candidate?.birth_date} />

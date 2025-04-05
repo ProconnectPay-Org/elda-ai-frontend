@@ -122,7 +122,7 @@ const CandidateProfile = () => {
     admission_letter: "Admission Letter",
     gre_document: "GRE or GMAT result",
     passport_photograph: "Passport Photograph",
-    change_of_name_document: "Change of name document",
+    change_of_name: "Change of name document",
   };
 
   return (
@@ -292,6 +292,7 @@ const CandidateProfile = () => {
               <CopyText label="First Name" text={candidate?.first_name} />
               <CopyText label="Middle Name" text={candidate?.middle_name} />
               <CopyText label="Last Name" text={candidate?.last_name} />
+              <CopyText label="Maiden Name" text={candidate?.maiden_name || "N/A"} />
               <CopyText label="Gender" text={candidate?.gender} />
               <div>
                 <CopyText label="Birth Date" text={candidate?.birth_date} />

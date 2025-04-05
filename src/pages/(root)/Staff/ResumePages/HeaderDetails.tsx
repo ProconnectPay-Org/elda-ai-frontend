@@ -87,10 +87,7 @@ const HeaderDetails = () => {
       for (let i = topThreeJobExperiences.length + 1; i <= 3; i++) {
         Cookies.remove(`work_experience_id${i}`);
       }
-      const foundCandidate = singleCandidate;
-
-      console.log(foundCandidate);
-      
+      const foundCandidate = singleCandidate;      
 
       setValue("email", foundCandidate.email_address || foundCandidate.user?.email || "");
       setValue("firstName", foundCandidate.first_name || "");
@@ -405,22 +402,6 @@ const HeaderDetails = () => {
                   : "Select a country"}
               </p>
             </div>
-            {/* <div className="flex flex-col sm:w-1/2">
-              <label htmlFor="nationality" className="text-[#344054]">
-                Nationality
-              </label>
-              <input
-                className="border border-gray-border rounded-md py-2 px-4"
-                id="nationality"
-                {...register("nationality")}
-                placeholder="Nigerian"
-              />
-              {errors.nationality && (
-                <span className="text-red text-sm">
-                  {getErrorMessage(errors.nationality)}
-                </span>
-              )}
-            </div> */}
             <div className="flex flex-col sm:w-1/2">
               <label htmlFor="preferredName">
                 Preferred Call Name <span className="text-red">*</span>
