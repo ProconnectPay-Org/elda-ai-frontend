@@ -109,27 +109,33 @@ const TabsComponent = () => {
   const startingIndex = (page - 1) * pageSize;
 
   const tableData: CandidateData[] =
-    allCandidates?.results.map((candidate: CandidateData, index: number) => ({
-      ...candidate,
-      serialNumber: startingIndex + index + 1,
-      full_name: candidate?.full_name || "No name",
-      first_country: candidate.first_country || "No country",
-      second_country: candidate.second_country || "No country",
-      assigned_university1: candidate.assigned_university1 || "None Assigned",
-      assigned_course1: candidate.assigned_course1 || "No course assigned",
-      assigned_course2: candidate.assigned_course2 || "No course assigned",
-      assigned_school2: candidate.assigned_university2 || "No school assigned",
-      program_type1: candidate.program_type1 || "No program",
-      program_type2: candidate.program_type2 || "No program",
-      school_application_status1:
-        candidate.school_application_status1 || "No status",
-      school_application_status2:
-        candidate.school_application_status2 || "No status",
-      resume_status: candidate.resume_status || "No status",
-      sop_status1: candidate.sop_status1 || "No status",
-      sop_status2: candidate.sop_status2 || "No status",
-      duplicate: candidate.duplicate || "none",
-    })) || [];
+    allCandidates?.results
+      .filter(
+        (candidate: CandidateData) =>
+          candidate?.email_address !== "victoryicha98@gmail.com"
+      )
+      .map((candidate: CandidateData, index: number) => ({
+        ...candidate,
+        serialNumber: startingIndex + index + 1,
+        full_name: candidate?.full_name || "No name",
+        first_country: candidate.first_country || "No country",
+        second_country: candidate.second_country || "No country",
+        assigned_university1: candidate.assigned_university1 || "None Assigned",
+        assigned_course1: candidate.assigned_course1 || "No course assigned",
+        assigned_course2: candidate.assigned_course2 || "No course assigned",
+        assigned_school2:
+          candidate.assigned_university2 || "No school assigned",
+        program_type1: candidate.program_type1 || "No program",
+        program_type2: candidate.program_type2 || "No program",
+        school_application_status1:
+          candidate.school_application_status1 || "No status",
+        school_application_status2:
+          candidate.school_application_status2 || "No status",
+        resume_status: candidate.resume_status || "No status",
+        sop_status1: candidate.sop_status1 || "No status",
+        sop_status2: candidate.sop_status2 || "No status",
+        duplicate: candidate.duplicate || "none",
+      })) || [];
 
   const unassignedData = tableData
     .filter((candidate) => !candidate.assigned)

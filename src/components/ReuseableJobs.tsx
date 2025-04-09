@@ -12,20 +12,21 @@ import { submitJobExperience } from "@/lib/actions/candidate.actions";
 import { Loader2 } from "lucide-react";
 import { useToast } from "./ui/use-toast";
 import { formatDate } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ReuseableJobsProps {
   index: number; // New prop for the job experience index
   job: JobExperience; // Adjust this to match the structure of your job object
-  onDelete: () => void;
-  isDeleting: boolean;
+  // onDelete: () => void;
+  // isDeleting: boolean;
 }
 
 const ReuseableJobs = ({
   index,
   job,
-  onDelete,
-  isDeleting,
-}: ReuseableJobsProps) => {
+}: // onDelete,
+// isDeleting,
+ReuseableJobsProps) => {
   const { register, getValues, setValue, control } =
     useFormContext<Step3FormData>();
   const { toast } = useToast();
@@ -36,6 +37,7 @@ const ReuseableJobs = ({
 
   const [refineLoading, setRefineLoading] = useState(false);
   const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
+  const [deletingIndex, setDeletingIndex] = useState<number | null>(null);
 
   const id = Cookies.get("candidate_id") || Cookies.get("studentId");
   const jobExperienceId = Cookies.get(`work_experience_id${index + 1}`);
@@ -46,6 +48,8 @@ const ReuseableJobs = ({
     name: `jobExperiences.${index}.jobStatus`,
     control,
   });
+
+  const queryClient = useQueryClient();
 
   const handleJobStatusChange = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -184,6 +188,9 @@ const ReuseableJobs = ({
         title: "Success",
         description: "Job experience updated successfully.",
       });
+
+      queryClient.invalidateQueries({ queryKey: ["singleCandidate", id] });
+      queryClient.invalidateQueries({ queryKey: ["jobExperiences", id] });
     } catch (error) {
       toast({
         variant: "destructive",
@@ -192,6 +199,63 @@ const ReuseableJobs = ({
       });
     } finally {
       setLoadingIndex(null);
+    }
+  };
+
+  const handleDelete = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    index: number
+  ) => {
+    e.preventDefault();
+    setDeletingIndex(index);
+    try {
+      const emptyData = {
+        business_name: "",
+        professional_status: "",
+        job_title: "",
+        employment_type: "other",
+        state: "",
+        country: "",
+        year_started: "1960-01-01",
+        year_ended: "1960-01-01",
+        job_status: index === 0 ? "current" : "former", // maintain default logic
+        company_description: "",
+        job_summary: "",
+        candidate: id,
+      } as JobExperience;
+
+      // Reset form values for this index
+      setValue(`jobExperiences.${index}.workPlaceName`, "");
+      setValue(`jobExperiences.${index}.currentProfessionalStatus`, "");
+      setValue(`jobExperiences.${index}.currentJobTitle`, "");
+      setValue(`jobExperiences.${index}.employmentType`, "");
+      setValue(`jobExperiences.${index}.stateLocation`, "");
+      setValue(`jobExperiences.${index}.countryLocation`, "");
+      setValue(`jobExperiences.${index}.startedDate`, "");
+      setValue(`jobExperiences.${index}.endedDate`, "");
+      setValue(
+        `jobExperiences.${index}.jobStatus`,
+        index === 0 ? "current" : "former"
+      );
+      setValue(`jobExperiences.${index}.companyDescription`, "");
+      setValue(`jobExperiences.${index}.jobSummary`, "");
+
+      await submitJobExperience(emptyData, jobExperienceId!);
+
+      toast({
+        variant: "success",
+        title: "Job experience cleared",
+        description: "This job experience entry has been deleted.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["singleCandidate", id] });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to reset the job experience.",
+      });
+    } finally {
+      setDeletingIndex(null);
     }
   };
 
@@ -361,7 +425,8 @@ const ReuseableJobs = ({
               htmlFor={`jobExperiences.${index}.stateLocation`}
               className="form-label"
             >
-             City, State/Province Location of Job <span className="text-red">*</span>
+              City, State/Province Location of Job{" "}
+              <span className="text-red">*</span>
             </label>
             <input
               id={`jobExperiences.${index}.stateLocation`}
@@ -468,11 +533,12 @@ const ReuseableJobs = ({
             <Button
               variant={"outline"}
               className="w-fit p-2"
-              onClick={onDelete}
+              // onClick={onDelete}
               type="button"
-              // onClick={(e) => handleDelete(e, index)}
+              onClick={(e) => handleDelete(e, index)}
+              disabled={deletingIndex === index}
             >
-              {isDeleting ? (
+              {deletingIndex ? (
                 <div className="flex items-center justify-center gap-2">
                   <Loader2 className="animate-spin" />
                 </div>

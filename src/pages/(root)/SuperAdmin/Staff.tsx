@@ -93,13 +93,15 @@ const Staff = () => {
   const startingIndex = (page - 1) * pageSize;
 
   const tableData: AllStaff[] =
-    data?.results.map((staff, index) => ({
-      ...staff,
-      full_name: staff.user?.full_name || "No name",
-      serialNumber: startingIndex + index + 1,
-      status: staff.status || "Inactive",
-      assigned_candidates: staff.assigned_candidates || "No candidates",
-    })) || [];
+    data?.results
+      .filter((staff) => staff?.user?.email !== "badgy2003@gmail.com")
+      .map((staff, index) => ({
+        ...staff,
+        full_name: staff.user?.full_name || "No name",
+        serialNumber: startingIndex + index + 1,
+        status: staff.status || "Inactive",
+        assigned_candidates: staff.assigned_candidates || "No candidates",
+      })) || [];
 
   if (error) {
     return <p className="text-center text-red-600">Error loading staff data</p>;
@@ -180,7 +182,9 @@ const Staff = () => {
                 <SheetTitle>Staff Name</SheetTitle>
                 <SheetDescription className="text-base flex flex-col">
                   <span>{selectedRowData.user.full_name}</span>
-                  <span className="text-black underline">Email: {selectedRowData.user.email}</span>
+                  <span className="text-black underline">
+                    Email: {selectedRowData.user.email}
+                  </span>
                 </SheetDescription>
               </SheetHeader>
               <div className="grid gap-4 py-4">

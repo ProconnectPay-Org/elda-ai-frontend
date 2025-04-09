@@ -8,18 +8,14 @@ import monitor from "@/assets/monitor.png";
 import admission from "@/assets/admission-status.png";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import Cookies from "js-cookie";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { LogOut } from "lucide-react";
+import useAuth from "@/hooks/useAuth";
 
 const CandidateSideBar = () => {
-  const navigate = useNavigate();
   const location = useLocation();
 
-  const handleLogout = () => {
-    Cookies.remove("staff_access_token");
-    navigate("/sign-in");
-  };
+  const { handleLogout } = useAuth();
 
   const sidebarItems = [
     {

@@ -10,11 +10,8 @@ import ReuseableJobs from "@/components/ReuseableJobs";
 import { submitCareer } from "@/lib/actions/staffresume.actions";
 import { toast } from "@/components/ui/use-toast";
 import Cookies from "js-cookie";
-import {
-  deleteJobExperience,
-  fetchJobExperienceData,
-} from "@/lib/actions/candidate.actions";
-import { useQuery } from "@tanstack/react-query";
+import { fetchJobExperienceData } from "@/lib/actions/candidate.actions";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 
 const WorkExperience = () => {
@@ -38,7 +35,6 @@ const WorkExperience = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [jobs, setJobs] = useState<JobExperience[]>([]);
-  const [isDeleting, setIsDeleting] = useState<number | null>(null);
 
   // Fetch job experience IDs from cookies
   const jobExperienceIds = [1, 2, 3]
@@ -56,10 +52,33 @@ const WorkExperience = () => {
     staleTime: 5 * 60 * 1000,
   });
 
+  const queryClient = useQueryClient();
+
   // Update jobs state when data is fetched
   useEffect(() => {
     if (fetchedJobs) {
-      setJobs(fetchedJobs);
+      const updatedJobs = [...fetchedJobs];
+
+      // Fill with empty jobs if less than 3
+      while (updatedJobs.length < 3) {
+        updatedJobs.push({
+          id: 0,
+          business_name: "",
+          professional_status: "",
+          job_title: "",
+          employment_type: "",
+          state: "",
+          country: "",
+          year_started: "",
+          year_ended: "",
+          company_description: "",
+          job_summary: "",
+          job_status: "",
+          candidate: id,
+        });
+      }
+
+      setJobs(updatedJobs.slice(0, 3));
     }
   }, [fetchedJobs]);
 
@@ -135,6 +154,7 @@ const WorkExperience = () => {
         description: "Updated successfully!",
       });
       setIsModified(false);
+      queryClient.invalidateQueries({ queryKey: ["singleCandidate", id] });
     } catch (error) {
       toast({
         variant: "destructive",
@@ -143,72 +163,6 @@ const WorkExperience = () => {
       });
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleAddJob = async () => {
-    if (jobsCount >= 3) {
-      toast({
-        variant: "destructive",
-        title: "Limit Reached",
-        description: "You can only add up to 3 jobs.",
-      });
-      return;
-    }
-
-    const newJob: JobExperience = {
-      id: 0,
-      business_name: "",
-      professional_status: "",
-      job_title: "",
-      employment_type: "",
-      state: "",
-      country: "",
-      year_started: "",
-      year_ended: "",
-      company_description: "",
-      job_summary: "",
-      job_status: "",
-      candidate: id,
-    };
-
-    setJobs((prevJobs) => [...prevJobs, newJob]);
-    setJobsCount((prevCount) => prevCount + 1);
-  };
-
-  const handleDelete = async (index: number, jobExperienceId: string) => {
-    setIsDeleting(index);
-
-    // Check if jobExperienceId is an empty string or not defined
-    if (jobExperienceId == String(0)) {
-      setJobs((prevJobs) =>
-        prevJobs.filter((job) => String(job.id) !== jobExperienceId)
-      );
-      setJobsCount((prevCount) => prevCount - 1); // Decrement jobsCount
-      setIsDeleting(null);
-      return;
-    }
-
-    try {
-      if (jobExperienceId) await deleteJobExperience(jobExperienceId!);
-      toast({
-        variant: "success",
-        title: "Success",
-        description: `Job experience deleted successfully. ${jobExperienceId}`,
-      });
-      setJobs((prevJobs) =>
-        prevJobs.filter((job) => String(job.id) !== jobExperienceId)
-      );
-      setJobsCount((prevCount) => prevCount - 1); // Decrement jobsCount
-      Cookies.set(`work_experience_id${index + 1}`, "");
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to delete job experience.",
-      });
-    } finally {
-      setIsDeleting(null);
     }
   };
 
@@ -261,6 +215,9 @@ const WorkExperience = () => {
             </svg>
           </span>
         </div>
+        <p className="text-xs text-red">
+          *This determines the number of jobs displayed on a candidate resume in order*
+        </p>
       </div>
 
       <div className="flex w-full gap-3">
@@ -406,23 +363,9 @@ const WorkExperience = () => {
 
       {/* Reuseable Job Container */}
       <div>
-        {jobs.slice(0, jobsCount).map((job, index) => (
-          <ReuseableJobs
-            key={job.id}
-            job={job}
-            onDelete={() => handleDelete(index, String(job.id))}
-            index={index}
-            isDeleting={isDeleting === index}
-          />
+        {jobs.map((job, index) => (
+          <ReuseableJobs key={job.id} job={job} index={index} />
         ))}
-        <Button
-          type="button"
-          onClick={handleAddJob}
-          className="mt-4 border-red text-red"
-          variant={"outline"}
-        >
-          Add Experience + {isLoading && <Loader2 className="animate-spin" />}
-        </Button>
       </div>
     </div>
   );

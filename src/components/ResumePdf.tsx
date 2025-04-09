@@ -157,8 +157,8 @@ const ResumePdf = () => {
           <div className="flex items-center justify-center gap-1">
             🌎
             <p className="text-sm">
-              {formData?.city_current_reside}, {formData?.state_current_reside} State,{" "}
-              {getCountryNameFromISO(formData?.country_of_birth)}
+              {formData?.city_current_reside}, {formData?.state_current_reside}{" "}
+              State, {getCountryNameFromISO(formData?.country_of_birth)}
             </p>
           </div>
         </div>
@@ -224,8 +224,10 @@ const ResumePdf = () => {
       {/* WORK EXPERIENCE */}
       <div className="resume-inner-container">
         <h2 className="resume-title-text">WORK EXPERIENCE</h2>
-        {myJobs.map((experience: JobExperience) =>
-          experience.business_name ? (
+        {myJobs
+          .filter((job: JobExperience) => job.business_name)
+          .slice(0, formData?.career?.[0]?.jobs_to_show || 3)
+          .map((experience: JobExperience) => (
             <div key={experience.id} className="mb-2">
               <div>
                 <p className="font-bold text-sm">
@@ -251,8 +253,7 @@ const ResumePdf = () => {
                 <p className="text-sm text-justify">{experience.job_summary}</p>
               </div>
             </div>
-          ) : null
-        )}
+          ))}
       </div>
 
       <div className="resume-inner-container">

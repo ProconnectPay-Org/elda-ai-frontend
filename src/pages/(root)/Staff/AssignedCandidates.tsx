@@ -139,8 +139,8 @@ const AssignedCandidates = () => {
         {
           name: "Assigned Candidates",
           number:
-            loggedInStaff.count ||
-            staffAccountDetails.number_of_assigned_candidates ||
+            loggedInStaff?.count ||
+            staffAccountDetails?.number_of_assigned_candidates ||
             0,
           icon: icon3,
         },
