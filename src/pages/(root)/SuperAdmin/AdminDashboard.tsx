@@ -321,6 +321,25 @@ const AdminDashboard = () => {
         </div>
 
         <StatisticCard
+          title="ADMITTED CANDIDATES"
+          value={0}
+          isLoading={isAdminLoading}
+          className="border-r"
+        />
+
+        <div className="py-8 px-4 flex md:hidden gap-4 items-center justify-between rounded-lg border border-red">
+          <div>
+            <p className="font-medium text-sm">ADMITTED CANDIDATES</p>
+            <p className="text-xs flex items-center gap-2 capitalize">
+              <img src={Time} alt="time-icon" /> just now
+            </p>
+          </div>
+          <div className="font-bold text-4xl">
+            {isAdminLoading ? <Skeleton className="h-10 w-10" /> : 0}
+          </div>
+        </div>
+
+        <StatisticCard
           title="COMPLETED JOBS"
           value={completedJobs}
           isLoading={isAdminLoading}

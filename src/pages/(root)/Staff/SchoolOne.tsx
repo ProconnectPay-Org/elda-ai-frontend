@@ -1,10 +1,9 @@
 import RootLayout from "@/layouts/RootLayout";
-import { SchoolForm } from "@/components/SchoolForm";
-import type { SchoolFormData } from "@/components/SchoolForm";
+import { SchoolForm, SchoolFormData } from "@/components/SchoolForm";
 
 export default function SchoolOne() {
   const handleSubmit = (data: SchoolFormData) => {
-    console.log(data);
+    console.log("School 1 data:", data);
     // Handle form submission
   };
 

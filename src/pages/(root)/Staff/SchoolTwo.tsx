@@ -1,11 +1,11 @@
-import { SchoolForm, SchoolFormData } from '@/components/SchoolForm'
-import RootLayout from '@/layouts/RootLayout'
+import { SchoolForm, SchoolFormData } from "@/components/SchoolForm";
+import RootLayout from "@/layouts/RootLayout";
 
 export default function SchoolTwo() {
-    const handleSubmit = (data: SchoolFormData) => {
-        console.log(data);
-        // Handle form submission
-      };
+  const handleSubmit = (data: SchoolFormData) => {
+    console.log("School 2 data", data);
+    // Handle form submission
+  };
   return (
     <RootLayout title="Dashboard">
       <div className=" mx-auto mt-4">

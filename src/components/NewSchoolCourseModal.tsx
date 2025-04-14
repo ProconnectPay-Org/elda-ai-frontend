@@ -207,8 +207,7 @@ const NewSchoolCourseModal = ({ onClose, id }: ModalProps) => {
               <h2 className="text-2xl font-bold">Change School or Course</h2>
 
               <p>
-                Candidate - {candidate?.user?.full_name}
-                {candidate?.id}
+                Candidate - {candidate?.user?.full_name} - {candidate?.id}
               </p>
 
               {[

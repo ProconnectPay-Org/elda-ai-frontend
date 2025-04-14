@@ -122,7 +122,10 @@ export function DataTable<TData, TValue>({
               Columns
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="overflow-y-scroll max-h-96">
+          <DropdownMenuContent
+            align="end"
+            className="overflow-y-scroll max-h-96"
+          >
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
@@ -170,7 +173,19 @@ export function DataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   className="border-gray cursor-pointer"
-                  onClick={() => onRowClick && onRowClick(row.original)}
+                  // onClick={() => onRowClick && onRowClick(row.original)}
+                  onClick={(e) => {
+                    // Prevent triggering when clicking inside buttons, dropdowns, or links
+                    const target = e.target as HTMLElement;
+                    if (
+                      target.closest("button") ||
+                      target.closest("a") ||
+                      target.closest('[role="menu"]') // for dropdown items
+                    ) {
+                      return;
+                    }
+                    onRowClick?.(row.original);
+                  }}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
