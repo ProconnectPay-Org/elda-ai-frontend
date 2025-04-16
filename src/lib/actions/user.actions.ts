@@ -3,8 +3,10 @@ import {
   CreateCandidateProfileProps,
   PasswordProps,
   ReAssignCandidateProps,
+  SchoolFormData,
   signInProps,
 } from "@/types";
+import { AdmissionStatusPayload } from "@/types/forms";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -656,4 +658,115 @@ export const deleteInterestedCandidate = async (email: string) => {
     console.error("Error deleting candidate:", error);
     throw error;
   }
+};
+
+export const getCandidateSchoolDetails = async (id: number | string) => {
+  const token =
+    Cookies.get("staff_access_token") ||
+    Cookies.get("access_token") ||
+    Cookies.get("candidate_access_token");
+  if (!token) throw new Error("Access token is missing. Please sign in again.");
+
+  const response = await axios.get(`${API_URL}all-candidates/${id}/schools`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const createCandidateSchoolDetails = async (
+  id: number | string,
+  schoolData: SchoolFormData
+) => {
+  const token =
+    Cookies.get("staff_access_token") ||
+    Cookies.get("access_token") ||
+    Cookies.get("candidate_access_token");
+  if (!token) throw new Error("Access token is missing. Please sign in again.");
+
+  const response = await axios.post(
+    `${API_URL}all-candidates/${id}/schools`,
+    schoolData,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return response.data;
+};
+
+export const updateCandidateSchoolDetails = async (
+  id: number | string,
+  schoolId: number | string,
+  schoolData: SchoolFormData
+) => {
+  const token =
+    Cookies.get("staff_access_token") ||
+    Cookies.get("access_token") ||
+    Cookies.get("candidate_access_token");
+  if (!token) throw new Error("Access token is missing. Please sign in again.");
+
+  const response = await axios.patch(
+    `${API_URL}all-candidates/${id}/schools/${schoolId}`,
+    schoolData,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return response.data;
+};
+
+export const submitAdmissionStatus = async (
+  id: number | string,
+  schoolData: AdmissionStatusPayload
+) => {
+  const token =
+    Cookies.get("staff_access_token") ||
+    Cookies.get("access_token") ||
+    Cookies.get("candidate_access_token");
+  if (!token) throw new Error("Access token is missing. Please sign in again.");
+
+  const response = await axios.post(
+    `${API_URL}all-candidates/${id}/university`,
+    schoolData,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return response.data;
+};
+
+export const updateAdmissionStatus = async (
+  id: number | string,
+  universityId: number | string,
+  schoolData: AdmissionStatusPayload
+) => {
+  const token =
+    Cookies.get("staff_access_token") ||
+    Cookies.get("access_token") ||
+    Cookies.get("candidate_access_token");
+  if (!token) throw new Error("Access token is missing. Please sign in again.");
+
+  const response = await axios.patch(
+    `${API_URL}all-candidates/${id}/university/${universityId}`,
+    schoolData,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return response.data;
+};
+
+export const getAdmissionStatus = async (id: number | string) => {
+  const token =
+    Cookies.get("staff_access_token") ||
+    Cookies.get("access_token") ||
+    Cookies.get("candidate_access_token");
+  if (!token) throw new Error("Access token is missing. Please sign in again.");
+
+  const response = await axios.get(
+    `${API_URL}all-candidates/${id}/university`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return response.data;
 };

@@ -51,6 +51,27 @@ export const calculateAge = (birthDate: Date) => {
   return age;
 };
 
+export const downloadCSV = (data: any[], filename = "data.csv") => {
+  if (!data.length) return;
+
+  const keys = Object.keys(data[0]);
+  const csvContent = [
+    keys.join(","),
+    ...data.map((row) => keys.map((key) => `"${row[key] ?? ""}"`).join(",")),
+  ].join("\n");
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", filename);
+  link.style.visibility = "hidden";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 interface ToastConfig {
   variant: "success" | "destructive";
   title: string;
@@ -415,7 +436,9 @@ export const onboardSchema2 = z.object({
   specificUniversity: z.string().nonempty("This is required"),
   uploadCV: z.string().nonempty("CV upload is required"),
   GMATGRE: z.string().nonempty("This is required"),
-  countriesOfInterest: z.array(z.string()).min(1, "Please select at least one country of interest"),
+  countriesOfInterest: z
+    .array(z.string())
+    .min(1, "Please select at least one country of interest"),
 });
 
 export const acsform1Schema = z.object({

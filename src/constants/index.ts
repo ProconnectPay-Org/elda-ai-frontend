@@ -208,6 +208,74 @@ export const countryOptions = [
 
 export const programTypes = ["MSC", "MBA", "MPH", "MENG", "LLM", "MA", "MREs"];
 
+export const sessionTimelineOptions = [
+  {
+    value: "Summer (May/June) 2025",
+    label: "Summer (May/June) 2025",
+    year: "2025/2026",
+  },
+  {
+    value: "Fall (September) 2025",
+    label: "Fall (September) 2025",
+    year: "2025/2026",
+  },
+  {
+    value: "Spring (Between Jan-Mar) 2026",
+    label: "Spring (Between Jan-Mar) 2026",
+    year: "2026/2027",
+  },
+  {
+    value: "Summer (May/June) 2026",
+    label: "Summer (May/June) 2026",
+    year: "2026/2027",
+  },
+  {
+    value: "Fall (September) 2026",
+    label: "Fall (September) 2026",
+    year: "2026/2027",
+  },
+  {
+    value: "Spring (Between Jan-Mar) 2027",
+    label: "Spring (Between Jan-Mar) 2027",
+    year: "2027/2028",
+  },
+  {
+    value: "Summer (May/June) 2027",
+    label: "Summer (May/June) 2027",
+    year: "2027/2028",
+  },
+  {
+    value: "Fall (September) 2027",
+    label: "Fall (September) 2027",
+    year: "2027/2028",
+  },
+  {
+    value: "Spring (Between Jan-Mar) 2028",
+    label: "Spring (Between Jan-Mar) 2028",
+    year: "2028/2029",
+  },
+  {
+    value: "Summer (May/June) 2028",
+    label: "Summer (May/June) 2028",
+    year: "2028/2029",
+  },
+  {
+    value: "Fall (September) 2028",
+    label: "Fall (September) 2028",
+    year: "2028/2029",
+  },
+  {
+    value: "Spring (Between Jan-Mar) 2029",
+    label: "Spring (Between Jan-Mar) 2029",
+    year: "2029/2030",
+  },
+  {
+    value: "Summer (May/June) 2029",
+    label: "Summer (May/June) 2029",
+    year: "2029/2030",
+  },
+];
+
 export const countriesData = [
   { country: "Afghanistan", demonym: "Afghan" },
   { country: "Albania", demonym: "Albanian" },

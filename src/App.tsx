@@ -85,9 +85,9 @@ function App() {
         <Route element={<CraftSOP />} path="/craft-sop/:id" />
         <Route path="/refine-resume" element={<CandidateSelection />} />
         <Route path="/craft-sop" element={<CandidateSelection />} />
-        <Route path="/school-one" element={<SchoolOne />} />
-        <Route path="/school-two" element={<SchoolTwo />} />
-        <Route path="/admission-status" element={<AdmissionStatus />} />
+        <Route path="/school-one/:id" element={<SchoolOne />} />
+        <Route path="/school-two/:id" element={<SchoolTwo />} />
+        <Route path="/admission-status/:id" element={<AdmissionStatus />} />
         <Route
           element={<FinalResume />}
           path="/refine-resume/final-resume/:id"

@@ -11,3 +11,10 @@ export const schoolFormSchema = z.object({
 });
 
 export type SchoolFormData = z.infer<typeof schoolFormSchema>;
+
+export type AdmissionStatusPayload = {
+  university: string;
+  course: string;
+  status: "Admitted" | "Declined";
+  university_number: "1" | "2";
+};

@@ -204,10 +204,11 @@ export type Step4FormData = z.infer<typeof step4Schema>;
 declare interface SchoolFormData {
   username: string;
   password: string;
-  applicationFee: "Yes" | "No";
+  applicationFee: string;
   applicationFeeAmount?: string;
   schoolApplicationUrl: string;
-  dateApplicationSubmittal: string;
+  applicationDeadline: string;
+  applicationSubmitted: string;
   sessionTimeline: string;
 }
 export type Step5FormData = z.infer<typeof step5Schema>;

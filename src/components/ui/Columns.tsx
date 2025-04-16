@@ -252,13 +252,13 @@ export const columns: ColumnDef<CandidateData>[] = [
                 School Application Status
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link target="_blank" to={`/school-one`}>Fill Details For School One</Link>
+                <Link target="_blank" to={`/school-one/${id}`}>Fill Details For School One</Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link target="_blank" to={`/school-two`}>Fill Details for School Two</Link>
+                <Link target="_blank" to={`/school-two/${id}`}>Fill Details for School Two</Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link target="_blank" to={`/admission-status`}>Admission Status</Link>
+                <Link target="_blank" to={`/admission-status/${id}`}>Admission Status</Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

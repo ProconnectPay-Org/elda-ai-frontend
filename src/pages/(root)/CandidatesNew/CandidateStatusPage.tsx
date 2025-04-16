@@ -11,6 +11,8 @@ import progress from "../../../assets/progress.svg";
 import globe from "../../../assets/red-globe.svg";
 import CandidateNewLayout from "@/layouts/CandidateNewLayout";
 import DocumentList from "@/components/DocumentList";
+import { useQuery } from "@tanstack/react-query";
+import { getCandidateSchoolDetails } from "@/lib/actions/user.actions";
 // import eldaLogo from "../../../assets/eldaLogo.png"
 
 const SkeletonStatusBox = () => {
@@ -89,6 +91,14 @@ export default function CandidateStatusPage() {
   const candidate_id = Cookies.get("candidate_id");
   const { singleCandidate, singleCandidateLoading } =
     useCandidates(candidate_id);
+
+  const { data } = useQuery({
+    queryKey: ["candidatesSchoolDetails"],
+    queryFn: () => getCandidateSchoolDetails(candidate_id!),
+  });
+
+  const schoolOneData = data?.find((entry: any) => entry.school_number === "1");
+  const schoolTwoData = data?.find((entry: any) => entry.school_number === "2");
 
   const statusProps = [
     {
@@ -323,10 +333,10 @@ export default function CandidateStatusPage() {
                     Username
                   </th>
                   <td className="p-4 text-sm md:text-base">
-                    filled by manager
+                    {schoolOneData?.username || "To be filled by manager"}
                   </td>
                   <td className="p-4 text-sm md:text-base">
-                    filled by manager
+                    {schoolTwoData?.username || "To be filled by manager"}
                   </td>
                 </tr>
                 <tr className="hover:bg-gray-50 border-b border-gray-100">
@@ -334,10 +344,10 @@ export default function CandidateStatusPage() {
                     Password
                   </th>
                   <td className="p-4 text-sm md:text-base">
-                    filled by manager
+                    {schoolOneData?.password || "To be filled by manager"}
                   </td>
                   <td className="p-4 text-sm md:text-base">
-                    filled by manager
+                    {schoolTwoData?.password || "To be filled by manager"}
                   </td>
                 </tr>
                 <tr className="hover:bg-gray-50 border-b border-gray-100">
@@ -345,10 +355,12 @@ export default function CandidateStatusPage() {
                     Application Deadline
                   </th>
                   <td className="p-4 text-sm md:text-base">
-                    filled by manager
+                    {schoolOneData?.application_deadline ||
+                      "To be filled by manager"}
                   </td>
                   <td className="p-4 text-sm md:text-base">
-                    filled by manager
+                    {schoolTwoData?.application_deadline ||
+                      "To be filled by manager"}
                   </td>
                 </tr>
                 <tr className="hover:bg-gray-50 border-b border-gray-100">
@@ -356,10 +368,12 @@ export default function CandidateStatusPage() {
                     Application Fee
                   </th>
                   <td className="p-4 text-sm md:text-base">
-                    filled by manager
+                    {schoolOneData?.application_fee ||
+                      "To be filled by manager"}
                   </td>
                   <td className="p-4 text-sm md:text-base">
-                    filled by manager
+                    {schoolTwoData?.application_fee ||
+                      "To be filled by manager"}
                   </td>
                 </tr>
                 <tr className="hover:bg-gray-50 border-b border-gray-100">
@@ -367,10 +381,12 @@ export default function CandidateStatusPage() {
                     Application Fee Amount
                   </th>
                   <td className="p-4 text-sm md:text-base">
-                    filled by manager
+                    {schoolOneData?.application_fee_amount ||
+                      "To be filled by manager"}
                   </td>
                   <td className="p-4 text-sm md:text-base">
-                    filled by manager
+                    {schoolTwoData?.application_fee_amount ||
+                      "To be filled by manager"}
                   </td>
                 </tr>
                 <tr className="hover:bg-gray-50 border-b border-gray-100">
@@ -378,10 +394,24 @@ export default function CandidateStatusPage() {
                     School Application URL
                   </th>
                   <td className="p-4 text-sm md:text-base">
-                    filled by manager
+                    <a
+                      href={schoolOneData?.school_application_url}
+                      target="_blank"
+                      className="underline text-blue-500"
+                    >
+                      {schoolOneData?.school_application_url ||
+                        "To be filled by manager"}
+                    </a>
                   </td>
                   <td className="p-4 text-sm md:text-base">
-                    filled by manager
+                    <a
+                      href={schoolTwoData?.school_application_url}
+                      target="_blank"
+                      className="underline text-blue-500"
+                    >
+                      {schoolTwoData?.school_application_url ||
+                        "To be filled by manager"}
+                    </a>
                   </td>
                 </tr>
                 <tr className="hover:bg-gray-50 border-b border-gray-100">
@@ -389,10 +419,12 @@ export default function CandidateStatusPage() {
                     Date Application Submitted
                   </th>
                   <td className="p-4 text-sm md:text-base">
-                    filled by manager
+                    {schoolOneData?.date_application_submitted ||
+                      "To be filled by manager"}
                   </td>
                   <td className="p-4 text-sm md:text-base">
-                    filled by manager
+                    {schoolTwoData?.date_application_submitted ||
+                      "To be filled by manager"}
                   </td>
                 </tr>
                 <tr className="hover:bg-gray-50">
@@ -400,10 +432,12 @@ export default function CandidateStatusPage() {
                     Session Targeted for Admission
                   </th>
                   <td className="p-4 text-sm md:text-base">
-                    filled by manager
+                    {schoolOneData?.session_timeline_for_admission ||
+                      "To be filled by manager"}
                   </td>
                   <td className="p-4 text-sm md:text-base">
-                    filled by manager
+                    {schoolTwoData?.session_timeline_for_admission ||
+                      "To be filled by manager"}
                   </td>
                 </tr>
               </tbody>

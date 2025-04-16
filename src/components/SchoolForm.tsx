@@ -8,9 +8,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import SaveBtn from "./SaveBtn";
+import { useEffect } from "react";
+import { sessionTimelineOptions } from "@/constants";
 
 // Schema and types
 export const schoolFormSchema = z.object({
@@ -20,7 +23,9 @@ export const schoolFormSchema = z.object({
   applicationFeeAmount: z.string().optional(),
   schoolApplicationUrl: z.string().url("Please enter a valid URL"),
   applicationDeadline: z.string().min(1, "Application deadline is required"),
-  applicationSubmitted: z.string().min(1, "Application submission date is required"),
+  applicationSubmitted: z
+    .string()
+    .min(1, "Application submission date is required"),
   sessionTimeline: z.string().min(1, "Please select a session timeline"),
 });
 
@@ -29,32 +34,15 @@ export type SchoolFormData = z.infer<typeof schoolFormSchema>;
 interface SchoolFormProps {
   onSubmit: (data: SchoolFormData) => void;
   initialValues?: Partial<SchoolFormData>;
+  isLoading?: boolean;
 }
 
-const sessionTimelineOptions = [
-  { value: "summer_2025", label: "Summer (May/June) 2025", year: "2025/2026" },
-  { value: "fall_2025", label: "Fall (September) 2025", year: "2025/2026" },
-  { value: "spring_2026", label: "Spring (Between Jan-Mar) 2026", year: "2026/2027" },
-  { value: "summer_2026", label: "Summer (May/June) 2026", year: "2026/2027" },
-  { value: "fall_2026", label: "Fall (September) 2026", year: "2026/2027" },
-  { value: "spring_2027", label: "Spring (Between Jan-Mar) 2027", year: "2027/2028" },
-  { value: "summer_2027", label: "Summer (May/June) 2027", year: "2027/2028" },
-  { value: "fall_2027", label: "Fall (September) 2027", year: "2027/2028" },
-  { value: "spring_2028", label: "Spring (Between Jan-Mar) 2028", year: "2028/2029" },
-  { value: "summer_2028", label: "Summer (May/June) 2028", year: "2028/2029" },
-  { value: "fall_2028", label: "Fall (September) 2028", year: "2028/2029" },
-  { value: "spring_2029", label: "Spring (Between Jan-Mar) 2029", year: "2029/2030" },
-  { value: "summer_2029", label: "Summer (May/June) 2029", year: "2029/2030" }
-];
-
-export function SchoolForm({ onSubmit, initialValues = {} }: SchoolFormProps) {
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useForm<SchoolFormData>({
+export function SchoolForm({
+  onSubmit,
+  initialValues = {},
+  isLoading,
+}: SchoolFormProps) {
+  const {register, handleSubmit, reset, control, formState: { errors },} = useForm<SchoolFormData>({
     resolver: zodResolver(schoolFormSchema),
     defaultValues: {
       username: "",
@@ -68,6 +56,21 @@ export function SchoolForm({ onSubmit, initialValues = {} }: SchoolFormProps) {
       ...initialValues,
     },
   });
+
+  const mapBackendToFrontend = (data: Record<string, any>): SchoolFormData => ({
+    username: data.username || "",
+    password: data.password || "",
+    applicationFee: data.application_fee || "",
+    applicationFeeAmount: data.application_fee_amount || "",
+    schoolApplicationUrl: data.school_application_url || "",
+    applicationDeadline: data.application_deadline || "",
+    applicationSubmitted: data.date_application_submitted || "",
+    sessionTimeline: data.session_timeline_for_admission || "",
+  });
+
+  useEffect(() => {
+    reset(mapBackendToFrontend(initialValues));
+  }, [initialValues, reset]);
 
   const handleDelete = () => {
     reset();
@@ -83,7 +86,9 @@ export function SchoolForm({ onSubmit, initialValues = {} }: SchoolFormProps) {
           className={errors.username ? "border-red-500" : ""}
         />
         {errors.username && (
-          <p className="text-sm font-medium text-destructive">{errors.username.message}</p>
+          <p className="text-sm font-medium text-destructive">
+            {errors.username.message}
+          </p>
         )}
       </div>
 
@@ -91,34 +96,49 @@ export function SchoolForm({ onSubmit, initialValues = {} }: SchoolFormProps) {
         <Label htmlFor="password">Password</Label>
         <Input
           id="password"
-          type="password"
+          type="text"
           {...register("password")}
           className={errors.password ? "border-red-500" : ""}
         />
         {errors.password && (
-          <p className="text-sm font-medium text-destructive">{errors.password.message}</p>
+          <p className="text-sm font-medium text-destructive">
+            {errors.password.message}
+          </p>
         )}
       </div>
 
       <div className="space-y-2">
         <Label>Application Fee</Label>
-        <Select onValueChange={(value) => setValue("applicationFee", value)}>
-          <SelectTrigger className={errors.applicationFee ? "border-red-500" : ""}>
-            <SelectValue placeholder="Select application fee option" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="Yes">Yes</SelectItem>
-            <SelectItem value="No">No</SelectItem>
-          </SelectContent>
-        </Select>
+        <Controller
+          name="applicationFee"
+          control={control}
+          render={({ field }) => (
+            <Select value={field.value} onValueChange={field.onChange}>
+              <SelectTrigger
+                className={errors.applicationFee ? "border-red-500" : ""}
+              >
+                <SelectValue placeholder="Select application fee option" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Yes">Yes</SelectItem>
+                <SelectItem value="No">No</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+        />
         {errors.applicationFee && (
-          <p className="text-sm font-medium text-destructive">{errors.applicationFee.message}</p>
+          <p className="text-sm font-medium text-destructive">
+            {errors.applicationFee.message}
+          </p>
         )}
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="applicationFeeAmount">Application Fee Amount</Label>
-        <Input id="applicationFeeAmount" {...register("applicationFeeAmount")} />
+        <Input
+          id="applicationFeeAmount"
+          {...register("applicationFeeAmount")}
+        />
       </div>
 
       <div className="space-y-2">
@@ -167,28 +187,36 @@ export function SchoolForm({ onSubmit, initialValues = {} }: SchoolFormProps) {
 
       <div className="space-y-2">
         <Label>Session Timeline for Admission</Label>
-        <Select onValueChange={(value) => setValue("sessionTimeline", value)}>
-          <SelectTrigger
-            className={errors.sessionTimeline ? "border-red-500" : ""}
-          >
-            <SelectValue placeholder="Select session timeline" />
-          </SelectTrigger>
-          <SelectContent>
-            {sessionTimelineOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Controller
+          name="sessionTimeline"
+          control={control}
+          render={({ field }) => (
+            <Select value={field.value} onValueChange={field.onChange}>
+              <SelectTrigger
+                className={errors.sessionTimeline ? "border-red-500" : ""}
+              >
+                <SelectValue placeholder="Select session timeline" />
+              </SelectTrigger>
+              <SelectContent>
+                {sessionTimelineOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
         {errors.sessionTimeline && (
-          <p className="text-sm font-medium text-destructive">{errors.sessionTimeline.message}</p>
+          <p className="text-sm font-medium text-destructive">
+            {errors.sessionTimeline.message}
+          </p>
         )}
       </div>
 
       <div className="flex justify-end gap-4 mt-8">
         <Button type="submit" variant="outline">
-          Save
+          {isLoading ? <SaveBtn text="Saving" /> : "Save"}
         </Button>
         <Button type="button" variant="destructive" onClick={handleDelete}>
           Delete
