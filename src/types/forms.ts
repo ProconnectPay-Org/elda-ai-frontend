@@ -15,6 +15,6 @@ export type SchoolFormData = z.infer<typeof schoolFormSchema>;
 export type AdmissionStatusPayload = {
   university: string;
   course: string;
-  status: "Admitted" | "Declined";
+  status: "approved" | "declined" | "pending";
   university_number: "1" | "2";
 };
