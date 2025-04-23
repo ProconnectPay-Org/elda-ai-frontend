@@ -35,7 +35,7 @@ export const allTabsColumns = (
     accessorKey: "email_address",
     header: "Email",
     cell: ({ row }) => (
-      <p className="capitalize">{row.original?.email_address || "No name"}</p>
+      <p className="">{row.original?.email_address || "No name"}</p>
     ),
   },
   {

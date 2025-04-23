@@ -8,10 +8,12 @@ import useAuth from "@/hooks/useAuth";
 import { updatePassword } from "@/lib/actions/user.actions";
 import { PasswordProps } from "@/types";
 import { useToast } from "./ui/use-toast";
+import SaveBtn from "./SaveBtn";
 
 const ProfileTabs = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
   const { loggedInUser } = useAuth();
   const { loggedInStaff } = useStaffDetails();
   const { toast } = useToast();
@@ -77,22 +79,40 @@ const ProfileTabs = () => {
   });
 
   const onSubmitPassword = async (data: PasswordProps) => {
+    setSaving(true);
+
     try {
       const response = await updatePassword(data);
-      return response;
-    } catch (error: any) {
-      if (error.response && error.response.data) {
-        console.error(
-          "Failed to update password:",
-          error.response.data.non_field_errors[0]
-        );
+
+      if (response === "Password updated successfully.") {
+        toast({
+          variant: "success",
+          title: "Success",
+          description: "Password successfully changed",
+        });
       } else {
+        const errorMessage =
+          response?.response?.data?.non_field_errors?.[0] || response?.detail;
+
         toast({
           variant: "destructive",
           title: "Error",
-          description: error.message,
+          description: errorMessage,
         });
       }
+    } catch (error: any) {
+      console.error("Failed to update password:", error);
+
+      const errorMessage =
+        error?.response?.data?.non_field_errors?.[0] || error?.detail;
+
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: errorMessage,
+      });
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -136,7 +156,7 @@ const ProfileTabs = () => {
             onClick={handleSave}
             className="h-12 w-full md:max-w-fit text-white bg-red"
           >
-            Save
+            {saving ? <SaveBtn text="Saving" /> : "Save"}
           </Button>
         </div>
       </TabsList>
@@ -163,58 +183,7 @@ const ProfileTabs = () => {
                   </p>
                 )}
               </div>
-
-              {/* <div className="w-full">
-                <label>Gender</label>
-                <input
-                  {...registerDetails("gender", {
-                    required: activeTab === "all" && "Gender is required",
-                  })}
-                  placeholder="Female"
-                  className="w-full p-2 rounded-md"
-                />
-                {errorsDetails.gender && (
-                  <p className="text-red text-sm">
-                    {errorsDetails.gender.message}
-                  </p>
-                )}
-              </div> */}
             </div>
-
-            {/* <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
-              <div className="w-full">
-                <label>Date of Birth</label>
-                <input
-                  {...registerDetails("dateOfBirth", {
-                    required:
-                      activeTab === "all" && "Date of Birth is required",
-                  })}
-                  placeholder="Enter your date of birth"
-                  className="w-full p-2 rounded-md"
-                />
-                {errorsDetails.dateOfBirth && (
-                  <p className="text-red text-sm">
-                    {errorsDetails.dateOfBirth.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="w-full">
-                <label>Phone Number</label>
-                <input
-                  {...registerDetails("phoneNumber", {
-                    required: activeTab === "all" && "Phone Number is required",
-                  })}
-                  placeholder="08122983232"
-                  className="w-full p-2 rounded-md"
-                />
-                {errorsDetails.phoneNumber && (
-                  <p className="text-red text-sm">
-                    {errorsDetails.phoneNumber.message}
-                  </p>
-                )}
-              </div>
-            </div> */}
 
             <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
               <div className="w-full">
@@ -238,7 +207,9 @@ const ProfileTabs = () => {
               </div>
 
               <div className="w-full">
-                <label className="text-gray-text">Number of Assigned Jobs so far</label>
+                <label className="text-gray-text">
+                  Number of Assigned Jobs so far
+                </label>
                 <input
                   {...registerDetails("numberOfJobs", {
                     required:
@@ -289,6 +260,12 @@ const ProfileTabs = () => {
                     {...registerPassword("new_password", {
                       required:
                         activeTab === "assigned" && "New Password is required",
+                      validate: (value, formValues) => {
+                        if (value === formValues.old_password) {
+                          return "New password cannot be the same as the old password.";
+                        }
+                        return true;
+                      },
                     })}
                     type="text"
                     className="w-full p-2 rounded-md"
@@ -307,6 +284,12 @@ const ProfileTabs = () => {
                       required:
                         activeTab === "assigned" &&
                         "Confirm Password is required",
+                      validate: (value, formValues) => {
+                        if (value !== formValues.new_password) {
+                          return "Passwords do not match.";
+                        }
+                        return true;
+                      },
                     })}
                     type="text"
                     className="w-full p-2 rounded-md"

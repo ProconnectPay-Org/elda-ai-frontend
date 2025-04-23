@@ -14,6 +14,14 @@ import {
   updateAdmissionStatus,
 } from "@/lib/actions/user.actions";
 import { toast } from "@/components/ui/use-toast";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "./ui/select";
+// import { sortedSchools } from "@/constants";
 
 const admissionStatusSchema = z.object({
   university1: z.string().min(1, "Please select a university"),
@@ -136,6 +144,23 @@ const AdmissionComponent = ({ id }: { id: string }) => {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">University 1</Label>
+                  {/* <Select
+                    onValueChange={(value) =>
+                      form.setValue("university1", value)
+                    }
+                    value={form.getValues("university1")}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select University" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {sortedSchools.map((school) => (
+                        <SelectItem value={school.name} key={school.name}>
+                          {school.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select> */}
                   <Input type="text" {...form.register("university1")} />
                 </div>
 
@@ -188,6 +213,23 @@ const AdmissionComponent = ({ id }: { id: string }) => {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">University 2</Label>
+                  {/* <Select
+                    onValueChange={(value) =>
+                      form.setValue("university1", value)
+                    }
+                    value={form.getValues("university1")}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select University" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {sortedSchools.map((school) => (
+                        <SelectItem value={school.name} key={school.name}>
+                          {school.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select> */}
                   <Input type="text" {...form.register("university2")} />
                 </div>
 

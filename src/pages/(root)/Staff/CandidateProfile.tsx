@@ -246,19 +246,60 @@ const CandidateProfile = () => {
               loggedInUser?.full_name ||
               "Manager not found"}
           </p>
-          <Button
-            className="border-red my-5 w-40"
-            variant={"outline"}
-            onClick={handleReminders}
-          >
-            {isSendingReminder ? (
-              <Loader2 className="animate-spin" />
-            ) : (
-              <div className="flex text-red gap-3 items-center">
-                Send Reminder <BellRingIcon stroke="red" />
-              </div>
-            )}
-          </Button>
+          <div className="flex flex-col my-5 gap-5">
+            <Button
+              className="border-red w-40"
+              variant={"outline"}
+              onClick={handleReminders}
+            >
+              {isSendingReminder ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                <div className="flex text-red gap-3 items-center">
+                  Send Reminder <BellRingIcon stroke="red" />
+                </div>
+              )}
+            </Button>
+            <Button
+              className="border-red w-40"
+              variant={"outline"}
+              // onClick={handleReminders}
+            >
+              {isSendingReminder ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                <div className="flex text-red gap-3 items-center">
+                  Intro Email
+                </div>
+              )}
+            </Button>
+            <Button
+              className="border-red w-40"
+              variant={"outline"}
+              // onClick={handleReminders}
+            >
+              {isSendingReminder ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                <div className="flex text-red gap-3 items-center">
+                  Application Completed
+                </div>
+              )}
+            </Button>
+            <Button
+              className="border-red w-40"
+              variant={"outline"}
+              // onClick={handleReminders}
+            >
+              {isSendingReminder ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                <div className="flex text-red gap-3 items-center">
+                  Loan Intro
+                </div>
+              )}
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -292,7 +333,10 @@ const CandidateProfile = () => {
               <CopyText label="First Name" text={candidate?.first_name} />
               <CopyText label="Middle Name" text={candidate?.middle_name} />
               <CopyText label="Last Name" text={candidate?.last_name} />
-              <CopyText label="Maiden Name" text={candidate?.maiden_name || "N/A"} />
+              <CopyText
+                label="Maiden Name"
+                text={candidate?.maiden_name || "N/A"}
+              />
               <CopyText label="Gender" text={candidate?.gender} />
               <div>
                 <CopyText label="Birth Date" text={candidate?.birth_date} />

@@ -49,6 +49,7 @@ import TownHall from "./pages/(root)/CandidatesNew/TownHall";
 import OtherInformation from "./pages/(root)/CandidatesNew/OtherInformation";
 import AdmissionStatusPrompt from "./pages/(root)/CandidatesNew/AdmissionStatusPrompt";
 import Error404 from "./pages/(root)/Error404";
+import Settings from "./pages/(root)/CandidatesNew/Settings";
 
 function App() {
   return (
@@ -118,6 +119,7 @@ function App() {
           path="/admission-status-prompt"
         />
         <Route element={<CandidateInformation />} path="/candidate-info" />
+        <Route element={<Settings />} path="/candidate-settings" />
 
         <Route element={<Error404 />} path="*" />
       </Routes>
