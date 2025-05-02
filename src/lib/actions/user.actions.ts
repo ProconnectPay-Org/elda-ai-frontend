@@ -103,6 +103,27 @@ export const getAdminInfo = async () => {
   }
 };
 
+export const getStats = async () => {
+  const access_token = Cookies.get("access_token"); // Fetch token from cookies
+
+  if (!access_token) {
+    throw new Error("Access token is missing. Please sign in again.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}all-candidates/statistics`, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching admin info:", error);
+    throw error;
+  }
+};
+
 export const createCandidateProfile = async ({
   email,
   password,
@@ -616,6 +637,63 @@ export const singleCandidateReminder = async (id: string) => {
         },
       }
     );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+export const applicationCompletedEmail = async (id: string) => {
+  try {
+    const token =
+      Cookies.get("access_token") || Cookies.get("staff_access_token");
+    if (!token) return null;
+
+    const response = await axios.post(
+      `${API_URL}send-application-complete/${id}`,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const IntroEmail = async (id: string) => {
+  try {
+    const token =
+      Cookies.get("access_token") || Cookies.get("staff_access_token");
+    if (!token) return null;
+
+    const response = await axios.post(`${API_URL}send-introemail/${id}`, null, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const LoanEmail = async (id: string) => {
+  try {
+    const token =
+      Cookies.get("access_token") || Cookies.get("staff_access_token");
+    if (!token) return null;
+
+    const response = await axios.post(`${API_URL}send-loan-email/${id}`, null, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error(error);

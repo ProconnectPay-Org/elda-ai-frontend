@@ -128,11 +128,11 @@ const AssignCandidate: React.FC = () => {
   //   }
   //   setIsLoading(true);
   //   try {
-  //     const candidate_ids = selectedCandidates.map(
+  //     const candidate_id = selectedCandidates.map(
   //       (candidate) => candidate.value
   //     );
   //     await reAssignCandidateToStaff({
-  //       candidate_ids,
+  //       candidate_id,
   //       new_staff_id: selectedStaff.value,
   //     });
   //     toast({

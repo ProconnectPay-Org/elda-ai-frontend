@@ -24,7 +24,10 @@ import useAuth from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
+  applicationCompletedEmail,
   getSingleCandidate,
+  IntroEmail,
+  LoanEmail,
   singleCandidateReminder,
 } from "@/lib/actions/user.actions";
 import CopyText from "@/components/CopyText";
@@ -37,6 +40,9 @@ const CandidateProfile = () => {
   const { loggedInUser } = useAuth();
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
   const [isSendingReminder, setIsSendingReminder] = useState(false);
+  const [sendApplicationComplete, setSendApplicationComplete] = useState(false);
+  const [isSendingIntroEmail, setIsSendingIntroEmail] = useState(false);
+  const [isSendingLoanEmail, setIsSendingLoanEmail] = useState(false);
 
   const toggleAccordion = () => {
     setIsAccordionOpen((prev) => !prev);
@@ -66,6 +72,54 @@ const CandidateProfile = () => {
       console.error(error);
     } finally {
       setIsSendingReminder(false);
+    }
+  };
+
+  const introEmail = async () => {
+    setIsSendingIntroEmail(true);
+    try {
+      const response = await IntroEmail(id);
+      toast({
+        title: "Success",
+        description: response?.message,
+        variant: "success",
+      });      
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSendingIntroEmail(false);
+    }
+  };
+
+  const applicationComplete = async () => {
+    setSendApplicationComplete(true);
+    try {
+      const response = await applicationCompletedEmail(id);
+      toast({
+        title: "Success",
+        description: response?.message,
+        variant: "success",
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSendApplicationComplete(false);
+    }
+  };
+
+  const loanIntro = async () => {
+    setIsSendingLoanEmail(true);
+    try {
+      const response = await LoanEmail(id);
+      toast({
+        title: "Success",
+        description: response?.message,
+        variant: "success",
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSendingLoanEmail(false);
     }
   };
 
@@ -263,9 +317,9 @@ const CandidateProfile = () => {
             <Button
               className="border-red w-40"
               variant={"outline"}
-              // onClick={handleReminders}
+              onClick={introEmail}
             >
-              {isSendingReminder ? (
+              {isSendingIntroEmail ? (
                 <Loader2 className="animate-spin" />
               ) : (
                 <div className="flex text-red gap-3 items-center">
@@ -276,9 +330,9 @@ const CandidateProfile = () => {
             <Button
               className="border-red w-40"
               variant={"outline"}
-              // onClick={handleReminders}
+              onClick={applicationComplete}
             >
-              {isSendingReminder ? (
+              {sendApplicationComplete ? (
                 <Loader2 className="animate-spin" />
               ) : (
                 <div className="flex text-red gap-3 items-center">
@@ -289,9 +343,9 @@ const CandidateProfile = () => {
             <Button
               className="border-red w-40"
               variant={"outline"}
-              // onClick={handleReminders}
+              onClick={loanIntro}
             >
-              {isSendingReminder ? (
+              {isSendingLoanEmail ? (
                 <Loader2 className="animate-spin" />
               ) : (
                 <div className="flex text-red gap-3 items-center">
