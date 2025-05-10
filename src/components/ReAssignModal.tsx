@@ -7,7 +7,7 @@ import {
 } from "@/lib/actions/user.actions";
 import { useState, useEffect } from "react";
 import { toast } from "./ui/use-toast";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { CandidateData, OptionType } from "@/types";
 import ReactSelect, { SingleValue } from "react-select";
 import { Link } from "react-router-dom";
@@ -26,6 +26,8 @@ const ReAssignModal = ({ onClose, id, mode }: ModalProps) => {
   const [staffOptions, setStaffOptions] = useState<OptionType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const queryClient = useQueryClient();
 
   const { data: staffResponse, isLoading: isLoadingStaff } = useQuery({
     queryKey: ["staff"],
@@ -60,7 +62,7 @@ const ReAssignModal = ({ onClose, id, mode }: ModalProps) => {
           return;
         }
         await reAssignCandidateToStaff({
-          candidate_id: id,
+          candidate_ids: [id],
           staff_id: singleCandidate?.assigned_manager[0]?.id,
           new_staff_id: selectedStaff.value,
         });
@@ -71,7 +73,7 @@ const ReAssignModal = ({ onClose, id, mode }: ModalProps) => {
         });
       } else if (mode === "unassign") {
         await unassignCandidateFromStaff({
-          candidate_id: id,
+          candidate_ids: [id],
           staff_id: singleCandidate?.assigned_manager[0]?.id,
         });
         toast({
@@ -104,6 +106,8 @@ const ReAssignModal = ({ onClose, id, mode }: ModalProps) => {
       });
     } finally {
       setIsLoading(false);
+      queryClient.invalidateQueries({ queryKey: ["staff"] });
+      queryClient.invalidateQueries({ queryKey: ["singleCandidate"] });
     }
   };
 
@@ -211,17 +215,9 @@ const ReAssignModal = ({ onClose, id, mode }: ModalProps) => {
             <button
               type="submit"
               onClick={assignCandidate}
-              disabled={
-                isLoading ||
-                isLoadingStaff ||
-                singleCandidateLoading ||
-                singleCandidate?.assigned_manager?.length === 0
-              }
+              disabled={isLoading || isLoadingStaff || singleCandidateLoading}
               className={`w-full text-white py-2 rounded-lg ${
-                isLoading ||
-                isLoadingStaff ||
-                singleCandidateLoading ||
-                singleCandidate?.assigned_manager?.length === 0
+                isLoading || isLoadingStaff || singleCandidateLoading
                   ? "bg-pale-bg cursor-not-allowed"
                   : "bg-red hover:bg-red"
               }`}

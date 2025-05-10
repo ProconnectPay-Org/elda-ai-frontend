@@ -345,7 +345,7 @@ export const assignCandidateToStaff = async ({
   }
 };
 export const reAssignCandidateToStaff = async ({
-  candidate_id,
+  candidate_ids,
   staff_id,
   new_staff_id,
 }: ReAssignCandidateProps) => {
@@ -358,7 +358,7 @@ export const reAssignCandidateToStaff = async ({
   try {
     const response = await axios.patch(
       `${API_URL}assign-candidate/`,
-      { candidate_id, staff_id, new_staff_id },
+      { candidate_ids, staff_id, new_staff_id },
       {
         headers: {
           Authorization: `Bearer ${access_token}`,
@@ -374,7 +374,7 @@ export const reAssignCandidateToStaff = async ({
 };
 
 export const unassignCandidateFromStaff = async ({
-  candidate_id,
+  candidate_ids,
   staff_id,
 }: ReAssignCandidateProps) => {
   const access_token = Cookies.get("access_token");
@@ -388,7 +388,7 @@ export const unassignCandidateFromStaff = async ({
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
-      data: { candidate_id, staff_id },
+      data: { candidate_ids, staff_id },
     });
 
     return response.data;

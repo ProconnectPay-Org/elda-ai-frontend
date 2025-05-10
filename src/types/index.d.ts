@@ -459,7 +459,7 @@ declare interface AssignCandidateProps {
 }
 
 declare interface ReAssignCandidateProps {
-  candidate_id: number | string;
+  candidate_ids: (number | string)[];
   staff_id: number | string;
   new_staff_id?: number | string;
 }
