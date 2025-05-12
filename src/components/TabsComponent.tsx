@@ -146,10 +146,10 @@ const TabsComponent = () => {
 
   const tableData: CandidateData[] =
     allCandidates?.results
-      .filter(
-        (candidate: CandidateData) =>
-          candidate?.email_address !== "victoryicha98@gmail.com"
-      )
+      // .filter(
+      //   (candidate: CandidateData) =>
+      //     candidate?.email_address !== "victoryicha98@gmail.com"
+      // )
       .map((candidate: CandidateData, index: number) => ({
         ...candidate,
         serialNumber: startingIndex + index + 1,

@@ -605,6 +605,47 @@ export const toggleSchoolApplicationStatus2 = async (id?: string) => {
     return null;
   }
 };
+export const toggleSchoolApplicationStatusBack = async (id?: string) => {
+  try {
+    const token =
+      Cookies.get("access_token") || Cookies.get("staff_access_token");
+    if (!token) return null;
+
+    const response = await axios.delete(
+      `${API_URL}staff-dashboard/toggle-school-application-status/${id}/`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const toggleSchoolApplicationStatus2Back = async (id?: string) => {
+  try {
+    const token =
+      Cookies.get("access_token") || Cookies.get("staff_access_token");
+    if (!token) return null;
+
+    const response = await axios.delete(
+      `${API_URL}staff-dashboard/toggle-school-application-status-2/${id}/`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
 
 export const sendReminder = async () => {
   try {

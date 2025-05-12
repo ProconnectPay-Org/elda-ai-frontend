@@ -16,6 +16,7 @@ import { useState } from "react";
 import ReAssignModal from "./ReAssignModal";
 import NewSchoolCourseModal from "./NewSchoolCourseModal";
 import Cookies from "js-cookie";
+import MiniDropDown from "./MiniDropDown";
 
 export const allTabsColumns = (
   handleDeleteCandidate: (userId: string, fullName: string) => void
@@ -93,51 +94,72 @@ export const allTabsColumns = (
     header: () => (
       <div className="text-center">School Application Status 1</div>
     ),
-    cell: ({ row }) => (
-      <div className="flex justify-center">
-        <Button
-          className={`py-1 h-5 rounded-xl ${
-            row.original.school_application_status1 === "Pending"
-              ? "bg-orange text-white"
-              : "bg-[#D5F4EA] text-[#2A6350]"
-          } px-5 hover:bg-green-200`}
-          onClick={() =>
-            alert(
-              `Status: ${row.original.school_application_status1 || "none"}`
-            )
-          }
-        >
-          {row.original.school_application_status1 === "True" ? (
-            "Completed"
-          ) : (
-            <>{row.original.school_application_status1 || "none"}</>
+    cell: ({ row }) => {
+      const [dropdownOpen1, setDropdownOpen1] = useState(false);
+      const { id, school_application_status1 } = row.original;
+
+      return (
+        <div className="flex justify-center relative">
+          <Button
+            className={`py-1 h-5 rounded-xl ${
+              school_application_status1 === "Pending"
+                ? "bg-orange text-white"
+                : "bg-[#D5F4EA] text-[#2A6350]"
+            } px-5 hover:bg-green-200`}
+            onClick={() => setDropdownOpen1(true)}
+          >
+            {school_application_status1 == "Pending"
+              ? school_application_status1 || "Pending"
+              : "Completed"}
+          </Button>
+          {dropdownOpen1 && (
+            <MiniDropDown
+              open={dropdownOpen1}
+              onOpenChange={setDropdownOpen1}
+              id={id!}
+              schoolAppliedTo="School1"
+              onClose={() => setDropdownOpen1(false)}
+            />
           )}
-        </Button>
-      </div>
-    ),
+        </div>
+      );
+    },
   },
   {
     accessorKey: "school_application_status2",
     header: () => (
       <div className="text-center">School Application Status 2</div>
     ),
-    cell: ({ row }) => (
-      <div className="flex justify-center">
-        <Button
-          className={`py-1 h-5 rounded-xl ${
-            row.original.school_application_status2 === "Pending"
-              ? "bg-orange text-white"
-              : "bg-[#D5F4EA] text-[#2A6350]"
-          } px-5 hover:bg-green-200`}
-        >
-          {row.original.school_application_status2 === "True" ? (
-            "Completed"
-          ) : (
-            <>{row.original.school_application_status2 || "none"}</>
+    cell: ({ row }) => {
+      const [dropdownOpen2, setDropdownOpen2] = useState(false);
+      const { id, school_application_status2 } = row.original;
+
+      return (
+        <div className="flex justify-center relative">
+          <Button
+            className={`py-1 h-5 rounded-xl ${
+              school_application_status2 === "Pending"
+                ? "bg-orange text-white"
+                : "bg-[#D5F4EA] text-[#2A6350]"
+            } px-5 hover:bg-green-200`}
+            onClick={() => setDropdownOpen2(true)}
+          >
+            {school_application_status2 == "Pending"
+              ? school_application_status2 || "Pending"
+              : "Completed"}
+          </Button>
+          {dropdownOpen2 && (
+            <MiniDropDown
+              open={dropdownOpen2}
+              onOpenChange={setDropdownOpen2}
+              id={id!}
+              schoolAppliedTo="School2"
+              onClose={() => setDropdownOpen2(false)}
+            />
           )}
-        </Button>
-      </div>
-    ),
+        </div>
+      );
+    },
   },
   {
     accessorKey: "resume_status",
