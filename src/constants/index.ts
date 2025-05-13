@@ -475,6 +475,7 @@ export const countriesData = [
 const supportedSchools = [
   { id: 0, name: "Carl von Ossietzky Universitat Oldenburg" },
   { id: 1, name: "Constructor University" },
+  { id: 900, name: "University of Roehampton" },
   { id: 2, name: "ESMT Berlin" },
   { id: 3, name: "Frankfurt School of Finance and Management" },
   { id: 4, name: "Hamburg University of Technology" },
