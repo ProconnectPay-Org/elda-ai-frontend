@@ -3,7 +3,11 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import { toast } from "@/components/ui/use-toast";
 import { CandidateData } from "@/types";
-import { getSingleCandidate } from "@/lib/actions/user.actions";
+import {
+  getSingleCandidate,
+  toggleSchoolApplicationStatus2Back,
+  toggleSchoolApplicationStatusBack,
+} from "@/lib/actions/user.actions";
 import { postEditedCandidate, updateSop } from "@/lib/actions/staff.actions";
 import { countryOptions, programTypes, sortedSchools } from "@/constants";
 
@@ -103,6 +107,14 @@ const NewSchoolCourseModal = ({ onClose, id }: ModalProps) => {
         },
         accessToken
       );
+
+      if (hasFirstChanged) {
+        await toggleSchoolApplicationStatusBack(id);
+      }
+
+      if (hasSecondChanged) {
+        await toggleSchoolApplicationStatus2Back(id);
+      }
 
       toast({
         variant: "success",

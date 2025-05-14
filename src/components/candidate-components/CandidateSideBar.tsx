@@ -58,6 +58,11 @@ const CandidateSideBar = () => {
       icon: student,
       href: "/candidate-info",
     },
+    {
+      title: "Settings",
+      icon: student,
+      href: "/candidate-settings",
+    },
   ];
   return (
     <div>

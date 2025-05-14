@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import {
   getAdminInfo,
   getAllActivities,
+  getStats,
   sendReminder,
 } from "@/lib/actions/user.actions";
 import messageIcon from "@/assets/message-icon.png";
@@ -87,6 +88,12 @@ const AdminDashboard = () => {
     queryFn: getAdminInfo,
     staleTime: 5 * 60 * 1000,
   });
+
+  const { data: statistics } = useQuery({
+    queryKey: ["statistics"],
+    queryFn: () => getStats(),
+  });
+  const adminStats = statistics?.approved_universities_canding;
 
   const {
     isLoading: isRecentActivityLoading,
@@ -322,7 +329,7 @@ const AdminDashboard = () => {
 
         <StatisticCard
           title="ADMITTED CANDIDATES"
-          value={0}
+          value={adminStats || 0}
           isLoading={isAdminLoading}
           className="border-r"
         />
@@ -335,7 +342,7 @@ const AdminDashboard = () => {
             </p>
           </div>
           <div className="font-bold text-4xl">
-            {isAdminLoading ? <Skeleton className="h-10 w-10" /> : 0}
+            {isAdminLoading ? <Skeleton className="h-10 w-10" /> : adminStats}
           </div>
         </div>
 

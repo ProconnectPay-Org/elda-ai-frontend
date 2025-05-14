@@ -24,7 +24,10 @@ import useAuth from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
+  applicationCompletedEmail,
   getSingleCandidate,
+  IntroEmail,
+  LoanEmail,
   singleCandidateReminder,
 } from "@/lib/actions/user.actions";
 import CopyText from "@/components/CopyText";
@@ -37,6 +40,9 @@ const CandidateProfile = () => {
   const { loggedInUser } = useAuth();
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
   const [isSendingReminder, setIsSendingReminder] = useState(false);
+  const [sendApplicationComplete, setSendApplicationComplete] = useState(false);
+  const [isSendingIntroEmail, setIsSendingIntroEmail] = useState(false);
+  const [isSendingLoanEmail, setIsSendingLoanEmail] = useState(false);
 
   const toggleAccordion = () => {
     setIsAccordionOpen((prev) => !prev);
@@ -66,6 +72,54 @@ const CandidateProfile = () => {
       console.error(error);
     } finally {
       setIsSendingReminder(false);
+    }
+  };
+
+  const introEmail = async () => {
+    setIsSendingIntroEmail(true);
+    try {
+      const response = await IntroEmail(id);
+      toast({
+        title: "Success",
+        description: response?.message,
+        variant: "success",
+      });      
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSendingIntroEmail(false);
+    }
+  };
+
+  const applicationComplete = async () => {
+    setSendApplicationComplete(true);
+    try {
+      const response = await applicationCompletedEmail(id);
+      toast({
+        title: "Success",
+        description: response?.message,
+        variant: "success",
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSendApplicationComplete(false);
+    }
+  };
+
+  const loanIntro = async () => {
+    setIsSendingLoanEmail(true);
+    try {
+      const response = await LoanEmail(id);
+      toast({
+        title: "Success",
+        description: response?.message,
+        variant: "success",
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSendingLoanEmail(false);
     }
   };
 
@@ -246,19 +300,60 @@ const CandidateProfile = () => {
               loggedInUser?.full_name ||
               "Manager not found"}
           </p>
-          <Button
-            className="border-red my-5 w-40"
-            variant={"outline"}
-            onClick={handleReminders}
-          >
-            {isSendingReminder ? (
-              <Loader2 className="animate-spin" />
-            ) : (
-              <div className="flex text-red gap-3 items-center">
-                Send Reminder <BellRingIcon stroke="red" />
-              </div>
-            )}
-          </Button>
+          <div className="flex flex-col my-5 gap-5">
+            <Button
+              className="border-red w-40"
+              variant={"outline"}
+              onClick={handleReminders}
+            >
+              {isSendingReminder ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                <div className="flex text-red gap-3 items-center">
+                  Send Reminder <BellRingIcon stroke="red" />
+                </div>
+              )}
+            </Button>
+            <Button
+              className="border-red w-40"
+              variant={"outline"}
+              onClick={introEmail}
+            >
+              {isSendingIntroEmail ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                <div className="flex text-red gap-3 items-center">
+                  Intro Email
+                </div>
+              )}
+            </Button>
+            <Button
+              className="border-red w-40"
+              variant={"outline"}
+              onClick={applicationComplete}
+            >
+              {sendApplicationComplete ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                <div className="flex text-red gap-3 items-center">
+                  Application Completed
+                </div>
+              )}
+            </Button>
+            <Button
+              className="border-red w-40"
+              variant={"outline"}
+              onClick={loanIntro}
+            >
+              {isSendingLoanEmail ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                <div className="flex text-red gap-3 items-center">
+                  Loan Intro
+                </div>
+              )}
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -292,7 +387,10 @@ const CandidateProfile = () => {
               <CopyText label="First Name" text={candidate?.first_name} />
               <CopyText label="Middle Name" text={candidate?.middle_name} />
               <CopyText label="Last Name" text={candidate?.last_name} />
-              <CopyText label="Maiden Name" text={candidate?.maiden_name || "N/A"} />
+              <CopyText
+                label="Maiden Name"
+                text={candidate?.maiden_name || "N/A"}
+              />
               <CopyText label="Gender" text={candidate?.gender} />
               <div>
                 <CopyText label="Birth Date" text={candidate?.birth_date} />

@@ -42,7 +42,13 @@ export function SchoolForm({
   initialValues = {},
   isLoading,
 }: SchoolFormProps) {
-  const {register, handleSubmit, reset, control, formState: { errors },} = useForm<SchoolFormData>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    formState: { errors },
+  } = useForm<SchoolFormData>({
     resolver: zodResolver(schoolFormSchema),
     defaultValues: {
       username: "",
@@ -69,15 +75,26 @@ export function SchoolForm({
   });
 
   useEffect(() => {
-    reset(mapBackendToFrontend(initialValues));
+    if (initialValues && Object.keys(initialValues).length > 0) {
+      reset(mapBackendToFrontend(initialValues));
+    }
   }, [initialValues, reset]);
 
   const handleDelete = () => {
-    reset();
+    reset({
+      username: "",
+      password: "",
+      applicationFee: "",
+      applicationFeeAmount: "",
+      schoolApplicationUrl: "",
+      applicationDeadline: "",
+      applicationSubmitted: "",
+      sessionTimeline: "",
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form className="space-y-6">
       <div className="space-y-2">
         <Label htmlFor="username">Username</Label>
         <Input
@@ -215,7 +232,11 @@ export function SchoolForm({
       </div>
 
       <div className="flex justify-end gap-4 mt-8">
-        <Button type="submit" variant="outline">
+        <Button
+          type="button"
+          onClick={handleSubmit(onSubmit)}
+          variant="outline"
+        >
           {isLoading ? <SaveBtn text="Saving" /> : "Save"}
         </Button>
         <Button type="button" variant="destructive" onClick={handleDelete}>
