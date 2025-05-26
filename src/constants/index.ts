@@ -1662,6 +1662,10 @@ export const degreeTypeOptions = [
     value: "Bachelor of Technology",
     label: "Bachelor of Technology",
   },
+  {
+    value: "Doctor of Veterinary Medicine",
+    label: "Doctor of Veterinary Medicine",
+  },
 ];
 
 export const advancedDegreeTypeOptions = [
