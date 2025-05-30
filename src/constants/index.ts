@@ -1542,6 +1542,7 @@ const supportedSchools = [
   { id: 64, name: "Mercer University" },
   { id: 65, name: "University of Manchester" },
   { id: 66, name: "University of Plymouth" },
+  { id: 67, name: "University of Salford" },
 ];
 
 const schoolsWithUniqueIds = supportedSchools.map((school, index) => ({
@@ -1661,6 +1662,10 @@ export const degreeTypeOptions = [
   {
     value: "Bachelor of Technology",
     label: "Bachelor of Technology",
+  },
+  {
+    value: "Doctor of Veterinary Medicine",
+    label: "Doctor of Veterinary Medicine",
   },
 ];
 
