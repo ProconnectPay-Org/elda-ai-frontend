@@ -22,7 +22,7 @@ export default function UsingPortal() {
             <iframe
               width="100%"
               height="100%"
-              src="https://drive.google.com/file/d/15Qu70WNSlWQtwSsdePwvsQ6kpcxRI3LU/preview"
+              src="https://drive.google.com/file/d/1aLM3XQTrE9lzThSkMKNjtxjSuaifFW08/view?usp=sharing"
               title="Google Drive video player"
               allow="autoplay"
               allowFullScreen
