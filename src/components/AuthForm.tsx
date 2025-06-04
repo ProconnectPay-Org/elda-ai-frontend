@@ -108,7 +108,7 @@ const AuthForm = () => {
           if (response.candidate.has_completed_application) {
             navigate("/candidate-status");
           } else {
-            navigate("/register");
+            navigate("/portal-usage");
           }
         } else if (userRole === "acs") {
           console.log(response);
