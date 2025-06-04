@@ -183,6 +183,8 @@ export const degreeOptions = [
   "Master of Medical Laboratory Science",
   "Master of Technology",
   "Higher National Diploma",
+  "Doctor of Pharmacy",
+  "Doctor of Veterinary Medicine",
 ];
 
 export const countryOptions = [

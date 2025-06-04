@@ -106,9 +106,9 @@ const AuthForm = () => {
           Cookies.set("AcademicRecommender", response.recommenders[1]);
           Cookies.set("otherRecommender", response.recommenders[2]);
           if (response.candidate.has_completed_application) {
-            navigate("/candidate-status");
+            navigate("/portal-usage");
           } else {
-            navigate("/register");
+            navigate("/portal-usage");
           }
         } else if (userRole === "acs") {
           console.log(response);
