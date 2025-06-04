@@ -1,6 +1,21 @@
 import CandidateNewLayout from "@/layouts/CandidateNewLayout";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export default function UsingPortal() {
+  const [isVideoComplete, setIsVideoComplete] = useState(false);
+  const navigate = useNavigate();
+
+  const handleVideoComplete = () => {
+    setIsVideoComplete(true);
+  };
+
+  const handleProceed = () => {
+    // Navigate to status page
+    navigate("/candidate-status");
+  };
+
   return (
     <CandidateNewLayout>
       <div className="flex flex-col gap-6">
@@ -26,9 +41,18 @@ export default function UsingPortal() {
               title="Google Drive video player"
               allow="autoplay"
               allowFullScreen
+              onPlay={() => console.log('Video started')}
+              onEnded={handleVideoComplete}
             ></iframe>
           </div>
           <h3 className="text-red font-medium">Watch the explainer video</h3>
+          <Button 
+            onClick={handleProceed}
+            disabled={!isVideoComplete}
+            className="mt-4"
+          >
+            {isVideoComplete ? "Proceed to Status Page" : "Watch Video to Proceed"}
+          </Button>
         </div>
       </div>
     </CandidateNewLayout>

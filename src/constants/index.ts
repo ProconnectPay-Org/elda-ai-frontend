@@ -183,8 +183,10 @@ export const degreeOptions = [
   "Master of Medical Laboratory Science",
   "Master of Technology",
   "Higher National Diploma",
+  "Ordinary National Diploma",
+  "Doctor of Optometry",
   "Doctor of Pharmacy",
-  "Doctor of Veterinary Medicine",
+  "Doctor of Veterinary Medicine"
 ];
 
 export const countryOptions = [
@@ -1667,6 +1669,11 @@ export const degreeTypeOptions = [
   {
     value: "Doctor of Veterinary Medicine",
     label: "Doctor of Veterinary Medicine",
+  },
+
+  {
+    value: "Doctor of Pharmacy",
+    label: "Doctor of Pharmacy",
   },
 ];
 
