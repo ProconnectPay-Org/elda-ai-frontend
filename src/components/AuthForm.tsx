@@ -106,7 +106,7 @@ const AuthForm = () => {
           Cookies.set("AcademicRecommender", response.recommenders[1]);
           Cookies.set("otherRecommender", response.recommenders[2]);
           if (response.candidate.has_completed_application) {
-            navigate("/portal-usage");
+            navigate("/candidate-status");
           } else {
             navigate("/portal-usage");
           }
