@@ -132,6 +132,10 @@ export default function CandidateStatusPage() {
       title: "Extra School Application Submission ",
       status: singleCandidate?.school_application_status2,
     },
+    {
+      title: "WAEC/NECO Result ",
+      // status: singleCandidate?.school_application_status2,
+    },
   ];
 
   const getApplicationStatus = () => {
