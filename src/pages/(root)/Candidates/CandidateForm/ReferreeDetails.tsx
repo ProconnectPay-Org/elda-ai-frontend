@@ -14,6 +14,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import Recommendation from "./Recommendation";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
+import { postEditedCandidate } from "@/lib/actions/staff.actions";
 
 const relationshipOptions = [
   "father",
@@ -55,6 +56,7 @@ const ReferreeDetails = () => {
   });
 
   const id = Cookies.get("candidate_id");
+  const candidateToken = Cookies.get("candidate_access_token");
 
   const [isModified, setIsModified] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -122,6 +124,11 @@ const ReferreeDetails = () => {
 
     try {
       await submitRefereeDetails(referee1Data, referee2Data);
+      await postEditedCandidate(
+        id!,
+        { is_ready_for_processing: true },
+        candidateToken!
+      );
       toast({
         variant: "success",
         title: "Success",
