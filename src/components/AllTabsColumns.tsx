@@ -17,6 +17,9 @@ import ReAssignModal from "./ReAssignModal";
 import NewSchoolCourseModal from "./NewSchoolCourseModal";
 import Cookies from "js-cookie";
 import MiniDropDown from "./MiniDropDown";
+import { serviceWithAgent } from "@/lib/actions/user.actions";
+import SaveBtn from "./SaveBtn";
+import { toast } from "./ui/use-toast";
 
 export const allTabsColumns = (
   handleDeleteCandidate: (userId: string, fullName: string) => void
@@ -220,6 +223,7 @@ export const allTabsColumns = (
       const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
       const [isUnAssignModalOpen, setIsUnAssignModalOpen] = useState(false);
       const [schoolCourseModalOpen, setSchoolCourseModalOpen] = useState(false);
+      const [loading, setLoading] = useState(false);
       const isAnalyst = Cookies.get("user_role") === "analyst";
 
       const openModal = () => {
@@ -348,6 +352,28 @@ export const allTabsColumns = (
               <DropdownMenuItem onClick={openModal} disabled={isAnalyst}>
                 School Application Status
               </DropdownMenuItem>
+              <DropdownMenuItem
+                disabled={loading}
+                onClick={async () => {
+                  if (!user_id) {
+                    console.error("User ID is undefined");
+                    return;
+                  }
+
+                  setLoading(true);
+                  try {
+                    const agentData = await serviceWithAgent(user_id);
+                    toast(agentData?.message);
+                  } catch (error) {
+                    console.error("Failed to fetch agent data:", error);
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+              >
+                {loading ? <SaveBtn text="Servicing" /> : "Service with agent"}
+              </DropdownMenuItem>
+
               <DropdownMenuItem disabled={isAnalyst}>
                 <Button
                   onClick={() => {
@@ -360,7 +386,7 @@ export const allTabsColumns = (
                       console.error("User ID is undefined");
                     }
                   }}
-                  className="w-full bg-red"
+                  className="w-full p-2 h-8 rounded-sm bg-red"
                 >
                   Delete Candidate
                 </Button>

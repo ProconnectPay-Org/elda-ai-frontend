@@ -6,13 +6,14 @@ import {
   getAllInterestedCandidates,
 } from "@/lib/actions/user.actions";
 import { useSearchParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import AdminLayout from "@/layouts/AdminLayout";
 import { interestedColumns } from "@/components/InterestedColumns";
 
 const InterestedCandidates = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isCSVLoading, setIsCSVLoading] = useState(false);
   const page = parseInt(searchParams.get("page") || "1", 10);
   const pageSize = 50;
 
@@ -113,11 +114,85 @@ const InterestedCandidates = () => {
       })
     ) || [];
 
+  const handleDownloadCSV = async () => {
+    try {
+      setIsCSVLoading(true);
+
+      let allResults: InterestedCandidatesProps[] = [];
+      let page = 1;
+      let hasNext = true;
+
+      // Fetch all pages
+      while (hasNext) {
+        const response = await getAllInterestedCandidates(page);
+        const results = response.results.map(
+          (candidate: InterestedCandidatesProps, index: number) => ({
+            serialNumber: (page - 1) * pageSize + index + 1,
+            full_name: candidate?.full_name || "No name",
+            email: candidate?.email || "No email",
+            phone: candidate?.phone || "No phone",
+            residence_country: candidate?.residence_country || "No country",
+            country_interested_in:
+              candidate?.country_interested_in || "No country",
+            enquiries: candidate?.enquiries || "No enquiries",
+            product: candidate?.product || "No product",
+            gender: candidate?.gender || "No gender",
+          })
+        );
+
+        allResults = [...allResults, ...results];
+
+        hasNext = !!response.next;
+        page++;
+      }
+
+      // Convert to CSV
+      const headers = Object.keys(allResults[0]);
+      const csvRows = [
+        headers.join(","), // header row
+        ...allResults.map((row) =>
+          headers.map((field) => `"${(row as any)[field] ?? ""}"`).join(",")
+        ),
+      ];
+
+      const csvContent = csvRows.join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv" });
+
+      // Download CSV
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "interested_candidates.csv";
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("CSV Download Error:", error);
+      alert("Failed to download CSV");
+    } finally {
+      setIsCSVLoading(false);
+    }
+  };
+
   if (allCandidatesError) return <p>Error: {allCandidatesError.message}</p>;
 
   return (
     <AdminLayout>
       <div className="w-full relative">
+        <div className="w-fit absolute left-0 mb-2 px-4 mt-4">
+          <button
+            onClick={handleDownloadCSV}
+            className="px-4 py-2 bg-red text-white rounded hover:bg-red-700 text-sm flex items-center gap-2"
+          >
+            {isCSVLoading ? (
+              <>
+                <span className="loader w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                Downloading...
+              </>
+            ) : (
+              "Download CSV"
+            )}
+          </button>
+        </div>
         {/* Display all candidates */}
         <DataTable
           columns={interestedColumns(handleDeleteCandidate)}

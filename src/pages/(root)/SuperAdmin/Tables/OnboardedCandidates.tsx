@@ -33,6 +33,7 @@ const OnboardedCandidates = () => {
   const [currentTab, setCurrentTab] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedBank, setSelectedBank] = useState<string>("");
+  const [isCSVLoading, setIsCSVLoading] = useState(false);
 
   // Pagination
   const page = parseInt(searchParams.get("page") || "1", 10);
@@ -139,6 +140,79 @@ const OnboardedCandidates = () => {
       serialNumber: i + 1,
     }));
 
+    const handleDownloadCSV = async () => {
+      try {
+        setIsCSVLoading(true);
+    
+        let allResults: ACSCandidateProps[] = [];
+        let page = 1;
+        let hasNext = true;
+    
+        // Fetch all pages
+        while (hasNext) {
+          const response = await getAllOnboardedCandidateData(page, searchQuery);
+          const results = response.results.map((candidate: ACSCandidateProps, index: number) => ({
+            serialNumber: (page - 1) * pageSize + index + 1,
+            full_name: candidate?.full_name || "No name",
+            first_country: candidate.first_country || "No country",
+            second_country: candidate.second_country || "No country",
+            assigned_university1: candidate.assigned_university1 || "None Assigned",
+            assigned_university2: candidate.assigned_university2 || "None assigned",
+            assigned_course1: candidate.assigned_course1 || "No course assigned",
+            assigned_course2: candidate.assigned_course2 || "No course assigned",
+            program_type1: candidate.program_type1 || "No program assigned",
+            program_type2: candidate.program_type2 || "No program assigned",
+            has_paid: candidate.has_paid ? "Yes" : "No",
+            bank: candidate.bank || "N/A",
+            email: candidate.email,
+            phone: candidate.phone_number,
+            whatsapp: candidate.whatsapp,
+            gender: candidate.gender,
+            age: candidate.age,
+            date_of_birth: candidate.date_of_birth,
+            class_of_degree: candidate.class_of_degree,
+            specific_cgpa: candidate.specific_cgpa,
+            graduate_of: candidate.graduate_of,
+            has_masters_degree: candidate.has_masters_degree,
+            state_of_residence: candidate.state_of_residence,
+            resume: candidate.resume,
+            created_at: candidate.created_at,
+            updated_at: candidate.updated_at,
+          }));
+    
+          allResults = [...allResults, ...results];
+    
+          hasNext = !!response.next;
+          page++;
+        }
+    
+        // Convert to CSV
+        const headers = Object.keys(allResults[0]);
+        const csvRows = [
+          headers.join(","), // header row
+          ...allResults.map((row) =>
+            headers.map((field) => `"${(row as any)[field] ?? ""}"`).join(",")
+          ),
+        ];
+    
+        const csvContent = csvRows.join("\n");
+        const blob = new Blob([csvContent], { type: "text/csv" });
+    
+        // Download CSV
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "onboarded_candidates.csv";
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error("CSV Download Error:", error);
+        alert("Failed to download CSV");
+      } finally {
+        setIsCSVLoading(false);
+      }
+    };
+
   if (allCandidatesError) return <p>Error: {allCandidatesError.message}</p>;
 
   return (
@@ -198,6 +272,21 @@ const OnboardedCandidates = () => {
                 ))}
               </select>
             )}
+          </div>
+          <div className="w-full flex justify-end mb-2 px-4 mt-4">
+            <button
+              onClick={handleDownloadCSV}
+              className="px-4 py-2 bg-red text-white rounded hover:bg-red-700 text-sm flex items-center gap-2"
+            >
+              {isCSVLoading ? (
+                <>
+                  <span className="loader w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  Downloading...
+                </>
+              ) : (
+                "Download CSV"
+              )}
+            </button>
           </div>
           <TabsContent value="all">
             <DataTable
