@@ -892,12 +892,13 @@ export const getAdmissionStatus = async (id: number | string) => {
 
 export const serviceWithAgent = async (id: number | string) => {
   try {
-    const token = Cookies.get("access_token");
+    const token =
+      Cookies.get("access_token") || Cookies.get("staff_access_token");
     if (!token)
       throw new Error("Access token is missing. Please sign in again.");
 
     const response = await axios.get(
-      `https://elda-ai-automation.onrender.com/agent/single/${id}`,
+      `https://elda-ai-automation.onrender.com/api/agent/single/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

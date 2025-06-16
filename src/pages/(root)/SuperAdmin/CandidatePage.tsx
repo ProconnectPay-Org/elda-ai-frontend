@@ -67,6 +67,8 @@ const CandidatePage = () => {
     gre_document: "GRE or GMAT result",
     passport_photograph: "Passport Photograph",
     change_of_name: "Change of name document",
+    waec: "WAEC/NECO Result",
+    recommendation_letter: "Recommendation Letter",
   };
 
   if (isLoading || !candidate) {

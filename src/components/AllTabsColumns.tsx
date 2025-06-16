@@ -20,6 +20,7 @@ import MiniDropDown from "./MiniDropDown";
 import { serviceWithAgent } from "@/lib/actions/user.actions";
 import SaveBtn from "./SaveBtn";
 import { toast } from "./ui/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const allTabsColumns = (
   handleDeleteCandidate: (userId: string, fullName: string) => void
@@ -224,6 +225,7 @@ export const allTabsColumns = (
       const [isUnAssignModalOpen, setIsUnAssignModalOpen] = useState(false);
       const [schoolCourseModalOpen, setSchoolCourseModalOpen] = useState(false);
       const [loading, setLoading] = useState(false);
+      const queryClient = useQueryClient();
       const isAnalyst = Cookies.get("user_role") === "analyst";
 
       const openModal = () => {
@@ -355,17 +357,33 @@ export const allTabsColumns = (
               <DropdownMenuItem
                 disabled={loading}
                 onClick={async () => {
-                  if (!user_id) {
+                  if (!id) {
                     console.error("User ID is undefined");
                     return;
                   }
 
                   setLoading(true);
                   try {
-                    const agentData = await serviceWithAgent(user_id);
-                    toast(agentData?.message);
-                  } catch (error) {
+                    const agentData = await serviceWithAgent(id);
+                    toast({
+                      description:
+                        `${agentData?.message}, ${agentData?.note}` ||
+                        "Successfully running",
+                      variant: "success",
+                    });
+                    queryClient.invalidateQueries({
+                      queryKey: ["singleCandidate"],
+                    });
+                  } catch (error: any) {
                     console.error("Failed to fetch agent data:", error);
+                    toast({
+                      title: "Error",
+                      description:
+                        error?.response?.data?.detail ||
+                        error?.message ||
+                        "Failed to fetch agent data",
+                      variant: "destructive",
+                    });
                   } finally {
                     setLoading(false);
                   }

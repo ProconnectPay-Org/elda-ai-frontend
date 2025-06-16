@@ -31,7 +31,9 @@ const UploadDocuments: React.FC = () => {
   const [uploadStates, setUploadStates] = useState<{
     [key: number]: UploadState;
   }>({});
-  const [isUploaded, setIsUploaded] = useState<boolean[]>(Array(13).fill(false));
+  const [isUploaded, setIsUploaded] = useState<boolean[]>(
+    Array(13).fill(false)
+  );
   const verificationDocumentsId = Cookies.get("verification_document_id");
   const candidate_id = Cookies.get("candidate_id");
 
@@ -49,6 +51,8 @@ const UploadDocuments: React.FC = () => {
     "gre_document",
     "change_of_name",
     "passport_photograph",
+    "waec",
+    "recommendation_letter",
   ];
 
   const beLabels = [
@@ -65,6 +69,8 @@ const UploadDocuments: React.FC = () => {
     "GRE or GMAT result",
     "Change of name document",
     "Passport Photograph",
+    "WAEC/NECO Result",
+    "Recommendation letter",
   ];
 
   const { data, isLoading } = useQuery({

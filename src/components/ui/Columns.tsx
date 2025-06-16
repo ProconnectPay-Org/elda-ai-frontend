@@ -15,6 +15,10 @@ import SchoolApplicationModal from "../SchoolApplicationModal";
 import { useState } from "react";
 import NewSchoolCourseModal from "../NewSchoolCourseModal";
 import MiniDropDown from "../MiniDropDown";
+import { toast } from "./use-toast";
+import { serviceWithAgent } from "@/lib/actions/user.actions";
+import SaveBtn from "../SaveBtn";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const columns: ColumnDef<CandidateData>[] = [
   {
@@ -198,6 +202,8 @@ export const columns: ColumnDef<CandidateData>[] = [
     cell: ({ row }) => {
       const [isSchoolModalOpen, setIsSchoolModalOpen] = useState(false); // Separate modal state
       const [schoolCourseModalOpen, setSchoolCourseModalOpen] = useState(false);
+      const [loading, setLoading] = useState(false);
+      const queryClient = useQueryClient();
 
       const openSchoolModal = () => {
         setIsSchoolModalOpen(true);
@@ -292,6 +298,43 @@ export const columns: ColumnDef<CandidateData>[] = [
                 <Link target="_blank" to={`/admission-status/${id}`}>
                   Admission Status
                 </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                disabled={loading}
+                onClick={async () => {
+                  if (!id) {
+                    console.error("User ID is undefined");
+                    return;
+                  }
+
+                  setLoading(true);
+                  try {
+                    const agentData = await serviceWithAgent(id);
+                    toast({
+                      description:
+                        `${agentData?.message}, ${agentData?.note}` ||
+                        "Successfully running",
+                      variant: "success",
+                    });
+                    queryClient.invalidateQueries({
+                      queryKey: ["singleCandidate"],
+                    });
+                  } catch (error: any) {
+                    console.error("Failed to fetch agent data:", error);
+                    toast({
+                      title: "Error",
+                      description:
+                        error?.response?.data?.detail ||
+                        error?.message ||
+                        "Failed to fetch agent data",
+                      variant: "destructive",
+                    });
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+              >
+                {loading ? <SaveBtn text="Servicing" /> : "Service with agent"}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
