@@ -68,7 +68,8 @@ const CandidatePage = () => {
     passport_photograph: "Passport Photograph",
     change_of_name: "Change of name document",
     waec: "WAEC/NECO Result",
-    recommendation_letter: "Recommendation Letter",
+    recommendation_letter: "Academic Recommendation Letter",
+    // professional_recommendation_letter: "Professional Recommendation Letter",
   };
 
   if (isLoading || !candidate) {
