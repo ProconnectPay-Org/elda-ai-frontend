@@ -51,9 +51,9 @@ const DocumentList = () => {
     passport_photograph: "Passport Photograph",
     change_of_name: "Change of name document",
     waec: "WAEC/NECO Result",
-    recommendation_letter: "Academic Recommendation Letter",
-    professional_recommendation_letter: "Professional Recommendation Letter"
-
+    academic_recommendation_letter: "Academic Recommendation Letter",
+    professional_recommendation_letter: "Professional Recommendation Letter",
+    proconnectpay_recommendation_letter: "ProconnectPay Recommendation Letter",
   };
 
   const handleFileChange = async (

@@ -52,7 +52,9 @@ const UploadDocuments: React.FC = () => {
     "change_of_name",
     "passport_photograph",
     "waec",
-    "recommendation_letter",
+    "academic_recommendation_letter",
+    "professional_recommendation_letter",
+    "proconnectpay_recommendation_letter",
   ];
 
   const beLabels = [
@@ -73,6 +75,7 @@ const UploadDocuments: React.FC = () => {
     // "Recommendation letter",
     "Academic Recommendation Letter",
     "Professional Recommendation Letter",
+    "ProconnectPay Recommendation Letter",
   ];
 
   const { data, isLoading } = useQuery({

@@ -116,6 +116,9 @@ const CandidateStatus = () => {
     utility_bill: "Utility Bill",
     admission_letter: "Admission Letter",
     gre_document: "GRE or GMAT result",
+    academic_recommendation_letter: "Academic Recommendation Letter",
+    professional_recommendation_letter: "Professional Recommendation Letter",
+    proconnectpay_recommendation_letter: "ProconnectPay Recommendation Letter",
   };
 
   const statusProps = [
@@ -147,21 +150,21 @@ const CandidateStatus = () => {
   const getApplicationStatus = () => {
     const app1Complete = singleCandidate?.school_application_status1 === "True";
     const app2Complete = singleCandidate?.school_application_status2 === "True";
-    
+
     if (app1Complete && app2Complete) {
       return {
         message: "All Applications Completed",
-        color: "from-green-500"
+        color: "from-green-500",
       };
     } else if (app1Complete || app2Complete) {
       return {
         message: "One Application Completed",
-        color: "from-yellow-500"
+        color: "from-yellow-500",
       };
     } else {
       return {
         message: "Not Completed",
-        color: "from-red"
+        color: "from-red",
       };
     }
   };
@@ -184,7 +187,12 @@ const CandidateStatus = () => {
           </p>
           <p className="font-medium">
             For issues and support, email{" "}
-            <a className="text-blue-500 underline" href="mailto:info@proconnectpay.com">info@proconnectpay.com</a>
+            <a
+              className="text-blue-500 underline"
+              href="mailto:info@proconnectpay.com"
+            >
+              info@proconnectpay.com
+            </a>
           </p>
         </div>
 
@@ -200,30 +208,47 @@ const CandidateStatus = () => {
         </div>
 
         <div className="flex flex-col gap-5">
-
-         <div className="px-5 overflow-x-auto">
-           <table className="w-full border-collapse min-w-[640px]">
-             <thead>
-               <tr>
-                 <th className="text-left font-semibold text-sm md:text-lg pb-4 pr-4">Recommended Schools</th>
-                 <th className="text-left font-semibold text-sm md:text-lg pb-4 pr-4">Program Types</th>
-                 <th className="text-left font-semibold text-sm md:text-lg pb-4">Recommended Courses</th>
-               </tr>
-             </thead>
-             <tbody>
-               <tr className="hover:bg-gray-50">
-                 <td className="pr-4 pb-4 text-sm md:text-base">{singleCandidate?.assigned_university1}</td>
-                 <td className="pr-4 pb-4 text-sm md:text-base">{singleCandidate?.program_type1}</td>
-                 <td className="pb-4 text-sm md:text-base">{singleCandidate?.assigned_course1}</td>
-               </tr>
-               <tr className="hover:bg-gray-50">
-                 <td className="pr-4 pb-4 text-sm md:text-base">{singleCandidate?.assigned_university2}</td>
-                 <td className="pr-4 pb-4 text-sm md:text-base">{singleCandidate?.program_type2}</td>
-                 <td className="pb-4 text-sm md:text-base">{singleCandidate?.assigned_course2}</td>
-               </tr>
-             </tbody>
-           </table>
-         </div>
+          <div className="px-5 overflow-x-auto">
+            <table className="w-full border-collapse min-w-[640px]">
+              <thead>
+                <tr>
+                  <th className="text-left font-semibold text-sm md:text-lg pb-4 pr-4">
+                    Recommended Schools
+                  </th>
+                  <th className="text-left font-semibold text-sm md:text-lg pb-4 pr-4">
+                    Program Types
+                  </th>
+                  <th className="text-left font-semibold text-sm md:text-lg pb-4">
+                    Recommended Courses
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="hover:bg-gray-50">
+                  <td className="pr-4 pb-4 text-sm md:text-base">
+                    {singleCandidate?.assigned_university1}
+                  </td>
+                  <td className="pr-4 pb-4 text-sm md:text-base">
+                    {singleCandidate?.program_type1}
+                  </td>
+                  <td className="pb-4 text-sm md:text-base">
+                    {singleCandidate?.assigned_course1}
+                  </td>
+                </tr>
+                <tr className="hover:bg-gray-50">
+                  <td className="pr-4 pb-4 text-sm md:text-base">
+                    {singleCandidate?.assigned_university2}
+                  </td>
+                  <td className="pr-4 pb-4 text-sm md:text-base">
+                    {singleCandidate?.program_type2}
+                  </td>
+                  <td className="pb-4 text-sm md:text-base">
+                    {singleCandidate?.assigned_course2}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           {singleCandidateLoading
             ? Array(3)
                 .fill(null)

@@ -328,7 +328,9 @@ export type VerificationDocument = {
   post_graduate_transcript: string | null;
   passport_photograph: string | null;
   change_of_name: string | null;
-  recommendation_letter: string | null;
+  academic_recommendation_letter: string | null;
+  professional_recommendation_letter: string | null;
+  proconnectpay_recommendation_letter: string | null;
   waec: string | null;
   candidate: string | undefined;
 };
