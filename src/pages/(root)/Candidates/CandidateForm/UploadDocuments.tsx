@@ -70,7 +70,9 @@ const UploadDocuments: React.FC = () => {
     "Change of name document",
     "Passport Photograph",
     "WAEC/NECO Result",
-    "Recommendation letter",
+    // "Recommendation letter",
+    "Academic Recommendation Letter",
+    "Professional Recommendation Letter",
   ];
 
   const { data, isLoading } = useQuery({
