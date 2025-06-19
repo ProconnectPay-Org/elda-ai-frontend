@@ -330,7 +330,7 @@ export type VerificationDocument = {
   change_of_name: string | null;
   academic_recommendation_letter: string | null;
   professional_recommendation_letter: string | null;
-  proconnectpay_recommendation_letter: string | null;
+  proconnectpay_recommendations_letter: string | null;
   waec: string | null;
   candidate: string | undefined;
 };

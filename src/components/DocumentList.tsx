@@ -53,7 +53,7 @@ const DocumentList = () => {
     waec: "WAEC/NECO Result",
     academic_recommendation_letter: "Academic Recommendation Letter",
     professional_recommendation_letter: "Professional Recommendation Letter",
-    proconnectpay_recommendation_letter: "ProconnectPay Recommendation Letter",
+    proconnectpay_recommendations_letter: "ProconnectPay Recommendation Letter",
   };
 
   const handleFileChange = async (

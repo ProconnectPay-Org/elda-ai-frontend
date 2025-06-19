@@ -118,7 +118,7 @@ const CandidateStatus = () => {
     gre_document: "GRE or GMAT result",
     academic_recommendation_letter: "Academic Recommendation Letter",
     professional_recommendation_letter: "Professional Recommendation Letter",
-    proconnectpay_recommendation_letter: "ProconnectPay Recommendation Letter",
+    proconnectpay_recommendations_letter: "ProconnectPay Recommendation Letter",
   };
 
   const statusProps = [

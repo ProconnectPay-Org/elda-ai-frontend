@@ -54,7 +54,7 @@ const UploadDocuments: React.FC = () => {
     "waec",
     "academic_recommendation_letter",
     "professional_recommendation_letter",
-    "proconnectpay_recommendation_letter",
+    "proconnectpay_recommendations_letter",
   ];
 
   const beLabels = [
