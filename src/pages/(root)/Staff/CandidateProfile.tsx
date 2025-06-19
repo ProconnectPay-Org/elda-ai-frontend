@@ -83,7 +83,7 @@ const CandidateProfile = () => {
         title: "Success",
         description: response?.message,
         variant: "success",
-      });      
+      });
     } catch (error) {
       console.error(error);
     } finally {
@@ -178,7 +178,9 @@ const CandidateProfile = () => {
     passport_photograph: "Passport Photograph",
     change_of_name: "Change of name document",
     waec: "WAEC/NECO Result",
-    recommendation_letter: "Recommendation Letter",
+    academic_recommendation_letter: "Academic Recommendation Letter",
+    professional_recommendation_letter: "Professional Recommendation Letter",
+    proconnectpay_recommendations_letter: "ProconnectPay Recommendation Letter",
   };
 
   return (
