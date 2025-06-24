@@ -32,9 +32,13 @@ import {
   getStaffAccountDetails,
   getStaffDetails,
 } from "@/lib/actions/staff.actions";
-import { singleCandidateReminder } from "@/lib/actions/user.actions";
+import {
+  serviceWithAgent,
+  singleCandidateReminder,
+} from "@/lib/actions/user.actions";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SaveBtn from "@/components/SaveBtn";
 const AssignedCandidates = () => {
   const { loggedInUser } = useAuth();
   const [selectedRowData, setSelectedRowData] = useState<CandidateData | null>(
@@ -47,6 +51,7 @@ const AssignedCandidates = () => {
   const page = parseInt(searchParams.get("page") || "1", 10);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState(searchQuery);
+  const [loading, setLoading] = useState(false);
 
   const pageSize = 50;
 
@@ -207,6 +212,38 @@ const AssignedCandidates = () => {
     }
   };
 
+  const handleServiceWithAgent = async (id: string) => {
+    if (!id) {
+      console.error("User ID is undefined");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const agentData = await serviceWithAgent(id);
+      toast({
+        description:
+          `${agentData?.message}, ${agentData?.note}` || "Successfully running",
+        variant: "success",
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["singleCandidate"],
+      });
+    } catch (error: any) {
+      console.error("Failed to fetch agent data:", error);
+      toast({
+        title: "Error",
+        description:
+          error?.response?.data?.detail ||
+          error?.message ||
+          "Failed to fetch agent data",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <RootLayout title="Assigned Candidates">
       <p className="text-red text-[32px] font-semibold">
@@ -312,7 +349,7 @@ const AssignedCandidates = () => {
 
         {selectedRowData && (
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogContent className="w-[364px] md:w-full overflow-y-scroll">
+            <DialogContent className="w-[364px] max-h-[500px] md:w-full overflow-y-auto">
               <DialogHeader>
                 <div className="flex w-full justify-between mt-4">
                   <DialogTitle className="text-red">
@@ -328,17 +365,28 @@ const AssignedCandidates = () => {
                   </Link>
                 </div>
               </DialogHeader>
-              <div className="flex flex-col gap-8 text-sm">
-                <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
-                  <div className="w-1/2">
+              <div className="flex flex-col gap-5 md:gap-8 text-sm">
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="col-span-2 md:col-span-1 flex flex-col items-start">
                     <label>Full Name</label>
-                    <p className="text-primary font-medium">
-                      {selectedRowData.full_name || "No name"}
-                    </p>
+                    <span
+                      onClick={() =>
+                        copyToClipboard(
+                          selectedRowData.full_name || "No name",
+                          toast
+                        )
+                      }
+                      className="flex items-center gap-1"
+                    >
+                      <p className="text-primary font-medium">
+                        {selectedRowData.full_name || "No name"}
+                      </p>
+                      <CopyIcon size={16} cursor="pointer" />
+                    </span>
                   </div>
-                  <div className="w-1/2 flex flex-col items-start">
+                  <div className="col-span-2 md:col-span-1 flex flex-col items-start">
                     <label>Status</label>
-                    <div className="flex gap-3 items-center justify-center">
+                    <div className="flex gap-3 items-start justify-start">
                       <p
                         className={`${
                           selectedRowData.status === "completed"
@@ -349,7 +397,7 @@ const AssignedCandidates = () => {
                         {selectedRowData.status}{" "}
                       </p>
                       <Button
-                        className="border-red my-5"
+                        className="border-red py-0 w-fit"
                         variant={"outline"}
                         onClick={() => {
                           if (selectedRowData?.id) {
@@ -361,15 +409,16 @@ const AssignedCandidates = () => {
                           <Loader2 className="animate-spin" />
                         ) : (
                           <div className="flex text-red gap-3 items-center">
-                            <BellRingIcon stroke="red" />
+                            <BellRingIcon stroke="red" size={12} />
                           </div>
                         )}
                       </Button>
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
-                  <div className="w-1/2">
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="col-span-2 md:col-span-1">
                     <label>Phone Number</label>
                     <span
                       onClick={() =>
@@ -385,7 +434,7 @@ const AssignedCandidates = () => {
                       <CopyIcon size={16} cursor="pointer" />
                     </span>
                   </div>
-                  <div className="w-1/2">
+                  <div className="col-span-2 md:col-span-1">
                     <label>Email Address</label>
                     <span
                       onClick={() =>
@@ -403,8 +452,8 @@ const AssignedCandidates = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
-                  <div className="md:max-w-48">
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="col-span-2 md:col-span-1">
                     <label>Recommended School 1</label>
                     <p className="text-primary font-medium">
                       <span
@@ -421,7 +470,7 @@ const AssignedCandidates = () => {
                       </span>
                     </p>
                   </div>
-                  <div className="md:w-1/2">
+                  <div className="col-span-2 md:col-span-1">
                     <label>Recommended Course 1</label>
                     <p className="text-primary font-medium">
                       <span
@@ -440,8 +489,8 @@ const AssignedCandidates = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-0 justify-between">
-                  <div className="md:w-1/2">
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="col-span-2 md:col-span-1">
                     <label>Recommended School 2</label>
                     <p className="text-primary font-medium">
                       <span
@@ -458,7 +507,7 @@ const AssignedCandidates = () => {
                       </span>
                     </p>
                   </div>
-                  <div className="md:w-1/2">
+                  <div className="col-span-2 md:col-span-1">
                     <label>Recommended Course 2</label>
                     <p className="text-primary font-medium">
                       <span
@@ -490,12 +539,24 @@ const AssignedCandidates = () => {
                     docType="Draft SOP 2"
                     icon=""
                   />
+
                   <Link
                     to={`/refine-resume/${selectedRowData.id}`}
-                    className="bg-red w-40 hover:bg-pale-bg text-white hover:text-red border hover:border-red text-center py-2 rounded-md"
+                    className="bg-red p-2 hover:bg-pale-bg text-white hover:text-red border hover:border-red text-center py-2 rounded-md"
                   >
                     Refine Resume
                   </Link>
+                  <Button
+                    variant={"outline"}
+                    onClick={() => handleServiceWithAgent(selectedRowData.id!)}
+                    className="p-2 border-red text-red h-fit w-fit"
+                  >
+                    {loading ? (
+                      <SaveBtn text="Servicing" />
+                    ) : (
+                      "Service with agent"
+                    )}
+                  </Button>
                 </div>
               </div>
             </DialogContent>

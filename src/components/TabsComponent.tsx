@@ -2,11 +2,12 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTable } from "./DataTable";
 import { allTabsColumns } from "./AllTabsColumns";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import {
   deleteStaff,
   getAllTableCandidates,
+  serviceWithAgent,
   singleCandidateReminder,
 } from "@/lib/actions/user.actions";
 import { Link } from "react-router-dom";
@@ -32,8 +33,9 @@ import { Button } from "./ui/button";
 import { toast } from "./ui/use-toast";
 import ReAssignModal from "./ReAssignModal";
 import { useCandidateState } from "@/hooks/useCandidateState";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { CandidateData } from "@/types";
+import SaveBtn from "./SaveBtn";
 
 const TabsComponent = () => {
   const {
@@ -75,6 +77,7 @@ const TabsComponent = () => {
     },
     utils: { fetchAllCandidates },
   } = useCandidateState();
+  const [loading, setLoading] = useState(false);
 
   const token = Cookies.get("access_token");
 
@@ -116,6 +119,8 @@ const TabsComponent = () => {
     staleTime: 5 * 1000 * 60,
   });
 
+  const queryClient = useQueryClient();
+
   // Pagination Controls
   const { handleNextPage, handlePreviousPage } = usePagination(
     allCandidates,
@@ -137,6 +142,38 @@ const TabsComponent = () => {
       console.error(error);
     } finally {
       setIsSendingReminder(false);
+    }
+  };
+
+  const handleServiceWithAgent = async (id: string) => {
+    if (!id) {
+      console.error("User ID is undefined");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const agentData = await serviceWithAgent(id);
+      toast({
+        description:
+          `${agentData?.message}, ${agentData?.note}` || "Successfully running",
+        variant: "success",
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["allTableCandidates"],
+      });
+    } catch (error: any) {
+      console.error("Failed to fetch agent data:", error);
+      toast({
+        title: "Error",
+        description:
+          error?.response?.data?.detail ||
+          error?.message ||
+          "Failed to fetch agent data",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -487,6 +524,17 @@ const TabsComponent = () => {
                   </Button>
                   <Button className="bg-red" onClick={openReAssignModal}>
                     Reassign
+                  </Button>
+                  <Button
+                    variant={"outline"}
+                    onClick={() => handleServiceWithAgent(selectedRowData.id!)}
+                    className="p-2 border-red text-red h-fit w-fit"
+                  >
+                    {loading ? (
+                      <SaveBtn text="Servicing" />
+                    ) : (
+                      "Service with agent"
+                    )}
                   </Button>
                 </div>
               </div>

@@ -8,11 +8,6 @@ interface SidebarProps {
   selectedCandidate: ACSCandidateProps | null;
   setSelectedCandidate: (candidate: ACSCandidateProps) => void;
   openMenu: boolean;
-  hasNextPage: boolean;
-  isLoadingMore: boolean;
-  loadMoreCandidates: () => void;
-  loadedPages: number;
-  totalPages: number;
 }
 
 const AcsSidebar: React.FC<SidebarProps> = ({
@@ -20,11 +15,6 @@ const AcsSidebar: React.FC<SidebarProps> = ({
   selectedCandidate,
   setSelectedCandidate,
   openMenu,
-  hasNextPage,
-  isLoadingMore,
-  loadMoreCandidates,
-  loadedPages,
-  totalPages,
 }) => {
   // Check if candidate has all recommendation fields filled
   const [recommendedCandidates, setRecommendedCandidates] = useState<
@@ -82,21 +72,6 @@ const AcsSidebar: React.FC<SidebarProps> = ({
         onSelect={setSelectedCandidate}
         type="acs"
       />
-
-      {hasNextPage && (
-        <div className="mt-4 flex flex-col items-center">
-          <button
-            onClick={loadMoreCandidates}
-            disabled={isLoadingMore}
-            className="px-4 py-2 bg-red text-white text-sm rounded disabled:opacity-50"
-          >
-            {isLoadingMore ? "Loading..." : "Load More Candidates"}
-          </button>
-          <p className="text-xs text-gray-600 mt-1">
-            Page {loadedPages} of {totalPages}
-          </p>
-        </div>
-      )}
 
       <div className="my-5">
         <CandidateLists
