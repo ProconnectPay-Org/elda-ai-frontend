@@ -93,6 +93,21 @@ const ResumePdf = () => {
   const [selectedEducation, setSelectedEducation] =
     useState<AdvancedEducation | null>(null);
 
+  const countryISO = formData?.country_current_reside;
+  const countryName = getCountryNameFromISO(countryISO);
+
+  const countryBirthISO = formData?.country_of_birth;
+  const countryBirthName = getDemonymFromISO(countryBirthISO);
+
+  // If the ISO lookup fails, fallback to the raw country string
+  const finalCountry =
+    countryName && countryName !== "Unknown" ? countryName : countryISO;
+
+  const finalCountryBirth =
+    countryBirthName && countryBirthName !== "Unknown"
+      ? countryBirthName
+      : countryBirthISO;
+
   useEffect(() => {
     if (formData) {
       const sortedJobExperiences = processJobExperiences(formData);
@@ -158,7 +173,7 @@ const ResumePdf = () => {
             🌎
             <p className="text-sm">
               {formData?.city_current_reside}, {formData?.state_current_reside}{" "}
-              State, {getCountryNameFromISO(formData?.country_current_reside)}
+              State, {finalCountry}
             </p>
           </div>
         </div>
@@ -195,9 +210,7 @@ const ResumePdf = () => {
           </div>
           <div className="flex">
             <p className="font-bold width-200-text-sm">Nationality:</p>
-            <p className="width-200-text-sm">
-              {getDemonymFromISO(formData?.country_of_birth)}
-            </p>
+            <p className="width-200-text-sm">{finalCountryBirth}</p>
           </div>
           <div className="flex">
             <p className="font-bold width-200-text-sm">Interests:</p>
