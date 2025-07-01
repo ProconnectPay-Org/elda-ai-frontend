@@ -1,7 +1,7 @@
 import PcpLogo from "@/assets/proconnect-logo-new-no-bg.png";
 import EldaLogo from "@/assets/elda-new-logo.png";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
@@ -170,6 +170,13 @@ const CandidateLogin = () => {
                   "Sign In"
                 )}
               </Button>
+              <div className="w-full mx-auto">
+                <Link to="/forgot-password">
+                  <button className="text-red bg-transparent text-center text-sm underline">
+                    Forgot Password
+                  </button>
+                </Link>
+              </div>
             </div>
           </form>
         </Form>

@@ -55,9 +55,7 @@ const CustomInput = <T extends FormSchema>({
               <Input
                 id={name}
                 placeholder={placeholder}
-                className={`input-class ${
-                  name === "email" ? "lowercase" : "normal-case"
-                }`}
+                className={`input-class`}
                 type={
                   isPasswordField && showPassword
                     ? "text"

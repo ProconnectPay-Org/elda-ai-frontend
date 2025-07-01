@@ -50,12 +50,14 @@ import OtherInformation from "./pages/(root)/CandidatesNew/OtherInformation";
 import AdmissionStatusPrompt from "./pages/(root)/CandidatesNew/AdmissionStatusPrompt";
 import Error404 from "./pages/(root)/Error404";
 import Settings from "./pages/(root)/CandidatesNew/Settings";
+import ForgotPassword from "./pages/Auth/ForgotPassword";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<Home />} path="/" />
+        <Route element={<ForgotPassword />} path="/forgot-password" />
         <Route element={<GeneratePDF />} path="/pdf/:id" />
         {/* <Route element={<SignUp />} path="/sign-up" /> */}
         <Route element={<DownloadResume />} path="/download-resume/:id" />

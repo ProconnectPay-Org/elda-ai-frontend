@@ -23,8 +23,7 @@ const AssignCandidate: React.FC = () => {
     MultiValue<OptionType>
   >([]);
   const [candidateOptions, setCandidateOptions] = useState<OptionType[]>([]);
-  const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
-  const [loadingMore, setLoadingMore] = useState(false);
+
   const [staffOptions, setStaffOptions] = useState<OptionType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,10 +47,13 @@ const AssignCandidate: React.FC = () => {
     staleTime: 5 * 1000,
   });
 
-  const { data: firstPage, isLoading: allCandidatesLoading } = useQuery({
-    queryKey: ["candidates", 1],
-    queryFn: () => getCandidatesToAssign(),
-    staleTime: 5 * 60 * 1000,
+  const { data: allCandidates, isLoading: allCandidatesLoading } = useQuery({
+    queryKey: ["candidates"],
+    queryFn: async () => {
+      const count = 1000;
+      return getCandidatesToAssign(count);
+    },
+    staleTime: 5 * 1000,
   });
 
   const handleStaffChange = (selectedOption: SingleValue<OptionType>) => {
@@ -224,44 +226,18 @@ const AssignCandidate: React.FC = () => {
     }
   };
 
-  const handleLoadMore = async () => {
-    if (!nextPageUrl) return;
-    setLoadingMore(true);
-    try {
-      const response = await fetch(nextPageUrl);
-      const data = await response.json();
-
-      const newOptions = data.results
-        .filter((candidate: CandidateData) => !candidate.assigned)
-        .map((candidate: CandidateData) => ({
-          value: candidate.id,
-          label: candidate.full_name,
-        }));
-
-      setCandidateOptions((prev) => [...prev, ...newOptions]);
-      setNextPageUrl(data.next);
-    } catch (error) {
-      console.error("Failed to load more candidates:", error);
-    } finally {
-      setLoadingMore(false);
-    }
-  };
-
   useEffect(() => {
-    if (firstPage) {
-      const unassignedCandidates = firstPage.results.filter(
+    if (allCandidates) {
+      const unassignedCandidates = allCandidates.results.filter(
         (candidate: CandidateData) => !candidate.assigned
       );
-
       const options = unassignedCandidates.map((candidate: CandidateData) => ({
         value: candidate.id,
-        label: candidate.full_name,
+        label: candidate?.full_name,
       }));
-
       setCandidateOptions(options);
-      setNextPageUrl(firstPage.next); // save next page URL
     }
-  }, [firstPage]);
+  }, [allCandidates]);
 
   useEffect(() => {
     if (staffResponse && staffResponse.results) {
@@ -345,17 +321,6 @@ const AssignCandidate: React.FC = () => {
                     }}
                     isLoading={allCandidatesLoading}
                   />
-                  {nextPageUrl && (
-                    <button
-                      onClick={handleLoadMore}
-                      disabled={loadingMore}
-                      type="button"
-                      className="mt-2 px-4 py-1 border rounded text-sm bg-gray-100 hover:bg-gray-200"
-                    >
-                      {loadingMore ? "Loading..." : "Load More Candidates"}
-                    </button>
-                  )}
-
                   {error && <p className="text-sm text-red">{error}</p>}
                 </div>
               </>

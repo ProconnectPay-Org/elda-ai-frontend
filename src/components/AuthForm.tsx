@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { authFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CustomInput from "./CustomInput";
 import { adminSignIn } from "@/lib/actions/user.actions";
 import { toast } from "./ui/use-toast";
@@ -184,6 +184,13 @@ const AuthForm = () => {
                 "Sign In"
               )}
             </Button>
+            <div className="w-full mx-auto">
+              <Link to="/forgot-password">
+                <button className="text-red text-center text-sm underline">
+                  Forgot Password
+                </button>
+              </Link>
+            </div>
           </div>
         </form>
       </Form>

@@ -251,12 +251,12 @@ export const getSingleCandidate = async (id: number | string) => {
   return response.data;
 };
 
-export const getCandidatesToAssign = async () => {
+export const getCandidatesToAssign = async (count?: number) => {
   const token = Cookies.get("access_token");
 
   if (!token) throw new Error("Access token is missing. Please sign in again.");
 
-  const url = `${API_URL}all-candidates-small/`; // Default count to a high number if not provided
+  const url = `${API_URL}all-candidates-small/?count=${count}`; // Default count to a high number if not provided
 
   try {
     const response = await axios.get(url, {
