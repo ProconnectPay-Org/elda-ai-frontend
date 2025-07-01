@@ -69,10 +69,6 @@ export const businessLinks = [
     name: "Privacy Policy",
   },
   {
-    url: "https://proconnectpay.com/global-loan#terms-conditions",
-    name: "Terms and Conditions",
-  },
-  {
     url: "https://proconnectpay.com/university-admission",
     name: "University Admission",
   },
