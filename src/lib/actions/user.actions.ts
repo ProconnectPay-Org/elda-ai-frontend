@@ -25,6 +25,62 @@ export const adminSignIn = async ({ email, password }: signInProps) => {
   }
 };
 
+export const requestPassword = async (email: string) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}auth/request-password-reset/`,
+      {
+        email,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Reset password:", error);
+    throw error;
+  }
+};
+
+export const verifyOtp = async ({
+  email,
+  otp,
+}: {
+  email: string;
+  otp: string;
+}) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}auth/verify-reset-password-otp`,
+      {
+        email,
+        otp,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Reset password:", error);
+    throw error;
+  }
+};
+
+export const resetPassword = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
+  try {
+    const response = await axios.post(`${API_URL}auth/reset-password`, {
+      email,
+      password,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Reset password:", error);
+    throw error;
+  }
+};
+
 export const logoutAccount = async (
   role: "candidate" | "staff" | "admin" | "analyst" | "acs"
 ) => {
