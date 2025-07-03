@@ -29,7 +29,7 @@ type PersistedState = {
 };
 
 const ForgotPassword = () => {
-  const [step, setStep] = useState(2); // track current step: 1=email, 2=otp, 3=new password
+  const [step, setStep] = useState(1); // track current step: 1=email, 2=otp, 3=new password
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
