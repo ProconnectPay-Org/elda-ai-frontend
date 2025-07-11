@@ -1,5 +1,5 @@
 import { ACSCandidateProps } from "@/types";
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import Logo from "@/assets/elda-new-logo.png";
 import CandidateLists from "./CandidateLists";
 
@@ -8,6 +8,8 @@ interface SidebarProps {
   selectedCandidate: ACSCandidateProps | null;
   setSelectedCandidate: (candidate: ACSCandidateProps) => void;
   openMenu: boolean;
+  isLoadingMore?: boolean;
+  totalCandidates?: number;
 }
 
 const AcsSidebar: React.FC<SidebarProps> = ({
@@ -15,45 +17,41 @@ const AcsSidebar: React.FC<SidebarProps> = ({
   selectedCandidate,
   setSelectedCandidate,
   openMenu,
+  isLoadingMore = false,
+  totalCandidates = 0,
 }) => {
-  // Check if candidate has all recommendation fields filled
-  const [recommendedCandidates, setRecommendedCandidates] = useState<
-    ACSCandidateProps[]
-  >([]);
-  const [notRecommendedCandidates, setNotRecommendedCandidates] = useState<
-    ACSCandidateProps[]
-  >([]);
-  const [allCandidates, setAllCandidates] = useState<ACSCandidateProps[]>([]);
+  // Memoized candidate categorization
+  const { recommendedCandidates, notRecommendedCandidates, allCandidates } =
+    useMemo(() => {
+      const paidCandidates = candidates.filter(
+        (candidate) => candidate.has_paid
+      );
 
-  // Function to check if a candidate has all required fields filled
-  const isRecommended = (candidate: ACSCandidateProps) => candidate.recommended;
+      const recommended = paidCandidates.filter(
+        (candidate) => candidate.recommended
+      );
+      const notRecommended = paidCandidates.filter(
+        (candidate) => !candidate.recommended
+      );
 
-  // Update candidate lists when candidates change
-  useEffect(() => {
-    const paidCandidates = candidates.filter((candidate) => candidate.has_paid);
+      // Create sets for efficient lookup
+      const recommendedIds = new Set(recommended.map((c) => c.id));
+      const notRecommendedIds = new Set(notRecommended.map((c) => c.id));
 
-    const recommended = paidCandidates.filter(isRecommended);
-    const notRecommended = paidCandidates.filter(
-      (candidate) => !isRecommended(candidate)
-    );
+      const remaining = candidates
+        .filter(
+          (candidate) =>
+            !recommendedIds.has(candidate.id) &&
+            !notRecommendedIds.has(candidate.id)
+        )
+        .sort((a, b) => a.full_name.localeCompare(b.full_name));
 
-    setRecommendedCandidates(recommended);
-    setNotRecommendedCandidates(notRecommended);
-
-    // Exclude candidates already in recommended or not recommended lists
-    const recommendedIds = new Set(recommended.map((c) => c.id));
-    const notRecommendedIds = new Set(notRecommended.map((c) => c.id));
-
-    const uniqueAllCandidates = candidates
-      .filter(
-        (candidate) =>
-          !recommendedIds.has(candidate.id) &&
-          !notRecommendedIds.has(candidate.id)
-      )
-      .sort((a, b) => a.full_name.localeCompare(b.full_name));
-
-    setAllCandidates(uniqueAllCandidates);
-  }, [candidates]);
+      return {
+        recommendedCandidates: recommended,
+        notRecommendedCandidates: notRecommended,
+        allCandidates: remaining,
+      };
+    }, [candidates]);
 
   return (
     <aside
@@ -64,6 +62,13 @@ const AcsSidebar: React.FC<SidebarProps> = ({
       <div className="flex items-center justify-center h-36">
         <img src={Logo} alt="logo" className="object-contain" />
       </div>
+
+      {/* Loading indicator */}
+      {isLoadingMore && (
+        <div className="text-center py-2 text-sm text-gray-600">
+          Loading more candidates... ({totalCandidates} loaded)
+        </div>
+      )}
 
       <CandidateLists
         title="Candidates Without Recommendation"
