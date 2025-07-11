@@ -22,9 +22,6 @@ const AssignCandidate: React.FC = () => {
   const [selectedCandidates, setSelectedCandidates] = useState<
     MultiValue<OptionType>
   >([]);
-  const [candidateOptions, setCandidateOptions] = useState<OptionType[]>([]);
-
-  const [staffOptions, setStaffOptions] = useState<OptionType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedAction, setSelectedAction] = useState<
@@ -38,7 +35,6 @@ const AssignCandidate: React.FC = () => {
   const [targetStaff, setTargetStaff] = useState<SingleValue<OptionType>>(null);
 
   const isAnalyst = Cookies.get("user_role") === "analyst";
-
   const queryClient = useQueryClient();
 
   const { data: staffResponse, isLoading: isLoadingStaff } = useQuery({
@@ -47,14 +43,31 @@ const AssignCandidate: React.FC = () => {
     staleTime: 5 * 1000,
   });
 
-  const { data: allCandidates, isLoading: allCandidatesLoading } = useQuery({
-    queryKey: ["candidates"],
+  const { data: candidatesResponse, isLoading: candidatesLoading } = useQuery({
+    queryKey: ["candidates", selectedAction],
     queryFn: async () => {
       const count = 1000;
-      return getCandidatesToAssign(count);
+      return getCandidatesToAssign(
+        count,
+        selectedAction === "assign" ? "False" : "True"
+      );
     },
     staleTime: 5 * 1000,
   });
+
+  // Create staff options
+  const staffOptions =
+    staffResponse?.results?.map((staff: CandidateData) => ({
+      value: staff.id,
+      label: staff.user?.full_name,
+    })) || [];
+
+  // Create candidate options - no local filtering needed since server handles it
+  const candidateOptions =
+    candidatesResponse?.results?.map((candidate: CandidateData) => ({
+      value: candidate.id,
+      label: candidate?.full_name,
+    })) || [];
 
   const handleStaffChange = (selectedOption: SingleValue<OptionType>) => {
     setSelectedStaff(selectedOption);
@@ -101,7 +114,6 @@ const AssignCandidate: React.FC = () => {
         const candidates = (foundStaff.assigned_candidates || []).map(
           (candidate: CandidateData) => {
             const { first_name, middle_name, last_name } = candidate;
-
             const hasValidName = first_name?.trim() && last_name?.trim();
 
             return {
@@ -140,6 +152,8 @@ const AssignCandidate: React.FC = () => {
         description: "Candidates assigned",
         variant: "success",
       });
+      queryClient.invalidateQueries({ queryKey: ["candidates"] });
+      queryClient.invalidateQueries({ queryKey: ["staff"] });
     } catch (error) {
       console.error("Error assigning candidates:", error);
       toast({
@@ -153,7 +167,6 @@ const AssignCandidate: React.FC = () => {
     }
   };
 
-  // 🔄 Re-Assign
   const reassignCandidate = async () => {
     if (!sourceStaff || !targetStaff || selectedCandidates.length === 0) {
       setError(
@@ -178,6 +191,7 @@ const AssignCandidate: React.FC = () => {
         description: "Candidates reassigned",
         variant: "success",
       });
+      queryClient.invalidateQueries({ queryKey: ["candidates"] });
       queryClient.invalidateQueries({ queryKey: ["staff"] });
     } catch (error) {
       console.error(error);
@@ -191,11 +205,8 @@ const AssignCandidate: React.FC = () => {
     }
   };
 
-  // 🚫 Unassign
   const unassignCandidate = async () => {
     if (!selectedStaff || checkedCandidates.length === 0) {
-      console.log(checkedCandidates);
-
       setError("Please select a staff and candidates to unassign.");
       return;
     }
@@ -213,6 +224,7 @@ const AssignCandidate: React.FC = () => {
         description: "Candidates unassigned",
         variant: "success",
       });
+      queryClient.invalidateQueries({ queryKey: ["candidates"] });
       queryClient.invalidateQueries({ queryKey: ["staff"] });
     } catch (error) {
       console.error(error);
@@ -226,29 +238,15 @@ const AssignCandidate: React.FC = () => {
     }
   };
 
+  // Clear form when action changes
   useEffect(() => {
-    if (allCandidates) {
-      const unassignedCandidates = allCandidates.results.filter(
-        (candidate: CandidateData) => !candidate.assigned
-      );
-      const options = unassignedCandidates.map((candidate: CandidateData) => ({
-        value: candidate.id,
-        label: candidate?.full_name,
-      }));
-      setCandidateOptions(options);
-    }
-  }, [allCandidates]);
-
-  useEffect(() => {
-    if (staffResponse && staffResponse.results) {
-      const options = staffResponse.results.map((staff: CandidateData) => ({
-        value: staff.id,
-        label: staff.user?.full_name,
-      }));
-      setStaffOptions(options);
-      setError("");
-    }
-  }, [staffResponse]);
+    setSelectedStaff(null);
+    setSelectedCandidates([]);
+    setSourceStaff(null);
+    setTargetStaff(null);
+    setCheckedCandidates([]);
+    setError(null);
+  }, [selectedAction]);
 
   return (
     <AdminLayout>
@@ -293,194 +291,181 @@ const AssignCandidate: React.FC = () => {
           </div>
 
           {/* ASSIGN INPUT FIELDS */}
-          <div className="flex flex-col gap-3 w-full">
-            {selectedAction === "assign" && (
-              <>
-                <div className="flex flex-col w-full gap-1.5">
-                  <p>Select Staff </p>
-                  <ReactSelect
-                    options={staffOptions}
-                    onChange={handleStaffChange}
-                    className="border-gray-border"
-                    placeholder="Select Staff"
-                    value={selectedStaff}
-                    isLoading={isLoadingStaff}
-                  />
-                </div>
-                <div className="flex flex-col w-full gap-1.5">
-                  <p>Select Candidate(s)</p>
-                  <ReactSelect
-                    isMulti
-                    options={candidateOptions}
-                    onChange={handleCandidateChange}
-                    className="border-gray-border"
-                    placeholder="Select Candidates"
-                    value={selectedCandidates}
-                    components={{
-                      MultiValueContainer: () => null,
-                    }}
-                    isLoading={allCandidatesLoading}
-                  />
-                  {error && <p className="text-sm text-red">{error}</p>}
-                </div>
-              </>
-            )}
-          </div>
+          {selectedAction === "assign" && (
+            <div className="flex flex-col gap-3 w-full">
+              <div className="flex flex-col w-full gap-1.5">
+                <p>Select Staff</p>
+                <ReactSelect
+                  options={staffOptions}
+                  onChange={handleStaffChange}
+                  className="border-gray-border"
+                  placeholder="Select Staff"
+                  value={selectedStaff}
+                  isLoading={isLoadingStaff}
+                />
+              </div>
+              <div className="flex flex-col w-full gap-1.5">
+                <p>Select Candidate(s)</p>
+                <ReactSelect
+                  isMulti
+                  options={candidateOptions}
+                  onChange={handleCandidateChange}
+                  className="border-gray-border"
+                  placeholder="Select Candidates"
+                  value={selectedCandidates}
+                  components={{
+                    MultiValueContainer: () => null,
+                  }}
+                  isLoading={candidatesLoading}
+                />
+              </div>
+            </div>
+          )}
 
           {/* RE-ASSIGN INPUT FIELDS */}
-          <div className="w-full">
-            {/* Reassign extra info (old staff) */}
-            {selectedAction === "reassign" && (
-              <div className="flex flex-col gap-3">
-                <div className="flex flex-col w-full gap-1.5">
-                  <p>Select Current Staff</p>
-                  <ReactSelect
-                    options={staffOptions}
-                    onChange={(option) => {
-                      setSourceStaff(option);
-                      handleSourceStaffChange(option); // you’ll define this
-                    }}
-                    className="border-gray-border"
-                    placeholder="Select Staff"
-                    value={sourceStaff}
-                    isLoading={isLoadingStaff}
-                  />
-                </div>
-
-                <div className="flex flex-col w-full gap-1.5">
-                  <p>Select Candidates to re-assign</p>
-                  <ReactSelect
-                    isMulti
-                    options={selectedStaffCandidates}
-                    onChange={handleCandidateChange}
-                    className="border-gray-border"
-                    placeholder="Select Candidates"
-                    value={selectedCandidates}
-                    components={{
-                      MultiValueContainer: () => null,
-                    }}
-                    isLoading={isLoadingStaff}
-                  />
-                </div>
-
-                {/* New staff to reassign to */}
-                <div className="flex flex-col w-full gap-1.5">
-                  <p>Select New Staff</p>
-                  <ReactSelect
-                    options={staffOptions}
-                    onChange={setTargetStaff}
-                    className="border-gray-border"
-                    placeholder="Select New Staff"
-                    value={targetStaff}
-                    isLoading={isLoadingStaff}
-                  />
-                </div>
-
-                {error && <p className="text-sm text-red">{error}</p>}
+          {selectedAction === "reassign" && (
+            <div className="flex flex-col gap-3 w-full">
+              <div className="flex flex-col w-full gap-1.5">
+                <p>Select Current Staff</p>
+                <ReactSelect
+                  options={staffOptions}
+                  onChange={(option) => {
+                    setSourceStaff(option);
+                    handleSourceStaffChange(option);
+                  }}
+                  className="border-gray-border"
+                  placeholder="Select Staff"
+                  value={sourceStaff}
+                  isLoading={isLoadingStaff}
+                />
               </div>
-            )}
-          </div>
+
+              <div className="flex flex-col w-full gap-1.5">
+                <p>Select Candidates to re-assign</p>
+                <ReactSelect
+                  isMulti
+                  options={selectedStaffCandidates}
+                  onChange={handleCandidateChange}
+                  className="border-gray-border"
+                  placeholder="Select Candidates"
+                  value={selectedCandidates}
+                  components={{
+                    MultiValueContainer: () => null,
+                  }}
+                  isLoading={isLoadingStaff}
+                />
+              </div>
+
+              <div className="flex flex-col w-full gap-1.5">
+                <p>Select New Staff</p>
+                <ReactSelect
+                  options={staffOptions}
+                  onChange={setTargetStaff}
+                  className="border-gray-border"
+                  placeholder="Select New Staff"
+                  value={targetStaff}
+                  isLoading={isLoadingStaff}
+                />
+              </div>
+            </div>
+          )}
 
           {/* UN ASSIGN INPUT FIELDS */}
-          <div className="w-full">
-            {/* Unassign case: After staff selected, show assigned candidates */}
-            {selectedAction === "unassign" && (
-              <>
-                <div className="flex flex-col w-full gap-1.5">
-                  <p>Select Staff </p>
-                  <ReactSelect
-                    options={staffOptions}
-                    onChange={handleStaffChange}
-                    className="border-gray-border"
-                    placeholder="Select Staff"
-                    value={selectedStaff}
-                    isLoading={isLoadingStaff}
-                  />
-                </div>
-                <div className="flex flex-col gap-2 mt-4">
-                  <p>Select Candidates to Unassign</p>
-                  {selectedStaffCandidates.length > 0 ? (
-                    <>
-                      <label className="flex items-center gap-2 font-semibold text-lg my-5">
+          {selectedAction === "unassign" && (
+            <div className="flex flex-col gap-3 w-full">
+              <div className="flex flex-col w-full gap-1.5">
+                <p>Select Staff</p>
+                <ReactSelect
+                  options={staffOptions}
+                  onChange={handleStaffChange}
+                  className="border-gray-border"
+                  placeholder="Select Staff"
+                  value={selectedStaff}
+                  isLoading={isLoadingStaff}
+                />
+              </div>
+              <div className="flex flex-col gap-2 mt-4">
+                <p>Select Candidates to Unassign</p>
+                {selectedStaffCandidates.length > 0 ? (
+                  <>
+                    <label className="flex items-center gap-2 font-semibold text-lg my-5">
+                      <input
+                        type="checkbox"
+                        checked={
+                          checkedCandidates.length ===
+                          selectedStaffCandidates.length
+                        }
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setCheckedCandidates(selectedStaffCandidates);
+                          } else {
+                            setCheckedCandidates([]);
+                          }
+                        }}
+                      />
+                      Select All Candidates
+                    </label>
+
+                    {selectedStaffCandidates.map((candidate) => (
+                      <label
+                        key={candidate.value}
+                        className="flex items-center gap-2"
+                      >
                         <input
                           type="checkbox"
-                          checked={
-                            checkedCandidates.length ===
-                            selectedStaffCandidates.length
-                          }
+                          checked={checkedCandidates.some(
+                            (c) => c.value === candidate.value
+                          )}
                           onChange={(e) => {
                             if (e.target.checked) {
-                              setCheckedCandidates(selectedStaffCandidates);
+                              setCheckedCandidates((prev) => [
+                                ...prev,
+                                candidate,
+                              ]);
                             } else {
-                              setCheckedCandidates([]);
+                              setCheckedCandidates((prev) =>
+                                prev.filter((c) => c.value !== candidate.value)
+                              );
                             }
                           }}
                         />
-                        Select All Candidates
+                        {candidate.label?.trim()
+                          ? candidate.label
+                          : "No name ~ has not filled form yet"}
                       </label>
+                    ))}
+                  </>
+                ) : (
+                  <p>No candidates assigned to this staff.</p>
+                )}
+              </div>
+            </div>
+          )}
 
-                      {selectedStaffCandidates.map((candidate) => (
-                        <label
-                          key={candidate.value}
-                          className="flex items-center gap-2"
-                        >
-                          <input
-                            type="checkbox"
-                            checked={checkedCandidates.some(
-                              (c) => c.value === candidate.value
-                            )}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setCheckedCandidates((prev) => [
-                                  ...prev,
-                                  candidate,
-                                ]);
-                              } else {
-                                setCheckedCandidates((prev) =>
-                                  prev.filter(
-                                    (c) => c.value !== candidate.value
-                                  )
-                                );
-                              }
-                            }}
-                          />
-                          {candidate.label?.trim()
-                            ? candidate.label
-                            : "No name ~ has not filled form yet"}
-                        </label>
-                      ))}
-                    </>
-                  ) : (
-                    <p>No candidates assigned to this staff.</p>
-                  )}
-                </div>
-              </>
-            )}
-          </div>
+          {error && <p className="text-sm text-red mt-2">{error}</p>}
 
           {/* Display selected candidates */}
-          <div className="mt-4">
-            {selectedCandidates.length > 0 && (
-              <div>
-                <ul className="flex flex-col flex-wrap gap-2">
-                  {selectedCandidates.map((candidate) => (
-                    <li
-                      key={candidate.value}
-                      className="flex border border-gray-border rounded-full items-center gap-2 bg-gray-200 py-1 px-2 justify-between"
+          {selectedCandidates.length > 0 && (
+            <div className="mt-4 w-full">
+              <ul className="flex flex-col flex-wrap gap-2">
+                {selectedCandidates.map((candidate) => (
+                  <li
+                    key={candidate.value}
+                    className="flex border border-gray-border rounded-full items-center gap-2 bg-gray-200 py-1 px-2 justify-between"
+                  >
+                    {candidate.label}
+                    <button
+                      className="text-red-500"
+                      onClick={() => handleRemoveCandidate(candidate)}
                     >
-                      {candidate.label}
-                      <button
-                        className="text-red-500"
-                        onClick={() => handleRemoveCandidate(candidate)}
-                      >
-                        <XCircleIcon className="w-4 h-4" />
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
+                      <XCircleIcon className="w-4 h-4" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <Button
             className="bg-red mt-10 w-full h-12 text-lg"
             disabled={isLoading || isAnalyst}
