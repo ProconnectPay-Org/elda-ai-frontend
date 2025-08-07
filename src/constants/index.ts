@@ -168,6 +168,7 @@ export const degreeOptions = [
   "Bachelor of Nursing",
   "Bachelor of Medical Laboratory Science",
   "Bachelor of Technology",
+  "Bachelor of Agriculture",
   "Master of Science (MSC)",
   "Master of Arts (MA)",
   "Master of Business Administration (MBA)",
