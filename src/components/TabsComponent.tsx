@@ -267,6 +267,7 @@ const TabsComponent = () => {
               <option value="course">Assigned Course</option>
               <option value="program">Program Type</option>
               <option value="school">Assigned School</option>
+              <option value="country">Assigned Country</option>
             </select>
           </div>
 
