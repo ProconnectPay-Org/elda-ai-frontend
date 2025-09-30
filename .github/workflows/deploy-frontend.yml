@@ -1,0 +1,137 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    # Set environment variables based on branch
+    env:
+      IS_STAGING: ${{ github.ref == 'refs/heads/staging' }}
+      IS_PRODUCTION: ${{ github.ref == 'refs/heads/main' }}
+      DEPLOY_PATH: ${{ github.ref == 'refs/heads/staging' && '/home/procstoo/staging.elda.cloud' || '/home/procstoo/elda.cloud' }}
+      SITE_URL: ${{ github.ref == 'refs/heads/staging' && 'https://staging.elda.cloud' || 'https://elda.cloud' }}
+      ENVIRONMENT: ${{ github.ref == 'refs/heads/staging' && 'staging' || 'production' }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Display deployment info
+      run: |
+        echo "🚀 Deploying to: ${{ env.ENVIRONMENT }}"
+        echo "📍 Deploy path: ${{ env.DEPLOY_PATH }}"
+        echo "🌐 Site URL: ${{ env.SITE_URL }}"
+        echo "🌿 Branch: ${{ github.ref_name }}"
+      
+    - name: Build React app
+      env:
+        REACT_APP_API_URL: https://elda-ai-drf.onrender.com/api/
+        CI: false  # Disable treating warnings as errors
+      run: npm run build
+      
+    - name: Create .htaccess file
+      run: |
+        cat > dist/.htaccess << 'EOF'
+        RewriteOptions inherit
+        <IfModule mod_rewrite.c>
+          RewriteEngine On
+          RewriteBase /
+          RewriteRule ^index\.html$ - [L]
+          RewriteCond %{REQUEST_FILENAME} !-f
+          RewriteCond %{REQUEST_FILENAME} !-d
+          RewriteCond %{REQUEST_FILENAME} !-l
+          RewriteRule . /index.html [L]
+        </IfModule>
+        
+        # Cache static assets
+        <IfModule mod_expires.c>
+          ExpiresActive on
+          ExpiresByType text/css "access plus 1 year"
+          ExpiresByType application/javascript "access plus 1 year"
+          ExpiresByType image/png "access plus 1 year"
+          ExpiresByType image/jpg "access plus 1 year"
+          ExpiresByType image/jpeg "access plus 1 year"
+          ExpiresByType image/gif "access plus 1 year"
+          ExpiresByType image/ico "access plus 1 year"
+          ExpiresByType image/svg+xml "access plus 1 year"
+        </IfModule>
+        EOF
+
+    - name: Deploy to VPS
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        port: 21098
+        timeout: 60s
+        command_timeout: 10m
+        script_stop: true
+        envs: TERM
+        script: |
+          export TERM=xterm
+          echo "Creating backup..."
+          cd ${{ env.DEPLOY_PATH }}
+          
+          # Create backup directory
+          mkdir -p backups
+          
+          # Backup current files if they exist
+          if [ -f "index.html" ]; then
+            tar -czf backups/backup_$(date +%Y%m%d_%H%M%S).tar.gz *.html *.js *.css *.ico *.png *.jpg *.svg *.json *.txt static/ .htaccess 2>/dev/null || true
+          fi
+          
+          # Clean old files
+          rm -f *.html *.js *.css *.ico *.png *.jpg *.svg *.json *.txt .htaccess
+          rm -rf static/
+          
+          echo "Backup and cleanup completed"
+          
+    - name: Copy build files to ${{ env.ENVIRONMENT }} server
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        port: 21098
+        source: "dist/*"
+        target: "${{ env.DEPLOY_PATH }}/"
+        strip_components: 1
+        
+    - name: Set permissions and finalize
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        port: 21098
+        script: |
+          cd ${{ env.DEPLOY_PATH }}
+          echo "Setting file permissions..."
+          
+          # Try to fix permissions - if it fails, note that manual cPanel fix may be needed
+          find . -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" -o -name "*.ico" -o -name "*.png" -o -name "*.jpg" -o -name "*.svg" -o -name "*.json" -o -name "*.txt" -o -name "*.map" -o -name ".htaccess" \) -exec chmod 644 {} \; 2>/dev/null || echo "Note: If site doesn't load, fix permissions via cPanel File Manager"
+          
+          find . -type d -exec chmod 755 {} \; 2>/dev/null || true
+          
+          echo "Frontend deployment completed successfully!"
+          echo "✅ Environment: ${{ env.ENVIRONMENT }}"
+          echo "✅ Site URL: ${{ env.SITE_URL }}"
+          echo "Files deployed:"
+          ls -la
+          echo ""
+          echo "If site shows 403 errors, fix permissions via cPanel File Manager:"
+          echo "Files: 644, Directories: 755"
