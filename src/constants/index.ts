@@ -168,6 +168,7 @@ export const degreeOptions = [
   "Bachelor of Nursing",
   "Bachelor of Medical Laboratory Science",
   "Bachelor of Technology",
+  "Bachelor of Agriculture",
   "Master of Science (MSC)",
   "Master of Arts (MA)",
   "Master of Business Administration (MBA)",
@@ -1684,6 +1685,10 @@ export const degreeTypeOptions = [
   {
     value: "Bachelor of Technology",
     label: "Bachelor of Technology",
+  },
+  {
+    value: "Bachelor of Agriculture",
+    label: "Bachelor of Agriculture",
   },
   {
     value: "Doctor of Veterinary Medicine",
