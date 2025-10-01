@@ -1,4 +1,4 @@
-// Create a shared constant file to ensure consistency
+
 // constants/documents.ts
 
 export const DOCUMENT_FIELDS = [
