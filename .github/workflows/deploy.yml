@@ -38,7 +38,7 @@ jobs:
       
     - name: Build React app
       env:
-        VITE_API_URL=https://elda-ai-drf.onrender.com/api/
+        VITE_API_URL: https://elda-ai-drf.onrender.com/api/
         CI: false  # Disable treating warnings as errors
       run: npm run build
       
