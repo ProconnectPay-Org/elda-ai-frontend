@@ -93,7 +93,10 @@ const HomeFooter = () => {
             {bankPartners.map((footerLink) => {
               return (
                 // <Link to={footerLink.url} key={footerLink.url} target="_blank">
-                <li className="font-medium lg:font-semibold hover:font-normal hover:text-red">
+                <li
+                  key={footerLink.name}
+                  className="font-medium lg:font-semibold hover:font-normal hover:text-red"
+                >
                   {footerLink.name}
                 </li>
                 // {/* </Link> */}
