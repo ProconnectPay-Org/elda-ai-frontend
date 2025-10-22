@@ -1556,7 +1556,7 @@ const supportedSchools = [
   { id: 55, name: "Niagara University" },
   { id: 56, name: "Tennessee Technological University" },
   { id: 57, name: "The University of West Florida" },
-  { id: 58, name: "Monroe College" },
+  { id: 58, name: "Monroe University" },
   { id: 59, name: "Florida Institute of Technology" },
   { id: 60, name: "Lawrence Technological University" },
   { id: 61, name: "University of St. Thomas (Houston)" },
