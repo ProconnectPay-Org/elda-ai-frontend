@@ -14,7 +14,8 @@ const CountrySelector = () => {
   const { control, formState, getValues } = useFormContext();
   const [isCountryLoading, setIsCountryLoading] = useState(false);
   const { toast } = useToast();
-  const API_URL = "https://elda-ai-drf.onrender.com/api/onboarding-candidate/s";
+  // const API_URL = "https://elda-ai-drf.onrender.com/api/onboarding-candidate/s";
+  const API_URL = "https://elda-ai-backend-xbtb.onrender.com/api/onboarding-candidate/s";
 
   const handleSaveCountries = async (
     e: React.MouseEvent<HTMLButtonElement>

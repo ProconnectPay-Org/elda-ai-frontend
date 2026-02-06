@@ -39,8 +39,8 @@ const DegreeForm = () => {
     // Determine degree ID and form values dynamically
     const degreeId = Cookies.get(`${degreeType}_degree_id`);
     const url = degreeId
-      ? `https://elda-ai-drf.onrender.com/api/onboarding-candidate/s/${email}/degrees/${degreeId}`
-      : `https://elda-ai-drf.onrender.com/api/onboarding-candidate/s/${email}/degrees/${
+      ? `https://elda-ai-backend-xbtb.onrender.com/api/onboarding-candidate/s/${email}/degrees/${degreeId}`
+      : `https://elda-ai-backend-xbtb.onrender.com/api/onboarding-candidate/s/${email}/degrees/${
           degreeType === "first" ? 1 : 2
         }`;
 
