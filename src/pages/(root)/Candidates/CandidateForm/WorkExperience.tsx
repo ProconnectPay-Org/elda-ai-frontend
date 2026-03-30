@@ -63,33 +63,35 @@ const WorkExperience = () => {
 
   const queryClient = useQueryClient();
 
-  // Update jobs state when data is fetched
+  // Update jobs state when data is fetched or if no data exists
   useEffect(() => {
-    if (fetchedJobs) {
-      const updatedJobs = [...fetchedJobs];
+    // If we have job IDs but they are still loading, wait.
+    if (jobsLoading && jobExperienceIds.length > 0) return;
 
-      // Fill with empty jobs if less than 3
-      while (updatedJobs.length < 3) {
-        updatedJobs.push({
-          id: 0,
-          business_name: "",
-          professional_status: "",
-          job_title: "",
-          employment_type: "",
-          state: "",
-          country: "",
-          year_started: "",
-          year_ended: "",
-          company_description: "",
-          job_summary: "",
-          job_status: "",
-          candidate: id,
-        });
-      }
+    const baseJobs = fetchedJobs || [];
+    const updatedJobs = [...baseJobs];
 
-      setJobs(updatedJobs.slice(0, 3));
+    // Fill with empty jobs if less than 3
+    while (updatedJobs.length < 3) {
+      updatedJobs.push({
+        id: 0,
+        business_name: "",
+        professional_status: "",
+        job_title: "",
+        employment_type: "",
+        state: "",
+        country: "",
+        year_started: "",
+        year_ended: "",
+        company_description: "",
+        job_summary: "",
+        job_status: updatedJobs.length === 0 ? "current" : "former",
+        candidate: id,
+      } as JobExperience);
     }
-  }, [fetchedJobs]);
+
+    setJobs(updatedJobs.slice(0, 3));
+  }, [fetchedJobs, id, jobsLoading, jobExperienceIds.length]);
 
   const divClass = "flex flex-col w-full md:w-1/2";
   const outerDivClass =
@@ -557,8 +559,8 @@ const WorkExperience = () => {
 
       {/* Reuseable Job Container */}
       <div>
-        {jobs.map((job, index) => (
-          <ReuseableJobs key={job.id} job={job} index={index} />
+        {jobs.slice(0, jobsCount).map((job, index) => (
+          <ReuseableJobs key={job.id || index} job={job} index={index} />
         ))}
       </div>
     </div>
