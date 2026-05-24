@@ -105,7 +105,7 @@ const DocumentList = () => {
       >
         <div className="flex items-center gap-2 md:gap-4">
           <p className="font-semibold text-sm md:text-2xl text-red">
-            Verification Documents
+            Upload Documents
           </p>
           <div className="border border-red px-2 h-6 flex items-center gap-2 rounded-md">
             <img src={IconProgress} alt="Progress Icon" />
