@@ -12,7 +12,7 @@ jobs:
     env:
       IS_STAGING: ${{ github.ref == 'refs/heads/staging' }}
       IS_PRODUCTION: ${{ github.ref == 'refs/heads/main' }}
-      DEPLOY_PATH: ${{ github.ref == 'refs/heads/staging' && '/home/procstoo/staging.elda.cloud' || '/home/procstoo/elda.cloud' }}
+      DEPLOY_PATH: ${{ github.ref == 'refs/heads/staging' && '/home/procttkd/staging.elda.cloud' || '/home/procttkd/elda.cloud' }}
       SITE_URL: ${{ github.ref == 'refs/heads/staging' && 'https://staging.elda.cloud' || 'https://elda.cloud' }}
       ENVIRONMENT: ${{ github.ref == 'refs/heads/staging' && 'staging' || 'production' }}
     
