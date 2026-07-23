@@ -309,13 +309,14 @@ export const getSingleCandidate = async (id: number | string) => {
 
 export const getCandidatesToAssign = async (
   count?: number,
-  assigned?: string
+  assigned?: string,
+  page: number = 1
 ) => {
   const token = Cookies.get("access_token");
 
   if (!token) throw new Error("Access token is missing. Please sign in again.");
 
-  const url = `${API_URL}all-candidates-small/?count=${count}&assigned=${assigned}`; // Default count to a high number if not provided
+  const url = `${API_URL}all-candidates-small/?count=${count}&assigned=${assigned}&page=${page}`; // Default count to a high number if not provided
 
   try {
     const response = await axios.get(url, {
@@ -331,15 +332,21 @@ export const getCandidatesToAssign = async (
   }
 };
 
-export const getAllStaff = async (page?: number) => {
+export const getAllStaff = async (page?: number, count?: number) => {
   const access_token = Cookies.get("access_token");
 
   if (!access_token) {
     throw new Error("Access token is missing. Please sign in again.");
   }
-  const url = page
-    ? `${API_URL}all-staffs/?page=${page}`
-    : `${API_URL}all-staffs/`;
+  
+  let url = `${API_URL}all-staffs/`;
+  const queryParams = new URLSearchParams();
+  if (page) queryParams.append('page', page.toString());
+  if (count) queryParams.append('count', count.toString());
+  
+  if (queryParams.toString()) {
+      url += `?${queryParams.toString()}`;
+  }
 
   try {
     const response = await axios.get(`${url}`, {

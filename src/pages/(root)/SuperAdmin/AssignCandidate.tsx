@@ -13,7 +13,7 @@ import {
 } from "@/lib/actions/user.actions";
 import { CandidateData, OptionType } from "@/types";
 import { toast } from "@/components/ui/use-toast";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 
 const AssignCandidate: React.FC = () => {
@@ -37,52 +37,78 @@ const AssignCandidate: React.FC = () => {
   const isAnalyst = Cookies.get("user_role") === "analyst";
   const queryClient = useQueryClient();
 
-  const { data: staffResponse, isLoading: isLoadingStaff } = useQuery({
+  const {
+    data: staffResponse,
+    isLoading: isLoadingStaff,
+    fetchNextPage: fetchNextStaffPage,
+    hasNextPage: hasNextStaffPage,
+    isFetchingNextPage: isFetchingNextStaffPage,
+  } = useInfiniteQuery({
     queryKey: ["staff"],
-    queryFn: () => getAllStaff(),
+    queryFn: async ({ pageParam = 1 }) => getAllStaff(pageParam, 50),
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.next ? allPages.length + 1 : undefined,
+    initialPageParam: 1,
     staleTime: 5 * 1000,
   });
 
-  const { data: candidatesResponse, isLoading: candidatesLoading } = useQuery({
+  const {
+    data: candidatesResponse,
+    isLoading: candidatesLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: ["candidates", selectedAction],
-    queryFn: async () => {
-      const count = 1000;
+    queryFn: async ({ pageParam = 1 }) => {
+      const count = 50;
       return getCandidatesToAssign(
         count,
-        selectedAction === "assign" ? "False" : "True"
+        selectedAction === "assign" ? "False" : "True",
+        pageParam,
       );
     },
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.next ? allPages.length + 1 : undefined;
+    },
+    initialPageParam: 1,
     staleTime: 5 * 1000,
   });
 
   // Create staff options
   const staffOptions =
-    staffResponse?.results?.map((staff: CandidateData) => ({
-      value: staff.id,
-      label: staff.user?.full_name,
-    })) || [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (staffResponse?.pages as any[])?.flatMap((page) =>
+      page.results.map((staff: CandidateData) => ({
+        value: staff.id || "",
+        label: staff.user?.full_name || "",
+      })),
+    ) || [];
 
   // Create candidate options - no local filtering needed since server handles it
   const candidateOptions =
-    candidatesResponse?.results?.map((candidate: CandidateData) => ({
-      value: candidate.id,
-      label: candidate?.full_name,
-    })) || [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (candidatesResponse?.pages as any[])?.flatMap((page) =>
+      page.results.map((candidate: CandidateData) => ({
+        value: candidate.id || "",
+        label: candidate?.full_name || "",
+      })),
+    ) || [];
 
   const handleStaffChange = (selectedOption: SingleValue<OptionType>) => {
     setSelectedStaff(selectedOption);
 
     if (staffResponse && selectedOption) {
-      const foundStaff = staffResponse.results.find(
-        (staff: CandidateData) => staff.id === selectedOption.value
-      );
+      const foundStaff = staffResponse.pages
+        .flatMap((p) => p.results)
+        .find((staff: CandidateData) => staff.id === selectedOption.value);
 
       if (foundStaff) {
         const candidates = (foundStaff.assigned_candidates || []).map(
           (candidate: CandidateData) => ({
             value: candidate.id,
             label: `${candidate.first_name} ${candidate.middle_name} ${candidate.last_name}`,
-          })
+          }),
         );
 
         setSelectedStaffCandidates(candidates);
@@ -98,7 +124,7 @@ const AssignCandidate: React.FC = () => {
 
   const handleRemoveCandidate = (candidate: OptionType) => {
     setSelectedCandidates((prevCandidates) =>
-      prevCandidates.filter((item) => item.value !== candidate.value)
+      prevCandidates.filter((item) => item.value !== candidate.value),
     );
   };
 
@@ -106,9 +132,10 @@ const AssignCandidate: React.FC = () => {
     setSourceStaff(selectedOption);
 
     if (staffResponse && selectedOption) {
-      const foundStaff = staffResponse.results.find(
-        (staff: CandidateData) => staff.id === selectedOption.value
-      );
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const foundStaff = (staffResponse.pages as any[])
+        ?.flatMap((p) => p.results)
+        .find((staff: CandidateData) => staff.id === selectedOption.value);
 
       if (foundStaff) {
         const candidates = (foundStaff.assigned_candidates || []).map(
@@ -122,7 +149,7 @@ const AssignCandidate: React.FC = () => {
                 ? `${first_name} ${middle_name} ${last_name}`
                 : "Unnamed Candidate",
             };
-          }
+          },
         );
 
         setSelectedStaffCandidates(candidates);
@@ -140,7 +167,7 @@ const AssignCandidate: React.FC = () => {
     setIsLoading(true);
     try {
       const candidate_ids = selectedCandidates.map(
-        (candidate) => candidate.value
+        (candidate) => candidate.value,
       );
       await assignCandidateToStaff({
         candidate_ids,
@@ -170,7 +197,7 @@ const AssignCandidate: React.FC = () => {
   const reassignCandidate = async () => {
     if (!sourceStaff || !targetStaff || selectedCandidates.length === 0) {
       setError(
-        "Please select both the original and new staff, and one or more candidates."
+        "Please select both the original and new staff, and one or more candidates.",
       );
       return;
     }
@@ -178,7 +205,7 @@ const AssignCandidate: React.FC = () => {
     setIsLoading(true);
     try {
       const candidate_ids = selectedCandidates.map(
-        (candidate) => candidate.value
+        (candidate) => candidate.value,
       );
       await reAssignCandidateToStaff({
         candidate_ids,
@@ -213,7 +240,7 @@ const AssignCandidate: React.FC = () => {
     setIsLoading(true);
     try {
       const candidate_id = checkedCandidates.map(
-        (candidate) => candidate.value
+        (candidate) => candidate.value,
       );
       await unassignCandidateFromStaff({
         candidate_ids: candidate_id,
@@ -301,7 +328,12 @@ const AssignCandidate: React.FC = () => {
                   className="border-gray-border"
                   placeholder="Select Staff"
                   value={selectedStaff}
-                  isLoading={isLoadingStaff}
+                  isLoading={isLoadingStaff || isFetchingNextStaffPage}
+                  onMenuScrollToBottom={() => {
+                    if (hasNextStaffPage && !isFetchingNextStaffPage) {
+                      fetchNextStaffPage();
+                    }
+                  }}
                 />
               </div>
               <div className="flex flex-col w-full gap-1.5">
@@ -316,7 +348,12 @@ const AssignCandidate: React.FC = () => {
                   components={{
                     MultiValueContainer: () => null,
                   }}
-                  isLoading={candidatesLoading}
+                  isLoading={candidatesLoading || isFetchingNextPage}
+                  onMenuScrollToBottom={() => {
+                    if (hasNextPage && !isFetchingNextPage) {
+                      fetchNextPage();
+                    }
+                  }}
                 />
               </div>
             </div>
@@ -330,13 +367,18 @@ const AssignCandidate: React.FC = () => {
                 <ReactSelect
                   options={staffOptions}
                   onChange={(option) => {
-                    setSourceStaff(option);
+                    setSelectedStaff(option);
                     handleSourceStaffChange(option);
                   }}
                   className="border-gray-border"
                   placeholder="Select Staff"
-                  value={sourceStaff}
-                  isLoading={isLoadingStaff}
+                  value={selectedStaff}
+                  isLoading={isLoadingStaff || isFetchingNextStaffPage}
+                  onMenuScrollToBottom={() => {
+                    if (hasNextStaffPage && !isFetchingNextStaffPage) {
+                      fetchNextStaffPage();
+                    }
+                  }}
                 />
               </div>
 
@@ -360,11 +402,18 @@ const AssignCandidate: React.FC = () => {
                 <p>Select New Staff</p>
                 <ReactSelect
                   options={staffOptions}
-                  onChange={setTargetStaff}
+                  onChange={(option) => {
+                    setTargetStaff(option);
+                  }}
                   className="border-gray-border"
-                  placeholder="Select New Staff"
+                  placeholder="Select Staff"
                   value={targetStaff}
-                  isLoading={isLoadingStaff}
+                  isLoading={isLoadingStaff || isFetchingNextStaffPage}
+                  onMenuScrollToBottom={() => {
+                    if (hasNextStaffPage && !isFetchingNextStaffPage) {
+                      fetchNextStaffPage();
+                    }
+                  }}
                 />
               </div>
             </div>
@@ -414,7 +463,7 @@ const AssignCandidate: React.FC = () => {
                         <input
                           type="checkbox"
                           checked={checkedCandidates.some(
-                            (c) => c.value === candidate.value
+                            (c) => c.value === candidate.value,
                           )}
                           onChange={(e) => {
                             if (e.target.checked) {
@@ -424,7 +473,7 @@ const AssignCandidate: React.FC = () => {
                               ]);
                             } else {
                               setCheckedCandidates((prev) =>
-                                prev.filter((c) => c.value !== candidate.value)
+                                prev.filter((c) => c.value !== candidate.value),
                               );
                             }
                           }}
@@ -478,10 +527,10 @@ const AssignCandidate: React.FC = () => {
             {isLoading
               ? "Processing..."
               : selectedAction === "assign"
-              ? "Assign"
-              : selectedAction === "reassign"
-              ? "Re-Assign"
-              : "Un-Assign"}
+                ? "Assign"
+                : selectedAction === "reassign"
+                  ? "Re-Assign"
+                  : "Un-Assign"}
           </Button>
         </div>
       </div>

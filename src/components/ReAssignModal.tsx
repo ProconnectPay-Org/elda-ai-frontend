@@ -7,7 +7,7 @@ import {
 } from "@/lib/actions/user.actions";
 import { useState, useEffect } from "react";
 import { toast } from "./ui/use-toast";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import { CandidateData, OptionType } from "@/types";
 import ReactSelect, { SingleValue } from "react-select";
 import { Link } from "react-router-dom";
@@ -29,9 +29,17 @@ const ReAssignModal = ({ onClose, id, mode }: ModalProps) => {
 
   const queryClient = useQueryClient();
 
-  const { data: staffResponse, isLoading: isLoadingStaff } = useQuery({
+  const {
+    data: staffResponse,
+    isLoading: isLoadingStaff,
+    fetchNextPage: fetchNextStaffPage,
+    hasNextPage: hasNextStaffPage,
+    isFetchingNextPage: isFetchingNextStaffPage,
+  } = useInfiniteQuery({
     queryKey: ["staff"],
-    queryFn: async () => getAllStaff(),
+    queryFn: async ({ pageParam = 1 }) => getAllStaff(pageParam, 50),
+    getNextPageParam: (lastPage, allPages) => lastPage.next ? allPages.length + 1 : undefined,
+    initialPageParam: 1,
     staleTime: 5 * 1000,
   });
 
@@ -112,11 +120,13 @@ const ReAssignModal = ({ onClose, id, mode }: ModalProps) => {
   };
 
   useEffect(() => {
-    if (staffResponse && staffResponse.results) {
-      const options = staffResponse.results.map((staff: CandidateData) => ({
-        value: staff.id,
-        label: staff.user?.full_name,
-      }));
+    if (staffResponse && staffResponse.pages) {
+      const options = (staffResponse.pages as any[])
+        .flatMap((p) => p.results)
+        .map((staff: CandidateData) => ({
+          value: staff.id || "",
+          label: staff.user?.full_name || "",
+        }));
       setStaffOptions(options);
       setError("");
     }
@@ -204,7 +214,12 @@ const ReAssignModal = ({ onClose, id, mode }: ModalProps) => {
                   className="border-gray-border"
                   placeholder="Select Staff"
                   value={selectedStaff}
-                  isLoading={isLoadingStaff}
+                  isLoading={isLoadingStaff || isFetchingNextStaffPage}
+                  onMenuScrollToBottom={() => {
+                    if (hasNextStaffPage && !isFetchingNextStaffPage) {
+                      fetchNextStaffPage();
+                    }
+                  }}
                 />
               </div>
             )}
